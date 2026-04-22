@@ -16,6 +16,8 @@ import Pricing from './pages/LawyerPlans'
 import LawyerPlans from './pages/LawyerPlans'
 import AdminDashboard from './pages/AdminDashboard'
 
+import ScrollToTop from './components/ScrollToTop'
+
 function ProtectedRoute({ children }) {
   const { isLoggedIn } = useAuth()
   return isLoggedIn ? children : <Navigate to="/login" replace />
@@ -24,6 +26,7 @@ function ProtectedRoute({ children }) {
 function AppRoutes() {
   return (
     <>
+      <ScrollToTop />
       <Navbar />
       <Routes>
         <Route path="/"             element={<Home />} />
