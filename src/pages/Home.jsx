@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { API } from '../api'
+import { CheckCircle, Video, Lock, Zap, Bell, Search, BarChart2, Calendar, Activity, DollarSign, Smartphone, Scale, TrendingUp, CreditCard, LayoutDashboard, Star, Gift, ClipboardList } from 'lucide-react'
 
 const SPECS = ['Criminal Defence','Family Law','Property Law','Corporate Law','Consumer Rights','Labour Law']
 const STATS = [['2,400+','Verified Lawyers'],['50,000+','Cases Handled'],['98%','Satisfaction Rate'],['₹0','Platform Fee for Clients']]
@@ -61,8 +62,8 @@ export default function Home() {
               </div>
             </div>
             <div style={{display:'flex',gap:'1.2rem',marginTop:'1.3rem',flexWrap:'wrap'}}>
-              {['✅ No Hidden Fees','📹 Video Calls','🔒 Confidential','⚡ Instant Booking'].map(t=>(
-                <span key={t} style={{fontSize:'.78rem',color:'var(--txt-2)',fontWeight:600}}>{t}</span>
+              {[{i:<CheckCircle size={14}/>, t:'No Hidden Fees'},{i:<Video size={14}/>, t:'Video Calls'},{i:<Lock size={14}/>, t:'Confidential'},{i:<Zap size={14}/>, t:'Instant Booking'}].map(item=>(
+                <span key={item.t} style={{fontSize:'.78rem',color:'var(--txt-2)',fontWeight:600,display:'flex',alignItems:'center',gap:4}}>{item.i}{item.t}</span>
               ))}
             </div>
           </div>
@@ -99,7 +100,7 @@ export default function Home() {
               ))}
             </div>
             <div style={{background:'#fff',border:'1px solid var(--border)',borderRadius:'var(--r)',padding:'.7rem 1rem',display:'flex',gap:10,alignItems:'center',boxShadow:'var(--sh)',animation:'slideUp .5s ease .3s both'}}>
-              <span style={{fontSize:'1.1rem'}}>🔔</span>
+              <Bell size={20} color="var(--gold)" />
               <div><div style={{fontSize:'.78rem',fontWeight:700}}>Rahul just booked Adv. Mehta</div><div style={{fontSize:'.7rem',color:'var(--txt-3)'}}>2 min ago · Mumbai</div></div>
             </div>
           </div>
@@ -123,12 +124,15 @@ export default function Home() {
           <h2 className="sec-title reveal" style={{textAlign:'center'}}>Get legal help in <em>4 steps.</em></h2>
         </div>
         <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(230px,1fr))',gap:'1.5rem',maxWidth:1000,margin:'0 auto'}}>
-          {[['🔍','Search','Enter your city and issue. All verified lawyers appear instantly with pricing.'],['📊','Compare','View fees, ratings, experience — all transparent before you decide.'],['📅','Book','Pick time. Meet via encrypted video call from anywhere in India.'],['📡','Track','Your lawyer posts real-time case updates. No more chasing calls.']].map(([icon,title,desc],i)=>(
-            <div key={title} className="reveal card card-hover" style={{textAlign:'center',padding:'2rem 1.5rem',position:'relative'}}>
+          {[{i:<Search size={28}/>,title:'Search',desc:'Enter your city and issue. All verified lawyers appear instantly with pricing.'},
+            {i:<BarChart2 size={28}/>,title:'Compare',desc:'View fees, ratings, experience — all transparent before you decide.'},
+            {i:<Calendar size={28}/>,title:'Book',desc:'Pick time. Meet via encrypted video call from anywhere in India.'},
+            {i:<Activity size={28}/>,title:'Track',desc:'Your lawyer posts real-time case updates. No more chasing calls.'}].map((item,i)=>(
+            <div key={item.title} className="reveal card card-hover" style={{textAlign:'center',padding:'2rem 1.5rem',position:'relative'}}>
               <div style={{position:'absolute',top:14,left:14,width:24,height:24,background:'var(--bur)',borderRadius:6,display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontSize:'.68rem',fontWeight:800}}>0{i+1}</div>
-              <div style={{fontSize:'2rem',marginBottom:12}}>{icon}</div>
-              <h3 style={{fontFamily:"'Playfair Display',serif",fontSize:'1.15rem',marginBottom:8}}>{title}</h3>
-              <p style={{fontSize:'.84rem',color:'var(--txt-3)',lineHeight:1.7}}>{desc}</p>
+              <div style={{color:'var(--bur)',marginBottom:12,display:'flex',justifyContent:'center'}}>{item.i}</div>
+              <h3 style={{fontFamily:"'Playfair Display',serif",fontSize:'1.15rem',marginBottom:8}}>{item.title}</h3>
+              <p style={{fontSize:'.84rem',color:'var(--txt-3)',lineHeight:1.7}}>{item.desc}</p>
             </div>
           ))}
         </div>
@@ -141,10 +145,13 @@ export default function Home() {
             <div className="sec-label">Our Edge</div>
             <h2 className="sec-title reveal">The <em>only</em> platform with complete price transparency.</h2>
             <p className="reveal" style={{color:'var(--txt-3)',marginBottom:'2rem',lineHeight:1.8,fontSize:'.95rem'}}>Traditional law firms hide fees until after consultation. We changed that — every lawyer's rate is shown before you even click their profile.</p>
-            {[['💰','Zero Hidden Charges','The fee you see is exactly what you pay. No booking fee, no extras.'],['✅','Bar-Verified Lawyers','Every advocate verified against Bar Council database before listing.'],['⚡','Same-Day Booking','Most consultations available within 24 hours of booking.'],['📱','Full Case Visibility','Track every hearing, filing, milestone — live on your dashboard.']].map(([icon,title,desc])=>(
-              <div key={title} className="reveal" style={{display:'flex',gap:12,marginBottom:'1.1rem',padding:'.9rem',borderRadius:'var(--r)'}}>
-                <div style={{width:40,height:40,borderRadius:10,background:'rgba(123,29,46,.07)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'1.1rem',flexShrink:0}}>{icon}</div>
-                <div><div style={{fontWeight:800,fontSize:'.9rem',marginBottom:2}}>{title}</div><div style={{fontSize:'.82rem',color:'var(--txt-3)',lineHeight:1.6}}>{desc}</div></div>
+            {[{i:<DollarSign size={20}/>,title:'Zero Hidden Charges',desc:'The fee you see is exactly what you pay. No booking fee, no extras.'},
+              {i:<CheckCircle size={20}/>,title:'Bar-Verified Lawyers',desc:'Every advocate verified against Bar Council database before listing.'},
+              {i:<Zap size={20}/>,title:'Same-Day Booking',desc:'Most consultations available within 24 hours of booking.'},
+              {i:<Smartphone size={20}/>,title:'Full Case Visibility',desc:'Track every hearing, filing, milestone — live on your dashboard.'}].map((item)=>(
+              <div key={item.title} className="reveal" style={{display:'flex',gap:12,marginBottom:'1.1rem',padding:'.9rem',borderRadius:'var(--r)'}}>
+                <div style={{width:40,height:40,borderRadius:10,background:'rgba(123,29,46,.07)',color:'var(--bur)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>{item.i}</div>
+                <div><div style={{fontWeight:800,fontSize:'.9rem',marginBottom:2}}>{item.title}</div><div style={{fontSize:'.82rem',color:'var(--txt-3)',lineHeight:1.6}}>{item.desc}</div></div>
               </div>
             ))}
           </div>
@@ -168,15 +175,20 @@ export default function Home() {
 
       {/* FOR LAWYERS */}
       <section style={{padding:'7rem 5vw',background:'linear-gradient(135deg,var(--bur) 0%,#9E2D42 100%)',position:'relative',overflow:'hidden'}}>
-        <div style={{position:'absolute',right:'-5rem',top:'50%',transform:'translateY(-50%)',fontSize:'22rem',opacity:.04,lineHeight:1,pointerEvents:'none'}}>⚖</div>
+        <div style={{position:'absolute',right:'-5rem',top:'50%',transform:'translateY(-50%)',opacity:.04,pointerEvents:'none'}}><Scale size={450}/></div>
         <div className="grid-2" style={{maxWidth:1000,margin:'0 auto',display:'grid',gridTemplateColumns:'1fr 1fr',gap:'4rem',alignItems:'center'}}>
           <div>
             <div style={{display:'inline-flex',alignItems:'center',gap:6,background:'rgba(255,255,255,.12)',border:'1px solid rgba(255,255,255,.2)',borderRadius:50,padding:'.3rem .9rem',fontSize:'.7rem',fontWeight:800,color:'rgba(255,255,255,.8)',textTransform:'uppercase',letterSpacing:'.1em',marginBottom:'1rem'}}>For Advocates</div>
             <h2 className="sec-title reveal" style={{color:'#fff',maxWidth:400}}>Grow your practice.<br/><em style={{color:'var(--gold-l)'}}>Get quality clients.</em></h2>
             <p className="reveal" style={{color:'rgba(255,255,255,.75)',marginBottom:'2rem',lineHeight:1.8}}>Register on Justice Junction and get discovered by thousands of clients searching for legal help in your city.</p>
-            {['📈 Get 10–30 client leads/month','💳 Set your own consultation fee','📊 Manage all clients from one dashboard','⭐ Build reputation with verified reviews','🆓 Free to register — plans from ₹999/mo'].map(t=>(
-              <div key={t} className="reveal" style={{display:'flex',gap:10,alignItems:'center',marginBottom:8}}>
-                <span style={{fontSize:'.88rem',color:'rgba(255,255,255,.85)',fontWeight:600}}>{t}</span>
+            {[{i:<TrendingUp size={16}/>,t:'Get 10–30 client leads/month'},
+              {i:<CreditCard size={16}/>,t:'Set your own consultation fee'},
+              {i:<LayoutDashboard size={16}/>,t:'Manage all clients from one dashboard'},
+              {i:<Star size={16}/>,t:'Build reputation with verified reviews'},
+              {i:<Gift size={16}/>,t:'Free to register — plans from ₹999/mo'}].map(item=>(
+              <div key={item.t} className="reveal" style={{display:'flex',gap:10,alignItems:'center',marginBottom:8}}>
+                <span style={{color:'var(--gold-l)',display:'flex'}}>{item.i}</span>
+                <span style={{fontSize:'.88rem',color:'rgba(255,255,255,.85)',fontWeight:600}}>{item.t}</span>
               </div>
             ))}
             <div style={{display:'flex',gap:12,marginTop:'2rem',flexWrap:'wrap'}}>
@@ -187,11 +199,14 @@ export default function Home() {
           <div className="reveal-r">
             <div style={{background:'rgba(255,255,255,.08)',border:'1px solid rgba(255,255,255,.15)',borderRadius:'var(--r-xl)',padding:'1.8rem',backdropFilter:'blur(8px)'}}>
               <div style={{fontSize:'.68rem',fontWeight:800,color:'rgba(255,255,255,.5)',textTransform:'uppercase',letterSpacing:'.1em',marginBottom:'1.2rem'}}>Lawyer Dashboard Preview</div>
-              {[['📋','New Booking','Riya S. · Family Law','2 min ago','rgba(201,148,58,.25)','#E8B55A'],['✅','Booking Confirmed','Mohan V. · Criminal','1 hr ago','rgba(22,163,74,.25)','#4ADE80'],['📡','Case Update Posted','Nisha R. · Property','3 hrs ago','rgba(255,255,255,.15)','rgba(255,255,255,.7)'],['⭐','New 5-star Review','"Excellent advice" · Verified','Yesterday','rgba(201,148,58,.25)','#E8B55A']].map(([icon,title,sub,time,bg,color])=>(
-                <div key={title} style={{display:'flex',gap:10,alignItems:'center',padding:'.75rem',background:'rgba(255,255,255,.06)',borderRadius:'var(--r-sm)',marginBottom:8,border:'1px solid rgba(255,255,255,.08)'}}>
-                  <span style={{fontSize:'1.1rem'}}>{icon}</span>
-                  <div style={{flex:1}}><div style={{fontWeight:700,fontSize:'.84rem',color:'#fff'}}>{title}</div><div style={{fontSize:'.71rem',color:'rgba(255,255,255,.5)'}}>{sub} · {time}</div></div>
-                  <span style={{fontSize:'.66rem',padding:'.16rem .55rem',borderRadius:50,fontWeight:700,background:bg,color,whiteSpace:'nowrap'}}>new</span>
+              {[{i:<ClipboardList size={18}/>,title:'New Booking',sub:'Riya S. · Family Law',time:'2 min ago',bg:'rgba(201,148,58,.25)',color:'#E8B55A'},
+                {i:<CheckCircle size={18}/>,title:'Booking Confirmed',sub:'Mohan V. · Criminal',time:'1 hr ago',bg:'rgba(22,163,74,.25)',color:'#4ADE80'},
+                {i:<Activity size={18}/>,title:'Case Update Posted',sub:'Nisha R. · Property',time:'3 hrs ago',bg:'rgba(255,255,255,.15)',color:'rgba(255,255,255,.7)'},
+                {i:<Star size={18}/>,title:'New 5-star Review',sub:'"Excellent advice" · Verified',time:'Yesterday',bg:'rgba(201,148,58,.25)',color:'#E8B55A'}].map((item)=>(
+                <div key={item.title} style={{display:'flex',gap:10,alignItems:'center',padding:'.75rem',background:'rgba(255,255,255,.06)',borderRadius:'var(--r-sm)',marginBottom:8,border:'1px solid rgba(255,255,255,.08)'}}>
+                  <span style={{color:item.color,display:'flex'}}>{item.i}</span>
+                  <div style={{flex:1}}><div style={{fontWeight:700,fontSize:'.84rem',color:'#fff'}}>{item.title}</div><div style={{fontSize:'.71rem',color:'rgba(255,255,255,.5)'}}>{item.sub} · {item.time}</div></div>
+                  <span style={{fontSize:'.66rem',padding:'.16rem .55rem',borderRadius:50,fontWeight:700,background:item.bg,color:item.color,whiteSpace:'nowrap'}}>new</span>
                 </div>
               ))}
             </div>
@@ -231,7 +246,7 @@ export default function Home() {
           </div>
           <div className="reveal" style={{display:'flex',gap:'1.8rem',justifyContent:'center',marginTop:'2rem',flexWrap:'wrap'}}>
             {['Free for clients','Lawyers from ₹500/session','Video calls included','No hidden charges'].map(f=>(
-              <span key={f} style={{fontSize:'.78rem',color:'var(--txt-3)',fontWeight:600,display:'flex',alignItems:'center',gap:5}}><span style={{color:'var(--green)'}}>✓</span>{f}</span>
+              <span key={f} style={{fontSize:'.78rem',color:'var(--txt-3)',fontWeight:600,display:'flex',alignItems:'center',gap:5}}><CheckCircle size={14} color="var(--green)"/>{f}</span>
             ))}
           </div>
         </div>

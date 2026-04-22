@@ -32,10 +32,10 @@
   --radius-xl: var(--r-xl);
 }
 html{scroll-behavior:smooth;}
-body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);color:var(--txt);line-height:1.65;overflow-x:hidden;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--cream);color:var(--txt);line-height:1.75;overflow-x:hidden;}
 a{text-decoration:none;color:inherit;}
 button,input,select,textarea{font-family:'Plus Jakarta Sans',sans-serif;}
-h1,h2,h3{font-family:'Playfair Display',serif;font-weight:700;line-height:1.15;}
+h1,h2,h3{font-family:'Playfair Display',serif;font-weight:700;line-height:1.15;letter-spacing:-0.02em;}
 
 /* BUTTONS */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:none;cursor:pointer;font-weight:700;transition:var(--tr);white-space:nowrap;font-family:'Plus Jakarta Sans',sans-serif;letter-spacing:-.01em;}
@@ -101,7 +101,7 @@ h1,h2,h3{font-family:'Playfair Display',serif;font-weight:700;line-height:1.15;}
 @keyframes toastIn{from{transform:translateX(110%) scale(.9);opacity:0}to{transform:translateX(0) scale(1);opacity:1}}
 
 /* SECTION */
-.sec-label{display:inline-flex;align-items:center;gap:.5rem;font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.16em;color:var(--gold);margin-bottom:.7rem;}
+.sec-label{display:inline-flex;align-items:center;gap:.5rem;font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.2em;color:var(--gold);margin-bottom:.7rem;}
 .sec-label::before{content:'';width:1.4rem;height:2px;background:var(--gold);border-radius:2px;}
 .sec-title{font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:700;line-height:1.2;margin-bottom:.9rem;}
 .sec-title em{font-style:italic;color:var(--bur);}

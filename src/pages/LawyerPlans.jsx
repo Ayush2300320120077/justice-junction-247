@@ -2,26 +2,27 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
+import { Sprout, Scale, Trophy, ChevronDown } from 'lucide-react'
 
 const PLANS = [
   {
-    id: 'basic', name: 'Basic', price: 999, icon: '🌱',
+    id: 'basic', name: 'Basic', price: 999, icon: <Sprout size={32}/>,
     tagline: 'Perfect to get started',
     features: ['Up to 20 bookings/month','Basic profile listing','Case update tools','Video consultation links','Email support','Performance analytics'],
     notIncluded: ['Featured listing','Priority placement','Verified badge','Dedicated support'],
     color: 'var(--txt-3)'
   },
   {
-    id: 'pro', name: 'Pro', price: 2499, icon: '⚖️',
+    id: 'pro', name: 'Pro', price: 2499, icon: <Scale size={32}/>,
     tagline: 'Most popular for growing practices',
-    features: ['Up to 60 bookings/month','Featured profile badge','Priority search placement','✅ Verified badge','Case update tools','Video consultation links','Priority email support','Advanced analytics dashboard','Client review management'],
+    features: ['Up to 60 bookings/month','Featured profile badge','Priority search placement','Verified badge','Case update tools','Video consultation links','Priority email support','Advanced analytics dashboard','Client review management'],
     notIncluded: ['Dedicated account manager'],
     popular: true, color: 'var(--bur)'
   },
   {
-    id: 'elite', name: 'Elite', price: 4999, icon: '🏆',
+    id: 'elite', name: 'Elite', price: 4999, icon: <Trophy size={32}/>,
     tagline: 'For established senior advocates',
-    features: ['Unlimited bookings','Featured + Elite badge','Top search placement','✅ Verified + Elite badge','Case update tools','Video consultation links','Dedicated account manager','Full analytics suite','Client review management','Homepage feature slot','Direct marketing support'],
+    features: ['Unlimited bookings','Featured + Elite badge','Top search placement','Verified + Elite badge','Case update tools','Video consultation links','Dedicated account manager','Full analytics suite','Client review management','Homepage feature slot','Direct marketing support'],
     notIncluded: [],
     color: 'var(--gold)'
   }
@@ -205,7 +206,7 @@ function FAQ({ q, a }) {
   return (
     <div style={{border:'1px solid var(--border)',borderRadius:'var(--r)',overflow:'hidden',marginBottom:8}}>
       <button onClick={()=>setOpen(o=>!o)} style={{width:'100%',padding:'1rem 1.5rem',background:open?'var(--cream-2)':'#fff',border:'none',cursor:'pointer',display:'flex',justifyContent:'space-between',alignItems:'center',fontFamily:'Plus Jakarta Sans,sans-serif',fontSize:'.92rem',fontWeight:700,color:'var(--txt)',textAlign:'left',transition:'background .2s'}}>
-        <span>{q}</span><span style={{color:'var(--bur)',fontSize:'1.2rem',transition:'transform .3s',transform:open?'rotate(45deg)':'none',flexShrink:0,marginLeft:12}}>+</span>
+        <span>{q}</span><span style={{color:'var(--bur)',transition:'transform .3s',transform:open?'rotate(180deg)':'none',flexShrink:0,marginLeft:12,display:'flex'}}><ChevronDown size={20}/></span>
       </button>
       {open&&<div style={{padding:'.8rem 1.5rem 1.1rem',background:'var(--cream)',borderTop:'1px solid var(--border)',animation:'slideUp .2s ease'}}><p style={{fontSize:'.86rem',color:'var(--txt-3)',lineHeight:1.75}}>{a}</p></div>}
     </div>

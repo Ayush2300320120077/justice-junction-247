@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { Scale, Heart, Home, Search, Shield, LayoutDashboard, Briefcase, Info, LogOut } from 'lucide-react'
 
 export default function Navbar() {
   const { user, isLoggedIn, logout } = useAuth()
@@ -34,7 +35,7 @@ export default function Navbar() {
       <nav style={{...s.nav,...(scrolled?s.navScrolled:{})}}>
         <div style={s.inner}>
           <Link to="/" style={s.logo}>
-            <div style={s.logoIcon}>⚖</div>
+            <div style={s.logoIcon}><Scale size={20}/></div>
             <div>
               <div style={s.logoText}>Justice Junction</div>
               <div style={s.logoSub}>Available 24 / 7</div>
@@ -49,7 +50,7 @@ export default function Navbar() {
 
           <div style={s.actions}>
             <Link to="/favorites" style={s.iconBtn} title="Saved Lawyers">
-              <span>🤍</span>
+              <span style={{display:'flex',color:'var(--txt-3)'}}><Heart size={18}/></span>
               {favCount > 0 && <span style={s.badge}>{favCount}</span>}
             </Link>
 
@@ -86,18 +87,18 @@ export default function Navbar() {
       {mobileOpen && (
         <div style={s.mobileMenu}>
           {[
-            ['/', '🏠 Home'],
-            ['/search','🔍 Find Lawyers'],
-            user?.role === 'admin' ? ['/admin','🛡️ Admin Panel'] : ['/dashboard','📊 Dashboard'],
-            ['/lawyer-plans','⚖ For Lawyers'],
-            ['/favorites','🤍 Saved'],
-            [ '/about','ℹ️ How It Works']
-          ].map(([p, l]) => (
-            <Link key={p} to={p} style={s.mLink} onClick={() => setMobileOpen(false)}>{l}</Link>
+            ['/', <Home size={18}/>, 'Home'],
+            ['/search', <Search size={18}/>, 'Find Lawyers'],
+            user?.role === 'admin' ? ['/admin', <Shield size={18}/>, 'Admin Panel'] : ['/dashboard', <LayoutDashboard size={18}/>, 'Dashboard'],
+            ['/lawyer-plans', <Briefcase size={18}/>, 'For Lawyers'],
+            ['/favorites', <Heart size={18}/>, 'Saved'],
+            [ '/about', <Info size={18}/>, 'How It Works']
+          ].map(([p, i, l]) => (
+            <Link key={p} to={p} style={s.mLink} onClick={() => setMobileOpen(false)}><span style={{color:'var(--bur)',display:'flex'}}>{i}</span>{l}</Link>
           ))}
           <hr style={{border:'none',borderTop:'1px solid var(--border)',margin:'4px 0'}}/>
           {isLoggedIn
-            ? <button onClick={handleLogout} style={{...s.mLink,background:'none',border:'none',cursor:'pointer',textAlign:'left',color:'var(--red)',fontFamily:'Plus Jakarta Sans,sans-serif',width:'100%',fontSize:'.9rem',fontWeight:700}}>🚪 Logout</button>
+            ? <button onClick={handleLogout} style={{...s.mLink,background:'none',border:'none',cursor:'pointer',textAlign:'left',color:'var(--red)',fontFamily:'Plus Jakarta Sans,sans-serif',width:'100%',fontSize:'.9rem',fontWeight:700}}><span style={{display:'flex'}}><LogOut size={18}/></span>Logout</button>
             : <Link to="/register" className="btn btn-primary" style={{margin:'4px 0',width:'100%',justifyContent:'center'}}>Register Free</Link>
           }
         </div>
@@ -127,5 +128,5 @@ const s = {
   burger:{width:36,height:36,background:'var(--cream-2)',border:'1px solid var(--border)',borderRadius:8,cursor:'pointer',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:8},
   bl:{width:18,height:2,background:'var(--txt)',borderRadius:2,display:'block',transition:'all .3s ease'},
   mobileMenu:{position:'fixed',top:92,left:0,right:0,zIndex:199,background:'#fff',borderBottom:'1px solid var(--border)',padding:'1rem 5vw',display:'flex',flexDirection:'column',gap:4,boxShadow:'var(--sh-lg)',animation:'slideUp .2s ease'},
-  mLink:{padding:'.75rem 1rem',borderRadius:10,fontSize:'.9rem',fontWeight:700,color:'var(--txt)',textDecoration:'none',display:'block'},
+  mLink:{padding:'.75rem 1rem',borderRadius:10,fontSize:'.9rem',fontWeight:700,color:'var(--txt)',textDecoration:'none',display:'flex',gap:10,alignItems:'center'},
 }

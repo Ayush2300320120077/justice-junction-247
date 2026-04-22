@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { API } from '../api'
 import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
+import { Scale } from 'lucide-react'
 
 export default function Login() {
   const [email, setEmail] = useState('')
@@ -31,7 +32,7 @@ export default function Login() {
     <div style={s.wrap}>
       <div style={s.card}>
         <div style={s.logoWrap}>
-          <div style={s.logoIcon}>⚖</div>
+          <div style={s.logoIcon}><Scale size={24}/></div>
           <div style={s.logoText}>Justice Junction</div>
           <div style={s.logoSub}>24 / 7</div>
         </div>

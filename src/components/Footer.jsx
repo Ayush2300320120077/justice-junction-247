@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { Scale } from 'lucide-react'
 
 export default function Footer() {
   return (
@@ -6,7 +7,7 @@ export default function Footer() {
       <div className="grid-footer" style={s.top}>
         <div style={s.brand}>
           <Link to="/" style={s.logo}>
-            <div style={s.logoIcon}>⚖</div>
+            <div style={s.logoIcon}><Scale size={20}/></div>
             <div>
               <div style={s.logoText}>Justice Junction</div>
               <div style={s.logoSub}>Available 24 / 7</div>

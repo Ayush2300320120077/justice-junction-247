@@ -1,19 +1,21 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
+import { Search, BarChart2, Calendar, ClipboardList, DollarSign, CheckCircle, Video, Lock, Clock, Activity, ChevronDown } from 'lucide-react'
+
 const STEPS = [
-  { num:'01', icon:'🔍', title:'Search by Location', desc:'Enter your city and type of legal issue. All verified, registered lawyers in your area appear instantly with full profiles and transparent pricing.' },
-  { num:'02', icon:'📊', title:'Compare & Choose', desc:'View each lawyer\'s experience, specialization, client ratings, and most importantly — their fixed consultation fee. No hidden costs ever.' },
-  { num:'03', icon:'📅', title:'Book a Consultation', desc:'Pick a date and time that works for you. Meet your lawyer via our secure encrypted video call platform — available from anywhere in India.' },
-  { num:'04', icon:'📋', title:'Track Your Case', desc:'Your lawyer posts real-time case updates directly on our platform. Know every hearing date, filing, and outcome — without chasing phone calls.' },
+  { num:'01', icon:<Search size={24}/>, title:'Search by Location', desc:'Enter your city and type of legal issue. All verified, registered lawyers in your area appear instantly with full profiles and transparent pricing.' },
+  { num:'02', icon:<BarChart2 size={24}/>, title:'Compare & Choose', desc:'View each lawyer\'s experience, specialization, client ratings, and most importantly — their fixed consultation fee. No hidden costs ever.' },
+  { num:'03', icon:<Calendar size={24}/>, title:'Book a Consultation', desc:'Pick a date and time that works for you. Meet your lawyer via our secure encrypted video call platform — available from anywhere in India.' },
+  { num:'04', icon:<ClipboardList size={24}/>, title:'Track Your Case', desc:'Your lawyer posts real-time case updates directly on our platform. Know every hearing date, filing, and outcome — without chasing phone calls.' },
 ]
 const WHY = [
-  { icon:'💰', title:'Price Transparency', desc:'Every lawyer\'s fee is published before you book. Fees are based on experience level — no negotiation, no surprises.' },
-  { icon:'✅', title:'Verified Lawyers', desc:'Every lawyer on our platform has a verified Bar Council registration number and has passed our onboarding review.' },
-  { icon:'📹', title:'Virtual Consultations', desc:'Consult from home via encrypted video calls. No travel needed — legal help comes to you 24/7.' },
-  { icon:'🔒', title:'100% Confidential', desc:'All communications, case details, and documents shared on our platform are fully encrypted and private.' },
-  { icon:'⏰', title:'24/7 Availability', desc:'Legal emergencies don\'t wait for business hours. Find and book lawyers any time — day or night.' },
-  { icon:'📡', title:'Live Case Updates', desc:'Unlike traditional lawyers who go silent between hearings, our platform requires lawyers to post regular case updates.' },
+  { icon:<DollarSign size={22}/>, title:'Price Transparency', desc:'Every lawyer\'s fee is published before you book. Fees are based on experience level — no negotiation, no surprises.' },
+  { icon:<CheckCircle size={22}/>, title:'Verified Lawyers', desc:'Every lawyer on our platform has a verified Bar Council registration number and has passed our onboarding review.' },
+  { icon:<Video size={22}/>, title:'Virtual Consultations', desc:'Consult from home via encrypted video calls. No travel needed — legal help comes to you 24/7.' },
+  { icon:<Lock size={22}/>, title:'100% Confidential', desc:'All communications, case details, and documents shared on our platform are fully encrypted and private.' },
+  { icon:<Clock size={22}/>, title:'24/7 Availability', desc:'Legal emergencies don\'t wait for business hours. Find and book lawyers any time — day or night.' },
+  { icon:<Activity size={22}/>, title:'Live Case Updates', desc:'Unlike traditional lawyers who go silent between hearings, our platform requires lawyers to post regular case updates.' },
 ]
 const FAQS = [
   { q:'How are lawyers verified on Justice Junction?', a:'Every lawyer must provide their Bar Council registration number, identity documents, and professional credentials. Our team manually reviews each application before approving their profile.' },
@@ -30,7 +32,7 @@ function FAQItem({ q, a }) {
     <div style={{border:'1px solid var(--border)',borderRadius:'var(--r)',overflow:'hidden',marginBottom:8}}>
       <button onClick={()=>setOpen(o=>!o)} style={{width:'100%',padding:'1rem 1.5rem',background:open?'var(--cream-2)':'#fff',border:'none',cursor:'pointer',display:'flex',justifyContent:'space-between',alignItems:'center',fontFamily:'Plus Jakarta Sans,sans-serif',fontSize:'.92rem',fontWeight:700,color:'var(--txt)',textAlign:'left',transition:'background .2s'}}>
         <span>{q}</span>
-        <span style={{color:'var(--bur)',fontSize:'1.2rem',transition:'transform .3s',transform:open?'rotate(45deg)':'rotate(0)',flexShrink:0,marginLeft:12}}>+</span>
+        <span style={{color:'var(--bur)',transition:'transform .3s',transform:open?'rotate(180deg)':'rotate(0)',flexShrink:0,marginLeft:12,display:'flex'}}><ChevronDown size={20}/></span>
       </button>
       {open && (
         <div style={{padding:'.8rem 1.5rem 1.1rem',background:'var(--cream)',borderTop:'1px solid var(--border)',animation:'slideUp .2s ease'}}>
@@ -67,7 +69,7 @@ export default function About() {
         <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(240px,1fr))',gap:'2rem',maxWidth:1000,margin:'0 auto'}}>
           {STEPS.map(step => (
             <div key={step.num} className="reveal" style={{textAlign:'center',padding:'2rem 1.5rem',background:'var(--cream)',borderRadius:'var(--r-lg)',border:'1px solid var(--border)'}}>
-              <div style={{width:52,height:52,background:'var(--bur)',borderRadius:14,display:'flex',alignItems:'center',justifyContent:'center',fontSize:'1.5rem',margin:'0 auto 1rem',boxShadow:'0 4px 16px rgba(123,29,46,.25)'}}>{step.icon}</div>
+              <div style={{width:52,height:52,background:'var(--bur)',borderRadius:14,color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 1rem',boxShadow:'0 4px 16px rgba(123,29,46,.25)'}}>{step.icon}</div>
               <div style={{fontSize:'.72rem',fontWeight:700,color:'var(--gold)',letterSpacing:'.1em',marginBottom:6}}>STEP {step.num}</div>
               <h3 style={{fontWeight:700,fontSize:'1.05rem',marginBottom:8}}>{step.title}</h3>
               <p style={{fontSize:'.85rem',color:'var(--txt-3)',lineHeight:1.7}}>{step.desc}</p>
@@ -84,10 +86,22 @@ export default function About() {
         <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(280px,1fr))',gap:'1.5rem',maxWidth:1000,margin:'0 auto'}}>
           {WHY.map(w=>(
             <div key={w.title} className="reveal card card-hover" style={{display:'flex',gap:'1rem',alignItems:'flex-start'}}>
-              <div style={{width:46,height:46,borderRadius:12,background:'rgba(123,29,46,.07)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'1.4rem',flexShrink:0}}>{w.icon}</div>
+              <div style={{width:46,height:46,borderRadius:12,background:'rgba(123,29,46,.07)',color:'var(--bur)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>{w.icon}</div>
               <div><h4 style={{fontWeight:700,marginBottom:4}}>{w.title}</h4><p style={{fontSize:'.85rem',color:'var(--txt-3)',lineHeight:1.65}}>{w.desc}</p></div>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section style={{padding:'6rem 5vw',background:`linear-gradient(rgba(26, 15, 10, 0.9), rgba(26, 15, 10, 0.95)), url('/mission-bg.png')`, backgroundSize:'cover', backgroundPosition:'center', backgroundAttachment:'fixed', color:'#fff', textAlign:'center'}}>
+        <div style={{maxWidth:800,margin:'0 auto'}}>
+          <div className="sec-label" style={{justifyContent:'center', color: 'var(--gold-l)', borderColor: 'rgba(232,181,90,0.3)'}}>Our Mission</div>
+          <h2 style={{fontFamily:"'Playfair Display',serif",fontSize:'clamp(2rem,4vw,3rem)',fontWeight:700,marginBottom:'1.5rem',lineHeight:1.2, textShadow:'0 2px 10px rgba(0,0,0,0.5)'}}>
+            Democratizing access to <em style={{fontStyle:'italic',color:'var(--gold)'}}>expert legal counsel.</em>
+          </h2>
+          <p style={{fontSize:'1.1rem',lineHeight:1.8,color:'rgba(255,255,255,0.8)'}}>
+            At Justice Junction, we believe that everyone deserves high-quality legal representation. For too long, finding a reliable lawyer meant dealing with opaque fees, endless referrals, and uncertainty. By bringing verified professionals onto a single, transparent platform, we are reshaping the future of legal services in India — making it accessible, predictable, and fair for all.
+          </p>
         </div>
       </section>
 

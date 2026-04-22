@@ -51,6 +51,7 @@ router.post('/login', async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ error: 'Invalid email or password' });
+    if (user.isBlocked) return res.status(403).json({ error: 'Your account has been blocked by an administrator.' });
     const valid = await user.comparePassword(password);
     if (!valid) return res.status(400).json({ error: 'Invalid email or password' });
     const token = jwt.sign(

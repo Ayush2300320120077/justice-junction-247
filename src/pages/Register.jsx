@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { API } from '../api'
 import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
+import { Scale, User } from 'lucide-react'
 
 const SPECS = ['Criminal Defence','Family Law','Property Law','Corporate Law','Consumer Rights','Labour Law','Civil Disputes','Divorce']
 
@@ -41,7 +42,7 @@ export default function Register() {
     <div style={s.wrap}>
       <div style={s.card}>
         <div style={s.logoWrap}>
-          <div style={s.logoIcon}>⚖</div>
+          <div style={s.logoIcon}><Scale size={24}/></div>
           <div style={s.logoText}>Justice Junction</div>
           <div style={s.logoSub}>Create Your Account</div>
         </div>
@@ -50,7 +51,7 @@ export default function Register() {
         <div style={s.roleRow}>
           {['client','lawyer'].map(r => (
             <div key={r} onClick={() => setRole(r)} style={{...s.roleCard, ...(role===r ? s.roleActive : {})}}>
-              <div style={{fontSize:'1.5rem',marginBottom:4}}>{r==='client'?'👤':'⚖️'}</div>
+              <div style={{marginBottom:4,display:'flex',justifyContent:'center',color:role===r?'var(--bur)':'var(--txt-3)'}}>{r==='client'?<User size={24}/>:<Scale size={24}/>}</div>
               <div style={{fontWeight:700,fontSize:'0.88rem',textTransform:'capitalize'}}>{r}</div>
             </div>
           ))}
@@ -70,7 +71,7 @@ export default function Register() {
 
           {role === 'lawyer' && (
             <div style={s.lawyerSection}>
-              <div style={s.lawyerTitle}>⚖ Lawyer Details</div>
+              <div style={{...s.lawyerTitle,display:'flex',alignItems:'center',gap:6}}><Scale size={16}/> Lawyer Details</div>
               <div className="form-group"><label>Bar Registration Number</label><input type="text" placeholder="e.g. BAR/DL/2024/12345" value={form.barRegistrationNumber} onChange={set('barRegistrationNumber')} required /></div>
               <div className="form-row">
                 <div className="form-group"><label>Years of Experience</label><input type="number" placeholder="e.g. 8" min="0" value={form.experience} onChange={set('experience')} /></div>

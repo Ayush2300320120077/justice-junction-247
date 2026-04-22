@@ -20,7 +20,7 @@ router.get('/', async (req, res) => {
   try {
     await connectDB();
     const { city, state, specialization, minExp, maxFee, sort, page = 1, limit = 12 } = req.query;
-    const filter = { isVerified: true };
+    const filter = { isVerified: true, isBlocked: { $ne: true } };
     if (city) filter.city = new RegExp(city, 'i');
     if (state) filter.state = new RegExp(state, 'i');
     if (specialization) filter.specializations = { $in: [new RegExp(specialization, 'i')] };

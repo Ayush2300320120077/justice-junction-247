@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { API } from '../api'
 import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
+import { BarChart2, Scale, Users, Calendar, AlertTriangle, ShieldCheck } from 'lucide-react'
 
 export default function AdminDashboard() {
   const { user, isLoggedIn } = useAuth()
@@ -16,6 +17,7 @@ export default function AdminDashboard() {
   const [bookings, setBookings] = useState([])
   const [loading, setLoading] = useState(true)
   const [promoteEmail, setPromoteEmail] = useState('')
+  const [editingLawyer, setEditingLawyer] = useState(null)
 
   useEffect(() => {
     if (!isLoggedIn || user?.role !== 'admin') {
@@ -56,6 +58,18 @@ export default function AdminDashboard() {
       }))
     } catch (err) {
       showToast('Failed to update verification: ' + err.message, 'error')
+    }
+  }
+
+  const handleBlock = async (id, currentStatus) => {
+    const actionStr = !currentStatus ? 'block' : 'unblock';
+    if (!window.confirm(`Are you sure you want to ${actionStr} this lawyer?`)) return;
+    try {
+      await API.blockLawyer(id, !currentStatus)
+      showToast(`Lawyer ${actionStr}ed successfully!`, 'success')
+      setLawyers(lawyers.map(l => l._id === id ? { ...l, isBlocked: !currentStatus } : l))
+    } catch (err) {
+      showToast('Failed to block lawyer: ' + err.message, 'error')
     }
   }
 
@@ -107,6 +121,52 @@ export default function AdminDashboard() {
     }
   }
 
+  const handleUserBlock = async (id, currentStatus) => {
+    const actionStr = !currentStatus ? 'block' : 'unblock';
+    if (!window.confirm(`Are you sure you want to ${actionStr} this user?`)) return;
+    try {
+      await API.blockUser(id, !currentStatus)
+      showToast(`User ${actionStr}ed successfully!`, 'success')
+      setUsers(users.map(u => u._id === id ? { ...u, isBlocked: !currentStatus } : u))
+    } catch (err) {
+      showToast('Failed to block user: ' + err.message, 'error')
+    }
+  }
+
+  const handleCancelBooking = async (id) => {
+    if (!window.confirm("Are you sure you want to cancel this booking?")) return;
+    try {
+      await API.cancelBooking(id)
+      showToast("Booking cancelled successfully!", 'success')
+      setBookings(bookings.map(b => b._id === id ? { ...b, status: 'cancelled' } : b))
+    } catch (err) {
+      showToast('Failed to cancel booking: ' + err.message, 'error')
+    }
+  }
+
+  const handleSubscriptionChange = async (id, sub) => {
+    try {
+      await API.updateLawyerSubscription(id, sub)
+      showToast("Subscription updated!", 'success')
+      setLawyers(lawyers.map(l => l._id === id ? { ...l, subscription: sub } : l))
+    } catch (err) {
+      showToast('Failed to update subscription: ' + err.message, 'error')
+    }
+  }
+
+  const handleSaveLawyer = async (e) => {
+    e.preventDefault()
+    try {
+      const { _id, ...data } = editingLawyer;
+      const res = await API.updateLawyerProfile(_id, data);
+      showToast(res.message, 'success');
+      setLawyers(lawyers.map(l => l._id === _id ? { ...l, ...data } : l));
+      setEditingLawyer(null);
+    } catch (err) {
+      showToast('Failed to update profile: ' + err.message, 'error');
+    }
+  }
+
   if (loading) return <div style={s.page}><div style={s.inner}>Loading admin data...</div></div>
 
   return (
@@ -127,17 +187,17 @@ export default function AdminDashboard() {
           {/* SIDEBAR */}
           <div style={s.sidebar}>
             {[
-              { id: 'overview', label: 'Overview', icon: '📊' },
-              { id: 'lawyers', label: 'Lawyers', icon: '⚖️' },
-              { id: 'users', label: 'Users & Access', icon: '👥' },
-              { id: 'bookings', label: 'Bookings', icon: '📅' }
+              { id: 'overview', label: 'Overview', icon: <BarChart2 size={18}/> },
+              { id: 'lawyers', label: 'Lawyers', icon: <Scale size={18}/> },
+              { id: 'users', label: 'Users & Access', icon: <Users size={18}/> },
+              { id: 'bookings', label: 'Bookings', icon: <Calendar size={18}/> }
             ].map(tab => (
               <button 
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 style={{...s.tabBtn, ...(activeTab === tab.id ? s.tabActive : {})}}
               >
-                <span style={{marginRight: 10}}>{tab.icon}</span> {tab.label}
+                <span style={{marginRight: 10, display:'flex'}}>{tab.icon}</span> {tab.label}
               </button>
             ))}
           </div>
@@ -150,10 +210,10 @@ export default function AdminDashboard() {
               <div style={s.tabSection}>
                 <h2 style={s.sectionTitle}>Platform Overview</h2>
                 <div style={s.statsGrid}>
-                  <StatCard label="Total Users" value={stats.totalUsers} icon="👥" />
-                  <StatCard label="Total Lawyers" value={stats.totalLawyers} icon="⚖️" />
-                  <StatCard label="Pending Verification" value={stats.pendingVerifications} highlight={stats.pendingVerifications > 0} icon="⚠️" />
-                  <StatCard label="Total Bookings" value={stats.totalBookings} icon="📅" />
+                  <StatCard label="Total Users" value={stats.totalUsers} icon={<Users size={24}/>} />
+                  <StatCard label="Total Lawyers" value={stats.totalLawyers} icon={<Scale size={24}/>} />
+                  <StatCard label="Pending Verification" value={stats.pendingVerifications} highlight={stats.pendingVerifications > 0} icon={<AlertTriangle size={24}/>} />
+                  <StatCard label="Total Bookings" value={stats.totalBookings} icon={<Calendar size={24}/>} />
                 </div>
               </div>
             )}
@@ -182,22 +242,49 @@ export default function AdminDashboard() {
                           <td style={s.td}><span style={s.mono}>{l.barRegistrationNumber}</span></td>
                           <td style={s.td}>{l.city}</td>
                           <td style={s.td}>
-                            {l.isVerified 
-                              ? <span style={s.badgeOk}>Verified</span>
-                              : <span style={s.badgeWarn}>Pending</span>}
+                            <div style={{display:'flex',gap:4,flexDirection:'column'}}>
+                              {l.isVerified 
+                                ? <span style={s.badgeOk}>Verified</span>
+                                : <span style={s.badgeWarn}>Pending</span>}
+                              {l.isBlocked && <span style={{...s.badgeWarn, background:'rgba(239,68,68,.1)', color:'#ef4444'}}>Blocked</span>}
+                              <select 
+                                value={l.subscription || 'free'} 
+                                onChange={(e) => handleSubscriptionChange(l._id, e.target.value)}
+                                style={{marginTop: 4, padding: '2px 4px', fontSize: '.7rem', borderRadius: 4, border: '1px solid var(--border)'}}
+                              >
+                                <option value="free">Free</option>
+                                <option value="basic">Basic</option>
+                                <option value="pro">Pro</option>
+                                <option value="elite">Elite</option>
+                              </select>
+                            </div>
                           </td>
                           <td style={s.td}>
-                            <div style={{display:'flex',gap:8,alignItems:'center'}}>
+                            <div style={{display:'flex',gap:8,alignItems:'center',flexWrap:'wrap',maxWidth: 200}}>
+                              <button 
+                                onClick={() => setEditingLawyer(l)}
+                                className={`btn btn-sm btn-outline`}
+                                style={{padding:'.4rem .8rem', fontSize:'.75rem', width: 75}}
+                              >
+                                Edit
+                              </button>
                               <button 
                                 onClick={() => handleVerify(l._id, l.isVerified)}
                                 className={`btn btn-sm ${l.isVerified ? 'btn-outline' : 'btn-primary'}`}
-                                style={{padding:'.4rem .8rem', fontSize:'.75rem'}}
+                                style={{padding:'.4rem .8rem', fontSize:'.75rem', width: 75}}
                               >
                                 {l.isVerified ? 'Revoke' : 'Approve'}
                               </button>
                               <button 
+                                onClick={() => handleBlock(l._id, l.isBlocked)}
+                                className={`btn btn-sm btn-outline`}
+                                style={{padding:'.4rem .8rem', fontSize:'.75rem', width: 75, borderColor: l.isBlocked ? '#10b981' : '#ef4444', color: l.isBlocked ? '#10b981' : '#ef4444'}}
+                              >
+                                {l.isBlocked ? 'Unblock' : 'Block'}
+                              </button>
+                              <button 
                                 onClick={() => handleDelete('lawyer', l._id)}
-                                style={s.delBtn}
+                                style={{...s.delBtn, width: 75}}
                               >
                                 Delete
                               </button>
@@ -253,9 +340,12 @@ export default function AdminDashboard() {
                           <td style={s.td}><b>{u.name}</b></td>
                           <td style={s.td}>{u.email}</td>
                           <td style={s.td}>
-                            {u.role === 'admin' && <span style={s.badgeAdmin}>👑 Admin</span>}
-                            {u.role === 'lawyer' && <span style={s.badgeLawyer}>Lawyer</span>}
-                            {u.role === 'client' && <span style={s.badgeClient}>Client</span>}
+                            <div style={{display:'flex',gap:4,flexDirection:'column'}}>
+                              {u.role === 'admin' && <span style={{...s.badgeAdmin, display:'inline-flex', alignItems:'center', gap:4}}><ShieldCheck size={12}/> Admin</span>}
+                              {u.role === 'lawyer' && <span style={s.badgeLawyer}>Lawyer</span>}
+                              {u.role === 'client' && <span style={s.badgeClient}>Client</span>}
+                              {u.isBlocked && <span style={{...s.badgeWarn, background:'rgba(239,68,68,.1)', color:'#ef4444'}}>Blocked</span>}
+                            </div>
                           </td>
                           <td style={s.td}>{new Date(u.createdAt).toLocaleDateString()}</td>
                           <td style={s.td}>
@@ -267,6 +357,15 @@ export default function AdminDashboard() {
                                   style={{padding:'.4rem .8rem', fontSize:'.75rem', borderColor:'#ca8a04', color:'#ca8a04'}}
                                 >
                                   Revoke Admin
+                                </button>
+                              )}
+                              {u._id !== user.id && u.role !== 'admin' && (
+                                <button 
+                                  onClick={() => handleUserBlock(u._id, u.isBlocked)}
+                                  className={`btn btn-sm btn-outline`}
+                                  style={{padding:'.4rem .8rem', fontSize:'.75rem', borderColor: u.isBlocked ? '#10b981' : '#ef4444', color: u.isBlocked ? '#10b981' : '#ef4444'}}
+                                >
+                                  {u.isBlocked ? 'Unblock' : 'Block'}
                                 </button>
                               )}
                               {u._id !== user.id && (
@@ -309,17 +408,28 @@ export default function AdminDashboard() {
                           <td style={s.td}>{b.client?.name || b.clientName}</td>
                           <td style={s.td}>{b.lawyer?.name || b.lawyerName}</td>
                           <td style={s.td}>
-                            <span style={b.status === 'completed' ? s.badgeOk : b.status === 'pending' ? s.badgeWarn : s.badgeClient}>
+                            <span style={b.status === 'completed' ? s.badgeOk : b.status === 'cancelled' ? {...s.badgeWarn, color:'#ef4444', background:'rgba(239,68,68,.1)'} : b.status === 'pending' ? s.badgeWarn : s.badgeClient}>
                               {b.status}
                             </span>
                           </td>
                           <td style={s.td}>
-                            <button 
-                              onClick={() => handleDelete('booking', b._id)}
-                              style={s.delBtn}
-                            >
-                              Delete
-                            </button>
+                            <div style={{display:'flex',gap:8,alignItems:'center'}}>
+                              {b.status !== 'cancelled' && b.status !== 'completed' && (
+                                <button 
+                                  onClick={() => handleCancelBooking(b._id)}
+                                  className={`btn btn-sm btn-outline`}
+                                  style={{padding:'.4rem .8rem', fontSize:'.75rem', borderColor: '#ef4444', color: '#ef4444'}}
+                                >
+                                  Cancel
+                                </button>
+                              )}
+                              <button 
+                                onClick={() => handleDelete('booking', b._id)}
+                                style={s.delBtn}
+                              >
+                                Delete
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       ))}
@@ -333,6 +443,44 @@ export default function AdminDashboard() {
           </div>
         </div>
       </div>
+
+      {/* EDIT LAWYER MODAL */}
+      {editingLawyer && (
+        <div style={s.modalOverlay}>
+          <div style={s.modalContent}>
+            <h2 style={{fontSize: '1.5rem', marginBottom: '1rem', color: 'var(--bur)'}}>Edit Lawyer Profile</h2>
+            <form onSubmit={handleSaveLawyer} style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
+              <div>
+                <label style={s.modalLabel}>Name</label>
+                <input required type="text" style={s.input} value={editingLawyer.name} onChange={e => setEditingLawyer({...editingLawyer, name: e.target.value})} />
+              </div>
+              <div style={{display: 'flex', gap: '1rem'}}>
+                <div style={{flex: 1}}>
+                  <label style={s.modalLabel}>Consultation Fee (₹)</label>
+                  <input required type="number" style={s.input} value={editingLawyer.consultationFee} onChange={e => setEditingLawyer({...editingLawyer, consultationFee: e.target.value})} />
+                </div>
+                <div style={{flex: 1}}>
+                  <label style={s.modalLabel}>Experience (Years)</label>
+                  <input required type="number" style={s.input} value={editingLawyer.experience} onChange={e => setEditingLawyer({...editingLawyer, experience: e.target.value})} />
+                </div>
+              </div>
+              <div>
+                <label style={s.modalLabel}>Specializations (Comma separated)</label>
+                <input required type="text" style={s.input} value={Array.isArray(editingLawyer.specializations) ? editingLawyer.specializations.join(', ') : editingLawyer.specializations} onChange={e => setEditingLawyer({...editingLawyer, specializations: e.target.value})} />
+              </div>
+              <div>
+                <label style={s.modalLabel}>Bio</label>
+                <textarea required rows={4} style={{...s.input, resize: 'vertical'}} value={editingLawyer.bio} onChange={e => setEditingLawyer({...editingLawyer, bio: e.target.value})} />
+              </div>
+              <div style={{display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1rem'}}>
+                <button type="button" onClick={() => setEditingLawyer(null)} className="btn btn-outline">Cancel</button>
+                <button type="submit" className="btn btn-primary">Save Changes</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
     </div>
   )
 }
@@ -388,5 +536,9 @@ const s = {
   
   delBtn: { padding: '.4rem .8rem', fontSize: '.75rem', background: '#fee2e2', color: '#ef4444', border: 'none', borderRadius: 'var(--r-sm)', cursor: 'pointer', fontWeight: 700, transition: 'background .2s' },
   mono: { fontFamily: 'monospace', background: '#F1F5F9', padding: '.2rem .4rem', borderRadius: 4, fontSize: '.85rem' },
-  empty: { padding: '2rem', textAlign: 'center', color: 'var(--txt-3)', fontStyle: 'italic' }
+  empty: { padding: '2rem', textAlign: 'center', color: 'var(--txt-3)', fontStyle: 'italic' },
+  
+  modalOverlay: { position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, backdropFilter: 'blur(4px)' },
+  modalContent: { background: '#fff', padding: '2rem', borderRadius: 'var(--r-lg)', width: '100%', maxWidth: 500, boxShadow: '0 20px 50px rgba(0,0,0,0.2)' },
+  modalLabel: { display: 'block', fontSize: '.85rem', fontWeight: 700, color: 'var(--txt-2)', marginBottom: '.3rem', textTransform: 'uppercase' },
 }

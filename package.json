@@ -8,17 +8,18 @@
     "dev:vite": "vite"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.22.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
+    "lucide-react": "^1.8.0",
     "mongoose": "^7.6.3",
-    "serverless-http": "^3.2.0",
-    "razorpay": "^2.9.2"
+    "razorpay": "^2.9.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.22.0",
+    "serverless-http": "^3.2.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.2.1",

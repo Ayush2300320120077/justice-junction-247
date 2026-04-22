@@ -76,6 +76,26 @@ router.put('/lawyers/:id/verify', async (req, res) => {
   }
 });
 
+router.put('/lawyers/:id/block', async (req, res) => {
+  try {
+    await connectDB();
+    const { isBlocked } = req.body;
+    const lawyer = await Lawyer.findByIdAndUpdate(
+      req.params.id,
+      { isBlocked },
+      { new: true }
+    );
+    if (!lawyer) return res.status(404).json({ error: 'Lawyer not found' });
+    
+    // Also block/unblock the associated user account to prevent login if blocked
+    await User.findByIdAndUpdate(lawyer.user, { isBlocked });
+    
+    res.json(lawyer);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 router.get('/users', async (req, res) => {
   try {
     await connectDB();
@@ -145,6 +165,70 @@ router.delete('/bookings/:id', async (req, res) => {
     const booking = await Booking.findByIdAndDelete(req.params.id);
     if (!booking) return res.status(404).json({ error: 'Booking not found' });
     res.json({ message: "Booking deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Cancel Booking
+router.put('/bookings/:id/cancel', async (req, res) => {
+  try {
+    await connectDB();
+    const booking = await Booking.findByIdAndUpdate(req.params.id, { status: 'cancelled' }, { new: true });
+    if (!booking) return res.status(404).json({ error: 'Booking not found' });
+    res.json({ message: "Booking cancelled successfully", booking });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Update Lawyer Profile
+router.put('/lawyers/:id', async (req, res) => {
+  try {
+    await connectDB();
+    const allowedUpdates = ['name', 'consultationFee', 'experience', 'bio', 'specializations'];
+    const updateData = {};
+    Object.keys(req.body).forEach(key => {
+      if (allowedUpdates.includes(key)) updateData[key] = req.body[key];
+    });
+    
+    if (updateData.specializations && typeof updateData.specializations === 'string') {
+      updateData.specializations = updateData.specializations.split(',').map(s => s.trim()).filter(Boolean);
+    }
+    
+    const lawyer = await Lawyer.findByIdAndUpdate(req.params.id, updateData, { new: true });
+    if (!lawyer) return res.status(404).json({ error: 'Lawyer not found' });
+    res.json({ message: "Profile updated successfully", lawyer });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Update Lawyer Subscription
+router.put('/lawyers/:id/subscription', async (req, res) => {
+  try {
+    await connectDB();
+    const { subscription } = req.body;
+    if (!['free', 'basic', 'pro', 'elite'].includes(subscription)) return res.status(400).json({ error: 'Invalid subscription tier' });
+    
+    const lawyer = await Lawyer.findByIdAndUpdate(req.params.id, { subscription }, { new: true });
+    if (!lawyer) return res.status(404).json({ error: 'Lawyer not found' });
+    res.json({ message: "Subscription updated successfully", lawyer });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Block/Unblock User
+router.put('/users/:id/block', async (req, res) => {
+  try {
+    await connectDB();
+    const { isBlocked } = req.body;
+    if (req.user.id === req.params.id) return res.status(400).json({ error: "Cannot block yourself" });
+    
+    const user = await User.findByIdAndUpdate(req.params.id, { isBlocked }, { new: true });
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    res.json({ message: `User ${isBlocked ? 'blocked' : 'unblocked'} successfully`, user });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

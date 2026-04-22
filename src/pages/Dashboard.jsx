@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { API } from '../api'
 import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
+import { ClipboardList, Activity, Scale, Video, User, Search, LayoutDashboard, LogOut, Edit3 } from 'lucide-react'
 
 function fmt(d) { return new Date(d).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}) }
 function initials(name) { return (name||'?').split(' ').slice(0,2).map(p=>p[0]).join('').toUpperCase() }
@@ -45,8 +46,8 @@ function ClientDash() {
       </div>
 
       <div style={s.tabs}>
-        {[['bookings','📋 My Bookings'],['updates','📡 Case Updates']].map(([id,label]) => (
-          <button key={id} onClick={() => setTab(id)} style={{...s.tab, ...(tab===id ? s.tabActive : {})}}>{label}</button>
+        {[['bookings',<ClipboardList size={16}/>,'My Bookings'],['updates',<Activity size={16}/>,'Case Updates']].map(([id,icon,label]) => (
+          <button key={id} onClick={() => setTab(id)} style={{...s.tab, ...(tab===id ? s.tabActive : {})}}><span style={{display:'flex'}}>{icon}</span>{label}</button>
         ))}
       </div>
 
@@ -58,15 +59,15 @@ function ClientDash() {
           </div>
           {loading ? <div className="spinner-wrap"><div className="spinner"></div></div> :
           bookings.length === 0 ? (
-            <div style={s.empty}><div style={{fontSize:'2.5rem',marginBottom:12}}>📋</div><p>No bookings yet.</p><Link to="/search" className="btn-primary" style={{marginTop:12,display:'inline-block'}}>Find a Lawyer</Link></div>
+            <div style={s.empty}><div style={{color:'var(--txt-3)',display:'flex',justifyContent:'center',marginBottom:12}}><ClipboardList size={40}/></div><p>No bookings yet.</p><Link to="/search" className="btn-primary" style={{marginTop:12,display:'inline-block'}}>Find a Lawyer</Link></div>
           ) : bookings.map(b => (
             <div key={b._id} style={s.bookingItem}>
-              <div style={s.biIcon}>⚖️</div>
+              <div style={s.biIcon}><Scale size={20} color="var(--bur)" /></div>
               <div style={{flex:1}}>
                 <div style={{fontWeight:700,fontSize:'0.9rem'}}>{b.lawyerName}</div>
                 <div style={{fontSize:'0.78rem',color:'var(--text-muted)',marginTop:2}}>{b.caseType} · {fmt(b.scheduledDate)} at {b.scheduledTime}</div>
                 <div style={{fontSize:'0.78rem',color:'var(--text-muted)',marginTop:2}}>Case # {b.caseNumber} · Fee: ₹{b.fee.toLocaleString()}</div>
-                {b.meetingLink && <a href={b.meetingLink} target="_blank" rel="noreferrer" style={{fontSize:'0.78rem',color:'var(--burgundy)',fontWeight:600,marginTop:4,display:'inline-block'}}>📹 Join Video Call</a>}
+                {b.meetingLink && <a href={b.meetingLink} target="_blank" rel="noreferrer" style={{fontSize:'0.78rem',color:'var(--burgundy)',fontWeight:600,marginTop:4,display:'inline-flex',alignItems:'center',gap:4}}><Video size={14}/>Join Video Call</a>}
               </div>
               <StatusBadge status={b.status} />
             </div>
@@ -78,7 +79,7 @@ function ClientDash() {
         <div style={s.section}>
           <h3 style={{fontWeight:700,marginBottom:'1.2rem'}}>Case Updates</h3>
           {updates.length === 0 ? (
-            <div style={s.empty}><div style={{fontSize:'2.5rem',marginBottom:12}}>📡</div><p>No updates yet. Your lawyer will post updates here.</p></div>
+            <div style={s.empty}><div style={{color:'var(--txt-3)',display:'flex',justifyContent:'center',marginBottom:12}}><Activity size={40}/></div><p>No updates yet. Your lawyer will post updates here.</p></div>
           ) : (
             <div>
               {updates.map((u,i) => (
@@ -147,8 +148,8 @@ function LawyerDash() {
       </div>
 
       <div style={s.tabs}>
-        {[['bookings','📋 Client Bookings'],['post','✏️ Post Case Update']].map(([id,label]) => (
-          <button key={id} onClick={() => setTab(id)} style={{...s.tab,...(tab===id?s.tabActive:{})}}>{label}</button>
+        {[['bookings',<ClipboardList size={16}/>,'Client Bookings'],['post',<Edit3 size={16}/>,'Post Case Update']].map(([id,icon,label]) => (
+          <button key={id} onClick={() => setTab(id)} style={{...s.tab,...(tab===id?s.tabActive:{})}}><span style={{display:'flex'}}>{icon}</span>{label}</button>
         ))}
       </div>
 
@@ -157,16 +158,16 @@ function LawyerDash() {
           <h3 style={{fontWeight:700,marginBottom:'1.2rem'}}>Client Bookings</h3>
           {loading ? <div className="spinner-wrap"><div className="spinner"></div></div> :
           bookings.length === 0 ? (
-            <div style={s.empty}><div style={{fontSize:'2.5rem',marginBottom:12}}>📋</div><p>No client bookings yet. Your profile is live!</p></div>
+            <div style={s.empty}><div style={{color:'var(--txt-3)',display:'flex',justifyContent:'center',marginBottom:12}}><ClipboardList size={40}/></div><p>No client bookings yet. Your profile is live!</p></div>
           ) : bookings.map(b => (
             <div key={b._id} style={s.bookingItem}>
-              <div style={s.biIcon}>👤</div>
+              <div style={s.biIcon}><User size={20} color="var(--bur)" /></div>
               <div style={{flex:1}}>
                 <div style={{fontWeight:700,fontSize:'0.9rem'}}>{b.clientName}</div>
                 <div style={{fontSize:'0.78rem',color:'var(--text-muted)',marginTop:2}}>{b.caseType} · {fmt(b.scheduledDate)} at {b.scheduledTime}</div>
                 <div style={{fontSize:'0.78rem',color:'var(--text-muted)',marginTop:2}}>Case # {b.caseNumber} · ₹{b.fee.toLocaleString()}</div>
                 {b.description && <div style={{fontSize:'0.78rem',color:'var(--text-muted)',marginTop:4,fontStyle:'italic'}}>"{b.description.slice(0,80)}{b.description.length>80?'...':''}"</div>}
-                {b.meetingLink && <a href={b.meetingLink} target="_blank" rel="noreferrer" style={{fontSize:'0.78rem',color:'var(--burgundy)',fontWeight:600,marginTop:4,display:'inline-block'}}>📹 Join Video Call</a>}
+                {b.meetingLink && <a href={b.meetingLink} target="_blank" rel="noreferrer" style={{fontSize:'0.78rem',color:'var(--burgundy)',fontWeight:600,marginTop:4,display:'inline-flex',alignItems:'center',gap:4}}><Video size={14}/>Join Video Call</a>}
               </div>
               <div style={{display:'flex',flexDirection:'column',gap:6,alignItems:'flex-end'}}>
                 <StatusBadge status={b.status} />
@@ -235,12 +236,12 @@ export default function Dashboard() {
           <div style={s.sbUser}>
             <div style={s.sbAvatar}>{initials(user?.name)}</div>
             <div style={{fontWeight:700,fontSize:'0.95rem'}}>{user?.name}</div>
-            <div style={{fontSize:'0.75rem',color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'0.08em'}}>{user?.role==='lawyer'?'⚖ Advocate':'👤 Client'}</div>
+            <div style={{fontSize:'0.75rem',color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'0.08em',display:'flex',justifyContent:'center',alignItems:'center',gap:4,marginTop:4}}>{user?.role==='lawyer'?<><Scale size={12}/> Advocate</>:<><User size={12}/> Client</>}</div>
           </div>
           <div style={{display:'flex',flexDirection:'column',gap:4}}>
-            <Link to="/search" style={s.sbLink}>🔍 Find Lawyers</Link>
-            <Link to="/dashboard" style={s.sbLink}>📋 Dashboard</Link>
-            <button onClick={handleLogout} style={{...s.sbLink,background:'none',border:'none',cursor:'pointer',textAlign:'left',color:'#B91C1C',fontFamily:'Nunito,sans-serif',fontSize:'0.88rem'}}>🚪 Logout</button>
+            <Link to="/search" style={s.sbLink}><Search size={16}/> Find Lawyers</Link>
+            <Link to="/dashboard" style={s.sbLink}><LayoutDashboard size={16}/> Dashboard</Link>
+            <button onClick={handleLogout} style={{...s.sbLink,background:'none',border:'none',cursor:'pointer',textAlign:'left',color:'#B91C1C',fontFamily:'Nunito,sans-serif',fontSize:'0.88rem'}}><LogOut size={16}/> Logout</button>
           </div>
         </div>
 
@@ -271,7 +272,7 @@ const s = {
   statNum: { fontFamily:"'Playfair Display',serif", fontSize:'1.8rem', fontWeight:700, color:'var(--burgundy)', lineHeight:1 },
   statLabel: { fontSize:'0.75rem', color:'var(--text-muted)', marginTop:4, fontWeight:600 },
   tabs: { display:'flex', gap:8, marginBottom:'1.5rem' },
-  tab: { padding:'0.55rem 1.2rem', border:'1.5px solid var(--border)', borderRadius:50, fontSize:'0.85rem', fontWeight:600, cursor:'pointer', background:'#fff', color:'var(--text-muted)', fontFamily:'Nunito,sans-serif', transition:'all 0.2s' },
+  tab: { display:'flex', alignItems:'center', gap:6, padding:'0.55rem 1.2rem', border:'1.5px solid var(--border)', borderRadius:50, fontSize:'0.85rem', fontWeight:600, cursor:'pointer', background:'#fff', color:'var(--text-muted)', fontFamily:'Plus Jakarta Sans,sans-serif', transition:'all 0.2s' },
   tabActive: { background:'var(--burgundy)', color:'#fff', borderColor:'var(--burgundy)' },
   section: { background:'#fff', border:'1px solid var(--border)', borderRadius:16, padding:'1.5rem' },
   bookingItem: { display:'flex', gap:12, alignItems:'flex-start', padding:'1rem 0', borderBottom:'1px solid var(--border)' },

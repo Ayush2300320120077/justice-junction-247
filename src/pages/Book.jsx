@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate, Link } from 'react-router-dom'
 import { API } from '../api'
 import { useToast } from '../context/ToastContext'
 import { useAuth } from '../context/AuthContext'
+import { CheckCircle, Lock, CreditCard, ShieldCheck } from 'lucide-react'
 
 const TIMES=['09:00 AM','10:00 AM','11:00 AM','12:00 PM','02:00 PM','03:00 PM','04:00 PM','05:00 PM','06:00 PM','07:00 PM','08:00 PM']
 const CASE_TYPES=['Criminal Defence','Family Law / Divorce','Property Dispute','Corporate / Business','Consumer Rights','Labour / Employment','Civil Dispute','Other']
@@ -90,7 +91,7 @@ export default function Book() {
 
         {/* Lawyer card */}
         <div style={{background:'#fff',borderRadius:'var(--r-lg)',padding:'1.2rem 1.5rem',display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'1.5rem',border:'1px solid var(--border)'}}>
-          <div><div style={{fontWeight:800,fontSize:'.98rem'}}>{lawyerName}</div><div style={{fontSize:'.76rem',color:'var(--green)',fontWeight:700,marginTop:2}}>✅ Bar Council Verified</div></div>
+          <div><div style={{fontWeight:800,fontSize:'.98rem'}}>{lawyerName}</div><div style={{fontSize:'.76rem',color:'var(--green)',fontWeight:700,marginTop:2,display:'flex',alignItems:'center',gap:4}}><CheckCircle size={12}/> Bar Council Verified</div></div>
           <div style={{textAlign:'right'}}><div style={{fontFamily:"'Playfair Display',serif",fontSize:'1.5rem',fontWeight:700,color:'var(--bur)',lineHeight:1}}>₹{fee.toLocaleString()}</div><div style={{fontSize:'.7rem',color:'var(--txt-3)'}}>per session</div></div>
         </div>
 
@@ -139,14 +140,18 @@ export default function Book() {
               </div>
             </div>
             <div style={{background:'var(--green-l)',border:'1px solid rgba(22,163,74,.15)',borderRadius:'var(--r-sm)',padding:'.9rem',marginBottom:'1.5rem',fontSize:'.82rem',color:'var(--green)'}}>
-              ✅ Session booked for <strong>{date}</strong> at <strong>{time}</strong>
+              <span style={{display:'flex',alignItems:'center',gap:6}}><CheckCircle size={16}/> Session booked for <strong>{date}</strong> at <strong>{time}</strong></span>
             </div>
             <button className="btn btn-primary btn-lg" onClick={handlePayment} disabled={loading} style={{width:'100%',justifyContent:'center',background:'linear-gradient(135deg,#7B1D2E,#9E2D42)',boxShadow:'0 4px 20px rgba(123,29,46,.3)'}}>
               {loading?'Opening Payment...': `Pay ₹${fee.toLocaleString()} Securely →`}
             </button>
             <div style={{display:'flex',gap:'1rem',justifyContent:'center',marginTop:'1rem',flexWrap:'wrap'}}>
-              {['🔒 SSL Encrypted','💳 UPI / Card / NetBanking','🛡 Razorpay Secure'].map(t=>(
-                <span key={t} style={{fontSize:'.7rem',color:'var(--txt-3)',fontWeight:600}}>{t}</span>
+              {[
+                [<Lock size={12}/>, 'SSL Encrypted'],
+                [<CreditCard size={12}/>, 'UPI / Card / NetBanking'],
+                [<ShieldCheck size={12}/>, 'Razorpay Secure']
+              ].map(([icon, text])=>(
+                <span key={text} style={{fontSize:'.7rem',color:'var(--txt-3)',fontWeight:600,display:'flex',alignItems:'center',gap:4}}>{icon} {text}</span>
               ))}
             </div>
           </div>

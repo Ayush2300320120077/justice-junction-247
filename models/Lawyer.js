@@ -24,6 +24,7 @@ const lawyerSchema = new mongoose.Schema({
   bio: String,
   languages: [String],
   isVerified: { type: Boolean, default: false },
+  isBlocked: { type: Boolean, default: false },
   isAvailable: { type: Boolean, default: true },
   reviews: [reviewSchema],
   averageRating: { type: Number, default: 0 },
