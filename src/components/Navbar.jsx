@@ -59,7 +59,11 @@ export default function Navbar() {
                   <div style={s.userAv}>{(user?.name || 'U')[0].toUpperCase()}</div>
                   <span style={{fontSize:'.85rem',fontWeight:700}}>{user?.name?.split(' ')[0]}</span>
                 </div>
-                <Link to="/dashboard" className="btn btn-outline btn-sm hide-mobile">Dashboard</Link>
+                {user?.role === 'admin' ? (
+                  <Link to="/admin" className="btn btn-outline btn-sm hide-mobile" style={{borderColor:'#ca8a04',color:'#ca8a04'}}>Admin Panel</Link>
+                ) : (
+                  <Link to="/dashboard" className="btn btn-outline btn-sm hide-mobile">Dashboard</Link>
+                )}
                 <button className="btn btn-ghost btn-sm hide-mobile" onClick={handleLogout}>Logout</button>
               </>
             ) : (
@@ -81,8 +85,15 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {mobileOpen && (
         <div style={s.mobileMenu}>
-          {[['/', '🏠 Home'],['/search','🔍 Find Lawyers'],['/dashboard','📊 Dashboard'],['/lawyer-plans','⚖ For Lawyers'],['/favorites','🤍 Saved'],[ '/about','ℹ️ How It Works']].map(([p, l]) => (
-            <Link key={p} to={p} style={s.mLink}>{l}</Link>
+          {[
+            ['/', '🏠 Home'],
+            ['/search','🔍 Find Lawyers'],
+            user?.role === 'admin' ? ['/admin','🛡️ Admin Panel'] : ['/dashboard','📊 Dashboard'],
+            ['/lawyer-plans','⚖ For Lawyers'],
+            ['/favorites','🤍 Saved'],
+            [ '/about','ℹ️ How It Works']
+          ].map(([p, l]) => (
+            <Link key={p} to={p} style={s.mLink} onClick={() => setMobileOpen(false)}>{l}</Link>
           ))}
           <hr style={{border:'none',borderTop:'1px solid var(--border)',margin:'4px 0'}}/>
           {isLoggedIn

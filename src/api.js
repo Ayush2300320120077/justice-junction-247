@@ -56,4 +56,16 @@ export const API = {
   verifyPayment: (body)       => request('/payments/verify',          { method: 'POST', body }),
   subscribe:     (body)       => request('/payments/subscribe',       { method: 'POST', body }),
   verifySub:     (body)       => request('/payments/verify-subscription', { method: 'POST', body }),
+
+  // Admin
+  getAdminStats:   ()           => request('/admin/stats'),
+  getAdminLawyers: ()           => request('/admin/lawyers'),
+  getAdminUsers:   ()           => request('/admin/users'),
+  getAdminBookings:()           => request('/admin/bookings'),
+  verifyLawyer:    (id, isVerified) => request(`/admin/lawyers/${id}/verify`, { method: 'PUT', body: { isVerified } }),
+  deleteUser:      (id)         => request(`/admin/users/${id}`, { method: 'DELETE' }),
+  deleteLawyer:    (id)         => request(`/admin/lawyers/${id}`, { method: 'DELETE' }),
+  deleteBooking:   (id)         => request(`/admin/bookings/${id}`, { method: 'DELETE' }),
+  promoteAdmin:    (email)      => request('/admin/promote', { method: 'PUT', body: { email } }),
+  demoteAdmin:     (id)         => request(`/admin/demote/${id}`, { method: 'PUT' }),
 }

@@ -14,6 +14,7 @@ import Favorites from './pages/Favorites'
 import About from './pages/About'
 import Pricing from './pages/LawyerPlans'
 import LawyerPlans from './pages/LawyerPlans'
+import AdminDashboard from './pages/AdminDashboard'
 
 function ProtectedRoute({ children }) {
   const { isLoggedIn } = useAuth()
@@ -35,6 +36,7 @@ function AppRoutes() {
         <Route path="/favorites"    element={<Favorites />} />
         <Route path="/book"         element={<ProtectedRoute><Book /></ProtectedRoute>} />
         <Route path="/dashboard"    element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/admin"        element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
         <Route path="*"             element={<Navigate to="/" replace />} />
       </Routes>
       <Footer />

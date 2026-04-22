@@ -7,6 +7,7 @@
     { "source": "/api/bookings/:path*", "destination": "/api/bookings" },
     { "source": "/api/cases/:path*", "destination": "/api/cases" },
     { "source": "/api/payments/:path*", "destination": "/api/payments" },
+    { "source": "/api/admin/:path*", "destination": "/api/admin" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
