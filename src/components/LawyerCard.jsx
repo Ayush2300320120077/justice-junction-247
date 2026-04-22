@@ -63,7 +63,10 @@ export default function LawyerCard({ lawyer, onCompare, compareList=[] }) {
           </div>
         </div>
         
-        <div style={{display:'flex', flexDirection:'column', alignItems:'flex-end', gap:'8px'}}>
+        <div style={{display:'flex', flexDirection:'row', alignItems:'center', gap:'6px', flexShrink:0}}>
+          <span className={`badge ${levelMap[lawyer.experienceLevel||'junior']}`}>
+            {lawyer.experienceLevel}
+          </span>
           <div style={s.topActions}>
             <button onClick={toggleFav} style={{...s.actionBtn,...(isFav?s.favActive:{})}} title={isFav?'Remove from saved':'Save lawyer'}>
               {isFav ? '❤️' : '🤍'}
@@ -74,9 +77,6 @@ export default function LawyerCard({ lawyer, onCompare, compareList=[] }) {
               </button>
             )}
           </div>
-          <span className={`badge ${levelMap[lawyer.experienceLevel||'junior']}`}>
-            {lawyer.experienceLevel}
-          </span>
         </div>
       </div>
 
