@@ -1,0 +1,16 @@
+STEP 1: Copy this file and rename it to ".env" (remove the .txt)
+
+STEP 2: Replace only these 2 values:
+  - MONGODB_URI: Get from MongoDB Atlas → Cluster0 → Connect → Drivers
+  - JWT_SECRET: Keep as is OR change to any random text
+
+STEP 3: Razorpay keys are optional for now (site works without payments)
+
+================== COPY BELOW THIS LINE ==================
+
+MONGODB_URI=mongodb+srv://ayush:YOUR_MONGODB_PASSWORD@cluster0.XXXXX.mongodb.net/justicejunction?retryWrites=true&w=majority
+JWT_SECRET=REMOVED_JWT_SECRET
+RAZORPAY_KEY_ID=rzp_test_placeholder
+RAZORPAY_KEY_SECRET=placeholder_secret
+NODE_ENV=development
+VITE_API_BASE=/api

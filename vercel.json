@@ -1,0 +1,12 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "rewrites": [
+    { "source": "/api/auth/:path*", "destination": "/api/auth" },
+    { "source": "/api/lawyers/:path*", "destination": "/api/lawyers" },
+    { "source": "/api/bookings/:path*", "destination": "/api/bookings" },
+    { "source": "/api/cases/:path*", "destination": "/api/cases" },
+    { "source": "/api/payments/:path*", "destination": "/api/payments" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
