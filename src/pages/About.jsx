@@ -41,7 +41,10 @@ function FAQItem({ q, a }) {
   )
 }
 
+import { useReveal } from '../hooks/useReveal'
+
 export default function About() {
+  useReveal()
   return (
     <div className="page-wrap" style={{paddingTop:100}}>
       <section style={{padding:'6rem 5vw 7rem',background:`linear-gradient(rgba(42, 22, 32, 0.85), rgba(123, 29, 46, 0.9)), url('/justice-bg.png')`, backgroundSize:'cover', backgroundPosition:'center', backgroundAttachment:'fixed', textAlign:'center', color:'#fff'}}>

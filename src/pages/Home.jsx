@@ -11,18 +11,7 @@ const TESTIMONIALS = [
   { init:'VP', name:'Vikash Patel', role:'Business Owner, Ahmedabad', text:"Needed a corporate lawyer fast. Booked within minutes, had a video call same day. Case update feed is a game-changer." },
 ]
 
-function useReveal() {
-  useEffect(() => {
-    const els = document.querySelectorAll('.reveal,.reveal-l,.reveal-r')
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach((e, i) => {
-        if (e.isIntersecting) { setTimeout(() => e.target.classList.add('visible'), i * 90); obs.unobserve(e.target) }
-      })
-    }, { threshold: 0.1 })
-    els.forEach(el => obs.observe(el))
-    return () => obs.disconnect()
-  }, [])
-}
+import { useReveal } from '../hooks/useReveal'
 
 export default function Home() {
   const [spec, setSpec] = useState('')
