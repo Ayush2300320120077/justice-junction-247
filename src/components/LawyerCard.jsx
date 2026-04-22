@@ -45,18 +45,6 @@ export default function LawyerCard({ lawyer, onCompare, compareList=[] }) {
       onMouseEnter={()=>setHovered(true)}
       onMouseLeave={()=>setHovered(false)}
     >
-      {/* Top actions */}
-      <div style={s.topActions}>
-        <button onClick={toggleFav} style={{...s.actionBtn,...(isFav?s.favActive:{})}} title={isFav?'Remove from saved':'Save lawyer'}>
-          {isFav ? '❤️' : '🤍'}
-        </button>
-        {onCompare && (
-          <button onClick={(e)=>{e.stopPropagation();onCompare(lawyer._id)}} style={{...s.actionBtn,...(inCompare?s.compareActive:{})}} title="Compare">
-            ⚖
-          </button>
-        )}
-      </div>
-
       {/* Avatar + Info */}
       <div style={s.top}>
         <div style={{position:'relative'}}>
@@ -74,9 +62,22 @@ export default function LawyerCard({ lawyer, onCompare, compareList=[] }) {
             <span style={{fontSize:'0.72rem',color:'var(--text-light)'}}>({lawyer.totalReviews||0})</span>
           </div>
         </div>
-        <span className={`badge ${levelMap[lawyer.experienceLevel||'junior']}`}>
-          {lawyer.experienceLevel}
-        </span>
+        
+        <div style={{display:'flex', flexDirection:'column', alignItems:'flex-end', gap:'8px'}}>
+          <div style={s.topActions}>
+            <button onClick={toggleFav} style={{...s.actionBtn,...(isFav?s.favActive:{})}} title={isFav?'Remove from saved':'Save lawyer'}>
+              {isFav ? '❤️' : '🤍'}
+            </button>
+            {onCompare && (
+              <button onClick={(e)=>{e.stopPropagation();onCompare(lawyer._id)}} style={{...s.actionBtn,...(inCompare?s.compareActive:{})}} title="Compare">
+                ⚖
+              </button>
+            )}
+          </div>
+          <span className={`badge ${levelMap[lawyer.experienceLevel||'junior']}`}>
+            {lawyer.experienceLevel}
+          </span>
+        </div>
       </div>
 
       {/* Location + Exp */}
@@ -131,7 +132,7 @@ export default function LawyerCard({ lawyer, onCompare, compareList=[] }) {
 const s={
   card:{background:'#fff',border:'1px solid var(--border)',borderRadius:'var(--radius-lg)',overflow:'hidden',transition:'all 0.3s cubic-bezier(0.4,0,0.2,1)',position:'relative'},
   cardHovered:{transform:'translateY(-5px)',boxShadow:'var(--shadow-lg)',borderColor:'var(--border-strong)'},
-  topActions:{position:'absolute',top:12,right:12,display:'flex',gap:6,zIndex:2},
+  topActions:{display:'flex',gap:6},
   actionBtn:{width:30,height:30,borderRadius:'50%',border:'1px solid var(--border)',background:'#fff',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.85rem',transition:'all 0.2s'},
   favActive:{background:'var(--red-light)',borderColor:'#FECACA'},
   compareActive:{background:'rgba(123,29,46,0.08)',borderColor:'var(--burgundy)'},

@@ -19,6 +19,11 @@ export default function AdminDashboard() {
   const [promoteEmail, setPromoteEmail] = useState('')
   const [editingLawyer, setEditingLawyer] = useState(null)
 
+  // Search and Filter States
+  const [lawyerSearch, setLawyerSearch] = useState('')
+  const [userSearch, setUserSearch] = useState('')
+  const [userRoleFilter, setUserRoleFilter] = useState('all')
+
   useEffect(() => {
     if (!isLoggedIn || user?.role !== 'admin') {
       navigate('/')
@@ -167,6 +172,19 @@ export default function AdminDashboard() {
     }
   }
 
+  // Filter Data
+  const filteredLawyers = lawyers.filter(l => 
+    l.name.toLowerCase().includes(lawyerSearch.toLowerCase()) || 
+    l.email.toLowerCase().includes(lawyerSearch.toLowerCase()) ||
+    l.city.toLowerCase().includes(lawyerSearch.toLowerCase())
+  )
+
+  const filteredUsers = users.filter(u => {
+    const matchesSearch = u.name.toLowerCase().includes(userSearch.toLowerCase()) || u.email.toLowerCase().includes(userSearch.toLowerCase());
+    const matchesRole = userRoleFilter === 'all' || u.role === userRoleFilter;
+    return matchesSearch && matchesRole;
+  })
+
   if (loading) return <div style={s.page}><div style={s.inner}>Loading admin data...</div></div>
 
   return (
@@ -221,7 +239,16 @@ export default function AdminDashboard() {
             {/* LAWYERS TAB */}
             {activeTab === 'lawyers' && (
               <div style={s.tabSection}>
-                <h2 style={s.sectionTitle}>Manage Lawyers</h2>
+                <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', flexWrap:'wrap', gap:'1rem', marginBottom:'2rem', borderBottom: '2px solid rgba(123,29,46,.1)', paddingBottom: '1rem'}}>
+                  <h2 style={{fontSize: '1.6rem', color: 'var(--bur)', fontFamily: "'Playfair Display',serif", fontWeight: 800}}>Manage Lawyers</h2>
+                  <input 
+                    type="text" 
+                    placeholder="Search by name, email, or city..." 
+                    value={lawyerSearch}
+                    onChange={e => setLawyerSearch(e.target.value)}
+                    style={{...s.input, maxWidth: 300}}
+                  />
+                </div>
                 <div style={s.tableWrap}>
                   <table style={s.table}>
                     <thead>
@@ -235,7 +262,7 @@ export default function AdminDashboard() {
                       </tr>
                     </thead>
                     <tbody>
-                      {lawyers.map(l => (
+                      {filteredLawyers.map(l => (
                         <tr key={l._id} style={s.tr}>
                           <td style={s.td}><b>{l.name}</b></td>
                           <td style={s.td}>{l.email}</td>
@@ -260,7 +287,7 @@ export default function AdminDashboard() {
                             </div>
                           </td>
                           <td style={s.td}>
-                            <div style={{display:'flex',gap:8,alignItems:'center',flexWrap:'wrap',maxWidth: 200}}>
+                            <div style={{display:'flex',gap:8,alignItems:'center',justifyContent:'center',flexWrap:'wrap', margin:'0 auto'}}>
                               <button 
                                 onClick={() => setEditingLawyer(l)}
                                 className={`btn btn-sm btn-outline`}
@@ -294,7 +321,7 @@ export default function AdminDashboard() {
                       ))}
                     </tbody>
                   </table>
-                  {lawyers.length === 0 && <p style={s.empty}>No lawyers found.</p>}
+                  {filteredLawyers.length === 0 && <p style={s.empty}>No lawyers found.</p>}
                 </div>
               </div>
             )}
@@ -302,7 +329,29 @@ export default function AdminDashboard() {
             {/* USERS & ACCESS TAB */}
             {activeTab === 'users' && (
               <div style={s.tabSection}>
-                <h2 style={s.sectionTitle}>Users & Access Control</h2>
+                <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', flexWrap:'wrap', gap:'1rem', marginBottom:'2rem', borderBottom: '2px solid rgba(123,29,46,.1)', paddingBottom: '1rem'}}>
+                  <h2 style={{fontSize: '1.6rem', color: 'var(--bur)', fontFamily: "'Playfair Display',serif", fontWeight: 800}}>Users & Access Control</h2>
+                  
+                  <div style={{display:'flex', gap:'.5rem', flexWrap:'wrap'}}>
+                    <select 
+                      value={userRoleFilter} 
+                      onChange={e => setUserRoleFilter(e.target.value)}
+                      style={{...s.input, width: 'auto'}}
+                    >
+                      <option value="all">All Roles</option>
+                      <option value="client">Clients Only</option>
+                      <option value="lawyer">Lawyers Only</option>
+                      <option value="admin">Admins Only</option>
+                    </select>
+                    <input 
+                      type="text" 
+                      placeholder="Search users..." 
+                      value={userSearch}
+                      onChange={e => setUserSearch(e.target.value)}
+                      style={{...s.input, maxWidth: 200}}
+                    />
+                  </div>
+                </div>
                 
                 {/* Promote Admin Form */}
                 <div style={s.promoteBox}>
@@ -335,7 +384,7 @@ export default function AdminDashboard() {
                       </tr>
                     </thead>
                     <tbody>
-                      {users.map(u => (
+                      {filteredUsers.map(u => (
                         <tr key={u._id} style={{...s.tr, ...(u.role==='admin' ? {background:'rgba(232,181,90,.05)'} : {})}}>
                           <td style={s.td}><b>{u.name}</b></td>
                           <td style={s.td}>{u.email}</td>
@@ -349,7 +398,7 @@ export default function AdminDashboard() {
                           </td>
                           <td style={s.td}>{new Date(u.createdAt).toLocaleDateString()}</td>
                           <td style={s.td}>
-                            <div style={{display:'flex',gap:8,alignItems:'center'}}>
+                            <div style={{display:'flex',gap:8,alignItems:'center',justifyContent:'center'}}>
                               {u.role === 'admin' && u._id !== user.id && (
                                 <button 
                                   onClick={() => handleDemote(u._id)}
@@ -413,7 +462,7 @@ export default function AdminDashboard() {
                             </span>
                           </td>
                           <td style={s.td}>
-                            <div style={{display:'flex',gap:8,alignItems:'center'}}>
+                            <div style={{display:'flex',gap:8,alignItems:'center',justifyContent:'center'}}>
                               {b.status !== 'cancelled' && b.status !== 'completed' && (
                                 <button 
                                   onClick={() => handleCancelBooking(b._id)}
@@ -500,7 +549,7 @@ function StatCard({ label, value, highlight, icon }) {
 const s = {
   page: { minHeight: '100vh', background: '#F8F9FA', paddingBottom: '5rem', position: 'relative' },
   headerBg: { position: 'absolute', top: 0, left: 0, right: 0, height: 320, background: 'linear-gradient(135deg, #2A1620 0%, var(--bur) 100%)', zIndex: 0 },
-  inner: { maxWidth: 1200, margin: '0 auto', padding: '0 5vw', position: 'relative', zIndex: 1, paddingTop: 120 },
+  inner: { width: '100%', maxWidth: 1800, margin: '0 auto', padding: '0 2vw', position: 'relative', zIndex: 1, paddingTop: 120 },
   header: { marginBottom: '2.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', color: '#fff' },
   title: { fontFamily: "'Playfair Display',serif", fontSize: '2.8rem', fontWeight: 800, marginBottom: '.5rem', textShadow: '0 2px 10px rgba(0,0,0,0.2)' },
   subtitle: { color: 'rgba(255,255,255,0.8)', fontSize: '1.1rem' },
@@ -511,7 +560,7 @@ const s = {
   tabBtn: { padding: '1rem 1.2rem', background: 'none', border: 'none', textAlign: 'left', fontSize: '1rem', fontWeight: 700, color: 'var(--txt-2)', borderRadius: 'var(--r-md)', cursor: 'pointer', transition: 'all .2s ease', display: 'flex', alignItems: 'center' },
   tabActive: { background: 'var(--bur)', color: '#fff', boxShadow: '0 4px 15px rgba(123,29,46,.2)' },
   
-  content: { background: '#fff', borderRadius: 'var(--r-lg)', boxShadow: '0 10px 30px rgba(0,0,0,0.08)', padding: '2.5rem', minHeight: 600, border: '1px solid rgba(0,0,0,0.03)' },
+  content: { background: '#fff', borderRadius: 'var(--r-lg)', boxShadow: '0 10px 30px rgba(0,0,0,0.08)', padding: '2.5rem', minHeight: 600, border: '1px solid rgba(0,0,0,0.03)', minWidth: 0 },
   tabSection: { animation: 'fadeIn .3s ease' },
   sectionTitle: { fontSize: '1.6rem', color: 'var(--bur)', marginBottom: '2rem', fontFamily: "'Playfair Display',serif", fontWeight: 800, borderBottom: '2px solid rgba(123,29,46,.1)', paddingBottom: '1rem' },
   
@@ -523,10 +572,10 @@ const s = {
   input: { flex: 1, padding: '.8rem 1rem', border: '1px solid rgba(0,0,0,0.1)', borderRadius: 'var(--r-sm)', fontSize: '.95rem', outline: 'none' },
   
   tableWrap: { overflowX: 'auto', background: '#fff', borderRadius: 'var(--r-md)', border: '1px solid var(--border)' },
-  table: { width: '100%', borderCollapse: 'collapse', textAlign: 'left' },
-  th: { padding: '1.2rem 1rem', borderBottom: '2px solid var(--border)', fontSize: '.75rem', fontWeight: 800, color: 'var(--txt-3)', textTransform: 'uppercase', letterSpacing: '1px', background: '#FAFAFA' },
+  table: { width: '100%', borderCollapse: 'collapse', textAlign: 'center' },
+  th: { padding: '1.2rem 1rem', borderBottom: '2px solid var(--border)', fontSize: '.75rem', fontWeight: 800, color: 'var(--txt-3)', textTransform: 'uppercase', letterSpacing: '1px', background: '#FAFAFA', textAlign: 'center' },
   tr: { transition: 'background .2s', borderBottom: '1px solid var(--border)' },
-  td: { padding: '1.2rem 1rem', fontSize: '.95rem', color: 'var(--txt-2)' },
+  td: { padding: '1.2rem 1rem', fontSize: '.95rem', color: 'var(--txt-2)', verticalAlign: 'middle' },
   
   badgeAdmin: { background: 'linear-gradient(135deg, #E8B55A, #D49B38)', color: '#fff', padding: '.3rem .8rem', borderRadius: 20, fontSize: '.7rem', fontWeight: 800, textTransform: 'uppercase', boxShadow: '0 2px 8px rgba(232,181,90,.4)' },
   badgeLawyer: { background: 'rgba(123,29,46,.1)', color: 'var(--bur)', padding: '.3rem .8rem', borderRadius: 20, fontSize: '.7rem', fontWeight: 800, textTransform: 'uppercase' },
