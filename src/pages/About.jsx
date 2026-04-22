@@ -44,15 +44,15 @@ function FAQItem({ q, a }) {
 export default function About() {
   return (
     <div className="page-wrap" style={{paddingTop:100}}>
-      <section style={{padding:'4rem 5vw 5rem',background:'linear-gradient(150deg,var(--cream) 0%,var(--cream-2) 60%,var(--cream-3) 100%)',textAlign:'center'}}>
-        <div className="sec-label" style={{justifyContent:'center'}}>How It Works</div>
-        <h1 style={{fontFamily:"'Playfair Display',serif",fontSize:'clamp(2.2rem,5vw,3.5rem)',fontWeight:700,maxWidth:650,margin:'0 auto 1rem',lineHeight:1.15}}>
-          Legal help made <em style={{fontStyle:'italic',color:'var(--bur)'}}>simple, fair,</em> and transparent.
+      <section style={{padding:'6rem 5vw 7rem',background:`linear-gradient(rgba(42, 22, 32, 0.85), rgba(123, 29, 46, 0.9)), url('/justice-bg.png')`, backgroundSize:'cover', backgroundPosition:'center', backgroundAttachment:'fixed', textAlign:'center', color:'#fff'}}>
+        <div className="sec-label" style={{justifyContent:'center', color: 'var(--gold-l)'}}>How It Works</div>
+        <h1 style={{fontFamily:"'Playfair Display',serif",fontSize:'clamp(2.5rem,5vw,3.8rem)',fontWeight:700,maxWidth:700,margin:'0 auto 1.5rem',lineHeight:1.15, textShadow:'0 2px 10px rgba(0,0,0,0.5)'}}>
+          Legal help made <em style={{fontStyle:'italic',color:'var(--gold-l)'}}>simple, fair,</em> and transparent.
         </h1>
-        <p style={{color:'var(--txt-3)',maxWidth:520,margin:'0 auto 2.5rem',fontSize:'1rem'}}>Justice Junction was built because finding a lawyer in India was too opaque, too expensive, and too confusing. We changed that.</p>
+        <p style={{color:'rgba(255,255,255,0.85)',maxWidth:560,margin:'0 auto 2.5rem',fontSize:'1.1rem', textShadow:'0 1px 4px rgba(0,0,0,0.5)'}}>Justice Junction was built because finding a lawyer in India was too opaque, too expensive, and too confusing. We changed that.</p>
         <div style={{display:'flex',gap:'1rem',justifyContent:'center',flexWrap:'wrap'}}>
-          <Link to="/search" className="btn btn-primary btn-lg">Find a Lawyer</Link>
-          <Link to="/register" className="btn btn-outline btn-lg">Register as Lawyer</Link>
+          <Link to="/search" className="btn btn-primary btn-lg" style={{boxShadow:'0 4px 15px rgba(0,0,0,0.3)'}}>Find a Lawyer</Link>
+          <Link to="/register" className="btn btn-outline-white btn-lg" style={{boxShadow:'0 4px 15px rgba(0,0,0,0.2)'}}>Register as Lawyer</Link>
         </div>
       </section>
 

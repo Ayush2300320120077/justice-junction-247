@@ -98,18 +98,18 @@ export default function LawyerPlans() {
   return (
     <div style={{paddingTop:95}}>
       {/* Header */}
-      <section style={{padding:'4rem 5vw',background:'linear-gradient(135deg,var(--bur),#9E2D42)',textAlign:'center',position:'relative',overflow:'hidden'}}>
+      <section style={{padding:'5rem 5vw',background:`linear-gradient(rgba(42, 22, 32, 0.85), rgba(123, 29, 46, 0.9)), url('/justice-bg.png')`, backgroundSize:'cover', backgroundPosition:'center', backgroundAttachment:'fixed', textAlign:'center', position:'relative', overflow:'hidden', boxShadow:'inset 0 -20px 40px rgba(0,0,0,0.2)'}}>
         <div style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at 50% 0%,rgba(201,148,58,.15),transparent 70%)',pointerEvents:'none'}}/>
         <div style={{position:'relative'}}>
-          <div style={{display:'inline-flex',alignItems:'center',gap:6,background:'rgba(255,255,255,.12)',border:'1px solid rgba(255,255,255,.2)',borderRadius:50,padding:'.3rem 1rem',fontSize:'.7rem',fontWeight:800,color:'rgba(255,255,255,.85)',textTransform:'uppercase',letterSpacing:'.12em',marginBottom:'1rem'}}>For Advocates</div>
-          <h1 style={{fontFamily:"'Playfair Display',serif",fontSize:'clamp(2rem,4vw,3rem)',fontWeight:700,color:'#fff',marginBottom:'1rem',lineHeight:1.2}}>Grow your practice with<br/><em style={{color:'var(--gold-l)'}}>Justice Junction.</em></h1>
-          <p style={{color:'rgba(255,255,255,.75)',maxWidth:520,margin:'0 auto 2rem',fontSize:'.98rem',lineHeight:1.8}}>Join 2,400+ verified advocates. Set your own fee. Get quality clients. All in one dashboard.</p>
+          <div style={{display:'inline-flex',alignItems:'center',gap:6,background:'rgba(255,255,255,.12)',border:'1px solid rgba(255,255,255,.2)',borderRadius:50,padding:'.3rem 1rem',fontSize:'.7rem',fontWeight:800,color:'rgba(255,255,255,.85)',textTransform:'uppercase',letterSpacing:'.12em',marginBottom:'1.5rem',backdropFilter:'blur(4px)'}}>For Advocates</div>
+          <h1 style={{fontFamily:"'Playfair Display',serif",fontSize:'clamp(2.5rem,5vw,3.5rem)',fontWeight:700,color:'#fff',marginBottom:'1.2rem',lineHeight:1.15, textShadow:'0 2px 10px rgba(0,0,0,0.5)'}}>Grow your practice with<br/><em style={{color:'var(--gold-l)'}}>Justice Junction.</em></h1>
+          <p style={{color:'rgba(255,255,255,.85)',maxWidth:520,margin:'0 auto 2.5rem',fontSize:'1.05rem',lineHeight:1.8, textShadow:'0 1px 4px rgba(0,0,0,0.5)'}}>Join 2,400+ verified advocates. Set your own fee. Get quality clients. All in one dashboard.</p>
           <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:12,marginBottom:'1rem'}}>
-            <span style={{fontSize:'.85rem',color:'rgba(255,255,255,.7)',fontWeight:600}}>Monthly</span>
-            <div style={{position:'relative',width:44,height:24,background:annual?'var(--gold)':'rgba(255,255,255,.2)',borderRadius:50,cursor:'pointer',transition:'background .2s'}} onClick={()=>setAnnual(a=>!a)}>
-              <div style={{position:'absolute',width:18,height:18,background:'#fff',borderRadius:'50%',top:3,left:annual?23:3,transition:'left .2s'}}/>
+            <span style={{fontSize:'.9rem',color:'rgba(255,255,255,.9)',fontWeight:600}}>Monthly</span>
+            <div style={{position:'relative',width:48,height:26,background:annual?'var(--gold)':'rgba(255,255,255,.3)',borderRadius:50,cursor:'pointer',transition:'background .2s',boxShadow:'inset 0 2px 4px rgba(0,0,0,0.2)'}} onClick={()=>setAnnual(a=>!a)}>
+              <div style={{position:'absolute',width:20,height:20,background:'#fff',borderRadius:'50%',top:3,left:annual?25:3,transition:'left .2s',boxShadow:'0 2px 4px rgba(0,0,0,0.3)'}}/>
             </div>
-            <span style={{fontSize:'.85rem',color:'rgba(255,255,255,.7)',fontWeight:600}}>Annual <span style={{background:'var(--gold)',color:'#fff',padding:'.1rem .5rem',borderRadius:50,fontSize:'.7rem',fontWeight:800,marginLeft:4}}>2 months free</span></span>
+            <span style={{fontSize:'.9rem',color:'rgba(255,255,255,.9)',fontWeight:600}}>Annual <span style={{background:'var(--gold)',color:'#fff',padding:'.15rem .6rem',borderRadius:50,fontSize:'.7rem',fontWeight:800,marginLeft:6,boxShadow:'0 2px 4px rgba(0,0,0,0.2)'}}>2 months free</span></span>
           </div>
         </div>
       </section>

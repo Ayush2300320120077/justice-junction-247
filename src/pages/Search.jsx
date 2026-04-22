@@ -119,9 +119,9 @@ export default function Search() {
 }
 
 const s = {
-  header: { background:'var(--burgundy)', padding:'5rem 5vw 3rem', color:'#fff' },
-  h1: { fontFamily:"'Playfair Display',serif", fontSize:'clamp(1.8rem,4vw,2.8rem)', fontWeight:700, marginBottom:8 },
-  searchBar: { background:'#fff', borderRadius:12, padding:'1rem', display:'grid', gridTemplateColumns:'1fr 1fr 1fr auto', gap:'0.8rem', alignItems:'flex-end' },
+  header: { background:`linear-gradient(rgba(42, 22, 32, 0.85), rgba(123, 29, 46, 0.9)), url('/justice-bg.png')`, backgroundSize:'cover', backgroundPosition:'center', padding:'5rem 5vw 4rem', color:'#fff', boxShadow:'inset 0 -20px 40px rgba(0,0,0,0.2)' },
+  h1: { fontFamily:"'Playfair Display',serif", fontSize:'clamp(2.2rem,4vw,3.2rem)', fontWeight:700, marginBottom:8, textShadow:'0 2px 10px rgba(0,0,0,0.5)' },
+  searchBar: { background:'rgba(255, 255, 255, 0.95)', backdropFilter:'blur(10px)', borderRadius:12, padding:'1.2rem', display:'grid', gridTemplateColumns:'1fr 1fr 1fr auto', gap:'0.8rem', alignItems:'flex-end', boxShadow:'0 10px 40px rgba(0,0,0,0.2)' },
   label: { fontSize:'0.72rem', fontWeight:700, color:'var(--text-muted)', textTransform:'uppercase', letterSpacing:'0.08em', display:'block', marginBottom:4 },
   input: { width:'100%', padding:'0.6rem 0.9rem', border:'1.5px solid var(--border)', borderRadius:8, fontSize:'0.9rem', color:'var(--text)', fontFamily:'Nunito,sans-serif', outline:'none' },
   resultsHeader: { display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'1.5rem', flexWrap:'wrap', gap:8 },

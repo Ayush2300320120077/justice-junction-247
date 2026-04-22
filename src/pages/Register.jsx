@@ -96,8 +96,8 @@ export default function Register() {
 }
 
 const s = {
-  wrap: { minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', padding:'2rem', background:'linear-gradient(135deg,var(--cream) 0%,var(--cream-2) 100%)', paddingTop:90 },
-  card: { background:'#fff', border:'1px solid var(--border)', borderRadius:20, padding:'2.5rem', width:'100%', maxWidth:500, boxShadow:'0 12px 48px rgba(123,29,46,0.15)' },
+  wrap: { minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', padding:'2rem', background:`linear-gradient(rgba(42, 22, 32, 0.8), rgba(123, 29, 46, 0.85)), url('/justice-bg.png')`, backgroundSize:'cover', backgroundPosition:'center', backgroundAttachment:'fixed', paddingTop:90 },
+  card: { background:'rgba(255, 255, 255, 0.96)', backdropFilter:'blur(12px)', border:'1px solid rgba(255, 255, 255, 0.3)', borderRadius:20, padding:'2.5rem', width:'100%', maxWidth:500, boxShadow:'0 24px 64px rgba(0,0,0,0.4)' },
   logoWrap: { textAlign:'center', marginBottom:'1.5rem' },
   logoIcon: { width:48, height:48, background:'var(--burgundy)', borderRadius:12, display:'flex', alignItems:'center', justifyContent:'center', color:'#fff', fontSize:'1.3rem', margin:'0 auto 0.5rem' },
   logoText: { fontFamily:"'Playfair Display',serif", fontSize:'1.15rem', fontWeight:700, color:'var(--burgundy)' },
