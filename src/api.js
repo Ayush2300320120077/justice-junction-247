@@ -1,7 +1,7 @@
 const BASE = '/api'
 
-export const getToken = () => localStorage.getItem('jj_token')
-export const getUser  = () => JSON.parse(localStorage.getItem('jj_user') || 'null')
+export const getToken = () => typeof window !== 'undefined' ? localStorage.getItem('jj_token') : null
+export const getUser  = () => typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('jj_user') || 'null') : null
 export const setAuth  = (token, user) => {
   localStorage.setItem('jj_token', token)
   localStorage.setItem('jj_user', JSON.stringify(user))

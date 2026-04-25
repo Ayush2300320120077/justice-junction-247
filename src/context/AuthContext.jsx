@@ -4,8 +4,13 @@ import { getUser, getToken, setAuth, clearAuth } from '../api'
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(getUser())
-  const [token, setToken] = useState(getToken())
+  const [user, setUser] = useState(null)
+  const [token, setToken] = useState(null)
+
+  useEffect(() => {
+    setUser(getUser())
+    setToken(getToken())
+  }, [])
 
   const login = (tok, usr) => {
     setAuth(tok, usr)

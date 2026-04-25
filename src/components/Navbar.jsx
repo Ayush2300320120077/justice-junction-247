@@ -1,40 +1,45 @@
 import { useState, useEffect } from 'react'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { useAuth } from '../context/AuthContext'
-import { Scale, Heart, Home, Search, Shield, LayoutDashboard, Briefcase, Info, LogOut } from 'lucide-react'
+import { Scale, Heart, Home, Search, Shield, LayoutDashboard, Briefcase, Info, LogOut, BookOpen, FileText } from 'lucide-react'
 
 export default function Navbar() {
   const { user, isLoggedIn, logout } = useAuth()
-  const navigate = useNavigate()
-  const location = useLocation()
+  const router = useRouter()
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
-  const favCount = JSON.parse(localStorage.getItem('jj_favorites') || '[]').length
+  const [favCount, setFavCount] = useState(0)
+  
+  useEffect(() => {
+    const count = JSON.parse(localStorage.getItem('jj_favorites') || '[]').length
+    setFavCount(count)
+  }, [])
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10)
     window.addEventListener('scroll', onScroll)
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
-  useEffect(() => setMobileOpen(false), [location.pathname])
+  useEffect(() => setMobileOpen(false), [router.pathname])
 
-  const handleLogout = () => { logout(); navigate('/') }
-  const isActive = (p) => location.pathname === p
+  const handleLogout = () => { logout(); router.push('/') }
+  const isActive = (p) => router.pathname === p
 
   return (
     <>
       {/* Emergency top bar */}
       <div style={s.emergency}>
         <span style={s.eDot}></span>
-        <span className="hide-mobile" style={{fontSize:'.75rem',fontWeight:700,color:'#fff'}}>🔴 Emergency Legal Help Available 24/7 — </span>
-        <span className="show-mobile-inline" style={{fontSize:'.75rem',fontWeight:700,color:'#fff'}}>🔴 Legal Help 24/7 — </span>
-        <Link to="/search" style={{fontSize:'.75rem',color:'#E8B55A',fontWeight:700,marginLeft:4}}>Find a Lawyer Now →</Link>
+        <span className="hide-mobile" style={{fontSize:'.75rem',fontWeight:700,color:'#fff'}}>Emergency Legal Help Available 24/7 - </span>
+        <span className="show-mobile-inline" style={{fontSize:'.75rem',fontWeight:700,color:'#fff'}}>Legal Help 24/7 - </span>
+        <Link href="/search" style={{fontSize:'.75rem',color:'#E8B55A',fontWeight:700,marginLeft:4}}>Find a Lawyer Now →</Link>
       </div>
 
       {/* Main nav */}
       <nav style={{...s.nav,...(scrolled?s.navScrolled:{})}}>
         <div style={s.inner}>
-          <Link to="/" style={s.logo}>
+          <Link href="/" style={s.logo}>
             <div style={s.logoIcon}><Scale size={20}/></div>
             <div>
               <div style={s.logoText}>Justice Junction</div>
@@ -43,13 +48,19 @@ export default function Navbar() {
           </Link>
 
           <ul style={s.links} className="hide-mobile">
-            {[['/', 'Home'],['/search','Find Lawyers'],['/about','How It Works'],['/lawyer-plans','For Lawyers']].map(([p,l])=>(
-              <li key={p}><Link to={p} style={{...s.link,...(isActive(p)?s.linkActive:{})}}>{l}</Link></li>
+            {[
+              ['/', 'Home'],
+              ['/search','Find Lawyers'],
+              ['/knowledge-hub','Knowledge Hub'],
+              ['/document-generator','Legal Tools'],
+              ['/join-as-lawyer','For Lawyers']
+            ].map(([p,l])=>(
+              <li key={p}><Link href={p} style={{...s.link,...(isActive(p)?s.linkActive:{})}}>{l}</Link></li>
             ))}
           </ul>
 
           <div style={s.actions}>
-            <Link to="/favorites" style={s.iconBtn} title="Saved Lawyers">
+            <Link href="/favorites" style={s.iconBtn} title="Saved Lawyers">
               <span style={{display:'flex',color:'var(--txt-3)'}}><Heart size={18}/></span>
               {favCount > 0 && <span style={s.badge}>{favCount}</span>}
             </Link>
@@ -61,16 +72,16 @@ export default function Navbar() {
                   <span style={{fontSize:'.85rem',fontWeight:700}}>{user?.name?.split(' ')[0]}</span>
                 </div>
                 {user?.role === 'admin' ? (
-                  <Link to="/admin" className="btn btn-outline btn-sm hide-mobile" style={{borderColor:'#ca8a04',color:'#ca8a04'}}>Admin Panel</Link>
+                  <Link href="/admin" className="btn btn-outline btn-sm hide-mobile" style={{borderColor:'#ca8a04',color:'#ca8a04'}}>Admin Panel</Link>
                 ) : (
-                  <Link to="/dashboard" className="btn btn-outline btn-sm hide-mobile">Dashboard</Link>
+                  <Link href="/dashboard" className="btn btn-outline btn-sm hide-mobile">Dashboard</Link>
                 )}
                 <button className="btn btn-ghost btn-sm hide-mobile" onClick={handleLogout}>Logout</button>
               </>
             ) : (
               <>
-                <Link to="/login"    className="btn btn-ghost btn-sm hide-mobile">Login</Link>
-                <Link to="/register" className="btn btn-primary btn-sm">Register Free</Link>
+                <Link href="/login"    className="btn btn-ghost btn-sm hide-mobile">Login</Link>
+                <Link href="/register" className="btn btn-primary btn-sm">Register Free</Link>
               </>
             )}
 
@@ -89,17 +100,18 @@ export default function Navbar() {
           {[
             ['/', <Home size={18}/>, 'Home'],
             ['/search', <Search size={18}/>, 'Find Lawyers'],
+            ['/knowledge-hub', <BookOpen size={18}/>, 'Knowledge Hub'],
+            ['/document-generator', <FileText size={18}/>, 'Legal Tools'],
             user?.role === 'admin' ? ['/admin', <Shield size={18}/>, 'Admin Panel'] : ['/dashboard', <LayoutDashboard size={18}/>, 'Dashboard'],
-            ['/lawyer-plans', <Briefcase size={18}/>, 'For Lawyers'],
+            ['/join-as-lawyer', <Briefcase size={18}/>, 'Join as Lawyer'],
             ['/favorites', <Heart size={18}/>, 'Saved'],
-            [ '/about', <Info size={18}/>, 'How It Works']
           ].map(([p, i, l]) => (
-            <Link key={p} to={p} style={s.mLink} onClick={() => setMobileOpen(false)}><span style={{color:'var(--bur)',display:'flex'}}>{i}</span>{l}</Link>
+            <Link key={p} href={p} style={s.mLink} onClick={() => setMobileOpen(false)}><span style={{color:'var(--bur)',display:'flex'}}>{i}</span>{l}</Link>
           ))}
           <hr style={{border:'none',borderTop:'1px solid var(--border)',margin:'4px 0'}}/>
           {isLoggedIn
             ? <button onClick={handleLogout} style={{...s.mLink,background:'none',border:'none',cursor:'pointer',textAlign:'left',color:'var(--red)',fontFamily:'Plus Jakarta Sans,sans-serif',width:'100%',fontSize:'.9rem',fontWeight:700}}><span style={{display:'flex'}}><LogOut size={18}/></span>Logout</button>
-            : <Link to="/register" className="btn btn-primary" style={{margin:'4px 0',width:'100%',justifyContent:'center'}}>Register Free</Link>
+            : <Link href="/register" className="btn btn-primary" style={{margin:'4px 0',width:'100%',justifyContent:'center'}}>Register Free</Link>
           }
         </div>
       )}

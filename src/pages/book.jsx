@@ -1,0 +1,112 @@
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
+import { useAuth } from '../context/AuthContext'
+import { useToast } from '../context/ToastContext'
+import Head from 'next/head'
+import { Calendar, Clock, ShieldCheck, Video, CreditCard, ChevronRight } from 'lucide-react'
+
+export default function Book() {
+  const router = useRouter()
+  const { user, isLoggedIn } = useAuth()
+  const { showToast } = useToast()
+  
+  const [loading, setLoading] = useState(false)
+  const [formData, setFormData] = useState({ date: '', time: '', caseType: 'General Consultation', description: '' })
+
+  const { lawyerId, lawyerName, fee } = router.query
+
+  useEffect(() => {
+    if (router.isReady && !isLoggedIn) router.push('/login')
+  }, [router.isReady, isLoggedIn])
+
+  const handlePay = async () => {
+    if (!formData.date || !formData.time) { showToast('Please select date and time', 'error'); return }
+    setLoading(true)
+    
+    // Simulate Razorpay flow
+    setTimeout(() => {
+      showToast('Payment Successful! Appointment Booked.', 'success')
+      router.push('/dashboard')
+    }, 2000)
+  }
+
+  if (!router.isReady || !isLoggedIn) return null
+
+  return (
+    <div className="page-wrap" style={{background: 'var(--cream-2)', padding: '4rem 1rem'}}>
+      <Head><title>Book Consultation — {lawyerName}</title></Head>
+      <div className="container" style={{maxWidth: 1000}}>
+        <div style={{display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '2.5rem'}}>
+          {/* Form */}
+          <div style={{background: '#fff', padding: '3rem', borderRadius: '32px', border: '1px solid var(--border)'}}>
+            <h1 style={{fontFamily: "'Playfair Display', serif", fontSize: '2.2rem', marginBottom: '2rem'}}>Confirm Appointment</h1>
+            
+            <div style={{marginBottom: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem'}}>
+              <div className="form-group">
+                <label>Select Date</label>
+                <div className="input-wrap">
+                  <Calendar size={18} className="input-icon" />
+                  <input type="date" value={formData.date} onChange={e=>setFormData({...formData, date: e.target.value})} min={new Date().toISOString().split('T')[0]} />
+                </div>
+              </div>
+              <div className="form-group">
+                <label>Available Slots</label>
+                <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8}}>
+                  {['10:00 AM', '11:30 AM', '2:00 PM', '4:30 PM', '6:00 PM'].map(t => (
+                    <button 
+                      key={t} 
+                      style={{padding: '.8rem', borderRadius: 12, border: `2.5px solid ${formData.time === t ? 'var(--bur)' : 'var(--border)'}`, background: formData.time === t ? 'var(--cream-2)' : '#fff', fontWeight: 800, fontSize: '.85rem', cursor: 'pointer'}}
+                      onClick={() => setFormData({...formData, time: t})}
+                    >
+                      {t}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="form-group">
+                <label>Nature of Case</label>
+                <select value={formData.caseType} onChange={e=>setFormData({...formData, caseType: e.target.value})}>
+                  {['General Consultation', 'Property Dispute', 'Family/Divorce', 'Criminal Matter', 'Corporate/Startup', 'Labour/Employment'].map(c => <option key={c}>{c}</option>)}
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Brief Description</label>
+                <textarea rows="4" style={{width: '100%', padding: '1rem', borderRadius: 12, border: '1.5px solid var(--border)', outline: 'none'}} placeholder="Describe your legal issue briefly..." value={formData.description} onChange={e=>setFormData({...formData, description: e.target.value})} />
+              </div>
+            </div>
+          </div>
+
+          {/* Summary Sidebar */}
+          <div style={{position: 'sticky', top: 110, height: 'fit-content'}}>
+            <div style={{background: 'var(--bur)', color: '#fff', padding: '2rem', borderRadius: '32px', boxShadow: 'var(--sh-xl)'}}>
+              <h3 style={{marginBottom: '1.5rem', fontWeight: 800}}>Booking Summary</h3>
+              <div style={{display: 'flex', flexDirection: 'column', gap: '1rem', paddingBottom: '1.5rem', borderBottom: '1px solid rgba(255,255,255,0.2)'}}>
+                <div style={{display: 'flex', justifyContent: 'space-between'}}><span style={{opacity: 0.7}}>Lawyer</span><span style={{fontWeight: 700}}>{lawyerName}</span></div>
+                <div style={{display: 'flex', justifyContent: 'space-between'}}><span style={{opacity: 0.7}}>Duration</span><span style={{fontWeight: 700}}>30 Mins</span></div>
+                <div style={{display: 'flex', justifyContent: 'space-between'}}><span style={{opacity: 0.7}}>Type</span><span style={{fontWeight: 700}}><Video size={14} style={{marginRight: 4}}/> Video Call</span></div>
+              </div>
+              
+              <div style={{padding: '1.5rem 0', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline'}}>
+                <span style={{fontSize: '1.1rem', fontWeight: 700}}>Total Fee</span>
+                <span style={{fontSize: '2.2rem', fontWeight: 800, color: 'var(--gold-l)'}}>₹{Number(fee).toLocaleString()}</span>
+              </div>
+
+              <button className="btn btn-gold btn-xl" style={{width: '100%', borderRadius: 16}} onClick={handlePay} disabled={loading}>
+                {loading ? 'Processing...' : <><CreditCard size={18}/> Pay & Confirm</>}
+              </button>
+              
+              <div style={{marginTop: '1.5rem', fontSize: '.7rem', textAlign: 'center', opacity: 0.7, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6}}>
+                <ShieldCheck size={14}/> Secure payment powered by Razorpay
+              </div>
+            </div>
+
+            <div style={{marginTop: '1.5rem', background: '#fff', padding: '1.5rem', borderRadius: '24px', border: '1px solid var(--border)'}}>
+              <div style={{fontWeight: 800, fontSize: '.9rem', marginBottom: 8}}>Rescheduling Policy</div>
+              <p style={{fontSize: '.75rem', color: 'var(--txt-3)', lineHeight: 1.5}}>Free rescheduling up to 4 hours before the slot. Full refund for cancellations made 24 hours in advance.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}

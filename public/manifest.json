@@ -1,0 +1,21 @@
+{
+  "name": "Justice Junction 24/7",
+  "short_name": "JusticeJunction",
+  "description": "Find Your Lawyer Anytime, Anywhere. Verified legal professionals at your fingertips.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FDF8F2",
+  "theme_color": "#7B1D2E",
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

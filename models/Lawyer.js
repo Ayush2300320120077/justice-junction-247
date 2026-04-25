@@ -20,6 +20,7 @@ const lawyerSchema = new mongoose.Schema({
   experienceLevel: { type: String, enum: ['junior','mid','senior'], default: 'junior' },
   city: { type: String, required: true },
   state: { type: String, required: true },
+  courts: [String],
   consultationFee: { type: Number, required: true },
   bio: String,
   languages: [String],
