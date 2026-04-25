@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import LawyerCard from '../components/LawyerCard'
 import SkeletonCard from '../components/SkeletonCard'
 import { useToast } from '../context/ToastContext'
-import { SearchX, Filter, X, ChevronDown, Star, MapPin, Scale, DollarSign, Loader2 } from 'lucide-react'
+import { SearchX, Filter, X, ChevronDown, Star, MapPin, Scale, DollarSign, Loader2, Globe, Video } from 'lucide-react'
 import Head from 'next/head'
 
 const SPECS = ['Criminal Defence','Family Law','Property Law','Corporate Law','Consumer Rights','Labour Law','Civil Disputes','Divorce','Taxation','Intellectual Property','Cyber Law']
@@ -25,6 +25,9 @@ export default function Search() {
   const [city, setCity] = useState('')
   const [maxFee, setMaxFee] = useState('')
   const [sortBy, setSortBy] = useState('rating')
+  const [language, setLanguage] = useState('')
+  const [availability, setAvailability] = useState('')
+  const [minRating, setMinRating] = useState('')
   const [showFilters, setShowFilters] = useState(false)
 
   const observer = useRef()
@@ -47,20 +50,22 @@ export default function Search() {
     if (qCity) setCity(qCity)
     if (qFee) setMaxFee(qFee)
     if (sort) setSortBy(sort)
+    if (router.query.language) setLanguage(router.query.language)
+    if (router.query.availability) setAvailability(router.query.availability)
+    if (router.query.minRating) setMinRating(router.query.minRating)
   }, [router.isReady, router.query])
 
   // Load data
   const fetchData = async (p, isNew = false) => {
     setLoading(true)
     try {
-      const params = new URLSearchParams({
-        page: p,
-        limit: 8,
-        sort: sortBy
-      })
+      const params = new URLSearchParams({ page: p, limit: 8, sort: sortBy })
       if (spec) params.append('specialization', spec)
       if (city) params.append('city', city)
       if (maxFee) params.append('maxFee', maxFee)
+      if (language) params.append('language', language)
+      if (availability) params.append('availability', availability)
+      if (minRating) params.append('minRating', minRating)
 
       const res = await fetch(`/api/search?${params.toString()}`)
       const data = await res.json()
@@ -89,21 +94,25 @@ export default function Search() {
   useEffect(() => {
     setPage(1)
     fetchData(1, true)
-    
-    // Update URL without reload
     const p = {}
     if (spec) p.specialization = spec
     if (city) p.city = city
     if (maxFee) p.maxFee = maxFee
+    if (language) p.language = language
+    if (availability) p.availability = availability
+    if (minRating) p.minRating = minRating
     if (sortBy !== 'rating') p.sort = sortBy
     router.push({ pathname: '/search', query: p }, undefined, { shallow: true })
-  }, [spec, city, maxFee, sortBy])
+  }, [spec, city, maxFee, sortBy, language, availability, minRating])
 
   const clearFilters = () => {
     setSpec('')
     setCity('')
     setMaxFee('')
     setSortBy('rating')
+    setLanguage('')
+    setAvailability('')
+    setMinRating('')
   }
 
   return (
@@ -172,6 +181,36 @@ export default function Search() {
                 <option value="price_low">Fee: Low to High</option>
                 <option value="price_high">Fee: High to Low</option>
               </select>
+            </div>
+
+            <div style={s.filterGroup}>
+              <label style={s.label}><Globe size={14}/> Language</label>
+              <select style={s.select} value={language} onChange={e => setLanguage(e.target.value)}>
+                <option value="">All Languages</option>
+                {['Hindi','English','Tamil','Bengali','Marathi','Gujarati','Telugu','Kannada','Punjabi','Urdu'].map(l => <option key={l}>{l}</option>)}
+              </select>
+            </div>
+
+            <div style={s.filterGroup}>
+              <label style={s.label}><Video size={14}/> Availability</label>
+              <div style={{display:'flex', flexDirection:'column', gap:8}}>
+                {[['','Any'],['online','Online'],['offline','Offline'],['both','Both (Online + Offline)']].map(([v,l]) => (
+                  <label key={v} style={{display:'flex', alignItems:'center', gap:8, fontSize:'.85rem', fontWeight:600, cursor:'pointer'}}>
+                    <input type="radio" name="availability" value={v} checked={availability===v} onChange={() => setAvailability(v)} style={{accentColor:'var(--bur)'}}/>{l}
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div style={s.filterGroup}>
+              <label style={s.label}><Star size={14}/> Minimum Rating</label>
+              <div style={{display:'flex', flexDirection:'column', gap:8}}>
+                {[['','All Ratings'],['4','4+ Stars ★★★★'],['3','3+ Stars ★★★']].map(([v,l]) => (
+                  <label key={v} style={{display:'flex', alignItems:'center', gap:8, fontSize:'.85rem', fontWeight:600, cursor:'pointer'}}>
+                    <input type="radio" name="minRating" value={v} checked={minRating===v} onChange={() => setMinRating(v)} style={{accentColor:'var(--bur)'}}/>{l}
+                  </label>
+                ))}
+              </div>
             </div>
 
             <div style={s.promoBox}>

@@ -17,6 +17,9 @@
   --sh:0 4px 16px rgba(123,29,46,.10);
   --sh-lg:0 12px 40px rgba(123,29,46,.14);
   --sh-xl:0 24px 64px rgba(123,29,46,.18);
+  --sh-premium: 0 20px 40px rgba(123,29,46,0.06), 0 1px 3px rgba(0,0,0,0.05);
+  --glass: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.4);
   --r-sm:6px;--r:10px;--r-lg:14px;--r-xl:20px;--r-2xl:28px;
   --tr:all .2s cubic-bezier(.4,0,.2,1);
 
@@ -156,6 +159,34 @@ h1,h2,h3{font-family:var(--font-display);font-weight:700;line-height:1.12;letter
 .tab-btn{flex:1;padding:.5rem .9rem;border-radius:8px;border:none;background:transparent;cursor:pointer;font-size:.83rem;font-weight:700;color:var(--txt-3);transition:var(--tr);font-family:var(--font-body);}
 .tab-btn.active{background:#fff;color:var(--bur);box-shadow:var(--sh-sm);}
 .pulse-dot{display:inline-block;width:8px;height:8px;background:var(--green);border-radius:50%;animation:pulseDot 2s infinite;}
+/* Glassmorphism */
+.glass {
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+}
+
+.glass-dark {
+  background: rgba(26, 15, 10, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Premium Hover Effects */
+.hover-lift {
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--sh-lg);
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 20px rgba(193, 148, 58, 0.3);
+}
+
 ::-webkit-scrollbar{width:5px;}
 ::-webkit-scrollbar-track{background:var(--cream-2);}
 ::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:3px;}

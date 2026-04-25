@@ -31,9 +31,9 @@ export default function Footer() {
         </div>
 
         {[
-          ['Platform', [['/', 'Find a Lawyer'],['/search','Search Lawyers'],['/lawyer-plans','For Lawyers'],['/document-generator','Document Generator'],['/knowledge-hub','Knowledge Hub']]],
-          ['Practice Areas', [['/search?specialization=Criminal Defence','Criminal Defence'],['/search?specialization=Family Law','Family Law'],['/search?specialization=Property Law','Property Law'],['/search?specialization=Corporate Law','Corporate Law'],['/search?specialization=Consumer Rights','Consumer Rights']]],
-          ['Company', [['/about','About Us'],['/faq','FAQs'],['/join-as-lawyer','Join as Lawyer'],['/privacy-policy','Privacy Policy'],['/disclaimer','Disclaimer'],['/contact','Contact Us']]],
+          ['Platform', [['/', 'Find a Lawyer'],['/search','Search Lawyers'],['/knowledge-hub','Know Your Rights'],['/rights','Legal Guides'],['/document-generator','Document Generator'],['/lawyer-plans','For Lawyers']]],
+          ['Company', [['/about','About Us'],['/how-it-works','How It Works'],['/join-as-lawyer','Join as Advocate'],['/faq','FAQs'],['/contact','Contact Us']]],
+          ['Legal', [['/privacy-policy','Privacy Policy'],['/disclaimer','Disclaimer'],['/terms','Terms of Service']]],
         ].map(([title, links]) => (
           <div key={title}>
             <div style={s.colTitle}>{title}</div>

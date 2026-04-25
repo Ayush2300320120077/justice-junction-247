@@ -1,4 +1,10 @@
 User-agent: *
 Allow: /
+Disallow: /api/
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /my-cases
+Disallow: /book
+Disallow: /favorites
 
 Sitemap: https://justice-junction-app.vercel.app/sitemap.xml

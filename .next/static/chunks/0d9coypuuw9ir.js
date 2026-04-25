@@ -1,7 +1,0 @@
-__turbopack_load_page_chunks__("/lawyer-plans", [
-  "static/chunks/0p.b08nf8zj_s.js",
-  "static/chunks/0skshzv4t891f.js",
-  "static/chunks/0uw~ov22uo1v0.js",
-  "static/chunks/0hov-~lu_vgg..js",
-  "static/chunks/turbopack-0w2b4f2l2_f2f.js"
-])

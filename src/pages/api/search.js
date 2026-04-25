@@ -6,7 +6,7 @@ export default async function handler(req, res) {
 
   try {
     await connectDB()
-    const { city, specialization, maxFee, minRating, sort = 'rating', page = 1, limit = 12 } = req.query
+    const { city, specialization, maxFee, minRating, language, availability, sort = 'rating', page = 1, limit = 12 } = req.query
     
     const filter = { isVerified: true, isBlocked: { $ne: true } }
     if (city) filter.city = new RegExp(city, 'i')
@@ -16,6 +16,10 @@ export default async function handler(req, res) {
     }
     if (maxFee) filter.consultationFee = { $lte: parseFloat(maxFee) }
     if (minRating) filter.averageRating = { $gte: parseFloat(minRating) }
+    if (language) filter.languages = { $elemMatch: { $regex: new RegExp(language, 'i') } }
+    if (availability === 'online') filter.availabilityMode = 'online'
+    else if (availability === 'offline') filter.availabilityMode = 'offline'
+    else if (availability === 'both') filter.availabilityMode = 'both'
     
     const sortMap = {
       rating: { averageRating: -1, totalReviews: -1 }, 

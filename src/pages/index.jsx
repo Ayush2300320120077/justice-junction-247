@@ -30,76 +30,94 @@ export default function Home() {
     <div style={{ paddingTop: 95 }}>
       <Head>
         <title>Justice Junction 24/7 — Find Your Lawyer Anytime, Anywhere</title>
-        <meta name="description" content="Connect with 2,400+ verified lawyers across India. Instant booking. 24/7 availability. Transparent pricing and secure video consultations." />
+        <meta name="description" content="Connect with 500+ verified lawyers across India. Instant booking. 24/7 availability. Transparent pricing and secure video consultations." />
+
+        {/* Open Graph */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://justice-junction-app.vercel.app/" />
+        <meta property="og:title" content="Justice Junction 24/7 — Find Your Lawyer Anytime, Anywhere" />
+        <meta property="og:description" content="Connect with 500+ verified lawyers across India. Instant booking. 24/7 availability." />
+        <meta property="og:image" content="https://justice-junction-app.vercel.app/og-image.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:site_name" content="Justice Junction 24/7" />
+
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Justice Junction 24/7 — Find Your Lawyer Anytime, Anywhere" />
+        <meta name="twitter:description" content="Connect with 500+ verified lawyers across India. Instant booking. 24/7 availability." />
+        <meta name="twitter:image" content="https://justice-junction-app.vercel.app/og-image.png" />
+
+        {/* JSON-LD: LocalBusiness + LegalService */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebSite",
-            "name": "Justice Junction 24/7",
-            "url": "https://justice-junction-app.vercel.app/",
-            "potentialAction": {
-              "@type": "SearchAction",
-              "target": "https://justice-junction-app.vercel.app/search?query={search_term_string}",
-              "query-input": "required name=search_term_string"
+          __html: JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "LegalService",
+              "name": "Justice Junction 24/7",
+              "description": "India's leading lawyer discovery platform. Connect with 500+ verified lawyers 24/7.",
+              "url": "https://justice-junction-app.vercel.app/",
+              "image": "https://justice-junction-app.vercel.app/og-image.png",
+              "telephone": "+919188371233",
+              "address": { "@type": "PostalAddress", "addressCountry": "IN" },
+              "areaServed": "India",
+              "priceRange": "₹500–₹10,000"
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "name": "Justice Junction 24/7",
+              "url": "https://justice-junction-app.vercel.app/",
+              "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://justice-junction-app.vercel.app/search?query={search_term_string}",
+                "query-input": "required name=search_term_string"
+              }
             }
-          })
+          ])
         }} />
       </Head>
 
       {/* HERO SECTION UPGRADE */}
       <section style={s.hero}>
         <div style={s.heroBgWrapper}>
-          {!videoError ? (
-            <video
-              style={s.heroVideo}
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              poster="/justice-bg.png"
-              onError={() => setVideoError(true)}
-            >
-              <source src="/justice-bg-video.mp4" type="video/mp4" />
-            </video>
-          ) : (
-            <img src="/justice-bg.png" alt="Justice Junction HD Background" style={s.heroImage} />
-          )}
+          <div style={s.heroGradient} />
           <div style={s.heroOverlay}></div>
         </div>
         
         <div className="container" style={s.heroContainer}>
-          <div style={s.heroContent}>
+          <div style={s.heroContent} className="reveal-l visible">
             <div style={s.trustBadge}>
               <ShieldCheck size={16} color="var(--bur)"/>
               <span style={{fontSize:'.85rem',fontWeight:700,color:'var(--bur)'}}>Bar Council Verified Professionals</span>
             </div>
             
             <h1 style={s.h1}>
-              Your Legal Solution, <br/>
-              <span style={{color:'var(--bur)'}}>Instantly. Transparently.</span>
+              Find Your Lawyer — <br/>
+              <span style={{color:'var(--bur)'}}>Anytime, Anywhere.</span>
             </h1>
             
             <p style={s.heroSub}>
-              Find top-rated advocates by specialization, city, or pincode. 
-              Book secure video consultations with 100% upfront pricing.
+              Connect with 500+ verified lawyers across India. 
+              Instant booking. 24/7 availability.
             </p>
 
-            <div style={s.searchBox}>
+            <div style={s.searchBox} className="glass hover-glow">
               <div style={s.searchInner}>
                 <div style={s.inputGroup}>
-                  <label style={s.label}>Legal Issue</label>
-                  <select style={s.select} value={spec} onChange={e=>setSpec(e.target.value)}>
+                  <label style={s.label} htmlFor="issue-select">Legal Issue</label>
+                  <select id="issue-select" style={s.select} value={spec} onChange={e=>setSpec(e.target.value)}>
                     <option value="">What do you need help with?</option>
                     {SPECS.map(a=><option key={a}>{a}</option>)}
                   </select>
                 </div>
                 <div style={s.dividerV} />
                 <div style={s.inputGroup}>
-                  <label style={s.label}>City or Pincode</label>
+                  <label style={s.label} htmlFor="city-input">City or Pincode</label>
                   <div style={{display:'flex', alignItems:'center', gap:8}}>
                     <Search size={18} color="var(--txt-3)"/>
                     <input 
+                      id="city-input"
                       style={s.input} 
                       placeholder="e.g. 110001 or Delhi" 
                       value={query} 
@@ -108,14 +126,14 @@ export default function Home() {
                     />
                   </div>
                 </div>
-                <button className="btn btn-primary btn-lg" onClick={goSearch} style={s.searchBtn}>
+                <button className="btn btn-primary btn-lg hover-lift" onClick={goSearch} style={s.searchBtn}>
                   Find My Lawyer
                 </button>
               </div>
             </div>
 
             <div style={s.heroBadges}>
-              {[{i:<Award size={18}/>, t:'Top Rated'}, {i:<Clock size={18}/>, t:'24/7 Support'}, {i:<DollarSign size={18}/>, t:'Fixed Fees'}].map((item, idx) => (
+              {[{i:<ShieldCheck size={18}/>, t:'Verified Lawyers'}, {i:<Zap size={18}/>, t:'Instant Booking'}, {i:<Lock size={18}/>, t:'Secure & Confidential'}].map((item, idx) => (
                 <div key={idx} style={s.heroBadgeItem}>
                   {item.i} <span>{item.t}</span>
                 </div>
@@ -241,13 +259,12 @@ export default function Home() {
 const s = {
   hero: { padding: '6rem 0 8rem', position: 'relative', overflow: 'hidden', minHeight: '90vh', display: 'flex', alignItems: 'center' },
   heroBgWrapper: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 0 },
-  heroVideo: { width: '100%', height: '100%', objectFit: 'cover' },
-  heroImage: { width: '100%', height: '100%', objectFit: 'cover' },
-  heroOverlay: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'linear-gradient(135deg, rgba(253,248,242,0.94) 0%, rgba(253,248,242,0.85) 100%)', zIndex: 1 },
+  heroGradient: { position: 'absolute', inset: 0, background: 'radial-gradient(circle at 70% 30%, var(--gold-p), transparent 70%), radial-gradient(circle at 10% 80%, var(--bur-l), transparent 50%)', opacity: 0.15 },
+  heroOverlay: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'linear-gradient(135deg, rgba(253,248,242,0.92) 0%, rgba(253,248,242,0.8) 100%)', zIndex: 1 },
   heroContainer: { position: 'relative', zIndex: 2, display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '4rem', alignItems: 'center' },
   heroContent: { maxWidth: 650 },
-  trustBadge: { display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(123,29,46,.08)', border: '1px solid rgba(123,29,46,.15)', borderRadius: 50, padding: '.4rem 1.2rem', marginBottom: '2rem' },
-  h1: { fontFamily: "'Playfair Display',serif", fontSize: 'clamp(3rem, 6vw, 4.5rem)', fontWeight: 800, lineHeight: 1.1, marginBottom: '1.5rem', color: 'var(--txt)' },
+  trustBadge: { display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(123,29,46,.06)', border: '1px solid rgba(123,29,46,.12)', borderRadius: 50, padding: '.4rem 1.2rem', marginBottom: '2rem', backdropFilter:'blur(4px)' },
+  h1: { fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(3rem, 6vw, 4.5rem)', fontWeight: 800, lineHeight: 1.05, marginBottom: '1.5rem', color: 'var(--txt)', letterSpacing: '-0.02em' },
   heroSub: { fontSize: '1.2rem', color: 'var(--txt-2)', marginBottom: '3rem', lineHeight: 1.6, fontWeight: 500 },
   searchBox: { background: '#fff', padding: '8px', borderRadius: '24px', boxShadow: '0 20px 50px rgba(0,0,0,0.1)', border: '1px solid var(--border)', maxWidth: 750 },
   searchInner: { display: 'flex', alignItems: 'center', gap: 12, padding: '8px' },

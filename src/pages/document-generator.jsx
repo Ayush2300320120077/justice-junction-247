@@ -7,19 +7,40 @@ const TEMPLATES = [
   { id: 'rental', name: 'Rental Agreement', description: 'Standard residential lease agreement for India.' },
   { id: 'affidavit', name: 'General Affidavit', description: 'Standard self-declaration for various legal purposes.' },
   { id: 'promissory', name: 'Promissory Note', description: 'Legal document for debt acknowledgment and repayment.' },
+  { id: 'legal-notice', name: 'Legal Notice', description: 'Formal legal notice to demand action or assert rights before filing a case.' },
+  { id: 'consumer-complaint', name: 'Consumer Complaint', description: 'Complaint letter to Consumer Forum under Consumer Protection Act 2019.' },
+  { id: 'nda', name: 'Non-Disclosure Agreement', description: 'Mutual or one-way NDA for business and employment purposes.' },
 ]
 
 export default function DocumentGenerator() {
   const [selectedTemplate, setSelectedTemplate] = useState(null)
   const [formData, setFormData] = useState({})
   const [isGenerating, setIsGenerating] = useState(false)
+  const [showFreemiumGate, setShowFreemiumGate] = useState(false)
+
+  const getUsageCount = () => {
+    if (typeof window === 'undefined') return 0
+    const data = JSON.parse(localStorage.getItem('jj_doc_usage') || '{}')
+    const month = new Date().toISOString().slice(0, 7)
+    return data[month] || 0
+  }
+
+  const incrementUsage = () => {
+    const data = JSON.parse(localStorage.getItem('jj_doc_usage') || '{}')
+    const month = new Date().toISOString().slice(0, 7)
+    data[month] = (data[month] || 0) + 1
+    localStorage.setItem('jj_doc_usage', JSON.stringify(data))
+  }
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
   const generatePDF = () => {
+    const count = getUsageCount()
+    if (count >= 2) { setShowFreemiumGate(true); return }
     setIsGenerating(true)
+    incrementUsage()
     const doc = new jsPDF()
     const now = new Date().toLocaleDateString()
 
@@ -73,6 +94,46 @@ export default function DocumentGenerator() {
       doc.text(`2. That ${formData.point2 || '____________________________________________________'}`, 20, y)
       y += 10
       doc.text(`3. That the contents of this affidavit are true to the best of my knowledge.`, 20, y)
+    } else if (selectedTemplate.id === 'legal-notice') {
+      doc.text(`From:`, 20, y); y += 7
+      doc.setFont('helvetica', 'bold')
+      doc.text(formData.senderName || '____________________', 20, y); y += 7
+      doc.setFont('helvetica', 'normal')
+      doc.text(formData.senderAddress || '____________________', 20, y); y += 12
+      doc.text(`To,`, 20, y); y += 7
+      doc.setFont('helvetica', 'bold')
+      doc.text(formData.recipientName || '____________________', 20, y); y += 7
+      doc.setFont('helvetica', 'normal')
+      doc.text(formData.recipientAddress || '____________________', 20, y); y += 12
+      doc.text(`Subject: Legal Notice — ${formData.subject || '____________________'}`, 20, y); y += 12
+      doc.text(`Sir/Madam,`, 20, y); y += 10
+      const noticeParagraph = `Through this notice, I, ${formData.senderName || '____'}, hereby inform you of the following matter: ${formData.grievance || '____'}. You are hereby called upon to ${formData.demand || '____'} within ${formData.days || '15'} days of receipt of this notice. Failing which, I shall be constrained to initiate appropriate legal proceedings against you without any further notice, at your risk, cost, and consequences.`
+      const noticeLines = doc.splitTextToSize(noticeParagraph, 165)
+      doc.text(noticeLines, 20, y)
+    } else if (selectedTemplate.id === 'consumer-complaint') {
+      doc.text(`To,`, 20, y); y += 7
+      doc.text(`The President, District Consumer Disputes Redressal Commission`, 20, y); y += 12
+      doc.text(`COMPLAINANT: ${formData.complainantName || '____________________'}`, 20, y); y += 7
+      doc.text(`Address: ${formData.complainantAddress || '____________________'}`, 20, y); y += 12
+      doc.text(`OPPOSITE PARTY: ${formData.oppositeName || '____________________'}`, 20, y); y += 7
+      doc.text(`Address: ${formData.oppositeAddress || '____________________'}`, 20, y); y += 12
+      doc.text(`SUBJECT: Complaint under Consumer Protection Act 2019`, 20, y); y += 12
+      doc.text(`Date of purchase/service: ${formData.purchaseDate || '____'}`, 20, y); y += 7
+      doc.text(`Amount paid: Rs. ${formData.amount || '____'}`, 20, y); y += 7
+      const grievanceLines = doc.splitTextToSize(`Grievance: ${formData.grievance || '____'}`, 165)
+      doc.text(grievanceLines, 20, y); y += grievanceLines.length * 7 + 5
+      doc.text(`Relief sought: ${formData.relief || 'Refund, compensation, and cost of litigation.'}`, 20, y)
+    } else if (selectedTemplate.id === 'nda') {
+      doc.text(`This Non-Disclosure Agreement is entered into on ${now} between:`, 20, y); y += 10
+      doc.setFont('helvetica', 'bold')
+      doc.text(`DISCLOSING PARTY: ${formData.disclosingParty || '____________________'}`, 20, y); y += 10
+      doc.text(`RECEIVING PARTY: ${formData.receivingParty || '____________________'}`, 20, y); y += 10
+      doc.setFont('helvetica', 'normal')
+      doc.text(`Purpose: ${formData.purpose || '____________________'}`, 20, y); y += 10
+      doc.text(`Duration: ${formData.duration || '2'} years from the date of signing.`, 20, y); y += 10
+      const ndaText = `The Receiving Party agrees to: (a) Keep all Confidential Information strictly confidential; (b) Not disclose any Confidential Information to third parties without prior written consent; (c) Use Confidential Information solely for the stated Purpose; (d) Notify the Disclosing Party immediately upon any unauthorized disclosure.`
+      const ndaLines = doc.splitTextToSize(ndaText, 165)
+      doc.text(ndaLines, 20, y)
     } else if (selectedTemplate.id === 'promissory') {
       doc.text(`Rs. ${formData.amount || '________'}`, 160, y)
       y += 15
@@ -106,8 +167,29 @@ export default function DocumentGenerator() {
     <div style={{ paddingTop: 95, background: '#F8F9FA', minHeight: '100vh' }}>
       <Head>
         <title>Legal Document Generator — Justice Junction 24/7</title>
-        <meta name="description" content="Generate professional legal documents like Rental Agreements, Affidavits, and Promissory Notes instantly." />
+        <meta name="description" content="Generate professional legal documents: Rental Agreements, Legal Notices, NDA, Affidavits, Consumer Complaints and more. Free PDF download." />
+        <meta property="og:title" content="Legal Document Generator — Justice Junction 24/7" />
+        <meta property="og:description" content="Generate professional legal documents instantly. Fill the form, preview, and download PDF." />
+        <meta property="og:image" content="https://justice-junction-app.vercel.app/og-image.png" />
+        <meta property="og:url" content="https://justice-junction-app.vercel.app/document-generator" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Legal Document Generator — Justice Junction 24/7" />
+        <meta name="twitter:image" content="https://justice-junction-app.vercel.app/og-image.png" />
       </Head>
+
+      {/* Freemium Gate Modal */}
+      {showFreemiumGate && (
+        <div className="modal-overlay" onClick={() => setShowFreemiumGate(false)}>
+          <div className="modal" onClick={e => e.stopPropagation()} style={{textAlign:'center'}}>
+            <div style={{fontSize:'3rem', marginBottom:'1rem'}}>📄</div>
+            <h3 style={{fontFamily:"'Playfair Display',serif", fontSize:'1.5rem', marginBottom:'0.8rem'}}>Free Limit Reached</h3>
+            <p style={{color:'var(--txt-3)', marginBottom:'1.5rem'}}>You've used your 2 free documents for this month. Upgrade to Justice Junction Pro for unlimited document generation.</p>
+            <Link href="/pricing" className="btn btn-primary btn-lg" style={{width:'100%', marginBottom:'0.8rem'}}>Upgrade to Pro</Link>
+            <button className="btn btn-ghost" style={{width:'100%'}} onClick={() => setShowFreemiumGate(false)}>Maybe Later</button>
+          </div>
+        </div>
+      )}
 
       <div className="container" style={{ padding: '3rem 5vw' }}>
         <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
@@ -170,10 +252,47 @@ export default function DocumentGenerator() {
                       <div className="form-group"><label>Interest Rate (% p.a.)</label><input name="interest" type="number" onChange={handleInputChange} /></div>
                     </>
                   )}
+                  {selectedTemplate.id === 'legal-notice' && (
+                    <>
+                      <div className="form-group"><label>Sender Full Name</label><input name="senderName" onChange={handleInputChange} placeholder="Your full name"/></div>
+                      <div className="form-group"><label>Sender Address</label><input name="senderAddress" onChange={handleInputChange} placeholder="Your full address"/></div>
+                      <div className="form-group"><label>Recipient Name</label><input name="recipientName" onChange={handleInputChange} placeholder="Person/company to serve"/></div>
+                      <div className="form-group"><label>Recipient Address</label><input name="recipientAddress" onChange={handleInputChange} placeholder="Their full address"/></div>
+                      <div className="form-group"><label>Subject of Notice</label><input name="subject" onChange={handleInputChange} placeholder="e.g. Unpaid dues of ₹50,000"/></div>
+                      <div className="form-group"><label>Grievance (what happened)</label><textarea name="grievance" rows={3} onChange={handleInputChange} placeholder="Briefly describe the issue..."/></div>
+                      <div className="form-group"><label>Demand (what you want them to do)</label><input name="demand" onChange={handleInputChange} placeholder="e.g. Pay the outstanding amount"/></div>
+                      <div className="form-group"><label>Days to Respond</label><input name="days" type="number" onChange={handleInputChange} placeholder="15"/></div>
+                    </>
+                  )}
+                  {selectedTemplate.id === 'consumer-complaint' && (
+                    <>
+                      <div className="form-group"><label>Your Name (Complainant)</label><input name="complainantName" onChange={handleInputChange}/></div>
+                      <div className="form-group"><label>Your Address</label><input name="complainantAddress" onChange={handleInputChange}/></div>
+                      <div className="form-group"><label>Opposite Party Name</label><input name="oppositeName" onChange={handleInputChange} placeholder="Company/seller name"/></div>
+                      <div className="form-group"><label>Opposite Party Address</label><input name="oppositeAddress" onChange={handleInputChange}/></div>
+                      <div className="form-group"><label>Date of Purchase/Service</label><input name="purchaseDate" type="date" onChange={handleInputChange}/></div>
+                      <div className="form-group"><label>Amount Paid (₹)</label><input name="amount" type="number" onChange={handleInputChange}/></div>
+                      <div className="form-group"><label>Grievance</label><textarea name="grievance" rows={3} onChange={handleInputChange} placeholder="Describe the defect or poor service..."/></div>
+                      <div className="form-group"><label>Relief Sought</label><input name="relief" onChange={handleInputChange} placeholder="e.g. Full refund + ₹10,000 compensation"/></div>
+                    </>
+                  )}
+                  {selectedTemplate.id === 'nda' && (
+                    <>
+                      <div className="form-group"><label>Disclosing Party (Shares Info)</label><input name="disclosingParty" onChange={handleInputChange} placeholder="Name or Company"/></div>
+                      <div className="form-group"><label>Receiving Party (Receives Info)</label><input name="receivingParty" onChange={handleInputChange} placeholder="Name or Company"/></div>
+                      <div className="form-group"><label>Purpose of Disclosure</label><input name="purpose" onChange={handleInputChange} placeholder="e.g. Evaluating a business partnership"/></div>
+                      <div className="form-group"><label>Duration (years)</label><input name="duration" type="number" onChange={handleInputChange} placeholder="2"/></div>
+                    </>
+                  )}
                 </div>
                 <button className="btn btn-primary btn-lg" style={{width:'100%', marginTop: '2rem', gap: 8}} onClick={generatePDF} disabled={isGenerating}>
                   {isGenerating ? 'Generating...' : <><Download size={20}/> Download PDF Draft</>}
                 </button>
+                {typeof window !== 'undefined' && getUsageCount() > 0 && (
+                  <p style={{textAlign:'center', fontSize:'.75rem', color:'var(--txt-3)', marginTop:'0.5rem'}}>
+                    {2 - Math.min(getUsageCount(), 2)} free download{2 - Math.min(getUsageCount(), 2) !== 1 ? 's' : ''} remaining this month
+                  </p>
+                )}
               </div>
 
               <div style={s.previewSide}>
