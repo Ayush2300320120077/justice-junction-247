@@ -20,6 +20,7 @@ const lawyerSchema = new mongoose.Schema({
   experienceLevel: { type: String, enum: ['junior','mid','senior'], default: 'junior' },
   city: { type: String, required: true },
   state: { type: String, required: true },
+  pincode: { type: String },
   courts: [String],
   consultationFee: { type: Number, required: true },
   bio: String,
@@ -41,6 +42,23 @@ const lawyerSchema = new mongoose.Schema({
     priority: { type: Boolean, default: false },
     maxBookings: { type: Number, default: 5 }
   },
+  // Personal Information (new)
+  dateOfBirth: { type: Date },
+  gender: { type: String, enum: ['Male','Female','Other','Prefer not to say'] },
+  address: { type: String },
+  // Professional Information (new)
+  barCouncilState: { type: String },
+  yearOfEnrollment: { type: Number },
+  designation: { type: String },
+  currentFirm: { type: String },
+  // Consultation & Availability (new)
+  consultationModes: [String],
+  availableDays: [String],
+  availableTimeFrom: { type: String },
+  availableTimeTo: { type: String },
+  // Online Presence (new)
+  linkedinUrl: { type: String },
+  websiteUrl: { type: String },
   createdAt: { type: Date, default: Date.now }
 })
 

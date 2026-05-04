@@ -12,6 +12,8 @@ const STATIC_PAGES = [
   { url: '/document-generator', priority: '0.7', changefreq: 'monthly' },
   { url: '/faq', priority: '0.7', changefreq: 'monthly' },
   { url: '/join-as-lawyer', priority: '0.8', changefreq: 'monthly' },
+  { url: '/how-it-works', priority: '0.7', changefreq: 'monthly' },
+  { url: '/lawyer-plans', priority: '0.7', changefreq: 'monthly' },
   { url: '/about', priority: '0.6', changefreq: 'monthly' },
   { url: '/contact', priority: '0.6', changefreq: 'monthly' },
   { url: '/disclaimer', priority: '0.5', changefreq: 'yearly' },

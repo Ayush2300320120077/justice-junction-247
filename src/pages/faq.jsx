@@ -6,23 +6,31 @@ const FAQS = [
   {
     category: 'General',
     items: [
-      { q: 'Is Justice Junction 24/7 free to use?', a: 'Yes! Browsing lawyer profiles, reading legal guides, and using our AI assistant are completely free. You only pay the consultation fee set directly by the lawyer when you book a session. There are no hidden platform charges for clients.' },
-      { q: 'Are the lawyers on this platform verified?', a: 'Absolutely. Every lawyer on Justice Junction undergoes a manual verification process where we check their Bar Council of India registration number and professional credentials. Look for the blue "Verified" badge on their profile for confirmed advocates.' },
-      { q: 'How do I book a consultation?', a: 'It\'s simple: Search for a lawyer by your city or legal issue → View their profile and fees → Click "Book Appointment Now" → Pay securely via Razorpay → Receive a confirmation and meeting link. The entire process takes under 5 minutes.' },
+      { q: 'Is Justice Junction 24/7 free to use?', a: 'Yes, completely free for clients. You only pay the lawyer\'s consultation fee which is shown upfront before you book. Justice Junction charges zero platform fee to clients.' },
+      { q: 'Are the lawyers on this platform verified?', a: 'Yes. Every lawyer on our platform goes through a Bar Council registration verification before their profile goes live. You can also see their Bar Council number on their profile.' },
+      { q: 'How do I book a consultation?', a: 'Search for a lawyer by practice area or city, view their profile and fee, then click Book. You\'ll be prompted to pay the consultation fee via Razorpay and confirm a time slot. You\'ll receive a confirmation on your registered email.' },
     ]
   },
   {
     category: 'Language & Accessibility',
     items: [
-      { q: 'Can I get legal help in Hindi?', a: 'Yes! Many lawyers on our platform speak Hindi and other regional languages including Tamil, Bengali, Marathi, Gujarati, and more. You can filter lawyers by language spoken on our search page. Our AI assistant also responds in Hindi.' },
+      { q: 'Can I get legal help in Hindi?', a: 'Yes. You can filter lawyers by language spoken. Many of our advocates are fluent in Hindi, Bengali, Tamil, Telugu, Marathi, Gujarati, and other regional languages.' },
     ]
   },
   {
     category: 'Scope of Services',
     items: [
-      { q: 'What types of legal issues can I get help with?', a: 'Justice Junction covers a wide range of practice areas including Criminal Defence, Family Law, Property Disputes, Consumer Rights, Labour Law, Corporate Law, Cyber Crime, Divorce, Cheque Bounce, RTI, and more. Use our search to find the right specialist.' },
-      { q: 'Is my information kept confidential?', a: 'Yes. All communications on our platform are encrypted. We do not share your personal details with third parties without your consent. Your case information is only visible to you and the lawyer you engage. Please read our Privacy Policy for full details.' },
-      { q: 'How is this different from hiring a lawyer directly?', a: 'Justice Junction makes finding the right lawyer faster, safer, and more transparent. You can compare fees, read verified reviews, check qualifications, and book consultations online — all before committing. Unlike hiring directly, you have full price visibility upfront with no surprise costs. We also provide a money-back guarantee if a lawyer doesn\'t show up.' },
+      { q: 'What types of legal issues can I get help with?', a: 'We cover Criminal Defence, Family Law, Property Law, Corporate Law, Consumer Rights, Labour Law, Civil Disputes, Divorce, Taxation, Intellectual Property, Cyber Law, Immigration, and Constitutional Law — across all courts.' },
+      { q: 'Is my information kept confidential?', a: 'Absolutely. All communications between you and your lawyer are private. We do not share your personal data with third parties. Payments are secured by Razorpay with 256-bit encryption.' },
+      { q: 'How is this different from hiring a lawyer directly?', a: 'Direct hiring often involves opaque pricing, no reviews, and no easy way to verify credentials. Justice Junction gives you upfront fixed fees, verified Bar Council credentials, ratings from real clients, and the ability to compare multiple lawyers before deciding.' },
+    ]
+  },
+  {
+    category: 'Bookings & More',
+    items: [
+      { q: 'Can I cancel or reschedule a booking?', a: 'Yes. Cancellations made 24 hours before the appointment are eligible for a full refund. Reschedules can be done up to 12 hours before the appointment from your dashboard.' },
+      { q: 'How do lawyers join the platform?', a: 'Lawyers can register at /join-as-lawyer, complete their professional profile, and choose a subscription plan. After Bar Council verification, their profile goes live within 48 hours.' },
+      { q: 'Is there a mobile app?', a: 'Our web platform is fully mobile-optimised and works perfectly on all devices. A dedicated Android and iOS app is coming soon.' },
     ]
   }
 ]
@@ -31,8 +39,8 @@ export default function FAQPage() {
   return (
     <div style={{ paddingTop:95, background:'#F8F9FA', minHeight:'100vh' }}>
       <Head>
-        <title>Frequently Asked Questions — Justice Junction 24/7</title>
-        <meta name="description" content="Find answers to common questions about finding lawyers, booking consultations, payments, and legal help in Hindi on Justice Junction 24/7." />
+        <title>FAQ — Justice Junction 24/7</title>
+        <meta name="description" content="Frequently asked questions about booking lawyers, payments, cancellations and platform features." />
         <meta property="og:title" content="FAQ — Justice Junction 24/7" />
         <meta property="og:description" content="Everything you need to know about finding lawyers and booking consultations on Justice Junction 24/7." />
         <meta property="og:image" content="https://justice-junction-app.vercel.app/og-image.png" />

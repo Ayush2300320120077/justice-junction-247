@@ -7,9 +7,27 @@ import dynamic from 'next/dynamic'
 import { useEffect } from 'react'
 const AIChatWidget = dynamic(() => import('../components/AIChatWidget'), { ssr: false })
 const WhatsAppHelpline = dynamic(() => import('../components/WhatsAppHelpline'), { ssr: false })
+const CookieConsent = dynamic(() => import('../components/CookieConsent'), { ssr: false })
+const BackToTop = dynamic(() => import('../components/BackToTop'), { ssr: false })
 import Head from 'next/head'
+import { useRouter } from 'next/router'
+import { useState } from 'react'
 
 function MyApp({ Component, pageProps }) {
+  const router = useRouter()
+  const [scrollProgress, setScrollProgress] = useState(0)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight
+      const progress = (window.scrollY / totalHeight) * 100
+      setScrollProgress(progress)
+    }
+    
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
   useEffect(() => {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js').catch(console.error)
@@ -31,11 +49,22 @@ function MyApp({ Component, pageProps }) {
       </Head>
       <AuthProvider>
         <ToastProvider>
+          <div className="scroll-progress" style={{ width: `${scrollProgress}%` }} />
+          <div className="global-bg">
+            <div className="bg-mesh" />
+            <div className="floating-shape" style={{ width: '40vw', height: '40vw', top: '-10%', left: '-10%' }} />
+            <div className="floating-shape" style={{ width: '30vw', height: '30vw', bottom: '10%', right: '-5%', animationDelay: '-5s' }} />
+          </div>
+          
           <Navbar />
-          <Component {...pageProps} />
+          <div key={router.asPath} className="page-reveal">
+            <Component {...pageProps} />
+          </div>
           <Footer />
           <AIChatWidget />
           <WhatsAppHelpline />
+          <BackToTop />
+          <CookieConsent />
         </ToastProvider>
       </AuthProvider>
     </>

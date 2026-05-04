@@ -113,14 +113,14 @@ export default function AIChatWidget() {
   return (
     <div style={s.container}>
       {!isOpen && (
-        <button style={s.fab} onClick={() => setIsOpen(true)} aria-label="Ask a legal question">
+        <button style={s.fab} onClick={() => setIsOpen(true)} aria-label="Ask a legal question" className="fab-responsive">
           <MessageSquare size={28} />
-          <span style={s.fabLabel}>Ask a Legal Question — Free</span>
+          <span style={s.fabLabel} className="mobile-hide fab-label-mobile">Ask a Legal Question — Free</span>
         </button>
       )}
 
       {isOpen && (
-        <div style={s.window}>
+        <div style={s.window} className="chat-window-responsive">
           <div style={s.header}>
             <div style={{display:'flex', alignItems:'center', gap:10}}>
               <div style={s.botIcon}><Bot size={20}/></div>

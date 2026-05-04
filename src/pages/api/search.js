@@ -9,7 +9,13 @@ export default async function handler(req, res) {
     const { city, specialization, maxFee, minRating, language, availability, sort = 'rating', page = 1, limit = 12 } = req.query
     
     const filter = { isVerified: true, isBlocked: { $ne: true } }
-    if (city) filter.city = new RegExp(city, 'i')
+    if (city) {
+      filter.$or = [
+        { city: new RegExp(city, 'i') },
+        { state: new RegExp(city, 'i') },
+        { pincode: new RegExp(city, 'i') }
+      ]
+    }
     if (specialization) {
       const specs = Array.isArray(specialization) ? specialization : [specialization]
       filter.specializations = { $in: specs.map(s => new RegExp(s, 'i')) }

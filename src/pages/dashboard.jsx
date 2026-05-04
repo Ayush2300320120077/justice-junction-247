@@ -81,7 +81,7 @@ function ClientDash() {
       </div>
 
       {tab === 'bookings' && (
-        <div style={s.section}>
+        <div style={s.section} className="dash-section-responsive">
           <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'1.2rem'}}>
             <h3 style={{fontWeight:800}}>My Bookings</h3>
             <Link href="/search" className="btn btn-primary btn-sm">+ New Booking</Link>
@@ -90,7 +90,7 @@ function ClientDash() {
           bookings.length === 0 ? (
             <div style={s.empty}><div style={{color:'var(--txt-3)',display:'flex',justifyContent:'center',marginBottom:12}}><ClipboardList size={40}/></div><p>No bookings yet.</p><Link href="/search" className="btn btn-primary" style={{marginTop:12,display:'inline-block'}}>Find a Lawyer</Link></div>
           ) : bookings.map(b => (
-            <div key={b._id} style={s.bookingItem}>
+            <div key={b._id} style={s.bookingItem} className="case-card-premium">
               <div style={s.biIcon}><Scale size={20} color="var(--bur)" /></div>
               <div style={{flex:1}}>
                 <div style={{fontWeight:800,fontSize:'.95rem'}}>{b.lawyerName}</div>
@@ -105,7 +105,7 @@ function ClientDash() {
       )}
 
       {tab === 'tracker' && (
-        <div style={s.section}>
+        <div style={s.section} className="dash-section-responsive">
           <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'1.5rem'}}>
             <h3 style={{fontWeight:800}}>Personal Case Tracker</h3>
             <button className="btn btn-primary btn-sm" onClick={() => setShowAddCase(true)}><Plus size={16}/> Add Case</button>
@@ -113,7 +113,7 @@ function ClientDash() {
 
           {showAddCase && (
             <div style={s.addForm}>
-              <div style={s.formGrid}>
+              <div style={s.formGrid} className="dash-form-grid-responsive">
                 <div className="form-group"><label>Case Number</label><input value={newCase.caseNumber} onChange={e=>setNewCase({...newCase, caseNumber:e.target.value})} placeholder="e.g. CNR: DLCT01-000..."/></div>
                 <div className="form-group"><label>Court Name</label><input value={newCase.courtName} onChange={e=>setNewCase({...newCase, courtName:e.target.value})} placeholder="e.g. Saket District Court"/></div>
                 <div className="form-group"><label>Opposite Party / Advocate</label><input value={newCase.lawyerName} onChange={e=>setNewCase({...newCase, lawyerName:e.target.value})} /></div>
@@ -156,7 +156,7 @@ function ClientDash() {
       )}
 
       {tab === 'updates' && (
-        <div style={s.section}>
+        <div style={s.section} className="dash-section-responsive">
           <h3 style={{fontWeight:800,marginBottom:'1.2rem'}}>Verified Case Updates</h3>
           {updates.length === 0 ? (
             <div style={s.empty}><div style={{color:'var(--txt-3)',display:'flex',justifyContent:'center',marginBottom:12}}><Activity size={40}/></div><p>No updates yet. Your lawyer will post updates here.</p></div>
@@ -238,13 +238,13 @@ function LawyerDash() {
       </div>
 
       {tab === 'bookings' && (
-        <div style={s.section}>
+        <div style={s.section} className="dash-section-responsive">
           <h3 style={{fontWeight:800,marginBottom:'1.2rem'}}>Client Bookings</h3>
           {loading ? <div className="spinner-wrap"><div className="spinner"></div></div> :
           bookings.length === 0 ? (
             <div style={s.empty}><div style={{color:'var(--txt-3)',display:'flex',justifyContent:'center',marginBottom:12}}><ClipboardList size={40}/></div><p>No client bookings yet. Your profile is live!</p></div>
           ) : bookings.map(b => (
-            <div key={b._id} style={s.bookingItem}>
+            <div key={b._id} style={s.bookingItem} className="case-card-premium">
               <div style={s.biIcon}><User size={20} color="var(--bur)" /></div>
               <div style={{flex:1}}>
                 <div style={{fontWeight:800,fontSize:'.95rem'}}>{b.clientName}</div>
@@ -264,7 +264,7 @@ function LawyerDash() {
       )}
 
       {tab === 'post' && (
-        <div style={s.section}>
+        <div style={s.section} className="dash-section-responsive">
           <h3 style={{fontWeight:800,marginBottom:'1.5rem'}}>Post Case Update</h3>
           <div style={{background:'var(--cream-2)',border:'1px solid var(--border)',borderRadius:16,padding:'2rem'}}>
             <div className="form-group">
@@ -280,7 +280,7 @@ function LawyerDash() {
               <textarea rows="4" placeholder="Describe what happened in the case today..." value={upForm.description} onChange={e=>setUpForm(f=>({...f,description:e.target.value}))}
                 style={{width:'100%',padding:'0.8rem 1rem',border:'1.5px solid var(--border)',borderRadius:12,fontSize:'0.92rem',color:'var(--text)',outline:'none',resize:'vertical',fontFamily:'Plus Jakarta Sans,sans-serif'}} />
             </div>
-            <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'1.5rem'}}>
+            <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'1.5rem'}} className="dash-form-grid-responsive">
               <div className="form-group">
                 <label>Stage</label>
                 <select value={upForm.stage} onChange={e=>setUpForm(f=>({...f,stage:e.target.value}))}>
@@ -303,7 +303,7 @@ function LawyerDash() {
       )}
 
       {tab === 'profile' && (
-        <div style={s.section}>
+        <div style={s.section} className="dash-section-responsive">
           <h3 style={{fontWeight:800,marginBottom:'1.2rem'}}>Practice Settings</h3>
           <p style={{color:'var(--txt-3)', marginBottom:'2rem'}}>Update your specialization, fee, and availability status.</p>
           <div style={{background:'var(--cream-2)', border:'1px solid var(--border)', borderRadius:16, padding:'2rem', textAlign:'center'}}>
@@ -334,43 +334,48 @@ export default function Dashboard() {
   const handleLogout = () => { logout(); router.push('/') }
 
   return (
-    <div className="page-wrap" style={{paddingTop: 95, background: '#F8F9FA', minHeight: '100vh'}}>
+    <div className="page-reveal" style={{ paddingTop: 95, background: '#F8F9FA', minHeight: '100vh' }}>
       <Head>
         <title>My Dashboard — Justice Junction 24/7</title>
       </Head>
-      <div className="container" style={{maxWidth:1400}}>
+      <div className="container" style={{ maxWidth: 1400 }}>
+        
+        {/* Personalized Welcome Banner */}
+        <div className="section-bg-abstract parallax" style={{ borderRadius: 32, padding: '4rem 3rem', marginBottom: '3rem', color: '#fff', position: 'relative', overflow: 'hidden', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ position: 'relative', zIndex: 2 }}>
+            <div className="tag" style={{ background: 'var(--gold)', color: '#000', border: 'none', marginBottom: '1rem' }}>Active Session</div>
+            <h1 className="boutique-heading" style={{ fontSize: '3rem', color: '#fff', fontStyle: 'normal', marginBottom: 8 }}>Welcome, {user?.name?.split(' ')[0]}!</h1>
+            <p style={{ fontSize: '1.1rem', opacity: 0.9 }}>
+              {user?.role === 'lawyer' ? 'Your legal practice is flourishing. 4 new inquiries today.' : "Your legal matters are being handled. 2 updates pending review."}
+            </p>
+          </div>
+          <div className="hide-mobile" style={{ textAlign: 'right', position: 'relative', zIndex: 2 }}>
+            <div style={{ fontSize: '2.5rem', fontWeight: 800, fontFamily: 'Sora, sans-serif' }}>{new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</div>
+            <div style={{ fontSize: '.9rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 2, opacity: 0.8 }}>System Status: Operational</div>
+          </div>
+        </div>
+
         <div className="grid-dashboard" style={s.wrap}>
           {/* Sidebar */}
-          <div style={s.sidebar}>
+          <div style={{ ...s.sidebar, background: 'rgba(255,255,255,0.8)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.5)' }}>
             <div style={s.sbUser}>
               <div style={s.sbAvatar}>{initials(user?.name)}</div>
-              <div style={{fontWeight:800,fontSize:'1rem', marginBottom:2}}>{user?.name}</div>
+              <div style={{ fontWeight: 800, fontSize: '1.1rem', marginBottom: 2 }}>{user?.name}</div>
               <div style={s.sbRoleBadge}>
-                {user?.role==='lawyer'?<><Scale size={12}/> Advocate</>:<><User size={12}/> Client</>}
+                {user?.role === 'lawyer' ? <><Scale size={12} /> Advocate</> : <><User size={12} /> Client</>}
               </div>
             </div>
-            <div style={{display:'flex',flexDirection:'column',gap:4}}>
-              <Link href="/dashboard" style={{...s.sbLink, ...(router.pathname==='/dashboard'?s.sbLinkActive:{})}}><LayoutDashboard size={18}/> Dashboard</Link>
-              <Link href="/search" style={s.sbLink}><Search size={18}/> Browse Lawyers</Link>
-              <Link href="/knowledge-hub" style={s.sbLink}><FileText size={18}/> Knowledge Hub</Link>
-              <div style={{margin: '1.5rem 0', height: 1, background: 'var(--border)'}} />
-              <button onClick={handleLogout} style={{...s.sbLink,background:'none',border:'none',cursor:'pointer',textAlign:'left',color:'#B91C1C'}}><LogOut size={18}/> Logout</button>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+              <Link href="/dashboard" style={{ ...s.sbLink, ...(router.pathname === '/dashboard' ? s.sbLinkActive : {}) }}><LayoutDashboard size={18} /> Dashboard</Link>
+              <Link href="/search" style={s.sbLink}><Search size={18} /> Browse Lawyers</Link>
+              <Link href="/knowledge-hub" style={s.sbLink}><FileText size={18} /> Knowledge Hub</Link>
+              <div style={{ margin: '1.5rem 0', height: 1, background: 'var(--border)' }} />
+              <button onClick={handleLogout} style={{ ...s.sbLink, background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', color: '#B91C1C' }}><LogOut size={18} /> Logout</button>
             </div>
           </div>
 
           {/* Main Content */}
           <div style={s.main}>
-            <div style={{marginBottom:'2.5rem', display:'flex', justifyContent:'space-between', alignItems:'flex-end'}}>
-              <div>
-                <h1 style={s.hTitle}>Welcome, {user?.name?.split(' ')[0]}! 👋</h1>
-                <p style={{color:'var(--txt-3)',fontSize:'.95rem', marginTop:4}}>
-                  {user?.role==='lawyer' ? 'Manage your legal practice and track client engagements.' : "Track your legal cases and manage consultations."}
-                </p>
-              </div>
-              <div className="hide-mobile" style={{fontSize:'.85rem', color:'var(--txt-3)', fontWeight:600}}>
-                Today: {new Date().toLocaleDateString('en-IN', {day:'numeric', month:'long'})}
-              </div>
-            </div>
             {user?.role === 'lawyer' ? <LawyerDash /> : <ClientDash />}
           </div>
         </div>

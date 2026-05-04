@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { MapPin, Landmark, Star, CheckCircle, Clock, ShieldCheck, MessageCircle, Gavel, Languages, Phone, Calendar, Video } from 'lucide-react'
+import { MapPin, Landmark, Star, CheckCircle, Clock, ShieldCheck, MessageCircle, Gavel, Languages, Phone, Calendar, Video, Briefcase, Globe, ExternalLink, CalendarDays } from 'lucide-react'
 import connectDB from '../../../middleware/db'
 import Lawyer from '../../../models/Lawyer'
 import { useState } from 'react'
@@ -42,21 +42,17 @@ export default function LawyerProfile({ lawyer }) {
     const text = encodeURIComponent(`Hi ${lawyer.name}, I found you on Justice Junction 24/7. I need help with a legal issue. Can we schedule a consultation?`)
     window.open(`https://wa.me/91XXXXXXXXXX?text=${text}`, '_blank')
   }
-
+  
   return (
-    <div className="page-wrap" style={{background:'var(--cream)', paddingBottom: '5rem', paddingTop: 95}}>
+    <div className="page-reveal" style={{ background: 'var(--cream)', paddingBottom: '5rem' }}>
       <Head>
         <title>{ogTitle}</title>
         <meta name="description" content={ogDesc} />
-        
-        {/* Open Graph / Facebook */}
         <meta property="og:type" content="profile" />
         <meta property="og:url" content={ogUrl} />
         <meta property="og:title" content={ogTitle} />
         <meta property="og:description" content={ogDesc} />
         <meta property="og:image" content="https://justice-junction-app.vercel.app/og-image.png" />
-        
-        {/* JSON-LD Structured Data */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
@@ -80,38 +76,52 @@ export default function LawyerProfile({ lawyer }) {
         }} />
       </Head>
 
-      <div className="container" style={{paddingTop:'3rem'}}>
-        {/* Breadcrumbs */}
-        <div style={{marginBottom: '1.5rem', fontSize: '.85rem', color: 'var(--txt-3)'}}>
-          <LinkNext href="/" style={{color: 'inherit'}}>Home</LinkNext> / <LinkNext href="/search" style={{color: 'inherit'}}>Lawyers</LinkNext> / <span style={{color: 'var(--bur)', fontWeight: 700}}>{lawyer.name}</span>
+      {/* Cinematic Profile Hero */}
+      <div className="profile-hero parallax">
+        <div className="profile-hero-bg" />
+        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
+          <div style={{ marginBottom: '1rem', fontSize: '.85rem', color: 'rgba(255,255,255,0.7)' }}>
+            <LinkNext href="/" style={{ color: 'inherit' }}>Home</LinkNext> / <LinkNext href="/search" style={{ color: 'inherit' }}>Lawyers</LinkNext> / <span style={{ color: 'var(--gold)', fontWeight: 700 }}>{lawyer.name}</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 12 }}>
+            <h1 className="boutique-heading" style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', color: '#fff', fontStyle: 'normal' }}>{lawyer.name}</h1>
+            {lawyer.isVerified && (
+              <div style={{ ...s.barBadge, background: 'var(--gold)', color: '#000' }}>
+                <ShieldCheck size={14} />
+                <span>Bar Council Verified</span>
+              </div>
+            )}
+            {lawyer.designation && (
+              <div style={{ ...s.barBadge, background: 'rgba(255,255,255,0.15)', color: '#fff' }}>
+                <Briefcase size={14} />
+                <span>{lawyer.designation}</span>
+              </div>
+            )}
+          </div>
+          <div style={{ fontSize: '1.2rem', color: 'var(--gold)', fontWeight: 700, marginBottom: '2rem' }}>{lawyer.specializations?.join(' · ')}</div>
+          <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
+            <span style={{ ...s.metaItem, color: 'rgba(255,255,255,0.8)' }}><MapPin size={16} /> {lawyer.city}, {lawyer.state}</span>
+            <span style={{ ...s.metaItem, color: 'rgba(255,255,255,0.8)' }}><Landmark size={16} /> {lawyer.experience} Years Experience</span>
+            <span style={{ ...s.metaItem, color: 'rgba(255,255,255,0.8)' }}><Star size={16} fill="var(--gold)" color="var(--gold)" /> {lawyer.averageRating} ({lawyer.totalReviews} Reviews)</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="container" style={{ position: 'relative', zIndex: 5 }}>
+        <div className="profile-avatar-wrap">
+          {lawyer.photo ? (
+            <img src={lawyer.photo} alt={lawyer.name} loading="lazy" style={{ width: 100, height: 100, borderRadius: 28, objectFit: 'cover', boxShadow: '0 0 0 8px var(--cream)' }} />
+          ) : (
+            <div style={{ ...s.avatar, boxShadow: '0 0 0 8px var(--cream)' }}>
+              {lawyer.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+            </div>
+          )}
         </div>
 
-        <div style={s.layout} className="grid-profile">
+        <div style={{ ...s.layout, marginTop: '3rem' }} className="grid-profile">
           {/* Main Info */}
           <div style={s.main}>
-            <div style={s.card}>
-              <div style={s.profileHeader}>
-                <div style={s.avatar}>
-                  {lawyer.name.split(' ').map(n=>n[0]).join('').toUpperCase()}
-                </div>
-                <div style={{flex:1}}>
-                  <div style={{display:'flex', alignItems:'center', gap:10, flexWrap:'wrap', marginBottom: 8}}>
-                    <h1 style={s.h1}>{lawyer.name}</h1>
-                    {lawyer.isVerified && (
-                      <div style={s.barBadge}>
-                        <ShieldCheck size={14}/>
-                        <span>Bar Council Verified</span>
-                      </div>
-                    )}
-                  </div>
-                  <div style={s.sub}>{lawyer.specializations?.join(' · ')}</div>
-                  <div style={s.metaRow}>
-                    <span style={s.metaItem}><MapPin size={14}/> {lawyer.city}, {lawyer.state}</span>
-                    <span style={s.metaItem}><Landmark size={14}/> {lawyer.experience} Years Experience</span>
-                    <span style={s.metaItem}><Star size={14} fill="var(--gold)" color="var(--gold)"/> {lawyer.averageRating} ({lawyer.totalReviews} Reviews)</span>
-                  </div>
-                </div>
-              </div>
+            <div className="glass-card" style={{ padding: '2.5rem', boxShadow: 'var(--sh-xl)' }}>
 
               <div className="divider" style={{margin: '2rem 0'}} />
 
@@ -151,11 +161,80 @@ export default function LawyerProfile({ lawyer }) {
               
               <div style={s.section}>
                 <h2 style={s.h2}>Bar Registration</h2>
-                <div style={{background: 'var(--cream-2)', padding: '1rem', borderRadius: 'var(--r-sm)', border: '1px solid var(--border)', display: 'inline-block'}}>
-                  <span style={{fontSize: '.85rem', color: 'var(--txt-3)', fontWeight: 700}}>REGISTRATION NO: </span>
-                  <span style={{fontFamily: 'monospace', fontWeight: 800, color: 'var(--bur)'}}>{lawyer.barRegistrationNumber}</span>
+                <div style={{display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center'}}>
+                  <div style={{background: 'var(--cream-2)', padding: '1rem', borderRadius: 'var(--r-sm)', border: '1px solid var(--border)', display: 'inline-block'}}>
+                    <span style={{fontSize: '.85rem', color: 'var(--txt-3)', fontWeight: 700}}>REGISTRATION NO: </span>
+                    <span style={{fontFamily: 'monospace', fontWeight: 800, color: 'var(--bur)'}}>{lawyer.barRegistrationNumber}</span>
+                  </div>
+                  {lawyer.barCouncilState && (
+                    <div style={{background: 'var(--cream-2)', padding: '1rem', borderRadius: 'var(--r-sm)', border: '1px solid var(--border)', display: 'inline-block'}}>
+                      <span style={{fontSize: '.85rem', color: 'var(--txt-3)', fontWeight: 700}}>STATE BAR: </span>
+                      <span style={{fontWeight: 800, color: 'var(--bur)'}}>{lawyer.barCouncilState}</span>
+                    </div>
+                  )}
+                  {lawyer.yearOfEnrollment && (
+                    <div style={{background: 'var(--cream-2)', padding: '1rem', borderRadius: 'var(--r-sm)', border: '1px solid var(--border)', display: 'inline-block'}}>
+                      <span style={{fontSize: '.85rem', color: 'var(--txt-3)', fontWeight: 700}}>ENROLLED: </span>
+                      <span style={{fontWeight: 800, color: 'var(--bur)'}}>{lawyer.yearOfEnrollment}</span>
+                    </div>
+                  )}
                 </div>
               </div>
+
+              {/* Consultation Modes & Availability */}
+              {(lawyer.consultationModes?.length > 0 || lawyer.availableDays?.length > 0) && (
+                <div style={s.section}>
+                  <h2 style={s.h2}><CalendarDays size={18} style={{marginRight: 8, verticalAlign:'middle'}}/> Availability</h2>
+                  {lawyer.consultationModes?.length > 0 && (
+                    <div style={{marginBottom: '1rem'}}>
+                      <div style={{fontSize: '.8rem', fontWeight: 700, color: 'var(--txt-3)', textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: 6}}>Consultation Modes</div>
+                      <div style={{display: 'flex', gap: 8, flexWrap: 'wrap'}}>
+                        {lawyer.consultationModes.map(m => <span key={m} className="tag" style={{padding: '.4rem .8rem'}}>{m}</span>)}
+                      </div>
+                    </div>
+                  )}
+                  {lawyer.availableDays?.length > 0 && (
+                    <div style={{marginBottom: '1rem'}}>
+                      <div style={{fontSize: '.8rem', fontWeight: 700, color: 'var(--txt-3)', textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: 6}}>Available Days</div>
+                      <div style={{display: 'flex', gap: 6, flexWrap: 'wrap'}}>
+                        {lawyer.availableDays.map(d => <span key={d} style={{padding: '.35rem .7rem', background: 'var(--bur)', color: '#fff', borderRadius: 8, fontSize: '.78rem', fontWeight: 700}}>{d}</span>)}
+                      </div>
+                    </div>
+                  )}
+                  {lawyer.availableTimeFrom && lawyer.availableTimeTo && (
+                    <div style={{display: 'flex', alignItems: 'center', gap: 8, fontSize: '.9rem', color: 'var(--txt-2)', fontWeight: 600}}>
+                      <Clock size={16} /> {lawyer.availableTimeFrom} – {lawyer.availableTimeTo}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Online Presence */}
+              {(lawyer.linkedinUrl || lawyer.websiteUrl) && (
+                <div style={s.section}>
+                  <h2 style={s.h2}><Globe size={18} style={{marginRight: 8, verticalAlign:'middle'}}/> Online Presence</h2>
+                  <div style={{display: 'flex', gap: '1rem', flexWrap: 'wrap'}}>
+                    {lawyer.linkedinUrl && (
+                      <a href={lawyer.linkedinUrl} target="_blank" rel="noreferrer" className="btn btn-outline btn-sm" style={{gap: 6}}>
+                        <ExternalLink size={16} /> LinkedIn Profile
+                      </a>
+                    )}
+                    {lawyer.websiteUrl && (
+                      <a href={lawyer.websiteUrl} target="_blank" rel="noreferrer" className="btn btn-outline btn-sm" style={{gap: 6}}>
+                        <Globe size={16} /> Personal Website
+                      </a>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Current Firm */}
+              {lawyer.currentFirm && (
+                <div style={s.section}>
+                  <h2 style={s.h2}><Briefcase size={18} style={{marginRight: 8, verticalAlign:'middle'}}/> Current Firm / Chamber</h2>
+                  <p style={{fontSize: '1rem', fontWeight: 600, color: 'var(--txt-2)'}}>{lawyer.currentFirm}</p>
+                </div>
+              )}
             </div>
 
             {/* Reviews Section */}

@@ -52,7 +52,9 @@ export default async function handler(req, res) {
       const lawyer = await Lawyer.findOne({ user: user.id })
       if (!lawyer) return res.status(404).json({ error: 'Profile not found' })
 
-      const allowed = ['bio', 'consultationFee', 'specializations', 'languages', 'isAvailable', 'phone', 'city', 'state']
+      const allowed = ['bio', 'consultationFee', 'specializations', 'languages', 'isAvailable', 'phone', 'city', 'state',
+        'photo', 'address', 'dateOfBirth', 'gender', 'barCouncilState', 'yearOfEnrollment', 'designation', 'currentFirm',
+        'courts', 'consultationModes', 'availableDays', 'availableTimeFrom', 'availableTimeTo', 'linkedinUrl', 'websiteUrl']
       allowed.forEach(f => { if (req.body[f] !== undefined) lawyer[f] = req.body[f] })
       await lawyer.save()
       return res.json({ message: 'Profile updated', lawyer })

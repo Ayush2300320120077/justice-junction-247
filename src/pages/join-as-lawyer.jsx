@@ -63,11 +63,13 @@ export default function JoinAsLawyer() {
         <meta name="twitter:image" content="https://justice-junction-app.vercel.app/og-image.png" />
       </Head>
 
-      <section style={s.hero}>
+      <section style={s.hero} className="section-bg-office parallax page-reveal">
         <div className="container" style={s.heroGrid}>
           <div>
             <div style={s.badge}>For Legal Professionals</div>
-            <h1 style={s.h1}>Grow Your Practice with <em>Justice Junction.</em></h1>
+            <h1 style={s.h1} className="h1-responsive">
+              <span className="boutique-heading">Grow Your</span> <span className="gradient-text">Practice</span> with <em>Justice Junction.</em>
+            </h1>
             <p style={s.sub}>Join India's fastest-growing legal-tech platform. Get clients 24/7, build your online reputation, and manage your entire practice from one smart dashboard.</p>
             <div style={{display:'flex', gap:12, flexWrap:'wrap', marginBottom:'1.5rem'}}>
               <a href="#apply-form" className="btn btn-primary btn-xl">Apply Now — It's Free</a>
@@ -88,7 +90,7 @@ export default function JoinAsLawyer() {
           <h2 className="sec-title" style={{textAlign:'center', marginBottom:'3rem'}}>Why join <em>Justice Junction?</em></h2>
           <div style={s.benefitsGrid}>
             {BENEFITS.map(b => (
-              <div key={b.title} style={s.benefitCard} className="card-hover">
+              <div key={b.title} style={s.benefitCard} className="card-hover magnetic-hover">
                 <div style={s.iconBox}>{b.icon}</div>
                 <h3 style={{fontSize:'1.1rem', fontWeight:800, marginBottom:8}}>{b.title}</h3>
                 <p style={{fontSize:'.9rem', color:'var(--txt-2)', lineHeight:1.6}}>{b.desc}</p>
@@ -143,7 +145,7 @@ export default function JoinAsLawyer() {
 }
 
 const s = {
-  hero: { padding:'6rem 0', background:'linear-gradient(135deg,var(--cream),var(--cream-2))' },
+  hero: { padding:'8rem 0', color:'#fff' },
   heroGrid: { display:'grid', gridTemplateColumns:'1.3fr 0.7fr', gap:'4rem', alignItems:'center' },
   badge: { display:'inline-block', background:'var(--bur)', color:'#fff', padding:'.4rem 1.2rem', borderRadius:50, fontSize:'.75rem', fontWeight:800, textTransform:'uppercase', letterSpacing:'1px', marginBottom:'1.5rem' },
   h1: { fontFamily:"'Playfair Display',serif", fontSize:'clamp(2.2rem,5vw,3.5rem)', fontWeight:800, lineHeight:1.1, marginBottom:'1.5rem' },

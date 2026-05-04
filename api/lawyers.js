@@ -73,7 +73,9 @@ router.put('/profile/update', async (req, res) => {
     if (decoded.role !== 'lawyer') return res.status(403).json({ error: 'Access denied' });
     const lawyer = await Lawyer.findOne({ user: decoded.id });
     if (!lawyer) return res.status(404).json({ error: 'Profile not found' });
-    const allowed = ['bio', 'consultationFee', 'specializations', 'languages', 'isAvailable', 'phone', 'city', 'state'];
+    const allowed = ['bio', 'consultationFee', 'specializations', 'languages', 'isAvailable', 'phone', 'city', 'state',
+      'photo', 'address', 'dateOfBirth', 'gender', 'barCouncilState', 'yearOfEnrollment', 'designation', 'currentFirm',
+      'courts', 'consultationModes', 'availableDays', 'availableTimeFrom', 'availableTimeTo', 'linkedinUrl', 'websiteUrl'];
     allowed.forEach(f => { if (req.body[f] !== undefined) lawyer[f] = req.body[f]; });
     await lawyer.save();
     res.json({ message: 'Profile updated', lawyer });

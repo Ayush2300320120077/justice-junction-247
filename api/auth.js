@@ -22,7 +22,28 @@ router.post('/register', async (req, res) => {
     await connectDB();
     const { name, email, password, role, phone, city, state,
             specializations, experience, barRegistrationNumber,
-            consultationFee, bio } = req.body;
+            consultationFee, bio,
+            // New fields
+            dateOfBirth, gender, photo, address,
+            barCouncilState, yearOfEnrollment, designation, currentFirm,
+            courts, languages,
+            consultationModes, availableDays, availableTimeFrom, availableTimeTo,
+            linkedinUrl, websiteUrl } = req.body;
+
+    // Server-side validation for required lawyer fields
+    if (role === 'lawyer') {
+      const missing = [];
+      if (!phone || !phone.trim()) missing.push('Phone Number');
+      if (!barRegistrationNumber || !barRegistrationNumber.trim()) missing.push('Bar Council Registration Number');
+      if (!barCouncilState || !barCouncilState.trim()) missing.push('Bar Council State');
+      if (!specializations || specializations.length === 0) missing.push('Practice Areas (at least one)');
+      if (!city || !city.trim()) missing.push('City');
+      if (!state || !state.trim()) missing.push('State');
+      if (missing.length > 0) {
+        return res.status(400).json({ error: `Missing required fields: ${missing.join(', ')}` });
+      }
+    }
+
     const exists = await User.findOne({ email });
     if (exists) return res.status(400).json({ error: 'Email already registered' });
     const user = await User.create({ name, email, password, role, phone, city, state });
@@ -34,7 +55,24 @@ router.post('/register', async (req, res) => {
         barRegistrationNumber, specializations: specializations || [],
         experience: exp, experienceLevel: level,
         consultationFee: parseFloat(consultationFee) || 0,
-        bio: bio || ''
+        bio: bio || '',
+        // New fields
+        dateOfBirth: dateOfBirth || undefined,
+        gender: gender || undefined,
+        photo: photo || '',
+        address: address || '',
+        barCouncilState: barCouncilState || '',
+        yearOfEnrollment: yearOfEnrollment ? parseInt(yearOfEnrollment) : undefined,
+        designation: designation || '',
+        currentFirm: currentFirm || '',
+        courts: courts || [],
+        languages: languages || [],
+        consultationModes: consultationModes || [],
+        availableDays: availableDays || [],
+        availableTimeFrom: availableTimeFrom || '',
+        availableTimeTo: availableTimeTo || '',
+        linkedinUrl: linkedinUrl || '',
+        websiteUrl: websiteUrl || '',
       });
     }
     const token = jwt.sign(

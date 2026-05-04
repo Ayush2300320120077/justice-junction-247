@@ -1,27 +1,45 @@
 import { useState } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
-import { Mail, Phone, MapPin, MessageSquare, Send, CheckCircle } from 'lucide-react'
+import { Mail, Phone, MapPin, MessageSquare, Send, CheckCircle, Loader2 } from 'lucide-react'
+import { useToast } from '../context/ToastContext'
 
 export default function Contact() {
   const [form, setForm] = useState({ name:'', email:'', subject:'', message:'' })
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+  const { showToast } = useToast()
 
-  const handleSubmit = e => {
-    e.preventDefault()
-    if (!form.name || !form.email || !form.message) return
+  const handleSubmit = async () => {
+    if (!form.name || !form.email || !form.message) {
+      showToast('Please fill in all required fields.', 'error')
+      return
+    }
     setSubmitting(true)
-    // Simulate submission
-    setTimeout(() => { setSubmitting(false); setSubmitted(true) }, 1000)
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Something went wrong')
+      setSubmitted(true)
+      showToast('Message sent! We\'ll reply within 24 hours.', 'success')
+    } catch (err) {
+      showToast(err.message || 'Failed to send message. Please try again.', 'error')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
     <div className="page-wrap" style={{background:'var(--cream)'}}>
       <Head>
         <title>Contact Us — Justice Junction 24/7</title>
-        <meta name="description" content="Get in touch with the Justice Junction 24/7 team. We're available 24/7 to help you find the right legal support." />
+        <meta name="description" content="Get in touch with Justice Junction support. Available 24/7 via WhatsApp, email and phone." />
         <meta property="og:title" content="Contact Us — Justice Junction 24/7" />
+        <meta property="og:description" content="Get in touch with Justice Junction support. Available 24/7 via WhatsApp, email and phone." />
         <meta property="og:image" content="https://justice-junction-app.vercel.app/og-image.png" />
         <meta property="og:url" content="https://justice-junction-app.vercel.app/contact" />
         <meta property="og:type" content="website" />
@@ -38,19 +56,25 @@ export default function Contact() {
       </section>
 
       <div className="container" style={{padding:'4rem 5vw', maxWidth:1000}}>
-        <div style={s.grid}>
+        <div style={s.grid} className="mobile-stack">
           {/* Info Cards */}
           <div style={{display:'flex', flexDirection:'column', gap:'1.5rem'}}>
             {[
-              { icon:<MessageSquare size={22}/>, title:'WhatsApp Support', desc:'Chat with our team directly. Available 24/7.', action:'Chat Now', href:`https://wa.me/919188371233?text=Hi, I need help with Justice Junction 24/7` },
-              { icon:<Mail size={22}/>, title:'Email Us', desc:'121ayushkumar121@gmail.com', action:'Send Email', href:'mailto:121ayushkumar121@gmail.com' },
-              { icon:<Phone size={22}/>, title:'Helpline', desc:'+91 91883 71233', action:'Call Now', href:'tel:+919188371233' },
+              { icon:<MessageSquare size={22}/>, title:'WhatsApp Support', desc:'Chat with our team directly. Available 24/7.', action:'Chat Now', href:'https://wa.me/919188371233?text=Hi, I need help with Justice Junction 24/7' },
+              { icon:<Mail size={22}/>, title:'Email Us', desc:'support@justicejunction.in', action:'Send Email', href:'mailto:support@justicejunction.in' },
+              { icon:<Phone size={22}/>, title:'Helpline', descComponent: true, action:'Call Now', href:'tel:+919188371233' },
             ].map(item => (
               <div key={item.title} style={s.infoCard}>
                 <div style={s.infoIcon}>{item.icon}</div>
                 <div style={{flex:1}}>
                   <div style={{fontWeight:800, fontSize:'1rem', marginBottom:4}}>{item.title}</div>
-                  <div style={{fontSize:'.85rem', color:'var(--txt-3)'}}>{item.desc}</div>
+                  {item.descComponent ? (
+                    <div style={{fontSize:'.85rem', color:'var(--txt-3)'}} data-noindex="true">
+                      <span>{'+91 91883 71233'.split('').map((c, i) => <span key={i}>{c}</span>)}</span>
+                    </div>
+                  ) : (
+                    <div style={{fontSize:'.85rem', color:'var(--txt-3)'}}>{item.desc}</div>
+                  )}
                 </div>
                 <a href={item.href} target="_blank" rel="noreferrer" className="btn btn-outline btn-sm">{item.action}</a>
               </div>
@@ -58,8 +82,8 @@ export default function Contact() {
 
             <div style={s.faqCard}>
               <div style={{fontWeight:800, fontSize:'1rem', marginBottom:8}}>Frequently Asked Questions</div>
-              <p style={{fontSize:'.85rem', color:'var(--txt-3)', marginBottom:'1rem'}}>Many answers are already in our FAQ section.</p>
-              <Link href="/faq" className="btn btn-primary btn-sm" style={{width:'100%', justifyContent:'center'}}>Browse FAQs</Link>
+              <p style={{fontSize:'.85rem', color:'rgba(255,255,255,.7)', marginBottom:'1rem'}}>Many answers are already in our FAQ section.</p>
+              <Link href="/faq" className="btn btn-white btn-sm" style={{width:'100%', justifyContent:'center'}}>Browse FAQs</Link>
             </div>
           </div>
 
@@ -73,17 +97,17 @@ export default function Contact() {
                 <p style={{color:'var(--txt-3)'}}>We'll get back to you within 24 hours.</p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} noValidate>
+              <div>
                 <div className="form-row">
-                  <div className="form-group"><label>Your Name *</label><input value={form.name} onChange={e=>setForm({...form,name:e.target.value})} placeholder="Full name" required/></div>
-                  <div className="form-group"><label>Email Address *</label><input type="email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} placeholder="your@email.com" required/></div>
+                  <div className="form-group"><label>Your Name *</label><input value={form.name} onChange={e=>setForm({...form,name:e.target.value})} placeholder="Full name" /></div>
+                  <div className="form-group"><label>Email Address *</label><input type="email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} placeholder="your@email.com" /></div>
                 </div>
                 <div className="form-group"><label>Subject</label><input value={form.subject} onChange={e=>setForm({...form,subject:e.target.value})} placeholder="e.g. Lawyer verification issue"/></div>
-                <div className="form-group"><label>Message *</label><textarea rows={5} value={form.message} onChange={e=>setForm({...form,message:e.target.value})} placeholder="Describe your issue or question..." required/></div>
-                <button type="submit" className="btn btn-primary btn-lg" style={{width:'100%', gap:8}} disabled={submitting}>
-                  <Send size={18}/>{submitting ? 'Sending...' : 'Send Message'}
+                <div className="form-group"><label>Message *</label><textarea rows={5} value={form.message} onChange={e=>setForm({...form,message:e.target.value})} placeholder="Describe your issue or question..." /></div>
+                <button type="button" className="btn btn-primary btn-lg" style={{width:'100%', gap:8}} disabled={submitting} onClick={handleSubmit}>
+                  {submitting ? <><Loader2 size={18} className="spinner-icon" /> Sending...</> : <><Send size={18}/> Send Message</>}
                 </button>
-              </form>
+              </div>
             )}
           </div>
         </div>

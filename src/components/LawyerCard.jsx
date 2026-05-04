@@ -44,6 +44,7 @@ export default function LawyerCard({ lawyer, onCompare, compareList=[] }) {
 
   return (
     <div
+      className="card-hover magnetic-hover page-reveal"
       style={{...s.card,...(hovered?s.cardHovered:{})}}
       onMouseEnter={()=>setHovered(true)}
       onMouseLeave={()=>setHovered(false)}
@@ -67,7 +68,7 @@ export default function LawyerCard({ lawyer, onCompare, compareList=[] }) {
           </div>
         </div>
         
-        <div style={{display:'flex', flexDirection:'row', alignItems:'center', gap:'6px', flexShrink:0}}>
+        <div style={{display:'flex', flexDirection:'row', alignItems:'center', gap:'6px', flexShrink:0, flexWrap:'wrap'}} className="card-top-stack">
           <span className={`badge ${levelMap[lawyer.experienceLevel||'junior']}`}>
             {lawyer.experienceLevel}
           </span>
@@ -86,7 +87,7 @@ export default function LawyerCard({ lawyer, onCompare, compareList=[] }) {
 
       {/* Location + Exp */}
       <div style={s.meta}>
-        <span style={s.metaItem}><MapPin size={13} /> {lawyer.city}, {lawyer.state}</span>
+        <span style={s.metaItem}><MapPin size={13} /> {lawyer.city}, {lawyer.state} {lawyer.pincode ? `(${lawyer.pincode})` : ''}</span>
         <span style={s.metaItem}><Landmark size={13} /> {lawyer.experience} yrs exp</span>
       </div>
 

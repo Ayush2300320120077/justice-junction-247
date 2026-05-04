@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useAuth } from '../context/AuthContext'
 import { Scale, Heart, Home, Search, Shield, LayoutDashboard, Briefcase, Info, LogOut, BookOpen, FileText } from 'lucide-react'
+import Logo from './Logo'
 
 export default function Navbar() {
   const { user, isLoggedIn, logout } = useAuth()
@@ -29,22 +30,18 @@ export default function Navbar() {
   return (
     <>
       {/* Emergency top bar */}
-      <div style={s.emergency}>
+      <div style={s.emergency} className="mobile-px-4">
         <span style={s.eDot}></span>
         <span className="hide-mobile" style={{fontSize:'.75rem',fontWeight:700,color:'#fff'}}>Emergency Legal Help Available 24/7 - </span>
-        <span className="show-mobile-inline" style={{fontSize:'.75rem',fontWeight:700,color:'#fff'}}>Legal Help 24/7 - </span>
-        <Link href="/search" style={{fontSize:'.75rem',color:'#E8B55A',fontWeight:700,marginLeft:4}}>Find a Lawyer Now →</Link>
+        <span className="show-mobile-inline" style={{fontSize:'.7rem',fontWeight:700,color:'#fff'}}>Legal Help 24/7 - </span>
+        <Link href="/search" style={{fontSize:'.7rem',color:'#E8B55A',fontWeight:700,marginLeft:4}}>Find a Lawyer →</Link>
       </div>
 
       {/* Main nav */}
-      <nav style={{...s.nav,...(scrolled?s.navScrolled:{})}}>
+      <nav style={{...s.nav,...(scrolled?s.navScrolled:{})}} className="mobile-px-4">
         <div style={s.inner}>
-          <Link href="/" style={s.logo}>
-            <div style={s.logoIcon}><Scale size={20}/></div>
-            <div>
-              <div style={s.logoText}>Justice Junction</div>
-              <div style={s.logoSub}>Available 24 / 7</div>
-            </div>
+          <Link href="/" style={{textDecoration:'none'}}>
+            <Logo />
           </Link>
 
           <ul style={s.links} className="hide-mobile">
@@ -81,7 +78,7 @@ export default function Navbar() {
             ) : (
               <>
                 <Link href="/login"    className="btn btn-ghost btn-sm hide-mobile">Login</Link>
-                <Link href="/register" className="btn btn-primary btn-sm">Register Free</Link>
+                <Link href="/register" className="btn btn-primary btn-sm mobile-hide">Register Free</Link>
               </>
             )}
 
@@ -94,9 +91,14 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile Menu */}
-      {mobileOpen && (
-        <div style={s.mobileMenu}>
+      {/* Mobile Menu Overlay */}
+      <div style={{
+        ...s.mobileMenu,
+        opacity: mobileOpen ? 1 : 0,
+        visibility: mobileOpen ? 'visible' : 'hidden',
+        transform: mobileOpen ? 'translateY(0)' : 'translateY(-10px)'
+      }} className="backdrop-blur">
+        <div className="container" style={{display:'flex', flexDirection:'column', gap: 8, paddingTop: '1rem'}}>
           {[
             ['/', <Home size={18}/>, 'Home'],
             ['/search', <Search size={18}/>, 'Find Lawyers'],
@@ -104,41 +106,62 @@ export default function Navbar() {
             ['/document-generator', <FileText size={18}/>, 'Legal Tools'],
             user?.role === 'admin' ? ['/admin', <Shield size={18}/>, 'Admin Panel'] : ['/dashboard', <LayoutDashboard size={18}/>, 'Dashboard'],
             ['/join-as-lawyer', <Briefcase size={18}/>, 'Join as Lawyer'],
-            ['/favorites', <Heart size={18}/>, 'Saved'],
-          ].map(([p, i, l]) => (
-            <Link key={p} href={p} style={s.mLink} onClick={() => setMobileOpen(false)}><span style={{color:'var(--bur)',display:'flex'}}>{i}</span>{l}</Link>
+            ['/favorites', <Heart size={18}/>, 'Saved Lawyers'],
+          ].map(([p, i, l], idx) => (
+            <Link 
+              key={p} 
+              href={p} 
+              style={{...s.mLink, animationDelay: `${idx * 0.05}s`}} 
+              onClick={() => setMobileOpen(false)}
+              className="page-reveal"
+            >
+              <span style={{color:'var(--bur)',display:'flex',background:'rgba(123,29,46,0.05)',padding:8,borderRadius:10}}>{i}</span>
+              {l}
+            </Link>
           ))}
-          <hr style={{border:'none',borderTop:'1px solid var(--border)',margin:'4px 0'}}/>
+          <div style={{margin: '1rem 0', height: 1, background: 'var(--border)', opacity: 0.5}} />
           {isLoggedIn
-            ? <button onClick={handleLogout} style={{...s.mLink,background:'none',border:'none',cursor:'pointer',textAlign:'left',color:'var(--red)',fontFamily:'Plus Jakarta Sans,sans-serif',width:'100%',fontSize:'.9rem',fontWeight:700}}><span style={{display:'flex'}}><LogOut size={18}/></span>Logout</button>
-            : <Link href="/register" className="btn btn-primary" style={{margin:'4px 0',width:'100%',justifyContent:'center'}}>Register Free</Link>
+            ? (
+              <div style={{display:'flex', flexDirection:'column', gap: 10}}>
+                <div style={{...s.userChip, width:'fit-content'}}>
+                  <div style={s.userAv}>{(user?.name || 'U')[0].toUpperCase()}</div>
+                  <span style={{fontSize:'.9rem',fontWeight:700}}>{user?.name}</span>
+                </div>
+                <button onClick={handleLogout} style={{...s.mLink,background:'rgba(220,38,38,0.05)',border:'none',cursor:'pointer',textAlign:'left',color:'var(--red)',width:'100%',borderRadius:12}}>
+                  <span style={{display:'flex', background:'rgba(220,38,38,0.1)', padding:8, borderRadius:10}}><LogOut size={18}/></span>
+                  Logout Account
+                </button>
+              </div>
+            )
+            : (
+              <div style={{display:'flex', flexDirection:'column', gap: 10}}>
+                <Link href="/login" onClick={()=>setMobileOpen(false)} className="btn btn-ghost btn-lg" style={{width:'100%', borderRadius: 14}}>Login</Link>
+                <Link href="/register" onClick={()=>setMobileOpen(false)} className="btn btn-primary btn-lg" style={{width:'100%', borderRadius: 14}}>Register Free</Link>
+              </div>
+            )
           }
         </div>
-      )}
+      </div>
     </>
   )
 }
 
 const s = {
-  emergency:{position:'fixed',top:0,left:0,right:0,zIndex:201,background:'var(--bur)',padding:'.28rem 5vw',display:'flex',alignItems:'center',justifyContent:'center',gap:8},
+  emergency:{position:'fixed',top:0,left:0,right:0,zIndex:201,background:'var(--bur)',padding:'.35rem 0',display:'flex',alignItems:'center',justifyContent:'center',gap:8},
   eDot:{width:7,height:7,background:'#4ADE80',borderRadius:'50%',animation:'pulseDot 2s infinite',display:'inline-block'},
-  nav:{position:'fixed',top:28,left:0,right:0,zIndex:200,background:'rgba(253,248,242,.96)',backdropFilter:'blur(16px)',borderBottom:'1px solid rgba(232,216,200,.6)',padding:'0 5vw',transition:'all .3s'},
-  navScrolled:{boxShadow:'0 4px 24px rgba(123,29,46,.10)'},
-  inner:{display:'flex',alignItems:'center',justifyContent:'space-between',height:64},
-  logo:{display:'flex',alignItems:'center',gap:10,textDecoration:'none'},
-  logoIcon:{width:36,height:36,background:'var(--bur)',borderRadius:9,display:'flex',alignItems:'center',justifyContent:'center',color:'#fff',fontSize:'1.1rem',boxShadow:'0 2px 8px rgba(123,29,46,.3)'},
-  logoText:{fontFamily:"'Playfair Display',serif",fontSize:'1.1rem',fontWeight:700,color:'var(--bur)',lineHeight:1.1},
-  logoSub:{fontSize:'.56rem',fontWeight:700,color:'var(--gold)',letterSpacing:'.12em',textTransform:'uppercase'},
-  links:{display:'flex',alignItems:'center',gap:'1.8rem',listStyle:'none'},
-  link:{fontSize:'.88rem',fontWeight:700,color:'var(--txt-2)',textDecoration:'none',padding:'.2rem 0',borderBottom:'2px solid transparent',transition:'all .2s'},
+  nav:{position:'fixed',top:32,left:0,right:0,zIndex:200,background:'rgba(253,248,242,0.85)',backdropFilter:'blur(20px)',WebkitBackdropFilter:'blur(20px)',borderBottom:'1px solid rgba(232,216,200,.4)',transition:'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'},
+  navScrolled:{top: 0, boxShadow:'0 10px 30px rgba(123,29,46,0.08)', background: 'rgba(255, 255, 255, 0.9)'},
+  inner:{display:'flex',alignItems:'center',justifyContent:'space-between',height:72},
+  links:{display:'flex',alignItems:'center',gap:'2rem',listStyle:'none'},
+  link:{fontSize:'.9rem',fontWeight:700,color:'var(--txt-2)',textDecoration:'none',padding:'.5rem 0',borderBottom:'2.5px solid transparent',transition:'all 0.2s'},
   linkActive:{color:'var(--bur)',borderBottomColor:'var(--bur)'},
-  actions:{display:'flex',gap:8,alignItems:'center'},
-  iconBtn:{width:36,height:36,borderRadius:'50%',border:'1px solid var(--border)',background:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'1rem',position:'relative',textDecoration:'none',cursor:'pointer'},
-  badge:{position:'absolute',top:-4,right:-4,width:16,height:16,background:'var(--bur)',color:'#fff',borderRadius:'50%',fontSize:'.6rem',fontWeight:700,display:'flex',alignItems:'center',justifyContent:'center'},
-  userChip:{display:'flex',alignItems:'center',gap:6,padding:'.3rem .7rem',background:'var(--cream-2)',borderRadius:50,border:'1px solid var(--border)'},
-  userAv:{width:26,height:26,borderRadius:'50%',background:'var(--bur)',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'.75rem',fontWeight:700},
-  burger:{width:36,height:36,background:'var(--cream-2)',border:'1px solid var(--border)',borderRadius:8,cursor:'pointer',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:8},
-  bl:{width:18,height:2,background:'var(--txt)',borderRadius:2,display:'block',transition:'all .3s ease'},
-  mobileMenu:{position:'fixed',top:92,left:0,right:0,zIndex:199,background:'#fff',borderBottom:'1px solid var(--border)',padding:'1rem 5vw',display:'flex',flexDirection:'column',gap:4,boxShadow:'var(--sh-lg)',animation:'slideUp .2s ease'},
-  mLink:{padding:'.75rem 1rem',borderRadius:10,fontSize:'.9rem',fontWeight:700,color:'var(--txt)',textDecoration:'none',display:'flex',gap:10,alignItems:'center'},
+  actions:{display:'flex',gap:10,alignItems:'center'},
+  iconBtn:{width:40,height:40,borderRadius:'50%',border:'1px solid var(--border)',background:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'1.1rem',position:'relative',textDecoration:'none',cursor:'pointer',transition:'all 0.2s'},
+  badge:{position:'absolute',top:-2,right:-2,width:18,height:18,background:'var(--bur)',color:'#fff',borderRadius:'50%',fontSize:'.65rem',fontWeight:800,display:'flex',alignItems:'center',justifyContent:'center',border: '2px solid #fff'},
+  userChip:{display:'flex',alignItems:'center',gap:8,padding:'.4rem .8rem',background:'#fff',borderRadius:50,border:'1px solid var(--border)', boxShadow: 'var(--sh-sm)'},
+  userAv:{width:28,height:28,borderRadius:'50%',background:'var(--bur)',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'.8rem',fontWeight:700},
+  burger:{width:40,height:40,background:'var(--bur)',border:'none',borderRadius:12,cursor:'pointer',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:10, transition: 'all 0.2s'},
+  bl:{width:20,height:2,background:'#fff',borderRadius:2,display:'block',transition:'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'},
+  mobileMenu:{position:'fixed',top:104,left:0,right:0,bottom:0,zIndex:199,background:'rgba(253,248,242,0.98)',padding:'1.5rem 0',display:'flex',flexDirection:'column',transition:'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)', overflowY: 'auto'},
+  mLink:{padding:'1rem',borderRadius:16,fontSize:'1.05rem',fontWeight:700,color:'var(--txt)',textDecoration:'none',display:'flex',gap:15,alignItems:'center', background: '#fff', border: '1px solid var(--border)', transition: 'all 0.2s'},
 }
