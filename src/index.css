@@ -854,6 +854,74 @@ h1,h2,h3{font-family:'Plus Jakarta Sans',var(--font-display);font-weight:700;lin
 /* ── Contact Grid Mobile ── */
 @media(max-width: 768px) {
   .mobile-stack > div:first-child {
-    order: 2;
   }
+}
+
+/* ═══ GLOBAL TEXT VISIBILITY RULES ═══ */
+
+/* Page base */
+body {
+  background-color: #FDF6EE;
+  color: #1A0D10;
+}
+
+/* All headings default to dark */
+h1, h2, h3, h4, h5, h6 {
+  color: #1A0D10;
+}
+
+/* On dark red backgrounds, ALL children must be light */
+.bg-red-section,
+[class*="bg-\[#7B1D2E\]"],
+[class*="bg-\[#5C1521\]"] {
+  color: #F9EEE4;
+}
+[class*="bg-\[#7B1D2E\]"] h1,
+[class*="bg-\[#7B1D2E\]"] h2,
+[class*="bg-\[#7B1D2E\]"] h3,
+[class*="bg-\[#7B1D2E\]"] p,
+[class*="bg-\[#7B1D2E\]"] span,
+[class*="bg-\[#7B1D2E\]"] li {
+  color: #F9EEE4;
+}
+
+/* Form inputs always dark text */
+input, select, textarea {
+  color: #1A0D10 !important;
+  background-color: #ffffff;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #9A7A84;
+}
+
+select option {
+  color: #1A0D10;
+  background-color: #ffffff;
+}
+
+/* Remove any lingering blue colors */
+.text-blue-500, .text-blue-600, .text-blue-700,
+.text-indigo-500, .text-indigo-600 {
+  color: #7B1D2E !important;
+}
+.bg-blue-500, .bg-blue-600, .bg-blue-700,
+.bg-indigo-500, .bg-indigo-600 {
+  background-color: #7B1D2E !important;
+}
+.border-blue-500, .border-blue-600,
+.border-indigo-500, .border-indigo-600 {
+  border-color: #7B1D2E !important;
+}
+.focus\:ring-blue-500:focus,
+.focus\:ring-indigo-500:focus {
+  --tw-ring-color: rgba(123, 29, 46, 0.3) !important;
+}
+
+/* Italic/highlighted words in headings on red bg */
+[class*="bg-\[#7B1D2E\]"] em,
+[class*="bg-\[#7B1D2E\]"] i {
+  color: #F5C4B3;
+  font-style: italic;
 }

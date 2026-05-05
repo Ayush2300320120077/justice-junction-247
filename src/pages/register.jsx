@@ -42,19 +42,19 @@ export default function Register() {
           <div style={{ display: 'flex', gap: 10, marginBottom: '2rem', maxWidth: 400, margin: '0 auto 2rem' }}>
             <button 
               className="magnetic-hover"
-              style={{ flex: 1, padding: '1rem', borderRadius: 16, border: '2px solid var(--border)', background: '#fff', cursor: 'pointer', transition: 'all .2s' }}
+              style={{ flex: 1, padding: '1rem', borderRadius: 16, border: '2px solid #E8C9A8', background: '#fff', cursor: 'pointer', transition: 'all .2s' }}
               onClick={() => setFormData({...formData, role:'client'})}
             >
-              <User size={24} color="var(--txt-3)" style={{ marginBottom: 8 }}/>
-              <div style={{ fontWeight: 800, fontSize: '.9rem', color: 'var(--txt-3)' }}>Client</div>
+              <User size={24} color="#1A0D10" style={{ marginBottom: 8 }}/>
+              <div style={{ fontWeight: 800, fontSize: '.9rem', color: '#1A0D10' }}>Client</div>
             </button>
             <button 
               className="magnetic-hover"
-              style={{ flex: 1, padding: '1rem', borderRadius: 16, border: '2px solid var(--bur)', background: 'var(--cream-2)', cursor: 'pointer', transition: 'all .2s' }}
+              style={{ flex: 1, padding: '1rem', borderRadius: 16, border: '2px solid #7B1D2E', background: '#7B1D2E', cursor: 'pointer', transition: 'all .2s', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
               onClick={() => setFormData({...formData, role:'lawyer'})}
             >
-              <Scale size={24} color="var(--bur)" style={{ marginBottom: 8 }}/>
-              <div style={{ fontWeight: 800, fontSize: '.9rem', color: 'var(--bur)' }}>Lawyer</div>
+              <Scale size={24} color="#fff" style={{ marginBottom: 8 }}/>
+              <div style={{ fontWeight: 800, fontSize: '.9rem', color: '#fff' }}>Lawyer</div>
             </button>
           </div>
 
@@ -77,44 +77,44 @@ export default function Register() {
       <div className="auth-visual-side">
         <div className="auth-visual-overlay" />
         <div style={{ position: 'relative', zIndex: 2, maxWidth: 450 }}>
-          <div className="tag" style={{ background: 'var(--gold)', color: '#000', border: 'none', marginBottom: '1.5rem' }}>Join the Network</div>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '3rem', fontWeight: 800, marginBottom: '1.5rem', lineHeight: 1.1 }}>
-            Empower Your <span style={{ color: 'var(--gold)' }}>Legal</span> Journey.
+          <div style={{ color: '#F5C4B3', textTransform: 'uppercase', fontSize: '0.875rem', letterSpacing: '0.1em', marginBottom: '1.5rem', fontWeight: 700 }}>Join the Network</div>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '3rem', fontWeight: 800, marginBottom: '1.5rem', lineHeight: 1.1, color: '#F9EEE4' }}>
+            Empower Your <span style={{ color: '#F5C4B3' }}>Legal</span> Journey.
           </h2>
-          <p style={{ fontSize: '1.1rem', color: 'rgba(255,255,255,0.8)', lineHeight: 1.6, fontStyle: 'italic' }}>
+          <p style={{ fontSize: '1.125rem', color: '#F9EEE4', lineHeight: 1.625, fontStyle: 'italic' }}>
             "Whether you are seeking resolution or providing counsel, we provide the platform for meaningful legal connection."
           </p>
           <div style={{ marginTop: '2.5rem', display: 'flex', gap: 12, alignItems: 'center' }}>
-            <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'var(--gold)', display: 'flex', alignItems: 'center', justifyCenter: 'center', color: '#000', fontWeight: 800 }}>JJ</div>
-            <div style={{ fontSize: '.8rem', fontWeight: 700 }}>VERIFIED LEGAL NETWORK</div>
+            <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: '1.5rem' }}>JJ</div>
+            <div style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', fontSize: '0.75rem', padding: '4px 12px', borderRadius: '9999px', fontWeight: 600 }}>VERIFIED LEGAL NETWORK</div>
           </div>
         </div>
       </div>
 
       {/* Form Side */}
       <div className="auth-form-side">
-        <div style={{ width: '100%', maxWidth: 450 }}>
+        <div style={{ width: '100%', maxWidth: 450, background: '#fff', borderRadius: '1rem', padding: '2rem', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)', border: '1px solid #E8C9A8' }}>
           <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-            <h1 className="h1-responsive" style={{ fontSize: '2.5rem', marginBottom: 8 }}>Create <span className="gradient-text">Account</span></h1>
-            <p style={{ color: 'var(--txt-3)', fontSize: '.9rem' }}>Choose your role and start your journey.</p>
+            <h1 className="h1-responsive" style={{ fontSize: '2.5rem', marginBottom: 8, color: '#1A0D10', fontWeight: 900 }}>Create Account</h1>
+            <p style={{ color: '#5A3A42', fontSize: '.9rem' }}>Choose your role and start your journey.</p>
           </div>
 
           <div style={{ display: 'flex', gap: 10, marginBottom: '2rem' }}>
             <button 
               className="magnetic-hover"
-              style={{ flex: 1, padding: '1rem', borderRadius: 16, border: `2px solid ${formData.role==='client'?'var(--bur)':'var(--border)'}`, background: formData.role==='client'?'var(--cream-2)':'#fff', cursor: 'pointer', transition: 'all .2s' }}
+              style={{ flex: 1, padding: '1rem', borderRadius: 16, border: `2px solid ${formData.role==='client'?'#7B1D2E':'#E8C9A8'}`, background: formData.role==='client'?'#7B1D2E':'#fff', cursor: 'pointer', transition: 'all .2s', boxShadow: formData.role==='client'?'0 4px 6px -1px rgba(0, 0, 0, 0.1)':'none' }}
               onClick={() => setFormData({...formData, role:'client'})}
             >
-              <User size={24} color={formData.role==='client'?'var(--bur)':'var(--txt-3)'} style={{ marginBottom: 8 }}/>
-              <div style={{ fontWeight: 800, fontSize: '.9rem', color: formData.role==='client'?'var(--bur)':'var(--txt-3)' }}>Client</div>
+              <User size={24} color={formData.role==='client'?'#fff':'#1A0D10'} style={{ marginBottom: 8 }}/>
+              <div style={{ fontWeight: 800, fontSize: '.9rem', color: formData.role==='client'?'#fff':'#1A0D10' }}>Client</div>
             </button>
             <button 
               className="magnetic-hover"
-              style={{ flex: 1, padding: '1rem', borderRadius: 16, border: `2px solid ${formData.role==='lawyer'?'var(--bur)':'var(--border)'}`, background: formData.role==='lawyer'?'var(--cream-2)':'#fff', cursor: 'pointer', transition: 'all .2s' }}
+              style={{ flex: 1, padding: '1rem', borderRadius: 16, border: `2px solid ${formData.role==='lawyer'?'#7B1D2E':'#E8C9A8'}`, background: formData.role==='lawyer'?'#7B1D2E':'#fff', cursor: 'pointer', transition: 'all .2s', boxShadow: formData.role==='lawyer'?'0 4px 6px -1px rgba(0, 0, 0, 0.1)':'none' }}
               onClick={() => setFormData({...formData, role:'lawyer'})}
             >
-              <Scale size={24} color={formData.role==='lawyer'?'var(--bur)':'var(--txt-3)'} style={{ marginBottom: 8 }}/>
-              <div style={{ fontWeight: 800, fontSize: '.9rem', color: formData.role==='lawyer'?'var(--bur)':'var(--txt-3)' }}>Lawyer</div>
+              <Scale size={24} color={formData.role==='lawyer'?'#fff':'#1A0D10'} style={{ marginBottom: 8 }}/>
+              <div style={{ fontWeight: 800, fontSize: '.9rem', color: formData.role==='lawyer'?'#fff':'#1A0D10' }}>Lawyer</div>
             </button>
           </div>
 

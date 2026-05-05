@@ -112,14 +112,14 @@ export default function Home() {
       }} className="hero-responsive">
         <div className="container hero-container-responsive" style={{ position: 'relative', zIndex: 2, maxWidth: 750 }}>
           <div style={{ maxWidth: 700, width: '100%' }} className="reveal-l visible mobile-text-center">
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.95)', border: '1px solid #E8C9A8', borderRadius: 50, padding: '.4rem 1.2rem', marginBottom: '2rem' }} className="mobile-mb-4">
-              <ShieldCheck size={16} color="#7B1D2E"/>
-              <span style={{fontSize:'.85rem',fontWeight:700,color:'#7B1D2E'}}>Bar Council Verified Professionals</span>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#7B1D2E', border: '1px solid rgba(255,255,255,0.3)', borderRadius: 50, padding: '.4rem 1.2rem', marginBottom: '2rem' }} className="mobile-mb-4">
+              <ShieldCheck size={16} color="#fff"/>
+              <span style={{fontSize:'.85rem',fontWeight:700,color:'#fff'}}>Bar Council Verified Professionals</span>
             </div>
             
             <h1 style={s.h1} className="h1-responsive text-balance">
               Find Your <span className="gradient-text" style={{color: '#fff', background: 'none', WebkitTextFillColor: 'initial'}}>Lawyer</span> —<br className="mobile-hide"/>
-              <span style={{color:'#F9EEE4'}}>Anytime, Anywhere.</span>
+              <span style={{color:'#F5C4B3', fontStyle:'italic'}}>Anytime, Anywhere.</span>
             </h1>
             
             <p style={{ fontSize: '1.15rem', color: '#F9EEE4', marginBottom: '1.5rem', lineHeight: 1.7, fontWeight: 500 }} className="hero-sub-responsive text-balance">
@@ -288,8 +288,8 @@ export default function Home() {
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))',gap:'2rem',textAlign:'center'}} className="grid-stats">
             {[['2,400+','Verified Advocates'],['50,000+','Cases Handled'],['500+','Cities Covered'],['4.8 ★','Client Rating']].map(([n,l], idx)=>(
               <div key={l} style={{borderRight: idx < 3 ? '1px solid rgba(255,255,255,0.2)' : 'none'}} className="mobile-border-none">
-                <div style={{fontSize:'3rem',fontWeight:900,color:'#F9EEE4',lineHeight:1}}>{n}</div>
-                <div style={{fontSize:'.875rem',color:'#F5C4B3',textTransform:'uppercase',letterSpacing:'1px',marginTop:8}}>{l}</div>
+                <div style={{fontSize:'3rem',fontWeight:900,color:'#F5C4B3',lineHeight:1}}>{n}</div>
+                <div style={{fontSize:'.875rem',color:'#F9EEE4',textTransform:'uppercase',letterSpacing:'1px',marginTop:8}}>{l}</div>
               </div>
             ))}
           </div>

@@ -47,7 +47,7 @@ export default function HowItWorks() {
                 <div style={s.stepIcon}>{item.icon}</div>
                 <h3 style={s.stepTitle}>{item.title}</h3>
                 <p style={s.stepDesc}>{item.desc}</p>
-                {i < 3 && <div style={s.stepArrow} className="hide-mobile">→</div>}
+                {i < 3 && <div style={s.stepArrow} className="hidden md:block">→</div>}
               </div>
             ))}
           </div>
@@ -74,7 +74,7 @@ export default function HowItWorks() {
                 <div style={{ ...s.stepIcon, color: 'var(--gold)' }}>{item.icon}</div>
                 <h3 style={s.stepTitle}>{item.title}</h3>
                 <p style={s.stepDesc}>{item.desc}</p>
-                {i < 3 && <div style={s.stepArrow} className="hide-mobile">→</div>}
+                {i < 3 && <div style={s.stepArrow} className="hidden md:block">→</div>}
               </div>
             ))}
           </div>

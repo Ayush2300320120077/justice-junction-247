@@ -30,11 +30,11 @@ export default function Navbar() {
   return (
     <>
       {/* Emergency top bar */}
-      <div style={s.emergency} className="mobile-px-4">
+      <div style={{...s.emergency, zIndex: 9999}} className="mobile-px-4">
         <span style={s.eDot}></span>
         <span className="hide-mobile" style={{fontSize:'.75rem',fontWeight:700,color:'#F5E6D3'}}>Emergency Legal Help Available 24/7 - </span>
         <span className="show-mobile-inline" style={{fontSize:'.7rem',fontWeight:700,color:'#F5E6D3'}}>Legal Help 24/7 - </span>
-        <Link href="/search" style={{fontSize:'.7rem',color:'#fff',fontWeight:700,marginLeft:4}}>Find a Lawyer →</Link>
+        <Link href="/search" style={{fontSize:'.7rem',color:'#F5C4B3',fontWeight:700,marginLeft:4,textDecoration:'underline'}}>Find a Lawyer →</Link>
       </div>
 
       {/* Main nav */}
@@ -56,35 +56,43 @@ export default function Navbar() {
             ))}
           </ul>
 
-          <div style={s.actions}>
-            <Link href="/favorites" style={s.iconBtn} title="Saved Lawyers">
-              <span style={{display:'flex',color:'#8B1A2A'}}><Heart size={18}/></span>
-              {favCount > 0 && <span style={s.badge}>{favCount}</span>}
-            </Link>
+          <div style={{display:'flex', alignItems:'center', gap:'1rem'}}>
+            <div style={s.actions} className="hide-mobile">
+              <Link href="/favorites" style={s.iconBtn} title="Saved Lawyers">
+                <span style={{display:'flex',color:'#8B1A2A'}}><Heart size={18}/></span>
+                {favCount > 0 && <span style={s.badge}>{favCount}</span>}
+              </Link>
 
-            {isLoggedIn ? (
-              <>
-                <div style={s.userChip} className="hide-mobile">
-                  <div style={s.userAv}>{(user?.name || 'U')[0].toUpperCase()}</div>
-                  <span style={{fontSize:'.85rem',fontWeight:700,color:'#1A0A0D'}}>{user?.name?.split(' ')[0]}</span>
-                </div>
-                {user?.role === 'admin' ? (
-                  <Link href="/admin" className="btn btn-sm hide-mobile" style={{background:'#fff',color:'#8B1A2A',border:'none',fontWeight:700,borderRadius:6}}>Admin Panel</Link>
-                ) : (
-                  <Link href="/dashboard" className="btn btn-sm hide-mobile" style={{border:'1.5px solid #fff',color:'#fff',background:'transparent',borderRadius:6}}>Dashboard</Link>
-                )}
-                <button className="btn btn-sm hide-mobile" onClick={handleLogout} style={{border:'1.5px solid rgba(255,255,255,0.4)',color:'#F5E6D3',background:'transparent',borderRadius:6}}>Logout</button>
-              </>
-            ) : (
-              <>
-                <Link href="/login" className="btn btn-sm hide-mobile" style={{border:'1.5px solid #fff',color:'#fff',background:'transparent',borderRadius:6}}>Login</Link>
-                <Link href="/register" className="btn btn-sm mobile-hide" style={{background:'#fff',color:'#8B1A2A',border:'none',fontWeight:700,borderRadius:6}}>Register Free</Link>
-              </>
-            )}
+              {isLoggedIn ? (
+                <>
+                  <div style={s.userChip}>
+                    <div style={s.userAv}>{(user?.name || 'U')[0].toUpperCase()}</div>
+                    <span style={{fontSize:'.85rem',fontWeight:700,color:'#1A0A0D'}}>{user?.name?.split(' ')[0]}</span>
+                  </div>
+                  {user?.role === 'admin' ? (
+                    <Link href="/admin" className="btn btn-sm" style={{background:'#fff',color:'#8B1A2A',border:'none',fontWeight:700,borderRadius:6}}>Admin Panel</Link>
+                  ) : (
+                    <Link href="/dashboard" className="btn btn-sm" style={{border:'1.5px solid #fff',color:'#fff',background:'transparent',borderRadius:6}}>Dashboard</Link>
+                  )}
+                  <button className="btn btn-sm" onClick={handleLogout} style={{border:'1.5px solid rgba(255,255,255,0.4)',color:'#F5E6D3',background:'transparent',borderRadius:6}}>Logout</button>
+                </>
+              ) : (
+                <>
+                  <Link href="/login" className="btn btn-sm" style={{border:'1.5px solid #fff',color:'#fff',background:'transparent',borderRadius:6}}>Login</Link>
+                  <Link href="/register" className="btn btn-sm" style={{background:'#fff',color:'#8B1A2A',border:'none',fontWeight:700,borderRadius:6}}>Register Free</Link>
+                </>
+              )}
+            </div>
 
-            <button style={s.burger} onClick={() => setMobileOpen(o => !o)} className="show-mobile">
-              ☰
-            </button>
+            <div className="show-mobile" style={{display:'flex', alignItems:'center', gap:'0.5rem'}}>
+              <Link href="/favorites" style={{...s.iconBtn, width:36, height:36}} title="Saved Lawyers">
+                <span style={{display:'flex',color:'#8B1A2A'}}><Heart size={16}/></span>
+                {favCount > 0 && <span style={{...s.badge, width:16, height:16, fontSize:'.6rem', top:-4, right:-4}}>{favCount}</span>}
+              </Link>
+              <button style={s.burger} onClick={() => setMobileOpen(o => !o)}>
+                {mobileOpen ? '✕' : '☰'}
+              </button>
+            </div>
           </div>
         </div>
       </nav>
@@ -152,10 +160,10 @@ export default function Navbar() {
 }
 
 const s = {
-  emergency:{position:'fixed',top:0,left:0,right:0,zIndex:201,background:'#6B1220',padding:'.35rem 0',display:'flex',alignItems:'center',justifyContent:'center',gap:8},
+  emergency:{position:'fixed',top:0,left:0,right:0,zIndex:9999,background:'#5C1521',padding:'.35rem 0',display:'flex',alignItems:'center',justifyContent:'center',gap:8},
   eDot:{width:7,height:7,background:'#4ADE80',borderRadius:'50%',animation:'pulseDot 2s infinite',display:'inline-block'},
-  nav:{position:'fixed',top:32,left:0,right:0,zIndex:200,background:'#8B1A2A',borderBottom:'1px solid rgba(255,255,255,.12)',transition:'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'},
-  navScrolled:{top: 0, boxShadow:'0 4px 20px rgba(139,26,42,0.3)', background: '#8B1A2A'},
+  nav:{position:'fixed',top:28,left:0,right:0,zIndex:9998,background:'#7B1D2E',borderBottom:'1px solid rgba(255,255,255,.12)',transition:'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'},
+  navScrolled:{top: 0, boxShadow:'0 4px 20px rgba(139,26,42,0.3)', background: '#7B1D2E'},
   inner:{display:'flex',alignItems:'center',justifyContent:'space-between',height:72},
   links:{display:'flex',alignItems:'center',gap:'2rem',listStyle:'none'},
   link:{fontSize:'.9rem',fontWeight:700,color:'#F5E6D3',textDecoration:'none',padding:'.5rem 0',borderBottom:'2.5px solid transparent',transition:'all 0.2s'},

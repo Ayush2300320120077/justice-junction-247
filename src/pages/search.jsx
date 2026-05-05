@@ -170,7 +170,7 @@ export default function Search() {
             
             <div style={{overflowY: 'auto', flex: 1, paddingRight: 5}}>
               <div style={st.filterGroup}>
-                <label style={st.label}><Scale size={14} color="#8B1A2A"/> Specialization</label>
+                <label style={st.label}><Scale size={14} color="#7B1D2E"/> Specialization</label>
                 <select style={st.select} value={spec} onChange={e => setSpec(e.target.value)}>
                   <option value="">All Practice Areas</option>
                   {SPECS.map(sp => <option key={sp} value={sp}>{sp}</option>)}
@@ -178,17 +178,17 @@ export default function Search() {
               </div>
 
               <div style={st.filterGroup}>
-                <label style={st.label}><MapPin size={14} color="#8B1A2A"/> Location</label>
+                <label style={st.label}><MapPin size={14} color="#7B1D2E"/> Location</label>
                 <input style={st.input} placeholder="City or Pincode" value={city} onChange={e => setCity(e.target.value)} />
               </div>
 
               <div style={st.filterGroup}>
-                <label style={st.label}><DollarSign size={14} color="#8B1A2A"/> Max Consultation Fee</label>
+                <label style={st.label}><DollarSign size={14} color="#7B1D2E"/> Max Consultation Fee</label>
                 <div style={st.feeRange}>
                   {[1000, 2500, 5000, 10000].map(amt => (
                     <button 
                       key={amt} 
-                      style={{...st.feeBtn, background: maxFee == amt ? '#8B1A2A' : '#fff', color: maxFee == amt ? '#fff' : '#4A2030'}}
+                      style={{...st.feeBtn, background: maxFee == amt ? '#7B1D2E' : '#fff', color: maxFee == amt ? '#fff' : '#1A0D10'}}
                       onClick={() => setMaxFee(maxFee == amt ? '' : amt)}
                     >
                       ₹{amt/1000}k
@@ -198,7 +198,7 @@ export default function Search() {
               </div>
 
               <div style={st.filterGroup}>
-                <label style={st.label}><ChevronDown size={14} color="#8B1A2A"/> Sort By</label>
+                <label style={st.label}><ChevronDown size={14} color="#7B1D2E"/> Sort By</label>
                 <select style={st.select} value={sortBy} onChange={e => setSortBy(e.target.value)}>
                   <option value="rating">Top Rated</option>
                   <option value="experience">Most Experienced</option>
@@ -208,7 +208,7 @@ export default function Search() {
               </div>
 
               <div style={st.filterGroup}>
-                <label style={st.label}><Globe size={14} color="#8B1A2A"/> Language</label>
+                <label style={st.label}><Globe size={14} color="#7B1D2E"/> Language</label>
                 <select style={st.select} value={language} onChange={e => setLanguage(e.target.value)}>
                   <option value="">All Languages</option>
                   {['Hindi','English','Tamil','Bengali','Marathi','Gujarati','Telugu','Kannada','Punjabi','Urdu'].map(l => <option key={l}>{l}</option>)}
@@ -216,10 +216,10 @@ export default function Search() {
               </div>
 
               <div style={st.filterGroup}>
-                <label style={st.label}><Video size={14} color="#8B1A2A"/> Availability</label>
+                <label style={st.label}><Video size={14} color="#7B1D2E"/> Availability</label>
                 <div style={{display:'flex', flexDirection:'column', gap:10}}>
                   {[['','Any'],['online','Online'],['offline','Offline'],['both','Both (Online + Offline)']].map(([v,l]) => (
-                    <label key={v} style={{display:'flex', alignItems:'center', gap:10, fontSize:'.9rem', fontWeight:600, cursor:'pointer', padding: '8px 12px', background: availability===v ? '#8B1A2A' : '#fff', color: availability===v ? '#fff' : '#1A0A0D', borderRadius: 10, transition: 'all 0.2s', border: '1px solid #EDD5BE'}}>
+                    <label key={v} style={{display:'flex', alignItems:'center', gap:10, fontSize:'.9rem', fontWeight:600, cursor:'pointer', padding: '8px 12px', background: availability===v ? '#7B1D2E' : '#fff', color: availability===v ? '#fff' : '#1A0D10', borderRadius: 10, transition: 'all 0.2s', border: '1px solid #E8C9A8'}}>
                       <input type="radio" name="availability" value={v} checked={availability===v} onChange={() => setAvailability(v)} style={{display: 'none'}}/>{l}
                     </label>
                   ))}
@@ -227,10 +227,10 @@ export default function Search() {
               </div>
 
               <div style={st.filterGroup}>
-                <label style={st.label}><Star size={14} color="#8B1A2A"/> Minimum Rating</label>
+                <label style={st.label}><Star size={14} color="#7B1D2E"/> Minimum Rating</label>
                 <div style={{display:'flex', flexDirection:'column', gap:10}}>
                   {[['','All Ratings'],['4','4+ Stars ★★★★'],['3','3+ Stars ★★★']].map(([v,l]) => (
-                    <label key={v} style={{display:'flex', alignItems:'center', gap:10, fontSize:'.9rem', fontWeight:600, cursor:'pointer', padding: '8px 12px', background: minRating===v ? '#8B1A2A' : '#fff', color: minRating===v ? '#fff' : '#1A0A0D', borderRadius: 10, transition: 'all 0.2s', border: '1px solid #EDD5BE'}}>
+                    <label key={v} style={{display:'flex', alignItems:'center', gap:10, fontSize:'.9rem', fontWeight:600, cursor:'pointer', padding: '8px 12px', background: minRating===v ? '#7B1D2E' : '#fff', color: minRating===v ? '#fff' : '#1A0D10', borderRadius: 10, transition: 'all 0.2s', border: '1px solid #E8C9A8'}}>
                       <input type="radio" name="minRating" value={v} checked={minRating===v} onChange={() => setMinRating(v)} style={{display: 'none'}}/>{l}
                     </label>
                   ))}
@@ -238,9 +238,9 @@ export default function Search() {
               </div>
 
               <div style={st.promoBox}>
-                <Star size={24} color="#8B1A2A" fill="#8B1A2A"/>
-                <div style={{fontWeight: 800, fontSize: '.9rem', margin: '8px 0', color:'#1A0A0D'}}>Justice Junction Pro</div>
-                <p style={{fontSize: '.75rem', color: '#4A2030'}}>Get 20% off on your first 3 consultations. Use code: JJSTART20</p>
+                <Star size={24} color="#F9EEE4" fill="#F9EEE4"/>
+                <div style={{fontWeight: 800, fontSize: '.9rem', margin: '8px 0', color:'#F9EEE4'}}>Justice Junction Pro</div>
+                <p style={{fontSize: '.75rem', color: '#F5C4B3'}}>Get 20% off on your first 3 consultations. Use code: JJSTART20</p>
               </div>
             </div>
 
@@ -311,16 +311,16 @@ const st = {
   searchHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '2.5rem', flexWrap: 'wrap', gap: '1.5rem' },
   h1: { fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 800, lineHeight: 1.1, color: '#1A0A0D' },
   layout: { display: 'flex', gap: '2.5rem', alignItems: 'flex-start' },
-  sidebar: { background: '#fff', border: '1px solid #EDD5BE', borderRadius: '24px', padding: '2rem', position: 'sticky', top: 110, transition: 'all 0.3s ease', zIndex: 100, width: '300px', flexShrink: 0, display: 'flex', flexDirection: 'column' },
+  sidebar: { background: '#FDF6EE', border: '1px solid #E8C9A8', borderRadius: '24px', padding: '2rem', position: 'sticky', top: 110, transition: 'all 0.3s ease', zIndex: 100, width: '300px', flexShrink: 0, display: 'flex', flexDirection: 'column' },
   sbHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' },
-  closeBtn: { background: 'none', border: 'none', cursor: 'pointer', color: '#1A0A0D' },
+  closeBtn: { background: 'none', border: 'none', cursor: 'pointer', color: '#1A0D10' },
   filterGroup: { marginBottom: '1.8rem' },
-  label: { display: 'flex', alignItems: 'center', gap: 6, fontSize: '.75rem', fontWeight: 800, color: '#8B1A2A', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 10 },
-  select: { width: '100%', padding: '.75rem 1rem', borderRadius: 12, border: '1.5px solid #EDD5BE', background: '#fff', fontSize: '.9rem', fontWeight: 600, outline: 'none', color: '#1A0A0D' },
-  input: { width: '100%', padding: '.75rem 1rem', borderRadius: 12, border: '1.5px solid #EDD5BE', background: '#fff', fontSize: '.9rem', fontWeight: 600, outline: 'none', color: '#1A0A0D' },
+  label: { display: 'flex', alignItems: 'center', gap: 6, fontSize: '.75rem', fontWeight: 700, color: '#7B1D2E', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 10 },
+  select: { width: '100%', padding: '.75rem 1rem', borderRadius: 12, border: '1.5px solid #E8C9A8', background: '#fff', fontSize: '.9rem', fontWeight: 600, outline: 'none', color: '#1A0D10' },
+  input: { width: '100%', padding: '.75rem 1rem', borderRadius: 12, border: '1.5px solid #E8C9A8', background: '#fff', fontSize: '.9rem', fontWeight: 600, outline: 'none', color: '#1A0D10' },
   feeRange: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 },
-  feeBtn: { padding: '.6rem', borderRadius: 10, border: '1.5px solid #EDD5BE', fontSize: '.8rem', fontWeight: 700, cursor: 'pointer', transition: 'all .2s' },
-  promoBox: { marginTop: '2rem', padding: '1.5rem', background: '#F5E6D3', borderRadius: 20, textAlign: 'center', border: '1px solid #EDD5BE' },
+  feeBtn: { padding: '.6rem', borderRadius: 10, border: '1.5px solid #E8C9A8', fontSize: '.8rem', fontWeight: 700, cursor: 'pointer', transition: 'all .2s' },
+  promoBox: { marginTop: '2rem', padding: '1.5rem', background: '#7B1D2E', borderRadius: 20, textAlign: 'center', border: '1px solid #7B1D2E' },
   main: { flex: 1, minWidth: 0 },
   grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem' },
   empty: { textAlign: 'center', padding: '5rem 2rem', background: '#fff', borderRadius: '24px', border: '1px solid #EDD5BE' }

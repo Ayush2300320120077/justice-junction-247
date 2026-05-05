@@ -60,8 +60,8 @@ export default function AdminLayout({ children, title = 'Dashboard' }) {
       <aside style={{ ...s.sidebar, transform: mobileOpen ? 'translateX(0)' : undefined }} className="admin-sidebar">
         <div style={s.sidebarHeader}>
           <div style={s.logo}>
-            <Scale size={24} color="#6366f1" />
-            <span style={{ fontWeight: 800, fontSize: '1.2rem', color: '#fff' }}>JJ Admin</span>
+            <Scale size={24} color="#F5C4B3" />
+            <span style={{ fontWeight: 800, fontSize: '1.2rem', color: '#F9EEE4' }}>JJ Admin</span>
           </div>
           {adminUser && (
             <div style={s.adminBadge}>
@@ -98,7 +98,7 @@ export default function AdminLayout({ children, title = 'Dashboard' }) {
       </aside>
 
       {/* Main Content Area */}
-      <div style={s.mainWrapper}>
+      <div style={s.mainWrapper} className="admin-main-wrapper">
         <header style={s.topbar}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <button className="admin-menu-btn" style={s.menuBtn} onClick={() => setMobileOpen(true)}>
@@ -121,9 +121,11 @@ export default function AdminLayout({ children, title = 'Dashboard' }) {
       <style jsx global>{`
         body { margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
         .admin-sidebar { transition: transform 0.3s ease; }
+        .admin-main-wrapper { transition: margin-left 0.3s ease; }
         .admin-menu-btn { display: none; background: none; border: none; cursor: pointer; padding: 0; }
         @media (max-width: 1024px) {
-          .admin-sidebar { position: fixed; top: 0; left: 0; bottom: 0; transform: translateX(-100%); z-index: 100; }
+          .admin-sidebar { transform: translateX(-100%); }
+          .admin-main-wrapper { margin-left: 0 !important; }
           .admin-menu-btn { display: block; }
         }
       `}</style>
@@ -134,17 +136,17 @@ export default function AdminLayout({ children, title = 'Dashboard' }) {
 const s = {
   layout: { display: 'flex', minHeight: '100vh', backgroundColor: '#f8fafc' },
   overlay: { position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 90 },
-  sidebar: { width: '260px', backgroundColor: '#0f172a', color: '#fff', display: 'flex', flexDirection: 'column', flexShrink: 0 },
-  sidebarHeader: { padding: '1.5rem', borderBottom: '1px solid #1e293b' },
+  sidebar: { position: 'fixed', top: 0, left: 0, bottom: 0, width: '260px', backgroundColor: '#1A0D10', color: '#F9EEE4', display: 'flex', flexDirection: 'column', zIndex: 100 },
+  sidebarHeader: { padding: '1.5rem', borderBottom: '1px solid rgba(255,255,255,0.1)' },
   logo: { display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem' },
-  adminBadge: { display: 'flex', alignItems: 'center', gap: '0.75rem', backgroundColor: '#1e293b', padding: '0.75rem', borderRadius: '8px' },
-  adminInitials: { width: '32px', height: '32px', backgroundColor: '#6366f1', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.9rem' },
-  adminName: { fontSize: '0.85rem', fontWeight: 700 },
-  adminRole: { fontSize: '0.7rem', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '1px' },
+  adminBadge: { display: 'flex', alignItems: 'center', gap: '0.75rem', backgroundColor: 'rgba(255,255,255,0.05)', padding: '0.75rem', borderRadius: '8px' },
+  adminInitials: { width: '32px', height: '32px', backgroundColor: '#7B1D2E', color: '#F9EEE4', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.9rem' },
+  adminName: { fontSize: '0.85rem', fontWeight: 700, color: '#F9EEE4' },
+  adminRole: { fontSize: '0.7rem', color: '#F5C4B3', textTransform: 'uppercase', letterSpacing: '1px' },
   nav: { display: 'flex', flexDirection: 'column', padding: '1rem', gap: '0.25rem', flex: 1, overflowY: 'auto' },
-  navItem: { display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem', background: 'none', border: 'none', color: '#cbd5e1', fontSize: '0.9rem', fontWeight: 600, cursor: 'pointer', borderRadius: '8px', transition: 'all 0.2s', textAlign: 'left' },
-  navItemActive: { backgroundColor: '#1e293b', color: '#fff', borderLeft: '3px solid #6366f1', borderTopLeftRadius: 0, borderBottomLeftRadius: 0 },
-  mainWrapper: { flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 },
+  navItem: { display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1rem', background: 'none', border: 'none', color: '#F9EEE4', fontSize: '0.9rem', fontWeight: 600, cursor: 'pointer', borderRadius: '8px', transition: 'all 0.2s', textAlign: 'left' },
+  navItemActive: { backgroundColor: '#7B1D2E', color: '#F9EEE4', borderLeft: '3px solid #F5C4B3', borderTopLeftRadius: 0, borderBottomLeftRadius: 0 },
+  mainWrapper: { marginLeft: '260px', flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, minHeight: '100vh' },
   topbar: { height: '70px', backgroundColor: '#fff', borderBottom: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 2rem' },
   pageTitle: { fontSize: '1.25rem', fontWeight: 700, color: '#0f172a', margin: 0 },
   topbarRight: { display: 'flex', alignItems: 'center', gap: '1.5rem' },
