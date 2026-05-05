@@ -51,7 +51,7 @@ export default function JoinAsLawyer() {
   return (
     <div style={{ paddingTop:95, background:'#fff', minHeight:'100vh' }}>
       <Head>
-        <title>Join as an Advocate — Justice Junction 24/7</title>
+        <title>Join as Advocate | Justice Junction 24/7</title>
         <meta name="description" content="Register as a verified advocate. Get quality clients, manage your cases, and grow your legal practice online." />
         <meta property="og:title" content="Join as an Advocate — Justice Junction 24/7" />
         <meta property="og:description" content="Get clients 24/7. Build your online reputation. No upfront cost." />
@@ -75,10 +75,10 @@ export default function JoinAsLawyer() {
               <a href="#apply-form" className="btn btn-primary btn-xl">Apply Now — It's Free</a>
               <Link href="/lawyer-plans" className="btn btn-outline btn-xl">View Plans</Link>
             </div>
-            <div style={{fontSize:'.85rem', color:'var(--txt-3)', display:'flex', alignItems:'center', gap:8, fontWeight:600}}><Users size={16}/> 2,400+ advocates already with us.</div>
+            <div style={{fontSize:'.85rem', color:'var(--txt-3)', display:'flex', alignItems:'center', gap:8, fontWeight:600}}><Users size={16}/> 50+ advocates already with us.</div>
           </div>
           <div style={s.statsPanel} className="hide-mobile">
-            {[['2,400+','Verified Advocates'],['₹45K+','Avg Monthly Earnings'],['24/7','Client Bookings'],['48h','Verification Time']].map(([v,l]) => (
+            {[['50+','Verified Advocates'],['24/7','Client Bookings'],['48h','Verification Time']].map(([v,l]) => (
               <div key={l} style={s.statBox}><div style={s.statVal}>{v}</div><div style={s.statLbl}>{l}</div></div>
             ))}
           </div>
@@ -94,6 +94,54 @@ export default function JoinAsLawyer() {
                 <div style={s.iconBox}>{b.icon}</div>
                 <h3 style={{fontSize:'1.1rem', fontWeight:800, marginBottom:8}}>{b.title}</h3>
                 <p style={{fontSize:'.9rem', color:'var(--txt-2)', lineHeight:1.6}}>{b.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Verification Steps */}
+      <section style={{padding:'5rem 5vw',background:'#fff'}}>
+        <div className="container">
+          <div style={{textAlign:'center',marginBottom:'3rem'}}>
+            <div className="sec-label" style={{justifyContent:'center'}}>What Happens Next</div>
+            <h2 className="sec-title" style={{textAlign:'center'}}>Our Simple <em>3-Step Verification</em></h2>
+          </div>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(260px,1fr))',gap:'1.5rem',maxWidth:900,margin:'0 auto'}}>
+            {[
+              {step:'01',time:'5 min',title:'Submit Your Application',desc:'Fill out the form below with your Bar Council details and practice information. Takes less than 5 minutes.'},
+              {step:'02',time:'24–48h',title:'Verification',desc:'Our team verifies your Bar Council enrollment number with official records. We may call for document confirmation.'},
+              {step:'03',time:'Go Live',title:'Start Getting Clients',desc:'Your profile goes live with a Verified badge. Clients can now find and book you 24/7 from anywhere in India.'},
+            ].map(s=>(
+              <div key={s.step} style={{textAlign:'center',padding:'2.5rem 2rem',background:'var(--cream-2)',borderRadius:20,border:'1px solid var(--border)',position:'relative'}}>
+                <div style={{position:'absolute',top:12,right:16,fontSize:'.7rem',fontWeight:800,color:'var(--bur)',background:'rgba(139,26,42,0.08)',padding:'.2rem .7rem',borderRadius:50}}>{s.time}</div>
+                <div style={{fontSize:'2.5rem',fontWeight:800,color:'var(--bur)',fontFamily:"'Sora',sans-serif",marginBottom:12}}>{s.step}</div>
+                <h3 style={{fontSize:'1.1rem',fontWeight:800,marginBottom:8}}>{s.title}</h3>
+                <p style={{fontSize:'.88rem',color:'var(--txt-2)',lineHeight:1.7}}>{s.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Lawyer Testimonials */}
+      <section style={{padding:'5rem 5vw',background:'var(--cream-2)'}}>
+        <div className="container">
+          <div style={{textAlign:'center',marginBottom:'3rem'}}>
+            <div className="sec-label" style={{justifyContent:'center'}}>From Our Advocates</div>
+            <h2 className="sec-title" style={{textAlign:'center'}}>Hear from lawyers <em>already on board.</em></h2>
+          </div>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(300px,1fr))',gap:'1.5rem',maxWidth:1050,margin:'0 auto'}}>
+            {[
+              {text:"I was skeptical at first, but Justice Junction brought me 14 quality clients in my second month. The dashboard makes scheduling and case updates effortless.",name:'Adv. Priya Nair',role:'Family Law Specialist, Chennai'},
+              {text:"As a young advocate in a new city, building a client base was my biggest challenge. Within 6 weeks of joining, I had a steady flow of consultations through the platform.",name:'Adv. Rohit Sharma',role:'Criminal Defence, Pune'},
+              {text:"The Razorpay integration means I get paid instantly after every consultation — no awkward follow-ups with clients. The Elite plan's ROI is excellent.",name:'Adv. Meenakshi Iyer',role:'Corporate Law, Bangalore'},
+            ].map(t=>(
+              <div key={t.name} style={{background:'#fff',padding:'2rem',borderRadius:20,border:'1px solid var(--border)',borderLeft:'4px solid var(--bur)'}}>
+                <div style={{color:'var(--bur)',marginBottom:12,letterSpacing:2}}>★★★★★</div>
+                <p style={{fontSize:'.95rem',fontStyle:'italic',lineHeight:1.7,marginBottom:'1.5rem',color:'var(--txt)'}}>&ldquo;{t.text}&rdquo;</p>
+                <div style={{fontWeight:800,fontSize:'.9rem'}}>{t.name}</div>
+                <div style={{fontSize:'.78rem',color:'var(--txt-3)'}}>{t.role}</div>
               </div>
             ))}
           </div>
@@ -118,18 +166,18 @@ export default function JoinAsLawyer() {
           ) : (
             <form onSubmit={handleSubmit} style={s.form} noValidate>
               <div className="form-row">
-                <div className="form-group"><label>Full Name *</label><div className="input-wrap"><Users size={16} className="input-icon"/><input name="name" value={form.name} onChange={onChange} placeholder="Adv. Rahul Sharma"/></div>{errors.name && <span style={s.err}>{errors.name}</span>}</div>
-                <div className="form-group"><label>Phone Number *</label><div className="input-wrap"><Phone size={16} className="input-icon"/><input name="phone" value={form.phone} onChange={onChange} placeholder="10-digit mobile" maxLength={10}/></div>{errors.phone && <span style={s.err}>{errors.phone}</span>}</div>
+                <div className="form-group"><label>Full Name <span style={{color:'#DC2626'}}>*</span></label><div className="input-wrap"><Users size={16} className="input-icon"/><input name="name" value={form.name} onChange={onChange} placeholder="Adv. Rahul Sharma" style={errors.name ? {border:'1px solid #DC2626'} : {}}/></div>{errors.name && <span style={s.err}>{errors.name}</span>}</div>
+                <div className="form-group"><label>Phone Number <span style={{color:'#DC2626'}}>*</span></label><div className="input-wrap"><Phone size={16} className="input-icon"/><input name="phone" value={form.phone} onChange={onChange} placeholder="10-digit mobile" maxLength={10} style={errors.phone ? {border:'1px solid #DC2626'} : {}}/></div>{errors.phone && <span style={s.err}>{errors.phone}</span>}</div>
               </div>
               <div className="form-row">
-                <div className="form-group"><label>Email Address *</label><div className="input-wrap"><Mail size={16} className="input-icon"/><input name="email" type="email" value={form.email} onChange={onChange} placeholder="your@email.com"/></div>{errors.email && <span style={s.err}>{errors.email}</span>}</div>
-                <div className="form-group"><label>Bar Council Enrolment No. *</label><div className="input-wrap"><Hash size={16} className="input-icon"/><input name="barCouncilNumber" value={form.barCouncilNumber} onChange={onChange} placeholder="e.g. D/1234/2010"/></div>{errors.barCouncilNumber && <span style={s.err}>{errors.barCouncilNumber}</span>}</div>
+                <div className="form-group"><label>Email Address <span style={{color:'#DC2626'}}>*</span></label><div className="input-wrap"><Mail size={16} className="input-icon"/><input name="email" type="email" value={form.email} onChange={onChange} placeholder="your@email.com" style={errors.email ? {border:'1px solid #DC2626'} : {}}/></div>{errors.email && <span style={s.err}>{errors.email}</span>}</div>
+                <div className="form-group"><label>Bar Council Enrolment No. <span style={{color:'#DC2626'}}>*</span></label><div className="input-wrap"><Hash size={16} className="input-icon"/><input name="barCouncilNumber" value={form.barCouncilNumber} onChange={onChange} placeholder="e.g. D/1234/2010" style={errors.barCouncilNumber ? {border:'1px solid #DC2626'} : {}}/></div>{errors.barCouncilNumber && <span style={s.err}>{errors.barCouncilNumber}</span>}</div>
               </div>
               <div className="form-row">
-                <div className="form-group"><label>Specialization *</label><select name="specialization" value={form.specialization} onChange={onChange}><option value="">Select...</option>{SPECS.map(sp => <option key={sp}>{sp}</option>)}</select>{errors.specialization && <span style={s.err}>{errors.specialization}</span>}</div>
-                <div className="form-group"><label>City *</label><div className="input-wrap"><MapPin size={16} className="input-icon"/><input name="city" value={form.city} onChange={onChange} placeholder="e.g. New Delhi"/></div>{errors.city && <span style={s.err}>{errors.city}</span>}</div>
+                <div className="form-group"><label>Specialization <span style={{color:'#DC2626'}}>*</span></label><select name="specialization" value={form.specialization} onChange={onChange} style={errors.specialization ? {border:'1px solid #DC2626'} : {}}><option value="">Select...</option>{SPECS.map(sp => <option key={sp}>{sp}</option>)}</select>{errors.specialization && <span style={s.err}>{errors.specialization}</span>}</div>
+                <div className="form-group"><label>City <span style={{color:'#DC2626'}}>*</span></label><div className="input-wrap"><MapPin size={16} className="input-icon"/><input name="city" value={form.city} onChange={onChange} placeholder="e.g. New Delhi" style={errors.city ? {border:'1px solid #DC2626'} : {}}/></div>{errors.city && <span style={s.err}>{errors.city}</span>}</div>
               </div>
-              <div className="form-group"><label>Years of Experience *</label><div className="input-wrap"><Briefcase size={16} className="input-icon"/><input name="yearsOfExperience" type="number" min="0" max="60" value={form.yearsOfExperience} onChange={onChange} placeholder="e.g. 8"/></div>{errors.yearsOfExperience && <span style={s.err}>{errors.yearsOfExperience}</span>}</div>
+              <div className="form-group"><label>Years of Experience <span style={{color:'#DC2626'}}>*</span></label><div className="input-wrap"><Briefcase size={16} className="input-icon"/><input name="yearsOfExperience" type="number" min="0" max="60" value={form.yearsOfExperience} onChange={onChange} placeholder="e.g. 8" style={errors.yearsOfExperience ? {border:'1px solid #DC2626'} : {}}/></div>{errors.yearsOfExperience && <span style={s.err}>{errors.yearsOfExperience}</span>}</div>
               <button type="submit" className="btn btn-primary btn-lg" style={{width:'100%', marginTop:'1.5rem', gap:8}} disabled={submitting}>
                 <Send size={18}/>{submitting ? 'Submitting...' : 'Submit Application'}
               </button>

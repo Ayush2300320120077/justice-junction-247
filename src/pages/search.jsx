@@ -1,13 +1,23 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 import LawyerCard from '../components/LawyerCard'
 import SkeletonCard from '../components/SkeletonCard'
 import { useToast } from '../context/ToastContext'
-import { SearchX, Filter, X, ChevronDown, Star, MapPin, Scale, DollarSign, Loader2, Globe, Video } from 'lucide-react'
+import { SearchX, Filter, X, ChevronDown, Star, MapPin, Scale, DollarSign, Loader2, Globe, Video, Phone } from 'lucide-react'
 import Head from 'next/head'
 
 const SPECS = ['Criminal Defence','Family Law','Property Law','Corporate Law','Consumer Rights','Labour Law','Civil Disputes','Divorce','Taxation','Intellectual Property','Cyber Law']
 const CITIES = ['Delhi','Mumbai','Bangalore','Hyderabad','Chennai','Kolkata','Ahmedabad','Pune','Jaipur','Lucknow']
+
+const SUGGESTED_LAWYERS = [
+  { _id: 'demo1', name: 'Adv. Priya Sharma', specializations: ['Family Law','Divorce'], city: 'Delhi', state: 'Delhi', experience: 14, consultationFee: 2500, averageRating: 4.9, totalReviews: 87, isAvailable: true, experienceLevel: 'senior', languages: ['Hindi','English'] },
+  { _id: 'demo2', name: 'Adv. Rajesh Menon', specializations: ['Criminal Defence','Bail & FIR'], city: 'Mumbai', state: 'Maharashtra', experience: 22, consultationFee: 4000, averageRating: 4.8, totalReviews: 142, isAvailable: true, experienceLevel: 'senior', languages: ['English','Marathi','Hindi'] },
+  { _id: 'demo3', name: 'Adv. Sunita Reddy', specializations: ['Property Law','Consumer Rights'], city: 'Bangalore', state: 'Karnataka', experience: 11, consultationFee: 3000, averageRating: 4.7, totalReviews: 63, isAvailable: true, experienceLevel: 'mid', languages: ['English','Kannada','Telugu'] },
+  { _id: 'demo4', name: 'Adv. Mohammed Farhan', specializations: ['Corporate Law','Taxation'], city: 'Hyderabad', state: 'Telangana', experience: 9, consultationFee: 3500, averageRating: 4.9, totalReviews: 51, isAvailable: true, experienceLevel: 'mid', languages: ['English','Hindi','Urdu'] },
+  { _id: 'demo5', name: 'Adv. Kavya Nair', specializations: ['Consumer Rights','Civil Disputes'], city: 'Chennai', state: 'Tamil Nadu', experience: 7, consultationFee: 1800, averageRating: 4.6, totalReviews: 38, isAvailable: true, experienceLevel: 'mid', languages: ['Tamil','English'] },
+  { _id: 'demo6', name: 'Adv. Amit Chaturvedi', specializations: ['Labour Law','Civil Disputes'], city: 'Lucknow', state: 'Uttar Pradesh', experience: 18, consultationFee: 2200, averageRating: 4.8, totalReviews: 94, isAvailable: false, experienceLevel: 'senior', languages: ['Hindi','English'] },
+]
 
 export default function Search() {
   const router = useRouter()
@@ -57,6 +67,7 @@ export default function Search() {
 
   // Load data
   const fetchData = async (p, isNew = false) => {
+    console.log('Fetching lawyers with params:', { p, isNew, spec, city, maxFee, sortBy, language, availability, minRating })
     setLoading(true)
     try {
       const params = new URLSearchParams({ page: p, limit: 8, sort: sortBy })
@@ -116,19 +127,19 @@ export default function Search() {
   }
 
   return (
-    <div className="search-page-bg">
+    <div style={{background:'#FDF8F4',minHeight:'100vh'}}>
       <div className="page-wrap page-reveal" style={{background: 'transparent'}}>
       <Head>
-        <title>Find Verified Lawyers — Justice Junction 24/7</title>
+        <title>Find Verified Lawyers in India | Justice Junction 24/7</title>
         <meta name="description" content="Browse and compare top-rated advocates by specialization, fee, and location. Book instant video consultations." />
       </Head>
 
       <div className="container" style={{paddingTop: '2rem'}}>
         {/* Header Area */}
-        <div style={s.searchHeader} className="search-header-responsive">
+        <div style={st.searchHeader} className="search-header-responsive">
           <div className="mobile-text-center mobile-w-full">
-            <h1 style={s.h1} className="text-balance">Expert Legal Counsel</h1>
-            <p style={{color: 'var(--txt-3)', fontSize: '.9rem'}} className="text-balance">Found {total} verified professionals matching your criteria.</p>
+            <h1 style={st.h1} className="text-balance">Expert Legal Counsel</h1>
+            <p style={{color: '#4A2030', fontSize: '.9rem'}} className="text-balance">Found {total} verified professionals matching your criteria.</p>
           </div>
           <div style={{display: 'flex', gap: 12, width: '100%', justifyContent: 'center'}} className="show-mobile">
              <button className="btn btn-primary" style={{flex:1, borderRadius: 12}} onClick={() => setShowFilters(true)}>
@@ -141,35 +152,35 @@ export default function Search() {
           </div>
         </div>
 
-        <div style={s.layout} className="search-layout-responsive">
+        <div style={st.layout} className="search-layout-responsive">
           {/* Sidebar Filters */}
-          <aside style={s.sidebar} className={`search-sidebar-mobile ${showFilters ? 'open' : ''}`}>
-            <div style={s.sbHeader}>
-              <h3 style={{fontWeight: 800, fontSize: '1.2rem'}}>Filters</h3>
-              <button className="show-mobile" style={s.closeBtn} onClick={() => setShowFilters(false)}><X size={24}/></button>
+          <aside style={st.sidebar} className={`search-sidebar-mobile ${showFilters ? 'open' : ''}`}>
+            <div style={st.sbHeader}>
+              <h3 style={{fontWeight: 800, fontSize: '1.2rem', color:'#1A0A0D'}}>Filters</h3>
+              <button className="show-mobile" style={st.closeBtn} onClick={() => setShowFilters(false)}><X size={24}/></button>
             </div>
             
             <div style={{overflowY: 'auto', flex: 1, paddingRight: 5}}>
-              <div style={s.filterGroup}>
-                <label style={s.label}><Scale size={14}/> Specialization</label>
-                <select style={s.select} value={spec} onChange={e => setSpec(e.target.value)}>
+              <div style={st.filterGroup}>
+                <label style={st.label}><Scale size={14} color="#8B1A2A"/> Specialization</label>
+                <select style={st.select} value={spec} onChange={e => setSpec(e.target.value)}>
                   <option value="">All Practice Areas</option>
                   {SPECS.map(sp => <option key={sp} value={sp}>{sp}</option>)}
                 </select>
               </div>
 
-              <div style={s.filterGroup}>
-                <label style={s.label}><MapPin size={14}/> Location</label>
-                <input style={s.input} placeholder="City or Pincode" value={city} onChange={e => setCity(e.target.value)} />
+              <div style={st.filterGroup}>
+                <label style={st.label}><MapPin size={14} color="#8B1A2A"/> Location</label>
+                <input style={st.input} placeholder="City or Pincode" value={city} onChange={e => setCity(e.target.value)} />
               </div>
 
-              <div style={s.filterGroup}>
-                <label style={s.label}><DollarSign size={14}/> Max Consultation Fee</label>
-                <div style={s.feeRange}>
+              <div style={st.filterGroup}>
+                <label style={st.label}><DollarSign size={14} color="#8B1A2A"/> Max Consultation Fee</label>
+                <div style={st.feeRange}>
                   {[1000, 2500, 5000, 10000].map(amt => (
                     <button 
                       key={amt} 
-                      style={{...s.feeBtn, background: maxFee == amt ? 'var(--bur)' : '#fff', color: maxFee == amt ? '#fff' : 'var(--txt-2)'}}
+                      style={{...st.feeBtn, background: maxFee == amt ? '#8B1A2A' : '#fff', color: maxFee == amt ? '#fff' : '#4A2030'}}
                       onClick={() => setMaxFee(maxFee == amt ? '' : amt)}
                     >
                       ₹{amt/1000}k
@@ -178,9 +189,9 @@ export default function Search() {
                 </div>
               </div>
 
-              <div style={s.filterGroup}>
-                <label style={s.label}><ChevronDown size={14}/> Sort By</label>
-                <select style={s.select} value={sortBy} onChange={e => setSortBy(e.target.value)}>
+              <div style={st.filterGroup}>
+                <label style={st.label}><ChevronDown size={14} color="#8B1A2A"/> Sort By</label>
+                <select style={st.select} value={sortBy} onChange={e => setSortBy(e.target.value)}>
                   <option value="rating">Top Rated</option>
                   <option value="experience">Most Experienced</option>
                   <option value="price_low">Fee: Low to High</option>
@@ -188,40 +199,40 @@ export default function Search() {
                 </select>
               </div>
 
-              <div style={s.filterGroup}>
-                <label style={s.label}><Globe size={14}/> Language</label>
-                <select style={s.select} value={language} onChange={e => setLanguage(e.target.value)}>
+              <div style={st.filterGroup}>
+                <label style={st.label}><Globe size={14} color="#8B1A2A"/> Language</label>
+                <select style={st.select} value={language} onChange={e => setLanguage(e.target.value)}>
                   <option value="">All Languages</option>
                   {['Hindi','English','Tamil','Bengali','Marathi','Gujarati','Telugu','Kannada','Punjabi','Urdu'].map(l => <option key={l}>{l}</option>)}
                 </select>
               </div>
 
-              <div style={s.filterGroup}>
-                <label style={s.label}><Video size={14}/> Availability</label>
+              <div style={st.filterGroup}>
+                <label style={st.label}><Video size={14} color="#8B1A2A"/> Availability</label>
                 <div style={{display:'flex', flexDirection:'column', gap:10}}>
                   {[['','Any'],['online','Online'],['offline','Offline'],['both','Both (Online + Offline)']].map(([v,l]) => (
-                    <label key={v} style={{display:'flex', alignItems:'center', gap:10, fontSize:'.9rem', fontWeight:600, cursor:'pointer', padding: '8px 12px', background: availability===v ? 'var(--bur-l)' : 'var(--cream)', color: availability===v ? '#fff' : 'var(--txt)', borderRadius: 10, transition: 'all 0.2s'}}>
+                    <label key={v} style={{display:'flex', alignItems:'center', gap:10, fontSize:'.9rem', fontWeight:600, cursor:'pointer', padding: '8px 12px', background: availability===v ? '#8B1A2A' : '#fff', color: availability===v ? '#fff' : '#1A0A0D', borderRadius: 10, transition: 'all 0.2s', border: '1px solid #EDD5BE'}}>
                       <input type="radio" name="availability" value={v} checked={availability===v} onChange={() => setAvailability(v)} style={{display: 'none'}}/>{l}
                     </label>
                   ))}
                 </div>
               </div>
 
-              <div style={s.filterGroup}>
-                <label style={s.label}><Star size={14}/> Minimum Rating</label>
+              <div style={st.filterGroup}>
+                <label style={st.label}><Star size={14} color="#8B1A2A"/> Minimum Rating</label>
                 <div style={{display:'flex', flexDirection:'column', gap:10}}>
                   {[['','All Ratings'],['4','4+ Stars ★★★★'],['3','3+ Stars ★★★']].map(([v,l]) => (
-                    <label key={v} style={{display:'flex', alignItems:'center', gap:10, fontSize:'.9rem', fontWeight:600, cursor:'pointer', padding: '8px 12px', background: minRating===v ? 'var(--gold)' : 'var(--cream)', color: minRating===v ? '#fff' : 'var(--txt)', borderRadius: 10, transition: 'all 0.2s'}}>
+                    <label key={v} style={{display:'flex', alignItems:'center', gap:10, fontSize:'.9rem', fontWeight:600, cursor:'pointer', padding: '8px 12px', background: minRating===v ? '#8B1A2A' : '#fff', color: minRating===v ? '#fff' : '#1A0A0D', borderRadius: 10, transition: 'all 0.2s', border: '1px solid #EDD5BE'}}>
                       <input type="radio" name="minRating" value={v} checked={minRating===v} onChange={() => setMinRating(v)} style={{display: 'none'}}/>{l}
                     </label>
                   ))}
                 </div>
               </div>
 
-              <div style={s.promoBox}>
-                <Star size={24} color="var(--gold)" fill="var(--gold)"/>
-                <div style={{fontWeight: 800, fontSize: '.9rem', margin: '8px 0'}}>Justice Junction Pro</div>
-                <p style={{fontSize: '.75rem', color: 'var(--txt-3)'}}>Get 20% off on your first 3 consultations. Use code: JJSTART20</p>
+              <div style={st.promoBox}>
+                <Star size={24} color="#8B1A2A" fill="#8B1A2A"/>
+                <div style={{fontWeight: 800, fontSize: '.9rem', margin: '8px 0', color:'#1A0A0D'}}>Justice Junction Pro</div>
+                <p style={{fontSize: '.75rem', color: '#4A2030'}}>Get 20% off on your first 3 consultations. Use code: JJSTART20</p>
               </div>
             </div>
 
@@ -229,16 +240,38 @@ export default function Search() {
           </aside>
 
           {/* Main Results */}
-          <main style={s.main}>
+          <main style={st.main}>
             {lawyers.length === 0 && !loading ? (
-              <div style={s.empty}>
-                <SearchX size={64} color="var(--border-2)" strokeWidth={1} />
-                <h2 style={{marginTop: '1.5rem', fontWeight: 800}}>No lawyers found</h2>
-                <p style={{color: 'var(--txt-3)', marginBottom: '2rem'}}>Try adjusting your filters or search terms.</p>
-                <button className="btn btn-outline" onClick={clearFilters}>Clear All Filters</button>
+              <div>
+                <div style={st.empty}>
+                  <SearchX size={64} color="#D4A882" strokeWidth={1} />
+                  <h2 style={{marginTop: '1.5rem', fontWeight: 800, color:'#1A0A0D'}}>No lawyers match your filters</h2>
+                  <p style={{color: '#4A2030', marginBottom: '1rem', maxWidth:420, margin:'0.5rem auto 1rem', lineHeight:1.7, fontSize:'.92rem'}}>
+                    Our network is growing fast. Try adjusting your filters, or browse our featured advocates below.
+                  </p>
+                  <button className="btn btn-outline" onClick={clearFilters}>Clear All Filters</button>
+                  <div style={{marginTop:'1rem'}}>
+                    <Link href="/join-as-lawyer" style={{fontSize:'.88rem',fontWeight:700,color:'#8B1A2A',textDecoration:'none'}}>Are you a lawyer? List your profile free →</Link>
+                  </div>
+                </div>
+
+                {/* Featured Advocates */}
+                <div style={{marginTop:'2.5rem'}}>
+                  <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:'1rem'}}>
+                    <h3 style={{fontSize:'1.1rem',fontWeight:700,color:'#8B1A2A',margin:0}}>Featured Advocates</h3>
+                    <span style={{fontSize:'.7rem',fontWeight:700,color:'#6B4050',background:'#F5E6D3',padding:'.25rem .8rem',borderRadius:50}}>Sample Profiles — Real lawyers joining soon</span>
+                  </div>
+                  <div style={st.grid} className="grid-lawyers">
+                    {SUGGESTED_LAWYERS.map(l => (
+                      <div key={l._id} className="magnetic-hover">
+                        <LawyerCard lawyer={l} />
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             ) : (
-              <div style={s.grid} className="grid-lawyers">
+              <div style={st.grid} className="grid-lawyers">
                 {lawyers.map((l, idx) => (
                   <div key={l._id} ref={idx === lawyers.length - 1 ? lastElementRef : null} className="magnetic-hover">
                     <LawyerCard lawyer={l} />
@@ -248,13 +281,13 @@ export default function Search() {
             )}
 
             {loading && (
-              <div style={s.grid} className="grid-lawyers">
+              <div style={st.grid} className="grid-lawyers">
                 {[1,2,3,4].map(i => <SkeletonCard key={i} />)}
               </div>
             )}
 
             {!hasMore && lawyers.length > 0 && (
-              <div style={{textAlign: 'center', padding: '4rem 0', color: 'var(--txt-3)', fontSize: '.9rem', fontWeight: 600}}>
+              <div style={{textAlign: 'center', padding: '4rem 0', color: '#6B4050', fontSize: '.9rem', fontWeight: 600}}>
                 You've reached the end of the list.
               </div>
             )}
@@ -266,21 +299,21 @@ export default function Search() {
   )
 }
 
-const s = {
+const st = {
   searchHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '2.5rem', flexWrap: 'wrap', gap: '1.5rem' },
-  h1: { fontFamily: "'Playfair Display', serif", fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 800, lineHeight: 1.1 },
+  h1: { fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 800, lineHeight: 1.1, color: '#1A0A0D' },
   layout: { display: 'flex', gap: '2.5rem', alignItems: 'flex-start' },
-  sidebar: { background: '#fff', border: '1px solid var(--border)', borderRadius: '24px', padding: '2rem', position: 'sticky', top: 110, transition: 'all 0.3s ease', zIndex: 100, width: '300px', flexShrink: 0, display: 'flex', flexDirection: 'column' },
+  sidebar: { background: '#fff', border: '1px solid #EDD5BE', borderRadius: '24px', padding: '2rem', position: 'sticky', top: 110, transition: 'all 0.3s ease', zIndex: 100, width: '300px', flexShrink: 0, display: 'flex', flexDirection: 'column' },
   sbHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' },
-  closeBtn: { background: 'none', border: 'none', cursor: 'pointer' },
+  closeBtn: { background: 'none', border: 'none', cursor: 'pointer', color: '#1A0A0D' },
   filterGroup: { marginBottom: '1.8rem' },
-  label: { display: 'flex', alignItems: 'center', gap: 6, fontSize: '.75rem', fontWeight: 800, color: 'var(--txt-3)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 10 },
-  select: { width: '100%', padding: '.75rem 1rem', borderRadius: 12, border: '1.5px solid var(--border)', background: 'var(--cream)', fontSize: '.9rem', fontWeight: 600, outline: 'none' },
-  input: { width: '100%', padding: '.75rem 1rem', borderRadius: 12, border: '1.5px solid var(--border)', background: 'var(--cream)', fontSize: '.9rem', fontWeight: 600, outline: 'none' },
+  label: { display: 'flex', alignItems: 'center', gap: 6, fontSize: '.75rem', fontWeight: 800, color: '#8B1A2A', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 10 },
+  select: { width: '100%', padding: '.75rem 1rem', borderRadius: 12, border: '1.5px solid #EDD5BE', background: '#fff', fontSize: '.9rem', fontWeight: 600, outline: 'none', color: '#1A0A0D' },
+  input: { width: '100%', padding: '.75rem 1rem', borderRadius: 12, border: '1.5px solid #EDD5BE', background: '#fff', fontSize: '.9rem', fontWeight: 600, outline: 'none', color: '#1A0A0D' },
   feeRange: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 },
-  feeBtn: { padding: '.6rem', borderRadius: 10, border: '1.5px solid var(--border)', fontSize: '.8rem', fontWeight: 700, cursor: 'pointer', transition: 'all .2s' },
-  promoBox: { marginTop: '2rem', padding: '1.5rem', background: 'var(--cream-2)', borderRadius: 20, textAlign: 'center', border: '1px solid var(--border)' },
-  main: { minWidth: 0 },
+  feeBtn: { padding: '.6rem', borderRadius: 10, border: '1.5px solid #EDD5BE', fontSize: '.8rem', fontWeight: 700, cursor: 'pointer', transition: 'all .2s' },
+  promoBox: { marginTop: '2rem', padding: '1.5rem', background: '#F5E6D3', borderRadius: 20, textAlign: 'center', border: '1px solid #EDD5BE' },
+  main: { flex: 1, minWidth: 0 },
   grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem' },
-  empty: { textAlign: 'center', padding: '6rem 2rem', background: '#fff', borderRadius: '32px', border: '1px solid var(--border)' }
+  empty: { textAlign: 'center', padding: '5rem 2rem', background: '#fff', borderRadius: '24px', border: '1px solid #EDD5BE' }
 }

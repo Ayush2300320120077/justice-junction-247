@@ -71,7 +71,7 @@ export default function Register() {
   // Client registration — original form unchanged
   return (
     <div className="auth-layout page-reveal">
-      <Head><title>Register — Justice Junction 24/7</title></Head>
+      <Head><title>Register Free | Justice Junction 24/7</title></Head>
 
       {/* Visual Side */}
       <div className="auth-visual-side">

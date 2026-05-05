@@ -16,7 +16,7 @@ export default function Logo({ size = 'md', color = 'var(--bur)', subColor = 'va
       <div style={{
         width: boxSize,
         height: boxSize,
-        background: `linear-gradient(135deg, ${color}, #5a1220)`,
+        background: `linear-gradient(135deg, ${color}, #6B1220)`,
         borderRadius: borderRadius,
         display: 'flex',
         alignItems: 'center',
@@ -40,9 +40,9 @@ export default function Logo({ size = 'md', color = 'var(--bur)', subColor = 'va
       </div>
 
       {showText && (
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: isLarge ? 12 : 8 }}>
           <div style={{
-            fontFamily: "'Playfair Display', serif",
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
             fontSize: fontSize,
             fontWeight: 800,
             color: color,
@@ -54,15 +54,16 @@ export default function Logo({ size = 'md', color = 'var(--bur)', subColor = 'va
             Justice<span style={{ color: subColor }}>Junction</span>
           </div>
           <div style={{
-            fontSize: subFontSize,
-            fontWeight: 800,
-            color: subColor,
-            letterSpacing: '0.2em',
-            textTransform: 'uppercase',
-            marginTop: isLarge ? 6 : 4,
-            opacity: 0.9
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 4,
+            background: 'rgba(22,163,74,0.1)',
+            padding: '2px 8px',
+            borderRadius: 50,
+            whiteSpace: 'nowrap'
           }}>
-            Available 24 / 7
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#16A34A', display: 'inline-block', animation: 'pulseDot 2s infinite' }} />
+            <span style={{ fontSize: isLarge ? '.6rem' : '.5rem', fontWeight: 700, color: '#16A34A', letterSpacing: '.05em' }}>24/7</span>
           </div>
         </div>
       )}

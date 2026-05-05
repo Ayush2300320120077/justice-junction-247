@@ -84,7 +84,7 @@ export default function ArticlePage({ article }) {
       </Head>
 
       <div className="container" style={{padding:'3rem 5vw', maxWidth:860}}>
-        <Link href="/rights" style={cs.back}><ChevronLeft size={16}/> Back to Know Your Rights</Link>
+        <Link href="/knowledge-hub" style={cs.back}><ChevronLeft size={16}/> Back to Knowledge Hub</Link>
 
         <article style={cs.article}>
           {/* Header */}

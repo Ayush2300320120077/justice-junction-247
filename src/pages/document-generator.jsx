@@ -2,6 +2,8 @@ import { useState } from 'react'
 import Head from 'next/head'
 import { FileText, Download, CheckCircle, ShieldCheck, Info } from 'lucide-react'
 import { jsPDF } from 'jspdf'
+import { useAuth } from '../context/AuthContext'
+import { useRouter } from 'next/router'
 
 const TEMPLATES = [
   { id: 'rental', name: 'Rental Agreement', description: 'Standard residential lease agreement for India.' },
@@ -17,6 +19,16 @@ export default function DocumentGenerator() {
   const [formData, setFormData] = useState({})
   const [isGenerating, setIsGenerating] = useState(false)
   const [showFreemiumGate, setShowFreemiumGate] = useState(false)
+  const { isLoggedIn } = useAuth()
+  const router = useRouter()
+
+  const handleSelectTemplate = (t) => {
+    if (!isLoggedIn) {
+      router.push('/login?returnUrl=/document-generator')
+      return
+    }
+    setSelectedTemplate(t)
+  }
 
   const getUsageCount = () => {
     if (typeof window === 'undefined') return 0
@@ -166,7 +178,7 @@ export default function DocumentGenerator() {
   return (
     <div style={{ paddingTop: 95, background: '#F8F9FA', minHeight: '100vh' }}>
       <Head>
-        <title>Legal Document Generator — Justice Junction 24/7</title>
+        <title>Legal Document Generator | Justice Junction 24/7</title>
         <meta name="description" content="Generate professional legal documents: Rental Agreements, Legal Notices, NDA, Affidavits, Consumer Complaints and more. Free PDF download." />
         <meta property="og:title" content="Legal Document Generator — Justice Junction 24/7" />
         <meta property="og:description" content="Generate professional legal documents instantly. Fill the form, preview, and download PDF." />
@@ -201,7 +213,7 @@ export default function DocumentGenerator() {
         {!selectedTemplate ? (
           <div style={s.grid}>
             {TEMPLATES.map(t => (
-              <div key={t.id} style={s.templateCard} className="card-hover" onClick={() => setSelectedTemplate(t)}>
+              <div key={t.id} style={s.templateCard} className="card-hover" onClick={() => handleSelectTemplate(t)}>
                 <div style={s.iconBox}><FileText size={32}/></div>
                 <h3 style={{fontFamily: "'Playfair Display', serif", fontSize: '1.4rem', marginBottom: 8}}>{t.name}</h3>
                 <p style={{fontSize: '.9rem', color: 'var(--txt-3)', lineHeight: 1.6}}>{t.description}</p>

@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
 import { Heart, Scale, MapPin, Landmark, CircleCheck } from 'lucide-react'
 
-const COLORS=['#7B1D2E','#2D7A4F','#C9943A','#1D4ED8','#991B1B','#5B21B6','#0F766E','#9D174D']
+const COLORS=['#7B1D2E','#2D7A4F','#C9943A','#8B1A2A','#991B1B','#5B21B6','#0F766E','#9D174D']
 const avatarColor=n=>{let h=0;for(let c of n)h+=c.charCodeAt(0);return COLORS[h%COLORS.length]}
 const initials=n=>(n||'?').split(' ').slice(0,2).map(p=>p[0]).join('').toUpperCase()
 const stars=r=>{const n=Math.round(r);return'★'.repeat(n)+'☆'.repeat(5-n)}

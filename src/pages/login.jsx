@@ -32,7 +32,7 @@ export default function Login() {
 
   return (
     <div className="auth-layout page-reveal">
-      <Head><title>Login — Justice Junction 24/7</title></Head>
+      <Head><title>Login | Justice Junction 24/7</title></Head>
       
       {/* Visual Side */}
       <div className="auth-visual-side">
