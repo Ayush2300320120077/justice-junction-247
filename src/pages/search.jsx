@@ -134,11 +134,19 @@ export default function Search() {
         <meta name="description" content="Browse and compare top-rated advocates by specialization, fee, and location. Book instant video consultations." />
       </Head>
 
+      {/* Hero Banner */}
+      <section style={{ padding: '6rem 0', background: '#7B1D2E', color: '#F9EEE4', textAlign: 'center' }}>
+        <div className="container">
+          <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 800, color: '#fff', marginBottom: '1rem' }}>Find the Right Legal Expert</h1>
+          <p style={{ fontSize: '1.1rem', maxWidth: 600, margin: '0 auto' }}>Browse verified advocates across India. Filter by practice area, location, language, and experience.</p>
+        </div>
+      </section>
+
       <div className="container" style={{paddingTop: '2rem'}}>
         {/* Header Area */}
         <div style={st.searchHeader} className="search-header-responsive">
           <div className="mobile-text-center mobile-w-full">
-            <h1 style={st.h1} className="text-balance">Expert Legal Counsel</h1>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#1A0A0D', marginBottom: 4 }}>Search Results</h2>
             <p style={{color: '#4A2030', fontSize: '.9rem'}} className="text-balance">Found {total} verified professionals matching your criteria.</p>
           </div>
           <div style={{display: 'flex', gap: 12, width: '100%', justifyContent: 'center'}} className="show-mobile">
@@ -264,7 +272,7 @@ export default function Search() {
                   <div style={st.grid} className="grid-lawyers">
                     {SUGGESTED_LAWYERS.map(l => (
                       <div key={l._id} className="magnetic-hover">
-                        <LawyerCard lawyer={l} />
+                        <LawyerCard lawyer={l} isDemo={true} />
                       </div>
                     ))}
                   </div>

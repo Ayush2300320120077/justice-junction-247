@@ -49,48 +49,48 @@ export default function KnowledgeHub() {
       </Head>
 
       {/* Header */}
-      <section style={s.hero}>
+      <section style={{ padding: '6rem 0', position: 'relative', overflow: 'hidden', background: '#7B1D2E', color: '#fff' }}>
         <div className="container" style={{textAlign: 'center', position:'relative', zIndex: 2}}>
-          <div className="sec-label" style={{justifyContent: 'center', color: 'rgba(255,255,255,0.7)'}}>Legal Literacy</div>
-          <h1 style={s.h1}>Empower Yourself with <em>Knowledge.</em></h1>
-          <p style={s.heroSub}>Simple, accurate legal guides for every Indian citizen. Know your rights before you take the next step.</p>
+          <div className="sec-label" style={{justifyContent: 'center', color: '#F5C4B3'}}>Legal Literacy</div>
+          <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', fontWeight: 800, marginBottom: '1.5rem' }}>Empower Yourself with <em>Knowledge.</em></h1>
+          <p style={{ fontSize: '1.1rem', color: '#F9EEE4', maxWidth: 600, margin: '0 auto 2.5rem' }}>Simple, accurate legal guides for every Indian citizen. Know your rights before you take the next step.</p>
           
-          <div style={s.searchBox}>
-            <Search size={20} color="#6B4050"/>
+          <div style={{ maxWidth: 600, margin: '0 auto', background: '#fff', padding: '1rem 1.5rem', borderRadius: '50px', display: 'flex', alignItems: 'center', gap: 12, boxShadow: '0 10px 40px rgba(0,0,0,0.2)' }}>
+            <Search size={20} color="#7B1D2E"/>
             <input 
-              style={s.input} 
+              style={{ flex: 1, border: 'none', outline: 'none', fontSize: '1rem', color: '#1A0A0D' }} 
               placeholder="Search for a topic (e.g. RTI, FIR, Property...)" 
               value={search}
               onChange={e => setSearch(e.target.value)}
             />
           </div>
+
+          {/* Category Filter Pills in Hero */}
+          <div style={{display:'flex',gap:'.6rem',flexWrap:'wrap',justifyContent: 'center', marginTop:'2.5rem'}}>
+            {CATEGORIES.map(cat => (
+              <button 
+                key={cat}
+                onClick={() => setCategory(cat)}
+                style={{
+                  padding:'.55rem 1.2rem',
+                  borderRadius:50,
+                  border: category === cat ? '1px solid rgba(255,255,255,0.5)' : '1px solid rgba(255,255,255,0.2)',
+                  background: category === cat ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.1)',
+                  color: '#F9EEE4',
+                  fontSize:'.82rem',
+                  fontWeight:700,
+                  cursor:'pointer',
+                  transition:'all .2s',
+                }}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
         </div>
-        <div style={s.heroBg} />
       </section>
 
       <div className="container" style={{ padding: '4rem 5vw' }}>
-        {/* Category Filter Pills */}
-        <div style={{display:'flex',gap:'.6rem',flexWrap:'wrap',marginBottom:'2.5rem'}}>
-          {CATEGORIES.map(cat => (
-            <button 
-              key={cat}
-              onClick={() => setCategory(cat)}
-              style={{
-                padding:'.55rem 1.2rem',
-                borderRadius:50,
-                border: category === cat ? '1.5px solid #8B1A2A' : '1.5px solid #EDD5BE',
-                background: category === cat ? '#8B1A2A' : '#fff',
-                color: category === cat ? '#fff' : '#4A2030',
-                fontSize:'.82rem',
-                fontWeight:700,
-                cursor:'pointer',
-                transition:'all .2s',
-              }}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
 
         <div style={s.grid}>
           {filtered.map(a => (
@@ -118,20 +118,20 @@ export default function KnowledgeHub() {
       </div>
 
       {/* Newsletter / CTA */}
-      <section style={s.ctaSection}>
-        <div className="container" style={s.ctaInner}>
+      <section style={{ padding: '5rem 5vw', background: '#FDF6EE', borderTop: '1px solid #E8C9A8' }}>
+        <div className="container" style={{ display: 'flex', alignItems: 'center', gap: '3rem', flexWrap: 'wrap', maxWidth: 1000, margin: '0 auto' }}>
           <div style={{flex: 1}}>
-            <h2 style={{fontFamily: "'Cormorant Garamond', serif", fontSize: '1.8rem', marginBottom: 8, color:'#1A0A0D'}}>Stay Informed.</h2>
-            <p style={{fontSize: '.9rem', color: '#4A2030'}}>Get monthly legal updates and simplified law explainers delivered to your inbox.</p>
+            <h2 style={{fontFamily: "'Cormorant Garamond', serif", fontSize: '2rem', marginBottom: 8, color:'#1A0A0D', fontWeight: 800}}>Stay Informed.</h2>
+            <p style={{fontSize: '1rem', color: '#5A3A42'}}>Get monthly legal updates and simplified law explainers delivered to your inbox.</p>
           </div>
           {subscribed ? (
             <div style={{display:'flex',alignItems:'center',gap:10,color:'#16a34a',fontWeight:700,fontSize:'.95rem'}}>
               ✓ You're subscribed! Legal updates coming your way.
             </div>
           ) : (
-            <form onSubmit={handleSubscribe} style={s.ctaForm}>
-              <input style={s.ctaInput} type="email" placeholder="Enter your email address" value={subEmail} onChange={e => setSubEmail(e.target.value)} required />
-              <button type="submit" className="btn btn-primary">Subscribe</button>
+            <form onSubmit={handleSubscribe} style={{ display: 'flex', gap: 10, flex: 1, maxWidth: 450 }}>
+              <input style={{ flex: 1, padding: '1rem 1.2rem', borderRadius: '12px', border: '1px solid #E8C9A8', outline: 'none', fontSize:'1rem' }} type="email" placeholder="Enter your email address" value={subEmail} onChange={e => setSubEmail(e.target.value)} required />
+              <button type="submit" className="btn btn-primary" style={{ padding: '1rem 2rem', borderRadius: '12px', background: '#7B1D2E', color: '#fff', border: 'none', fontWeight: 600, cursor: 'pointer' }}>Subscribe</button>
             </form>
           )}
         </div>
@@ -141,24 +141,12 @@ export default function KnowledgeHub() {
 }
 
 const s = {
-  hero: { padding: '6rem 0', position: 'relative', overflow: 'hidden', background: '#8B1A2A', color: '#fff' },
-  heroBg: { position: 'absolute', inset: 0, background: `linear-gradient(rgba(139,26,42,0.92),rgba(107,18,32,0.97))`, zIndex: 1 },
-  h1: { fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', fontWeight: 800, marginBottom: '1.5rem' },
-  heroSub: { fontSize: '1.1rem', color: 'rgba(245,230,211,0.8)', maxWidth: 600, margin: '0 auto 2.5rem' },
-  searchBox: { maxWidth: 600, margin: '0 auto', background: '#fff', padding: '1rem 1.5rem', borderRadius: '50px', display: 'flex', alignItems: 'center', gap: 12, boxShadow: '0 10px 40px rgba(0,0,0,0.2)' },
-  input: { flex: 1, border: 'none', outline: 'none', fontSize: '1rem', color: '#1A0A0D' },
-  
   grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '2rem' },
-  articleCard: { background: '#fff', padding: '2rem', borderRadius: '24px', border: '1px solid #EDD5BE', display: 'flex', flexDirection: 'column' },
+  articleCard: { background: '#fff', padding: '2rem', borderRadius: '24px', border: '1px solid #E8C9A8', display: 'flex', flexDirection: 'column' },
   cardHeader: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' },
-  iconBox: { width: 48, height: 48, borderRadius: '14px', background: '#F5E6D3', color: '#8B1A2A', display: 'flex', alignItems: 'center', justifyContent: 'center' },
-  category: { fontSize: '.7rem', fontWeight: 800, color: '#6B4050', textTransform: 'uppercase', letterSpacing: '1px' },
+  iconBox: { width: 48, height: 48, borderRadius: '14px', background: '#FDF6EE', color: '#7B1D2E', display: 'flex', alignItems: 'center', justifyContent: 'center' },
+  category: { fontSize: '.7rem', fontWeight: 800, color: '#7B1D2E', textTransform: 'uppercase', letterSpacing: '1px' },
   cardTitle: { fontFamily: "'Cormorant Garamond', serif", fontSize: '1.4rem', marginBottom: 12, fontWeight: 800, color: '#1A0A0D' },
-  cardDesc: { fontSize: '.9rem', color: '#4A2030', lineHeight: 1.6, flex: 1, marginBottom: '1.5rem' },
-  readMore: { fontSize: '.9rem', fontWeight: 700, color: '#8B1A2A', display: 'flex', alignItems: 'center', gap: 4, textDecoration: 'none' },
-  
-  ctaSection: { padding: '5rem 5vw', background: '#fff', borderTop: '1px solid #EDD5BE' },
-  ctaInner: { display: 'flex', alignItems: 'center', gap: '3rem', flexWrap: 'wrap', maxWidth: 1000, margin: '0 auto' },
-  ctaForm: { display: 'flex', gap: 10, flex: 1, maxWidth: 400 },
-  ctaInput: { flex: 1, padding: '.8rem 1.2rem', borderRadius: '12px', border: '1.5px solid #EDD5BE', outline: 'none', fontSize:'.95rem' },
+  cardDesc: { fontSize: '.9rem', color: '#5A3A42', lineHeight: 1.6, flex: 1, marginBottom: '1.5rem' },
+  readMore: { fontSize: '.9rem', fontWeight: 700, color: '#7B1D2E', display: 'flex', alignItems: 'center', gap: 4, textDecoration: 'none' },
 }

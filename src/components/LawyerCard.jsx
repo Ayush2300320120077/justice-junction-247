@@ -10,7 +10,7 @@ const initials=n=>(n||'?').split(' ').slice(0,2).map(p=>p[0]).join('').toUpperCa
 const stars=r=>{const n=Math.round(r);return'★'.repeat(n)+'☆'.repeat(5-n)}
 const levelMap={senior:'badge-senior',mid:'badge-mid',junior:'badge-junior'}
 
-export default function LawyerCard({ lawyer, onCompare, compareList=[] }) {
+export default function LawyerCard({ lawyer, onCompare, compareList=[], isDemo=false }) {
   const { isLoggedIn } = useAuth()
   const router = useRouter()
   const { showToast } = useToast()
@@ -59,7 +59,10 @@ export default function LawyerCard({ lawyer, onCompare, compareList=[] }) {
           {lawyer.isAvailable && <div style={s.onlineDot} title="Available now"/>}
         </div>
         <div style={{flex:1,minWidth:0}}>
-          <div style={s.name}>{lawyer.name}</div>
+          <div style={s.name}>
+            {lawyer.name}
+            {isDemo && <span style={{ marginLeft: '6px', fontSize: '0.65rem', background: '#FDF6EE', color: '#7B1D2E', padding: '2px 6px', borderRadius: '4px', border: '1px solid #E8C9A8', verticalAlign: 'middle' }}>DEMO</span>}
+          </div>
           <div style={s.spec}>{(lawyer.specializations||[]).slice(0,2).join(' · ')}</div>
           <div style={s.ratingRow}>
             <span style={{color:'var(--gold)',fontSize:'0.75rem'}}>{stars(lawyer.averageRating||0)}</span>
@@ -120,7 +123,7 @@ export default function LawyerCard({ lawyer, onCompare, compareList=[] }) {
             ? <span style={s.available}><CircleCheck size={12}/> Available</span>
             : <span style={s.unavailable}>Busy</span>
           }
-          <button className="btn btn-primary btn-sm" onClick={handleBook}>Book Now</button>
+          <button className="btn btn-primary btn-sm" onClick={handleBook} disabled={isDemo}>{isDemo ? 'Coming Soon' : 'Book Now'}</button>
         </div>
       </div>
 

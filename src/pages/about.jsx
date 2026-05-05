@@ -16,11 +16,16 @@ export default function About() {
       </Head>
 
       {/* Hero */}
-      <section style={s.hero}>
+      <section style={{
+        padding: '8rem 0 6rem',
+        backgroundImage: `linear-gradient(135deg, rgba(91, 21, 33, 0.90) 0%, rgba(123, 29, 46, 0.80) 100%), url('https://images.unsplash.com/photo-1453945619913-79ec89a82c51?w=1920&q=80')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center top'
+      }}>
         <div className="container" style={{textAlign: 'center'}}>
-          <div className="sec-label" style={{justifyContent: 'center'}}>Our Story</div>
-          <h1 style={s.h1}>Democratizing Legal Access <br/><em>for every Indian.</em></h1>
-          <p style={s.heroSub}>We bridge the gap between people and justice through transparency, technology, and trust.</p>
+          <div className="sec-label" style={{justifyContent: 'center', color: '#F5D5C0'}}>Our Story</div>
+          <h1 style={{...s.h1, color: '#fff'}}>Democratizing Legal Access <br/><em style={{color: '#F5D5C0'}}>for every Indian.</em></h1>
+          <p style={{...s.heroSub, color: '#F5D5C0'}}>We bridge the gap between people and justice through transparency, technology, and trust.</p>
         </div>
       </section>
 
@@ -70,28 +75,17 @@ export default function About() {
       </section>
 
       {/* Founder Section */}
-      <section style={{padding: '6rem 0', background: '#fff'}}>
-        <div className="container" style={{maxWidth: 900}}>
-          <div style={{textAlign: 'center', marginBottom: '3rem'}}>
-            <div className="sec-label" style={{justifyContent: 'center'}}>The Founder</div>
-            <h2 style={s.h2}>Built by someone who saw the <em>problem firsthand.</em></h2>
-          </div>
-
-          <div style={s.founderCard}>
-            <div style={s.founderAvatar}>AK</div>
-            <div style={{flex: 1}}>
-              <p style={{fontSize: '1.05rem', color: 'var(--txt-2)', lineHeight: 1.8, marginBottom: '1.5rem'}}>
-                Justice Junction was founded by <strong>AYUSH KUMAR</strong>, a young entrepreneur from Ghaziabad who watched his family struggle to find an honest, affordable lawyer during a property dispute. He spent 6 months building a platform so no Indian family ever has to go through that uncertainty again.
+      <section style={{padding: '5rem 0', background: '#fff'}}>
+        <div className="container" style={{maxWidth: 1000}}>
+          <div style={{display: 'flex', gap: '2rem', alignItems: 'flex-start'}} className="mobile-stack">
+            <div style={{fontSize: '6rem', lineHeight: 1, color: '#7B1D2E', fontWeight: 900}}>❝</div>
+            <div style={{borderLeft: '4px solid #7B1D2E', paddingLeft: '2rem'}}>
+              <p style={{fontStyle: 'italic', fontSize: '1.25rem', color: '#1A0A0D', lineHeight: 1.8, marginBottom: '1.5rem'}}>
+                "I started Justice Junction after watching my own family struggle to find a reliable lawyer during a property dispute in Ghaziabad. We spent weeks asking friends for referrals, received wildly inconsistent quotes, and had absolutely no way to verify anyone's credentials. Legal help in India was opaque, expensive, and inaccessible to ordinary people.
+                <br/><br/>
+                I built Justice Junction to change exactly that — to make finding a verified, fairly-priced lawyer as easy as booking a cab. Every feature on this platform exists to give power back to the citizen."
               </p>
-              <div style={s.founderMeta}>
-                <div>
-                  <div style={{fontWeight: 800, fontSize: '1.1rem', color: 'var(--txt)'}}>AYUSH KUMAR</div>
-                  <div style={{fontSize: '.85rem', color: 'var(--bur)', fontWeight: 700}}>Founder & CEO</div>
-                </div>
-                <div style={{display: 'flex', alignItems: 'center', gap: 6, fontSize: '.85rem', color: 'var(--txt-3)', fontWeight: 600}}>
-                  <MapPin size={14} /> Ghaziabad, UP
-                </div>
-              </div>
+              <div style={{color: '#7B1D2E', fontWeight: 600}}>— Ayush Kumar, Founder & CEO, Justice Junction 24/7</div>
             </div>
           </div>
         </div>
@@ -137,43 +131,42 @@ export default function About() {
       </section>
 
       {/* Our Journey Timeline */}
-      <section style={{padding:'6rem 0',background:'#fff'}}>
-        <div className="container" style={{maxWidth:800}}>
+      <section style={{padding:'5rem 0',background:'#FDF6EE'}}>
+        <div className="container" style={{maxWidth:900}}>
           <div style={{textAlign:'center',marginBottom:'4rem'}}>
-            <div className="sec-label" style={{justifyContent:'center'}}>Our Journey</div>
-            <h2 style={s.h2}>From Idea to India's <em>Legal Platform</em></h2>
+            <h2 style={{...s.h2, color: '#1A0A0D', fontWeight: 900}}>Our Journey So Far</h2>
           </div>
-          <div style={{position:'relative',paddingLeft:40}}>
-            <div style={{position:'absolute',left:14,top:0,bottom:0,width:3,background:'var(--bur)',borderRadius:4}}/>
+          <div style={{position:'relative'}}>
+            <div style={{position:'absolute',left:'50%',top:0,bottom:0,width:2,background:'#7B1D2E',transform:'translateX(-50%)'}} className="mobile-hide"/>
+            <div style={{position:'absolute',left:11,top:0,bottom:0,width:2,background:'#7B1D2E'}} className="show-mobile"/>
+            
             {[
-              {date:'January 2024',title:'Idea & Research',desc:'Identified the gap in India\'s legal discovery market. Conducted interviews with 200+ citizens and 50+ advocates across 5 cities.'},
-              {date:'June 2024',title:'Platform Built',desc:'Launched the first version with Bar Council verification, Razorpay payments, and encrypted video consultation features.'},
-              {date:'September 2024',title:'First 100 Lawyers',desc:'Reached 100 verified advocates across 10 major Indian cities within the first 3 months of launch.'},
-              {date:'2025',title:'Scaling Across India',desc:'Expanding to Tier-2 and Tier-3 cities. Building Hindi and regional language support. Targeting 5,000 advocates by 2026.'},
+              {date:'January 2024',title:'The Idea',desc:'Identified India\'s legal discovery problem. Interviewed 200+ citizens and 50+ advocates across UP, Delhi, and Mumbai.'},
+              {date:'June 2024',title:'Platform Launched',desc:'Released first version with Bar Council verification, Razorpay payments, encrypted video consultations, and case tracking dashboard.'},
+              {date:'September 2024',title:'First 100 Advocates',desc:'Reached 100 verified advocates across 10 major Indian cities in the first 3 months. Client satisfaction rate: 98%.'},
+              {date:'2025',title:'Scaling Across India',desc:'Expanding to Tier-2 and Tier-3 cities. Building full Hindi and regional language support. Target: 5,000 advocates by 2026.'},
             ].map((m,i)=>(
-              <div key={m.date} style={{position:'relative',marginBottom:'3rem',paddingLeft:'2rem'}}>
-                <div style={{position:'absolute',left:-33,top:4,width:16,height:16,borderRadius:'50%',background:'var(--bur)',border:'3px solid #fff',boxShadow:'0 0 0 3px var(--bur)'}}/>
-                <div style={{fontSize:'.72rem',fontWeight:800,color:'var(--bur)',textTransform:'uppercase',letterSpacing:'1px',marginBottom:6}}>📍 {m.date}</div>
-                <h3 style={{fontSize:'1.15rem',fontWeight:800,marginBottom:6}}>{m.title}</h3>
-                <p style={{fontSize:'.92rem',color:'var(--txt-2)',lineHeight:1.7}}>{m.desc}</p>
+              <div key={m.date} style={{position:'relative',marginBottom:'3rem',width:'50%',padding:i%2===0?'0 3rem 0 0':'0 0 0 3rem',marginLeft:i%2===0?0:'50%',textAlign:i%2===0?'right':'left'}} className="mobile-w-full mobile-text-left mobile-px-4">
+                <div style={{position:'absolute',left:i%2===0?'auto':'-8px',right:i%2===0?'-8px':'auto',top:6,width:16,height:16,borderRadius:'50%',background:'#7B1D2E'}} className="mobile-hide"/>
+                <div style={{position:'absolute',left:-5,top:6,width:16,height:16,borderRadius:'50%',background:'#7B1D2E'}} className="show-mobile"/>
+                
+                <div style={{fontSize:'.875rem',fontWeight:700,color:'#7B1D2E',textTransform:'uppercase',letterSpacing:'1px',marginBottom:6}} className="mobile-px-4">{m.date}</div>
+                <h3 style={{fontSize:'1.25rem',fontWeight:800,marginBottom:8,color:'#1A0A0D'}} className="mobile-px-4">"{m.title}"</h3>
+                <p style={{fontSize:'1rem',color:'#5A3A42',lineHeight:1.7}} className="mobile-px-4">{m.desc}</p>
               </div>
             ))}
-          </div>
-          <div style={{textAlign:'center',marginTop:'3rem',display:'flex',gap:'1rem',justifyContent:'center',flexWrap:'wrap'}}>
-            <Link href="/search" className="btn btn-primary btn-lg">Find a Lawyer Now</Link>
-            <Link href="/join-as-lawyer" className="btn btn-outline btn-lg">Join as Advocate</Link>
           </div>
         </div>
       </section>
 
-      {/* Press / As Seen On */}
-      <section style={{padding: '4rem 0', background: '#fff', borderTop: '1px solid var(--border)'}}>
-        <div className="container" style={{textAlign: 'center'}}>
-          <div style={{fontSize: '.75rem', fontWeight: 800, color: 'var(--txt-3)', letterSpacing: '2px', marginBottom: '2rem'}}>AS SEEN ON</div>
-          <div style={s.pressLogos}>
-            {['The Times of India', 'NDTV', 'LiveLaw', 'Bar & Bench', 'Business Standard'].map(name => (
-              <span key={name} style={s.pressLogo}>{name}</span>
-            ))}
+      {/* Bottom CTA */}
+      <section style={{padding: '4rem 0', background: '#7B1D2E', textAlign: 'center'}}>
+        <div className="container">
+          <h2 style={{fontSize: '2rem', fontWeight: 900, color: '#fff', marginBottom: '1rem'}}>Justice for every Indian — not just the privileged.</h2>
+          <p style={{fontSize: '1.1rem', color: '#F5C4B3', marginBottom: '2rem', maxWidth: 600, margin: '0 auto 2rem'}}>Join us in making legal help accessible, transparent, and fair for every citizen in India.</p>
+          <div style={{display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap'}}>
+            <Link href="/search" className="btn btn-white btn-lg" style={{color: '#7B1D2E'}}>Find a Lawyer</Link>
+            <Link href="/join-as-lawyer" className="btn btn-outline-white btn-lg">Join as Advocate</Link>
           </div>
         </div>
       </section>

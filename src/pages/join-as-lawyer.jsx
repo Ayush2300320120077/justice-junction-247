@@ -63,19 +63,19 @@ export default function JoinAsLawyer() {
         <meta name="twitter:image" content="https://justice-junction-app.vercel.app/og-image.png" />
       </Head>
 
-      <section style={s.hero} className="section-bg-office parallax page-reveal">
+      <section style={{...s.hero, background: 'linear-gradient(135deg, #7B1D2E 0%, #5C1521 100%)'}} className="page-reveal">
         <div className="container" style={s.heroGrid}>
           <div>
             <div style={s.badge}>For Legal Professionals</div>
             <h1 style={s.h1} className="h1-responsive">
-              <span className="boutique-heading">Grow Your</span> <span className="gradient-text">Practice</span> with <em>Justice Junction.</em>
+              <span style={{fontFamily:"'Cormorant Garamond',serif", fontSize:'clamp(2.2rem,5vw,3.5rem)', fontWeight:800}}>Grow Your</span> <span className="gradient-text" style={{color: '#F9EEE4', background: 'none', WebkitTextFillColor: 'initial', fontFamily:"'Cormorant Garamond',serif", fontSize:'clamp(2.2rem,5vw,3.5rem)', fontWeight:800}}>Practice</span> <span style={{fontFamily:"'Cormorant Garamond',serif", fontSize:'clamp(2.2rem,5vw,3.5rem)', fontWeight:800}}>with <em>Justice Junction.</em></span>
             </h1>
-            <p style={s.sub}>Join India's fastest-growing legal-tech platform. Get clients 24/7, build your online reputation, and manage your entire practice from one smart dashboard.</p>
+            <p style={{fontSize:'1.1rem', color:'#F9EEE4', marginBottom:'2rem', lineHeight:1.7}}>Join India's fastest-growing legal-tech platform. Get clients 24/7, build your online reputation, and manage your entire practice from one smart dashboard.</p>
             <div style={{display:'flex', gap:12, flexWrap:'wrap', marginBottom:'1.5rem'}}>
               <a href="#apply-form" className="btn btn-primary btn-xl">Apply Now — It's Free</a>
               <Link href="/lawyer-plans" className="btn btn-outline btn-xl">View Plans</Link>
             </div>
-            <div style={{fontSize:'.85rem', color:'var(--txt-3)', display:'flex', alignItems:'center', gap:8, fontWeight:600}}><Users size={16}/> 50+ advocates already with us.</div>
+            <div style={{fontSize:'.85rem', color:'#F5C4B3', display:'flex', alignItems:'center', gap:8, fontWeight:600}}><Users size={16}/> 50+ advocates already with us.</div>
           </div>
           <div style={s.statsPanel} className="hide-mobile">
             {[['50+','Verified Advocates'],['24/7','Client Bookings'],['48h','Verification Time']].map(([v,l]) => (
@@ -195,7 +195,7 @@ export default function JoinAsLawyer() {
 const s = {
   hero: { padding:'8rem 0', color:'#fff' },
   heroGrid: { display:'grid', gridTemplateColumns:'1.3fr 0.7fr', gap:'4rem', alignItems:'center' },
-  badge: { display:'inline-block', background:'var(--bur)', color:'#fff', padding:'.4rem 1.2rem', borderRadius:50, fontSize:'.75rem', fontWeight:800, textTransform:'uppercase', letterSpacing:'1px', marginBottom:'1.5rem' },
+  badge: { display:'inline-block', background:'#FDF6EE', color:'#7B1D2E', padding:'.4rem 1.2rem', borderRadius:50, fontSize:'.75rem', fontWeight:800, textTransform:'uppercase', letterSpacing:'1px', marginBottom:'1.5rem' },
   h1: { fontFamily:"'Playfair Display',serif", fontSize:'clamp(2.2rem,5vw,3.5rem)', fontWeight:800, lineHeight:1.1, marginBottom:'1.5rem' },
   sub: { fontSize:'1.1rem', color:'var(--txt-2)', marginBottom:'2rem', lineHeight:1.7 },
   statsPanel: { display:'grid', gridTemplateColumns:'1fr 1fr', gap:'1rem' },

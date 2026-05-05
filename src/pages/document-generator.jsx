@@ -176,7 +176,7 @@ export default function DocumentGenerator() {
   }
 
   return (
-    <div style={{ paddingTop: 95, background: '#F8F9FA', minHeight: '100vh' }}>
+    <div style={{ paddingTop: 95, background: '#FDF8F4', minHeight: '100vh' }}>
       <Head>
         <title>Legal Document Generator | Justice Junction 24/7</title>
         <meta name="description" content="Generate professional legal documents: Rental Agreements, Legal Notices, NDA, Affidavits, Consumer Complaints and more. Free PDF download." />
@@ -203,12 +203,16 @@ export default function DocumentGenerator() {
         </div>
       )}
 
-      <div className="container" style={{ padding: '3rem 5vw' }}>
-        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <div className="sec-label" style={{ justifyContent: 'center' }}>DIY Legal Tools</div>
-          <h1 className="sec-title" style={{ textAlign: 'center' }}>Legal <em>Document Generator</em></h1>
-          <p style={{ color: 'var(--txt-3)', maxWidth: 600, margin: '0 auto' }}>Create professional drafts for common legal needs in minutes. Just fill the details and download your PDF.</p>
+      {/* Hero Section */}
+      <section style={{ padding: '6rem 0', background: 'linear-gradient(135deg, #7B1D2E 0%, #5C1521 100%)', color: '#fff', textAlign: 'center' }}>
+        <div className="container">
+          <div className="sec-label" style={{ justifyContent: 'center', color: '#F5C4B3' }}>DIY Legal Tools</div>
+          <h1 className="sec-title" style={{ color: '#fff', fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(2.5rem, 5vw, 3.5rem)' }}>Legal <em>Document Generator</em></h1>
+          <p style={{ color: '#F9EEE4', maxWidth: 600, margin: '0 auto', fontSize: '1.1rem', lineHeight: 1.6 }}>Create professional drafts for common legal needs in minutes. Just fill the details and download your PDF.</p>
         </div>
+      </section>
+
+      <div className="container" style={{ padding: '4rem 5vw' }}>
 
         {!selectedTemplate ? (
           <div style={s.grid}>
@@ -316,7 +320,7 @@ export default function DocumentGenerator() {
                   </div>
                 </div>
                 <div style={{marginTop: '1.5rem', padding: '1rem', background: '#fff', borderRadius: '16px', border: '1px solid var(--border)'}}>
-                  <div style={{display: 'flex', alignItems: 'center', gap: 8, color: 'var(--green)', fontWeight: 700, fontSize: '.8rem'}}>
+                  <div style={{display: 'flex', alignItems: 'center', gap: 8, color: '#16a34a', fontWeight: 700, fontSize: '.8rem'}}>
                     <ShieldCheck size={16}/> Secure & Confidential
                   </div>
                   <p style={{fontSize: '.75rem', color: 'var(--txt-3)', marginTop: 4}}>Your data is processed locally and not stored on our servers.</p>
@@ -336,10 +340,10 @@ export default function DocumentGenerator() {
 
 const s = {
   grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem', maxWidth: 1100, margin: '0 auto' },
-  templateCard: { background: '#fff', padding: '2.5rem', borderRadius: '24px', border: '1px solid var(--border)', cursor: 'pointer', textAlign: 'center' },
-  iconBox: { width: 64, height: 64, borderRadius: '16px', background: 'var(--bur-l)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' },
-  editorBox: { background: '#fff', borderRadius: '32px', overflow: 'hidden', boxShadow: '0 30px 70px rgba(0,0,0,0.08)', border: '1px solid var(--border)', maxWidth: 1000, margin: '0 auto' },
-  editorHeader: { padding: '1.5rem 2.5rem', background: 'var(--bur)', color: '#fff', display: 'flex', alignItems: 'center', gap: '2rem' },
+  templateCard: { background: '#fff', padding: '2.5rem', borderRadius: '24px', border: '1px solid #E8C9A8', cursor: 'pointer', textAlign: 'center', transition: 'all 0.2s', boxShadow: '0 4px 6px rgba(0,0,0,0.02)' },
+  iconBox: { width: 64, height: 64, borderRadius: '16px', background: 'rgba(123, 29, 46, 0.08)', color: '#7B1D2E', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' },
+  editorBox: { background: '#fff', borderRadius: '32px', overflow: 'hidden', boxShadow: '0 20px 40px rgba(0,0,0,0.08)', border: '1px solid #E8C9A8', maxWidth: 1000, margin: '0 auto' },
+  editorHeader: { padding: '1.5rem 2.5rem', background: '#7B1D2E', color: '#fff', display: 'flex', alignItems: 'center', gap: '2rem' },
   backBtn: { background: 'rgba(255,255,255,0.15)', border: 'none', color: '#fff', padding: '.5rem 1rem', borderRadius: '50px', cursor: 'pointer', fontSize: '.85rem', fontWeight: 700 },
   editorBody: { display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '2.5rem', padding: '2.5rem' },
   formSide: { minWidth: 0 },

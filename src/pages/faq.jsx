@@ -23,12 +23,14 @@ const FAQS = [
       { q: 'What types of legal issues can I get help with?', a: 'We cover Criminal Defence, Family Law, Property Law, Corporate Law, Consumer Rights, Labour Law, Civil Disputes, Divorce, Taxation, Intellectual Property, Cyber Law, Immigration, and Constitutional Law — across all courts.' },
       { q: 'Is my information kept confidential?', a: 'Absolutely. All communications between you and your lawyer are private. We do not share your personal data with third parties. Payments are secured by Razorpay with 256-bit encryption.' },
       { q: 'How is this different from hiring a lawyer directly?', a: 'Direct hiring often involves opaque pricing, no reviews, and no easy way to verify credentials. Justice Junction gives you upfront fixed fees, verified Bar Council credentials, ratings from real clients, and the ability to compare multiple lawyers before deciding.' },
+      { q: 'Are the consultation fees negotiable?', a: 'No, all consultation fees on Justice Junction are fixed and shown upfront to ensure complete transparency. This eliminates bargaining and hidden costs.' },
     ]
   },
   {
     category: 'Bookings & More',
     items: [
       { q: 'Can I cancel or reschedule a booking?', a: 'Yes. Cancellations made 24 hours before the appointment are eligible for a full refund. Reschedules can be done up to 12 hours before the appointment from your dashboard.' },
+      { q: 'What happens if a lawyer doesn\'t join the call?', a: 'We offer a 100% money-back guarantee or an immediate reschedule if a lawyer misses a scheduled consultation.' },
       { q: 'How do lawyers join the platform?', a: 'Lawyers can register at /join-as-lawyer, complete their professional profile, and choose a subscription plan. After Bar Council verification, their profile goes live within 48 hours.' },
       { q: 'Is there a mobile app?', a: 'Our web platform is fully mobile-optimised and works perfectly on all devices. A dedicated Android and iOS app is coming soon.' },
     ]
@@ -60,11 +62,11 @@ export default function FAQPage() {
       </section>
 
       <div className="container" style={{ padding:'4rem 5vw', maxWidth:900 }}>
-        {FAQS.map(cat => (
+        {FAQS.map((cat, catIndex) => (
           <div key={cat.category} style={{marginBottom:'3rem'}}>
             <h2 style={s.catTitle}>{cat.category}</h2>
             <div style={s.faqList}>
-              {cat.items.map(item => <FAQItem key={item.q} q={item.q} a={item.a} />)}
+              {cat.items.map((item, itemIndex) => <FAQItem key={item.q} q={item.q} a={item.a} isOpen={catIndex === 0 && itemIndex === 0} />)}
             </div>
           </div>
         ))}
@@ -84,8 +86,8 @@ export default function FAQPage() {
   )
 }
 
-function FAQItem({ q, a }) {
-  const [open, setOpen] = useState(false)
+function FAQItem({ q, a, isOpen = false }) {
+  const [open, setOpen] = useState(isOpen)
   return (
     <div style={{...s.faqItem, borderColor: open ? 'var(--bur)' : 'var(--border)'}}>
       <button style={s.faqHead} onClick={() => setOpen(!open)}>
