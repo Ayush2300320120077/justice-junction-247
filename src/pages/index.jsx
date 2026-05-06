@@ -117,12 +117,12 @@ export default function Home() {
               <span style={{fontSize:'.85rem',fontWeight:700,color:'#fff'}}>Bar Council Verified Professionals</span>
             </div>
             
-            <h1 style={s.h1} className="h1-responsive text-balance">
+            <h1 style={{...s.h1, textShadow: '0 4px 20px rgba(0,0,0,0.5)'}} className="h1-responsive text-balance">
               Find Your <span className="gradient-text" style={{color: '#fff', background: 'none', WebkitTextFillColor: 'initial'}}>Lawyer</span> —<br className="mobile-hide"/>
               <span style={{color:'#F5C4B3', fontStyle:'italic'}}>Anytime, Anywhere.</span>
             </h1>
             
-            <p style={{ fontSize: '1.15rem', color: '#F9EEE4', marginBottom: '1.5rem', lineHeight: 1.7, fontWeight: 500 }} className="hero-sub-responsive text-balance">
+            <p style={{ fontSize: '1.15rem', color: '#F9EEE4', marginBottom: '1.5rem', lineHeight: 1.7, fontWeight: 500, textShadow: '0 2px 10px rgba(0,0,0,0.4)' }} className="hero-sub-responsive text-balance">
               India's first 100% price-transparent legal platform. Bar Council verified advocates. Instant booking. 24/7 support.
             </p>
 

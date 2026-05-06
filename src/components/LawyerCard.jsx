@@ -151,7 +151,7 @@ const s={
   spec:{fontSize:'0.76rem',color:'var(--text-muted)',marginBottom:3},
   ratingRow:{display:'flex',alignItems:'center',gap:4},
   meta:{display:'flex',gap:12,padding:'0 1.2rem 0.6rem',flexWrap:'wrap'},
-  metaItem:{fontSize:'0.74rem',color:'var(--text-light)',display:'flex',alignItems:'center',gap:3},
+  metaItem:{fontSize:'0.74rem',color:'#4B5563',display:'flex',alignItems:'center',gap:3},
   tags:{display:'flex',gap:4,flexWrap:'wrap',padding:'0 1.2rem 0.8rem'},
   footer:{padding:'0.9rem 1.2rem',borderTop:'1px solid var(--border)',display:'flex',justifyContent:'space-between',alignItems:'center'},
   price:{fontFamily:"'Playfair Display',serif",fontSize:'1.2rem',fontWeight:700,color:'var(--burgundy)',lineHeight:1},
