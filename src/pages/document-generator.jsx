@@ -106,200 +106,115 @@ function generateStampPaperHTML(data) {
   const now = new Date()
   const dateStr = now.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })
   const timeStr = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
-  const serialNo = STAMP_SERIAL()
-  const certNo = CERT_NO()
+  const stCode = (data.state||'DL').substring(0,2).toUpperCase()
+  const certNo = `IN-${stCode}${String(Math.floor(Math.random()*99999999)).padStart(8,'0')}`
+  const udr = `SUBIN-${stCode}${String(Math.floor(Math.random()*9999999999)).padStart(10,'0')}`
+  const stampId = `${stCode}e${String(Math.floor(Math.random()*9999999)).padStart(7,'0')}`
   const denomination = data.denomination || '100'
   const amtWords = numberToWords(parseInt(denomination))
+  const articleMap = {'Rental Agreement':'5(h)(A)','Affidavit':'4','Sale Deed':'23','Power of Attorney':'48','Indemnity Bond':'34','Gift Deed':'33','Mortgage Deed':'40','Partnership Deed':'46','General Agreement':'5','Other':'5'}
+  const article = articleMap[data.purpose] || '5'
 
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>e-Stamp Paper - ₹${denomination} - ${data.state || 'India'}</title>
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+<title>e-Stamp Certificate - Rs.${denomination} - ${data.state||'India'}</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700;800&family=Noto+Serif:wght@400;700&display=swap');
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  @page { size: A4; margin: 12mm; }
-  body { font-family: 'Noto Sans', Arial, sans-serif; background: #e8e8e8; display: flex; justify-content: center; padding: 20px; }
-  .stamp-page {
-    width: 210mm; min-height: 297mm; background: #fff;
-    border: 3px solid #1a5c2e; position: relative; overflow: hidden;
-    box-shadow: 0 4px 30px rgba(0,0,0,0.15);
-  }
-  .stamp-page::before {
-    content: 'e-STAMP'; position: absolute; top: 50%; left: 50%;
-    transform: translate(-50%, -50%) rotate(-35deg);
-    font-size: 120px; font-weight: 900; color: rgba(26,92,46,0.04);
-    letter-spacing: 20px; pointer-events: none; z-index: 0;
-    font-family: 'Noto Serif', serif;
-  }
-  .inner-border {
-    border: 1.5px solid #1a5c2e; margin: 6px; min-height: calc(297mm - 16px);
-    position: relative; z-index: 1;
-  }
-  .header {
-    background: linear-gradient(135deg, #1a5c2e 0%, #0d3d1a 100%);
-    color: #fff; padding: 18px 24px; display: flex; justify-content: space-between;
-    align-items: center;
-  }
-  .header-left h1 { font-family: 'Noto Serif', serif; font-size: 20px; font-weight: 700; letter-spacing: 2px; }
-  .header-left p { font-size: 11px; opacity: 0.85; margin-top: 2px; letter-spacing: 1px; }
-  .header-right { text-align: right; }
-  .header-right .value {
-    font-size: 32px; font-weight: 900; font-family: 'Noto Serif', serif;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-  }
-  .header-right .value-text { font-size: 10px; opacity: 0.8; text-transform: uppercase; letter-spacing: 1px; }
-  .ashoka { width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 28px; border: 2px solid rgba(255,255,255,0.3); }
-
-  .meta-bar {
-    background: #f0f7f2; border-bottom: 1px solid #c8dece;
-    padding: 10px 24px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
-    font-size: 10px; color: #1a5c2e; font-weight: 600;
-  }
-  .meta-bar span { display: flex; align-items: center; gap: 4px; }
-
-  .body { padding: 28px 32px; }
-  .section-title {
-    font-family: 'Noto Serif', serif; font-size: 13px; font-weight: 700;
-    color: #1a5c2e; text-transform: uppercase; letter-spacing: 2px;
-    border-bottom: 2px solid #1a5c2e; padding-bottom: 6px; margin-bottom: 14px;
-  }
-  .detail-grid { display: grid; grid-template-columns: 180px 1fr; gap: 0; margin-bottom: 24px; }
-  .detail-grid .label {
-    padding: 8px 12px; font-size: 11px; font-weight: 700; color: #2d6e3f;
-    background: #f7faf8; border: 1px solid #e4efe7; text-transform: uppercase; letter-spacing: .5px;
-  }
-  .detail-grid .value-cell {
-    padding: 8px 14px; font-size: 12px; font-weight: 600; color: #1a1a1a;
-    border: 1px solid #e4efe7; border-left: none;
-  }
-
-  .writing-area {
-    border: 1.5px dashed #c8dece; border-radius: 8px; min-height: 260px;
-    padding: 24px; position: relative; background: repeating-linear-gradient(
-      transparent, transparent 31px, #e8f0ea 31px, #e8f0ea 32px
-    );
-  }
-  .writing-area::before {
-    content: 'WRITE YOUR AGREEMENT / DOCUMENT CONTENT HERE';
-    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    font-size: 13px; color: #b0c8b6; font-weight: 700; letter-spacing: 2px;
-    text-align: center; pointer-events: none;
-  }
-
-  .footer-strip {
-    position: absolute; bottom: 0; left: 6px; right: 6px;
-    background: #f0f7f2; border-top: 2px solid #1a5c2e; padding: 12px 24px;
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .footer-strip .disclaimer { font-size: 8px; color: #5a7d63; max-width: 65%; line-height: 1.5; }
-  .qr-placeholder {
-    width: 64px; height: 64px; border: 2px solid #1a5c2e; border-radius: 4px;
-    display: flex; align-items: center; justify-content: center; flex-direction: column;
-    font-size: 7px; color: #1a5c2e; font-weight: 700; text-align: center; gap: 2px;
-    background: repeating-linear-gradient(45deg, transparent, transparent 3px, rgba(26,92,46,0.05) 3px, rgba(26,92,46,0.05) 6px);
-  }
-
-  .sig-row { display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; }
-  .sig-block { text-align: center; width: 200px; }
-  .sig-line { border-top: 1px solid #333; margin-top: 50px; padding-top: 6px; font-size: 10px; color: #444; }
-
-  @media print {
-    body { background: #fff; padding: 0; }
-    .stamp-page { box-shadow: none; border-width: 2px; }
-    .no-print { display: none !important; }
-  }
-  .print-bar {
-    position: fixed; top: 0; left: 0; right: 0; background: #1a5c2e;
-    color: #fff; padding: 12px 24px; display: flex; justify-content: space-between;
-    align-items: center; z-index: 999; font-size: 14px; font-weight: 600;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-  }
-  .print-bar button {
-    background: #fff; color: #1a5c2e; border: none; padding: 8px 20px;
-    border-radius: 6px; font-weight: 700; cursor: pointer; font-size: 13px;
-  }
-  .print-bar button:hover { background: #f0f7f2; }
-</style>
-</head>
-<body>
-  <div class="print-bar no-print">
-    <span>☑ e-Stamp Paper Generated — Justice Junction 24/7</span>
-    <div style="display:flex;gap:10px;">
-      <button onclick="window.print()">🖨 Print / Save as PDF</button>
-      <button onclick="window.close()">✕ Close</button>
-    </div>
-  </div>
-
-  <div class="stamp-page" style="margin-top:60px;">
-    <div class="inner-border">
-      <div class="header">
-        <div style="display:flex;gap:16px;align-items:center;">
-          <div class="ashoka">🏛</div>
-          <div class="header-left">
-            <h1>e-STAMP PAPER</h1>
-            <p>Government of ${data.state || 'India'} • Non-Judicial</p>
-          </div>
-        </div>
-        <div class="header-right">
-          <div class="value">₹${parseInt(denomination).toLocaleString('en-IN')}</div>
-          <div class="value-text">Rupees ${amtWords} Only</div>
-        </div>
-      </div>
-
-      <div class="meta-bar">
-        <span>📋 Certificate No: ${certNo}</span>
-        <span>🔢 Serial No: ${serialNo}</span>
-        <span>📅 Date: ${dateStr} ${timeStr}</span>
-        <span>🏛 Issuer: Stock Holding Corporation of India Ltd.</span>
-      </div>
-
-      <div class="body">
-        <div class="section-title">Stamp Details</div>
-        <div class="detail-grid">
-          <div class="label">Certificate Number</div><div class="value-cell">${certNo}</div>
-          <div class="label">Stamp Duty Paid</div><div class="value-cell">₹${parseInt(denomination).toLocaleString('en-IN')} (${amtWords} Rupees)</div>
-          <div class="label">First Party</div><div class="value-cell">${data.purchaserName || '—'}</div>
-          <div class="label">Second Party</div><div class="value-cell">${data.secondPartyName || '—'}</div>
-          <div class="label">Purpose</div><div class="value-cell">${data.purpose || '—'}</div>
-          ${data.considerationAmount ? `<div class="label">Consideration Amt</div><div class="value-cell">₹${parseInt(data.considerationAmount).toLocaleString('en-IN')}</div>` : ''}
-          <div class="label">State</div><div class="value-cell">${data.state || '—'}</div>
-          <div class="label">Date of Issue</div><div class="value-cell">${dateStr}</div>
-        </div>
-
-        <div class="section-title" style="margin-top:28px;">Document Content Area</div>
-        <div class="writing-area"></div>
-
-        <div class="sig-row">
-          <div class="sig-block">
-            <div class="sig-line">Signature of First Party<br/><strong>${data.purchaserName || ''}</strong></div>
-          </div>
-          <div class="sig-block">
-            <div class="sig-line">Signature of Second Party<br/><strong>${data.secondPartyName || ''}</strong></div>
-          </div>
-          <div class="sig-block">
-            <div class="sig-line">Witness Signature</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="footer-strip">
-        <div class="disclaimer">
-          <strong>Disclaimer:</strong> This e-Stamp Paper is generated via Justice Junction 24/7 as a template/draft for reference and practice purposes.
-          It is NOT an official government-issued stamp paper. For legally valid stamp papers, please purchase through
-          authorized vendors or the Stock Holding Corporation of India Ltd (SHCIL). Generated on ${dateStr}.
-        </div>
-        <div class="qr-placeholder">
-          <span>VERIFY</span>
-          <span style="font-size:16px;">⊞</span>
-          <span>SCAN QR</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</body>
-</html>`
+*{margin:0;padding:0;box-sizing:border-box}
+@page{size:A4;margin:10mm}
+body{font-family:Arial,Helvetica,sans-serif;background:#d0d0d0;display:flex;flex-direction:column;align-items:center;padding:20px}
+.toolbar{position:fixed;top:0;left:0;right:0;background:#004d26;color:#fff;padding:10px 20px;display:flex;justify-content:space-between;align-items:center;z-index:99;font-size:13px;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.toolbar button{background:#fff;color:#004d26;border:none;padding:7px 16px;border-radius:4px;font-weight:700;cursor:pointer;font-size:12px}
+.page{width:210mm;min-height:297mm;background:#fff;position:relative;overflow:hidden;box-shadow:0 4px 30px rgba(0,0,0,.18);margin-top:50px}
+.page::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(0deg,transparent,transparent 1px,rgba(0,77,38,.008) 1px,rgba(0,77,38,.008) 2px);pointer-events:none;z-index:0}
+.watermark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-30deg);font-size:90px;font-weight:900;color:rgba(0,77,38,.035);letter-spacing:15px;white-space:nowrap;z-index:0;font-family:serif}
+.top-band{background:#004d26;color:#fff;text-align:center;padding:6px;font-size:11px;font-weight:700;letter-spacing:4px;position:relative;z-index:1}
+.emblem-row{display:flex;align-items:center;justify-content:center;padding:14px 30px 8px;gap:16px;position:relative;z-index:1;border-bottom:2px solid #004d26}
+.emblem{width:70px;height:70px;display:flex;align-items:center;justify-content:center;flex-direction:column;font-size:10px;color:#004d26;font-weight:800}
+.emblem svg{width:50px;height:50px}
+.emblem-text{text-align:center;flex:1}
+.emblem-text h1{font-family:Georgia,'Times New Roman',serif;font-size:22px;color:#004d26;letter-spacing:3px;font-weight:800}
+.emblem-text h2{font-family:Georgia,serif;font-size:13px;color:#004d26;letter-spacing:1px;margin-top:2px;font-weight:600}
+.emblem-text .state-name{font-size:14px;color:#333;font-weight:700;margin-top:4px;letter-spacing:1px}
+.denom-box{text-align:center;padding:4px 20px;border:2px solid #004d26;display:inline-block;border-radius:2px}
+.denom-box .fig{font-family:Georgia,serif;font-size:28px;font-weight:900;color:#004d26}
+.denom-box .words{font-size:9px;color:#333;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.cert-bar{background:#e8f5e9;border-bottom:1px solid #b8d8be;padding:8px 24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;font-size:9px;color:#004d26;font-weight:700;position:relative;z-index:1}
+.cert-bar span{letter-spacing:.3px}
+.content{padding:20px 28px;position:relative;z-index:1}
+.row{display:flex;border-bottom:1px solid #cde0d3;min-height:28px}
+.row:last-child{border-bottom:none}
+.row .lbl{width:220px;padding:6px 10px;font-size:10px;font-weight:700;color:#004d26;background:#f5faf7;border-right:1px solid #cde0d3;text-transform:uppercase;letter-spacing:.5px;flex-shrink:0}
+.row .val{flex:1;padding:6px 12px;font-size:11px;color:#111;font-weight:600}
+.tbl{border:1px solid #b8d8be;border-radius:2px;margin-bottom:16px;overflow:hidden}
+.writing{border:1.5px dashed #b8d8be;min-height:280px;margin-top:12px;position:relative;background:repeating-linear-gradient(transparent,transparent 27px,#eef5f0 27px,#eef5f0 28px);padding:16px}
+.writing::before{content:'This space is intentionally left for the content of the document / agreement.';position:absolute;top:45%;left:50%;transform:translate(-50%,-50%);font-size:12px;color:#b0c8b6;font-weight:600;letter-spacing:1px;text-align:center;pointer-events:none;max-width:80%}
+.sigs{display:flex;justify-content:space-between;margin-top:50px;padding:0 10px}
+.sig{text-align:center;width:180px}
+.sig .line{border-top:1px solid #444;margin-top:55px;padding-top:5px;font-size:9px;color:#555}
+.sig .name{font-size:10px;font-weight:700;color:#111;margin-top:2px}
+.bottom-bar{position:absolute;bottom:0;left:0;right:0;background:#f5faf7;border-top:2px solid #004d26;padding:10px 24px;display:flex;justify-content:space-between;align-items:center;z-index:1}
+.bottom-bar .disc{font-size:7.5px;color:#5a7d63;max-width:70%;line-height:1.6}
+.qr{width:56px;height:56px;border:1.5px solid #004d26;display:grid;grid-template-columns:repeat(7,1fr);grid-template-rows:repeat(7,1fr);gap:1px;padding:3px}
+.qr i{background:#004d26;border-radius:0}
+.qr i.w{background:transparent}
+@media print{body{background:#fff;padding:0}.page{box-shadow:none;margin-top:0}.toolbar{display:none!important}}
+</style></head><body>
+<div class="toolbar no-print">
+<span>✅ e-Stamp Certificate Generated — Justice Junction 24/7</span>
+<div style="display:flex;gap:8px">
+<button onclick="window.print()">🖨️ Print / Save as PDF</button>
+<button onclick="window.close()">✕ Close</button>
+</div></div>
+<div class="page">
+<div class="watermark">INDIA NON JUDICIAL</div>
+<div class="top-band">GOVERNMENT OF INDIA</div>
+<div class="emblem-row">
+<div class="emblem">
+<svg viewBox="0 0 100 100" fill="#004d26"><circle cx="50" cy="30" r="18" fill="none" stroke="#004d26" stroke-width="3"/><text x="50" y="35" text-anchor="middle" font-size="16" font-weight="800" fill="#004d26">☸</text><rect x="35" y="48" width="30" height="4" rx="1"/><polygon points="50,55 30,90 70,90" fill="none" stroke="#004d26" stroke-width="2"/><text x="50" y="78" text-anchor="middle" font-size="8" font-weight="800" fill="#004d26">सत्यमेव जयते</text></svg>
+</div>
+<div class="emblem-text">
+<h1>INDIA NON JUDICIAL</h1>
+<h2>e-Stamp Certificate</h2>
+<div class="state-name">${data.state || 'India'}</div>
+</div>
+<div class="denom-box">
+<div class="fig">₹${parseInt(denomination).toLocaleString('en-IN')}</div>
+<div class="words">${amtWords} Rupees Only</div>
+</div>
+</div>
+<div class="cert-bar">
+<span>Certificate No: ${certNo}</span>
+<span>UDR: ${udr}</span>
+<span>Stamp ID: ${stampId}</span>
+<span>Date: ${dateStr} ${timeStr}</span>
+</div>
+<div class="content">
+<div class="tbl">
+<div class="row"><div class="lbl">Certificate Number</div><div class="val">${certNo}</div></div>
+<div class="row"><div class="lbl">Unique Doc. Reference</div><div class="val">${udr}</div></div>
+<div class="row"><div class="lbl">Account Reference</div><div class="val">${stampId} / SHCIL / ${stCode}</div></div>
+<div class="row"><div class="lbl">Purchased by</div><div class="val">${data.purchaserName||'—'}</div></div>
+<div class="row"><div class="lbl">Description of Document</div><div class="val">${data.purpose||'—'}</div></div>
+<div class="row"><div class="lbl">Article Number</div><div class="val">Article ${article}</div></div>
+<div class="row"><div class="lbl">Consideration Price (Rs.)</div><div class="val">${data.considerationAmount ? '₹'+parseInt(data.considerationAmount).toLocaleString('en-IN') : 'N/A'}</div></div>
+<div class="row"><div class="lbl">First Party</div><div class="val">${data.purchaserName||'—'}</div></div>
+<div class="row"><div class="lbl">Second Party</div><div class="val">${data.secondPartyName||'—'}</div></div>
+<div class="row"><div class="lbl">Stamp Duty Paid By</div><div class="val">${data.purchaserName||'—'}</div></div>
+<div class="row"><div class="lbl">Stamp Duty Amount (Rs.)</div><div class="val">₹${parseInt(denomination).toLocaleString('en-IN')} (${amtWords} Rupees Only)</div></div>
+</div>
+<p style="font-size:9px;color:#004d26;font-weight:700;text-align:center;margin:8px 0 4px;letter-spacing:2px">——— PLEASE WRITE OR TYPE BELOW THIS LINE ———</p>
+<div class="writing"></div>
+<div class="sigs">
+<div class="sig"><div class="line">Executant / First Party</div><div class="name">${data.purchaserName||''}</div></div>
+<div class="sig"><div class="line">Claimant / Second Party</div><div class="name">${data.secondPartyName||''}</div></div>
+<div class="sig"><div class="line">Witness</div><div class="name"></div></div>
+</div>
+</div>
+<div class="bottom-bar">
+<div class="disc"><strong>DISCLAIMER:</strong> This e-Stamp Certificate is generated via Justice Junction 24/7 for reference/practice purposes only. This is NOT an official government-issued stamp paper. For legally valid e-Stamp Certificates, purchase through authorized SHCIL (Stock Holding Corporation of India Ltd.) counters or licensed stamp vendors in your state. Issued: ${dateStr}.</div>
+<div class="qr"><i></i><i></i><i></i><i class="w"></i><i></i><i></i><i></i><i></i><i class="w"></i><i></i><i></i><i></i><i class="w"></i><i></i><i></i><i></i><i class="w"></i><i class="w"></i><i></i><i class="w"></i><i></i><i class="w"></i><i class="w"></i><i class="w"></i><i></i><i class="w"></i><i></i><i class="w"></i><i></i><i></i><i class="w"></i><i></i><i></i><i class="w"></i><i></i><i></i><i></i><i class="w"></i><i></i><i class="w"></i><i></i><i class="w"></i><i></i><i></i><i></i><i></i><i></i><i class="w"></i><i></i><i></i><i></i></div>
+</div>
+</div>
+</body></html>`
 }
 
 function numberToWords(num) {

@@ -27,6 +27,7 @@ export default function Search() {
   // Filter States (init from URL)
   const [spec, setSpec] = useState('')
   const [city, setCity] = useState('')
+  const [debouncedCity, setDebouncedCity] = useState('')
   const [maxFee, setMaxFee] = useState('')
   const [sortBy, setSortBy] = useState('rating')
   const [language, setLanguage] = useState('')
@@ -35,6 +36,7 @@ export default function Search() {
   const [showFilters, setShowFilters] = useState(false)
 
   const observer = useRef()
+  const initialSyncDone = useRef(false)
   const lastElementRef = useCallback(node => {
     if (loading) return
     if (observer.current) observer.current.disconnect()
@@ -46,18 +48,30 @@ export default function Search() {
     if (node) observer.current.observe(node)
   }, [loading, hasMore])
 
-  // Sync state with URL on mount
+  // Debounce city input — only update debouncedCity 500ms after user stops typing
   useEffect(() => {
-    if (!router.isReady) return
+    const timer = setTimeout(() => {
+      setDebouncedCity(city)
+    }, 500)
+    return () => clearTimeout(timer)
+  }, [city])
+
+  // Sync state with URL on mount (one-time)
+  useEffect(() => {
+    if (!router.isReady || initialSyncDone.current) return
+    initialSyncDone.current = true
     const { specialization, city: qCity, maxFee: qFee, sort } = router.query
     if (specialization) setSpec(specialization)
-    if (qCity) setCity(qCity)
+    if (qCity) {
+      setCity(qCity)
+      setDebouncedCity(qCity)
+    }
     if (qFee) setMaxFee(qFee)
     if (sort) setSortBy(sort)
     if (router.query.language) setLanguage(router.query.language)
     if (router.query.availability) setAvailability(router.query.availability)
     if (router.query.minRating) setMinRating(router.query.minRating)
-  }, [router.isReady, router.query])
+  }, [router.isReady])
 
   // Filter demo data in-memory
   const getFilteredDemoLawyers = () => {
@@ -69,9 +83,9 @@ export default function Search() {
         (l.specializations && l.specializations.some(s => s.toLowerCase() === spec.toLowerCase()))
       )
     }
-    if (city) {
+    if (debouncedCity) {
       filtered = filtered.filter(l =>
-        l.city.toLowerCase().includes(city.toLowerCase())
+        l.city.toLowerCase().includes(debouncedCity.toLowerCase())
       )
     }
     if (maxFee) {
@@ -114,7 +128,7 @@ export default function Search() {
     try {
       const params = new URLSearchParams({ page: p, limit: 8, sort: sortBy })
       if (spec) params.append('specialization', spec)
-      if (city) params.append('city', city)
+      if (debouncedCity) params.append('city', debouncedCity)
       if (maxFee) params.append('maxFee', maxFee)
       if (language) params.append('language', language)
       if (availability) params.append('availability', availability)
@@ -157,20 +171,20 @@ export default function Search() {
     if (page > 1 && !usingDemo) fetchData(page)
   }, [page])
 
-  // Effect for filter change (Reset)
+  // Effect for filter change (Reset) — uses debouncedCity so typing doesn't cause reload
   useEffect(() => {
     setPage(1)
     fetchData(1, true)
     const p = {}
     if (spec) p.specialization = spec
-    if (city) p.city = city
+    if (debouncedCity) p.city = debouncedCity
     if (maxFee) p.maxFee = maxFee
     if (language) p.language = language
     if (availability) p.availability = availability
     if (minRating) p.minRating = minRating
     if (sortBy !== 'rating') p.sort = sortBy
     router.push({ pathname: '/search', query: p }, undefined, { shallow: true })
-  }, [spec, city, maxFee, sortBy, language, availability, minRating])
+  }, [spec, debouncedCity, maxFee, sortBy, language, availability, minRating])
 
   const clearFilters = () => {
     setSpec('')
