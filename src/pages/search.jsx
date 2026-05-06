@@ -56,22 +56,39 @@ export default function Search() {
     return () => clearTimeout(timer)
   }, [city])
 
-  // Sync state with URL on mount (one-time)
+  // Sync state with URL or LocalStorage on mount
   useEffect(() => {
     if (!router.isReady || initialSyncDone.current) return
     initialSyncDone.current = true
+    
+    // Try URL first, then LocalStorage
     const { specialization, city: qCity, maxFee: qFee, sort } = router.query
-    if (specialization) setSpec(specialization)
-    if (qCity) {
-      setCity(qCity)
-      setDebouncedCity(qCity)
+    const saved = JSON.parse(localStorage.getItem('jj_search_filters') || '{}')
+
+    const initialSpec = specialization || saved.spec || ''
+    const initialCity = qCity || saved.city || ''
+    const initialFee = qFee || saved.maxFee || ''
+    const initialSort = sort || saved.sortBy || 'rating'
+
+    if (initialSpec) setSpec(initialSpec)
+    if (initialCity) {
+      setCity(initialCity)
+      setDebouncedCity(initialCity)
     }
-    if (qFee) setMaxFee(qFee)
-    if (sort) setSortBy(sort)
-    if (router.query.language) setLanguage(router.query.language)
-    if (router.query.availability) setAvailability(router.query.availability)
-    if (router.query.minRating) setMinRating(router.query.minRating)
+    if (initialFee) setMaxFee(initialFee)
+    if (initialSort) setSortBy(initialSort)
+    
+    if (saved.language) setLanguage(saved.language)
+    if (saved.availability) setAvailability(saved.availability)
+    if (saved.minRating) setMinRating(saved.minRating)
   }, [router.isReady])
+
+  // Persist filters to localStorage whenever they change
+  useEffect(() => {
+    if (!hasMounted.current) return
+    const filters = { spec, city, maxFee, sortBy, language, availability, minRating }
+    localStorage.setItem('jj_search_filters', JSON.stringify(filters))
+  }, [spec, city, maxFee, sortBy, language, availability, minRating])
 
   // Filter demo data in-memory
   const getFilteredDemoLawyers = () => {
@@ -184,16 +201,15 @@ export default function Search() {
 
   // Effect for filter change (Reset) — uses debouncedCity so typing doesn't cause reload
   useEffect(() => {
-    // Skip the very first run since mount sync handles it
     if (!hasMounted.current) {
       hasMounted.current = true
       return
     }
-
     setPage(1)
     fetchData(1, true)
-    
-    // Update URL query params without reload
+  }, [spec, debouncedCity, maxFee, sortBy, language, availability, minRating])
+
+  const updateUrl = () => {
     const p = new URLSearchParams()
     if (spec) p.set('specialization', spec)
     if (debouncedCity) p.set('city', debouncedCity)
@@ -204,7 +220,16 @@ export default function Search() {
     if (sortBy !== 'rating') p.set('sort', sortBy)
     
     const newUrl = `/search${p.toString() ? '?' + p.toString() : ''}`
-    router.push(newUrl, undefined, { shallow: true, scroll: false })
+    if (router.asPath !== newUrl) {
+      router.push(newUrl, undefined, { shallow: true, scroll: false })
+    }
+  }
+
+  // Only update URL on explicit actions or after a very long pause
+  useEffect(() => {
+    if (!hasMounted.current) return
+    const timer = setTimeout(updateUrl, 3000)
+    return () => clearTimeout(timer)
   }, [spec, debouncedCity, maxFee, sortBy, language, availability, minRating])
 
   const clearFilters = () => {
@@ -219,7 +244,7 @@ export default function Search() {
 
   return (
     <div style={{background:'#FDF8F4',minHeight:'100vh'}}>
-      <div className="page-wrap page-reveal" style={{background: 'transparent'}}>
+      <div className="page-wrap" style={{background: 'transparent'}}>
       <Head>
         <title>Find Verified Lawyers in India | Justice Junction 24/7</title>
         <meta name="description" content="Browse and compare top-rated advocates by specialization, fee, and location. Book instant video consultations." />
@@ -291,7 +316,8 @@ export default function Search() {
                   placeholder="City or Pincode" 
                   value={city} 
                   onChange={e => setCity(e.target.value)} 
-                  onKeyDown={e => e.key === 'Enter' && e.preventDefault()}
+                  onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), updateUrl())}
+                  onBlur={updateUrl}
                 />
               </div>
 
