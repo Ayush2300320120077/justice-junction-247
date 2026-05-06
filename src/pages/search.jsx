@@ -171,8 +171,16 @@ export default function Search() {
     if (page > 1 && !usingDemo) fetchData(page)
   }, [page])
 
+  const hasMounted = useRef(false)
+
   // Effect for filter change (Reset) — uses debouncedCity so typing doesn't cause reload
   useEffect(() => {
+    // Skip the very first run since mount sync handles it
+    if (!hasMounted.current) {
+      hasMounted.current = true
+      return
+    }
+
     setPage(1)
     fetchData(1, true)
     const p = {}
@@ -183,7 +191,7 @@ export default function Search() {
     if (availability) p.availability = availability
     if (minRating) p.minRating = minRating
     if (sortBy !== 'rating') p.sort = sortBy
-    router.push({ pathname: '/search', query: p }, undefined, { shallow: true })
+    router.push({ pathname: '/search', query: p }, undefined, { shallow: true, scroll: false })
   }, [spec, debouncedCity, maxFee, sortBy, language, availability, minRating])
 
   const clearFilters = () => {
