@@ -94,8 +94,8 @@ function ClientDash() {
               <div style={s.biIcon}><Scale size={20} color="var(--bur)" /></div>
               <div style={{flex:1}}>
                 <div style={{fontWeight:800,fontSize:'.95rem'}}>{b.lawyerName}</div>
-                <div style={{fontSize:'0.78rem',color:'var(--txt-3)',marginTop:2}}>{b.caseType} · {fmt(b.scheduledDate)} at {b.scheduledTime}</div>
-                <div style={{fontSize:'0.78rem',color:'var(--txt-3)',marginTop:2}}>Case # {b.caseNumber} · Fee: ₹{(b.fee||0).toLocaleString()}</div>
+                <div style={{fontSize:'0.78rem',color:'#3D2028',marginTop:2}}>{b.caseType} · {fmt(b.scheduledDate)} at {b.scheduledTime}</div>
+                <div style={{fontSize:'0.78rem',color:'#3D2028',marginTop:2}}>Case # {b.caseNumber} · Fee: ₹{(b.fee||0).toLocaleString()}</div>
                 {b.meetingLink && <a href={b.meetingLink} target="_blank" rel="noreferrer" style={{fontSize:'0.8rem',color:'var(--bur)',fontWeight:800,marginTop:8,display:'inline-flex',alignItems:'center',gap:4, background: 'var(--cream-2)', padding: '.4rem .8rem', borderRadius: 8}}><Video size={14}/>Join Video Call</a>}
               </div>
               <StatusBadge status={b.status} />
@@ -136,7 +136,7 @@ function ClientDash() {
                   <div style={s.biIcon}><Briefcase size={20} color="var(--bur)" /></div>
                   <div style={{flex:1}}>
                     <div style={{fontWeight:800, fontSize:'.95rem'}}>{c.caseNumber}</div>
-                    <div style={{fontSize:'.8rem', color:'var(--txt-3)'}}>{c.courtName} · {c.lawyerName || 'Advocate not specified'}</div>
+                    <div style={{fontSize:'.8rem', color:'#3D2028'}}>{c.courtName} · {c.lawyerName || 'Advocate not specified'}</div>
                     {c.nextHearing && <div style={{fontSize:'.8rem', color:'var(--bur)', fontWeight:800, marginTop:4}}>📅 Next Hearing: {fmt(c.nextHearing)}</div>}
                     <div style={{display:'flex', gap:10, marginTop:10}}>
                       <button style={s.docBtn} onClick={() => showToast('Simulating document upload...')}>
@@ -159,7 +159,7 @@ function ClientDash() {
         <div style={s.section} className="dash-section-responsive">
           <h3 style={{fontWeight:800,marginBottom:'1.2rem'}}>Verified Case Updates</h3>
           {updates.length === 0 ? (
-            <div style={s.empty}><div style={{color:'var(--txt-3)',display:'flex',justifyContent:'center',marginBottom:12}}><Activity size={40}/></div><p>No updates yet. Your lawyer will post updates here.</p></div>
+            <div style={s.empty}><div style={{color:'#3D2028',display:'flex',justifyContent:'center',marginBottom:12}}><Activity size={40}/></div><p>No updates yet. Your lawyer will post updates here.</p></div>
           ) : (
             <div>
               {updates.map((u,i) => (
@@ -242,14 +242,14 @@ function LawyerDash() {
           <h3 style={{fontWeight:800,marginBottom:'1.2rem'}}>Client Bookings</h3>
           {loading ? <div className="spinner-wrap"><div className="spinner"></div></div> :
           bookings.length === 0 ? (
-            <div style={s.empty}><div style={{color:'var(--txt-3)',display:'flex',justifyContent:'center',marginBottom:12}}><ClipboardList size={40}/></div><p>No client bookings yet. Your profile is live!</p></div>
+            <div style={s.empty}><div style={{color:'#3D2028',display:'flex',justifyContent:'center',marginBottom:12}}><ClipboardList size={40}/></div><p>No client bookings yet. Your profile is live!</p></div>
           ) : bookings.map(b => (
             <div key={b._id} style={s.bookingItem} className="case-card-premium">
               <div style={s.biIcon}><User size={20} color="var(--bur)" /></div>
               <div style={{flex:1}}>
                 <div style={{fontWeight:800,fontSize:'.95rem'}}>{b.clientName}</div>
-                <div style={{fontSize:'0.78rem',color:'var(--txt-3)',marginTop:2}}>{b.caseType} · {fmt(b.scheduledDate)} at {b.scheduledTime}</div>
-                <div style={{fontSize:'0.78rem',color:'var(--txt-3)',marginTop:2}}>Case # {b.caseNumber} · ₹{(b.fee||0).toLocaleString()}</div>
+                <div style={{fontSize:'0.78rem',color:'#3D2028',marginTop:2}}>{b.caseType} · {fmt(b.scheduledDate)} at {b.scheduledTime}</div>
+                <div style={{fontSize:'0.78rem',color:'#3D2028',marginTop:2}}>Case # {b.caseNumber} · ₹{(b.fee||0).toLocaleString()}</div>
                 {b.description && <div style={{fontSize:'0.82rem',color:'var(--txt-2)',marginTop:6,fontStyle:'italic', background:'var(--cream-2)', padding: '8px', borderRadius: 8}}>"{b.description.slice(0,120)}{b.description.length>120?'...':''}"</div>}
                 {b.meetingLink && <a href={b.meetingLink} target="_blank" rel="noreferrer" style={{fontSize:'0.8rem',color:'var(--bur)',fontWeight:800,marginTop:12,display:'inline-flex',alignItems:'center',gap:4, background:'var(--cream-2)', padding:'.4rem .8rem', borderRadius: 8}}><Video size={14}/>Join Video Call</a>}
               </div>
@@ -305,11 +305,11 @@ function LawyerDash() {
       {tab === 'profile' && (
         <div style={s.section} className="dash-section-responsive">
           <h3 style={{fontWeight:800,marginBottom:'1.2rem'}}>Practice Settings</h3>
-          <p style={{color:'var(--txt-3)', marginBottom:'2rem'}}>Update your specialization, fee, and availability status.</p>
+          <p style={{color:'#3D2028', marginBottom:'2rem'}}>Update your specialization, fee, and availability status.</p>
           <div style={{background:'var(--cream-2)', border:'1px solid var(--border)', borderRadius:16, padding:'2rem', textAlign:'center'}}>
             <User size={48} color="var(--bur)" style={{marginBottom:16}}/>
             <h4 style={{marginBottom:8}}>Profile Management</h4>
-            <p style={{fontSize:'.9rem', color:'var(--txt-3)', marginBottom:'1.5rem'}}>Manage your public profile information, bar registration details, and practice areas.</p>
+            <p style={{fontSize:'.9rem', color:'#3D2028', marginBottom:'1.5rem'}}>Manage your public profile information, bar registration details, and practice areas.</p>
             <button className="btn btn-outline" onClick={() => showToast('Profile editor coming soon...')}>Edit Practice Details</button>
           </div>
         </div>
@@ -342,16 +342,18 @@ export default function Dashboard() {
         
         {/* Personalized Welcome Banner */}
         <div className="section-bg-abstract parallax" style={{ borderRadius: 32, padding: '4rem 3rem', marginBottom: '3rem', color: '#fff', position: 'relative', overflow: 'hidden', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          {/* Dark overlay for text readability */}
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(92,21,33,0.88) 0%, rgba(26,10,13,0.82) 100%)', zIndex: 1 }} />
           <div style={{ position: 'relative', zIndex: 2 }}>
             <div className="tag" style={{ background: 'var(--gold)', color: '#000', border: 'none', marginBottom: '1rem' }}>Active Session</div>
-            <h1 className="boutique-heading" style={{ fontSize: '3rem', color: '#fff', fontStyle: 'normal', marginBottom: 8 }}>Welcome, {user?.name?.split(' ')[0]}!</h1>
-            <p style={{ fontSize: '1.1rem', opacity: 0.9 }}>
+            <h1 className="boutique-heading" style={{ fontSize: '3rem', color: '#fff', fontStyle: 'normal', marginBottom: 8, textShadow: '0 2px 8px rgba(0,0,0,0.3)' }}>Welcome, {user?.name?.split(' ')[0]}!</h1>
+            <p style={{ fontSize: '1.1rem', color: '#F5E6D3' }}>
               {user?.role === 'lawyer' ? 'Your legal practice is flourishing. 4 new inquiries today.' : "Your legal matters are being handled. 2 updates pending review."}
             </p>
           </div>
           <div className="hide-mobile" style={{ textAlign: 'right', position: 'relative', zIndex: 2 }}>
-            <div style={{ fontSize: '2.5rem', fontWeight: 800, fontFamily: 'Sora, sans-serif' }}>{new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</div>
-            <div style={{ fontSize: '.9rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 2, opacity: 0.8 }}>System Status: Operational</div>
+            <div style={{ fontSize: '2.5rem', fontWeight: 800, fontFamily: 'Sora, sans-serif', textShadow: '0 2px 8px rgba(0,0,0,0.3)' }}>{new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</div>
+            <div style={{ fontSize: '.9rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 2, color: '#F5E6D3' }}>System Status: Operational</div>
           </div>
         </div>
 
@@ -389,7 +391,7 @@ const s = {
   sidebar: { background:'#fff', border:'1px solid var(--border)', borderRadius:'24px', padding:'2.5rem 1.5rem', height:'fit-content', position:'sticky', top:110, boxShadow:'0 10px 30px rgba(0,0,0,0.02)' },
   sbUser: { textAlign:'center', paddingBottom:'1.5rem', borderBottom:'1px solid var(--border)', marginBottom:'1.5rem' },
   sbAvatar: { width:64, height:64, borderRadius:'20px', background:'linear-gradient(135deg, var(--bur), var(--bur-d))', color:'#fff', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:"'Playfair Display',serif", fontSize:'1.5rem', fontWeight:800, margin:'0 auto 1rem' },
-  sbRoleBadge: { fontSize:'0.7rem', color:'var(--txt-3)', textTransform:'uppercase', letterSpacing:'1px', fontWeight:800, display:'flex', justifyContent:'center', alignItems:'center', gap:4, background: 'var(--cream-2)', padding: '.3rem .6rem', borderRadius: 50, width: 'fit-content', margin: '0 auto' },
+  sbRoleBadge: { fontSize:'0.7rem', color:'#3D2028', textTransform:'uppercase', letterSpacing:'1px', fontWeight:800, display:'flex', justifyContent:'center', alignItems:'center', gap:4, background: 'var(--cream-2)', padding: '.3rem .6rem', borderRadius: 50, width: 'fit-content', margin: '0 auto' },
   sbLink: { display:'flex', alignItems:'center', gap:10, padding:'0.8rem 1.2rem', borderRadius:14, fontSize:'0.9rem', fontWeight:700, color:'var(--txt-2)', textDecoration:'none', transition:'all 0.2s' },
   sbLinkActive: { background:'var(--bur)', color:'#fff', boxShadow:'0 4px 15px rgba(123,29,46,0.2)' },
   
@@ -414,5 +416,5 @@ const s = {
   
   updateItem: { display:'flex', gap:16, padding:'1.5rem 0', borderBottom:'1px solid var(--border)' },
   udot: { width:24, height:24, borderRadius:'50%', flexShrink:0, marginTop:4 },
-  empty: { textAlign:'center', padding:'4rem 2rem', color:'var(--txt-3)' }
+  empty: { textAlign:'center', padding:'4rem 2rem', color:'#3D2028' }
 }
