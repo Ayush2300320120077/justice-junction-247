@@ -47,6 +47,7 @@ export default function Navbar() {
           <ul style={s.links} className="hide-mobile">
             {[
               ['/', 'Home'],
+              ['/how-it-works', 'How it Works'],
               ['/search','Find Lawyers'],
               ['/knowledge-hub','Knowledge Hub'],
               ['/document-generator','Legal Tools'],
@@ -113,6 +114,7 @@ export default function Navbar() {
             </div>
             {[
               ['/', <Home size={18}/>, 'Home'],
+              ['/how-it-works', <FileText size={18}/>, 'How it Works'],
               ['/search', <Search size={18}/>, 'Find Lawyers'],
               ['/knowledge-hub', <BookOpen size={18}/>, 'Knowledge Hub'],
               ['/document-generator', <FileText size={18}/>, 'Legal Tools'],

@@ -327,7 +327,7 @@ export default function Search() {
                   <SearchX size={64} color="#D4A882" strokeWidth={1} />
                   <h2 style={{marginTop: '1.5rem', fontWeight: 800, color:'#1A0A0D'}}>No lawyers match your filters</h2>
                   <p style={{color: '#4A2030', marginBottom: '1rem', maxWidth:420, margin:'0.5rem auto 1rem', lineHeight:1.7, fontSize:'.92rem'}}>
-                    Our network is growing fast. Try adjusting your filters, or browse our featured advocates below.
+                    Our network is growing fast. Try adjusting your filters to see more results.
                   </p>
                   <button className="btn btn-outline" onClick={clearFilters}>Clear All Filters</button>
                   <div style={{marginTop:'1rem'}}>
