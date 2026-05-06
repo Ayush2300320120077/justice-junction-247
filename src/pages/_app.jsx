@@ -57,7 +57,7 @@ function MyApp({ Component, pageProps }) {
           </div>
           
           <Navbar />
-          <div key={router.pathname} className="page-reveal">
+          <div className="page-reveal">
             <Component {...pageProps} />
           </div>
           <Footer />

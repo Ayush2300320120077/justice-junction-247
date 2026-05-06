@@ -141,26 +141,35 @@ export default function Search() {
         if (isNew) {
           setLawyers(data.lawyers)
         } else {
-          setLawyers(prev => [...prev, ...data.lawyers])
+          setLawyers(prev => {
+            // Prevent duplicates
+            const ids = new Set(prev.map(l => l._id))
+            const filtered = data.lawyers.filter(l => !ids.has(l._id))
+            return [...prev, ...filtered]
+          })
         }
         setHasMore(data.lawyers.length === 8)
         setTotal(data.total)
         setUsingDemo(false)
       } else {
-        // Fallback to demo data
+        if (isNew) {
+          // Fallback to demo data
+          const demoFiltered = getFilteredDemoLawyers()
+          setLawyers(demoFiltered)
+          setTotal(demoFiltered.length)
+          setUsingDemo(true)
+        }
+        setHasMore(false)
+      }
+    } catch (err) {
+      if (isNew) {
+        // API failed — fallback to demo data
         const demoFiltered = getFilteredDemoLawyers()
         setLawyers(demoFiltered)
         setTotal(demoFiltered.length)
-        setHasMore(false)
         setUsingDemo(true)
       }
-    } catch (err) {
-      // API failed — fallback to demo data
-      const demoFiltered = getFilteredDemoLawyers()
-      setLawyers(demoFiltered)
-      setTotal(demoFiltered.length)
       setHasMore(false)
-      setUsingDemo(true)
     } finally {
       setLoading(false)
     }
@@ -183,15 +192,19 @@ export default function Search() {
 
     setPage(1)
     fetchData(1, true)
-    const p = {}
-    if (spec) p.specialization = spec
-    if (debouncedCity) p.city = debouncedCity
-    if (maxFee) p.maxFee = maxFee
-    if (language) p.language = language
-    if (availability) p.availability = availability
-    if (minRating) p.minRating = minRating
-    if (sortBy !== 'rating') p.sort = sortBy
-    router.push({ pathname: '/search', query: p }, undefined, { shallow: true, scroll: false })
+    
+    // Update URL query params without reload
+    const p = new URLSearchParams()
+    if (spec) p.set('specialization', spec)
+    if (debouncedCity) p.set('city', debouncedCity)
+    if (maxFee) p.set('maxFee', maxFee)
+    if (language) p.set('language', language)
+    if (availability) p.set('availability', availability)
+    if (minRating) p.set('minRating', minRating)
+    if (sortBy !== 'rating') p.set('sort', sortBy)
+    
+    const newUrl = `/search${p.toString() ? '?' + p.toString() : ''}`
+    router.push(newUrl, undefined, { shallow: true, scroll: false })
   }, [spec, debouncedCity, maxFee, sortBy, language, availability, minRating])
 
   const clearFilters = () => {
@@ -273,7 +286,13 @@ export default function Search() {
 
               <div style={st.filterGroup}>
                 <label style={st.label}><MapPin size={14} color="#7B1D2E"/> Location</label>
-                <input style={st.input} placeholder="City or Pincode" value={city} onChange={e => setCity(e.target.value)} />
+                <input 
+                  style={st.input} 
+                  placeholder="City or Pincode" 
+                  value={city} 
+                  onChange={e => setCity(e.target.value)} 
+                  onKeyDown={e => e.key === 'Enter' && e.preventDefault()}
+                />
               </div>
 
               <div style={st.filterGroup}>
@@ -367,9 +386,15 @@ export default function Search() {
               </div>
             )}
 
-            {loading && (
+            {loading && lawyers.length === 0 && (
               <div style={st.grid} className="grid-lawyers">
                 {[1,2,3,4].map(i => <SkeletonCard key={i} />)}
+              </div>
+            )}
+
+            {loading && lawyers.length > 0 && (
+              <div style={{ textAlign: 'center', padding: '1rem', color: 'var(--bur)', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                <Loader2 className="spinner" size={20} /> Updating results...
               </div>
             )}
 
