@@ -6,18 +6,10 @@ import SkeletonCard from '../components/SkeletonCard'
 import { useToast } from '../context/ToastContext'
 import { SearchX, Filter, X, ChevronDown, Star, MapPin, Scale, DollarSign, Loader2, Globe, Video, Phone } from 'lucide-react'
 import Head from 'next/head'
+import demoLawyers from '../data/demoLawyers'
 
-const SPECS = ['Criminal Defence','Family Law','Property Law','Corporate Law','Consumer Rights','Labour Law','Civil Disputes','Divorce','Taxation','Intellectual Property','Cyber Law']
+const SPECS = ['Criminal Defence','Family Law','Property Law','Corporate Law','Consumer Rights','Labour Law','Civil Disputes','Divorce','Taxation','Intellectual Property','Cyber Law','Bail & FIR']
 const CITIES = ['Delhi','Mumbai','Bangalore','Hyderabad','Chennai','Kolkata','Ahmedabad','Pune','Jaipur','Lucknow']
-
-const SUGGESTED_LAWYERS = [
-  { _id: 'demo1', name: 'Adv. Priya Sharma', specializations: ['Family Law','Divorce'], city: 'Delhi', state: 'Delhi', experience: 14, consultationFee: 2500, averageRating: 4.9, totalReviews: 87, isAvailable: true, experienceLevel: 'senior', languages: ['Hindi','English'] },
-  { _id: 'demo2', name: 'Adv. Rajesh Menon', specializations: ['Criminal Defence','Bail & FIR'], city: 'Mumbai', state: 'Maharashtra', experience: 22, consultationFee: 4000, averageRating: 4.8, totalReviews: 142, isAvailable: true, experienceLevel: 'senior', languages: ['English','Marathi','Hindi'] },
-  { _id: 'demo3', name: 'Adv. Sunita Reddy', specializations: ['Property Law','Consumer Rights'], city: 'Bangalore', state: 'Karnataka', experience: 11, consultationFee: 3000, averageRating: 4.7, totalReviews: 63, isAvailable: true, experienceLevel: 'mid', languages: ['English','Kannada','Telugu'] },
-  { _id: 'demo4', name: 'Adv. Mohammed Farhan', specializations: ['Corporate Law','Taxation'], city: 'Hyderabad', state: 'Telangana', experience: 9, consultationFee: 3500, averageRating: 4.9, totalReviews: 51, isAvailable: true, experienceLevel: 'mid', languages: ['English','Hindi','Urdu'] },
-  { _id: 'demo5', name: 'Adv. Kavya Nair', specializations: ['Consumer Rights','Civil Disputes'], city: 'Chennai', state: 'Tamil Nadu', experience: 7, consultationFee: 1800, averageRating: 4.6, totalReviews: 38, isAvailable: true, experienceLevel: 'mid', languages: ['Tamil','English'] },
-  { _id: 'demo6', name: 'Adv. Amit Chaturvedi', specializations: ['Labour Law','Civil Disputes'], city: 'Lucknow', state: 'Uttar Pradesh', experience: 18, consultationFee: 2200, averageRating: 4.8, totalReviews: 94, isAvailable: false, experienceLevel: 'senior', languages: ['Hindi','English'] },
-]
 
 export default function Search() {
   const router = useRouter()
@@ -29,6 +21,8 @@ export default function Search() {
   const [page, setPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
   const [total, setTotal] = useState(0)
+  const [usingDemo, setUsingDemo] = useState(false)
+  const [showDemoBanner, setShowDemoBanner] = useState(true)
   
   // Filter States (init from URL)
   const [spec, setSpec] = useState('')
@@ -65,9 +59,57 @@ export default function Search() {
     if (router.query.minRating) setMinRating(router.query.minRating)
   }, [router.isReady, router.query])
 
+  // Filter demo data in-memory
+  const getFilteredDemoLawyers = () => {
+    let filtered = [...demoLawyers]
+
+    if (spec) {
+      filtered = filtered.filter(l =>
+        l.specialization.toLowerCase() === spec.toLowerCase() ||
+        (l.specializations && l.specializations.some(s => s.toLowerCase() === spec.toLowerCase()))
+      )
+    }
+    if (city) {
+      filtered = filtered.filter(l =>
+        l.city.toLowerCase().includes(city.toLowerCase())
+      )
+    }
+    if (maxFee) {
+      filtered = filtered.filter(l => (l.fee || l.consultationFee) <= Number(maxFee))
+    }
+    if (language) {
+      filtered = filtered.filter(l =>
+        l.languages && l.languages.some(lang => lang.toLowerCase() === language.toLowerCase())
+      )
+    }
+    if (availability) {
+      filtered = filtered.filter(l => {
+        if (availability === 'online') return l.availability === 'Online' || l.availability === 'Both'
+        if (availability === 'offline') return l.availability === 'Offline' || l.availability === 'Both'
+        if (availability === 'both') return l.availability === 'Both'
+        return true
+      })
+    }
+    if (minRating) {
+      filtered = filtered.filter(l => (l.rating || l.averageRating) >= Number(minRating))
+    }
+
+    // Sort
+    if (sortBy === 'rating') {
+      filtered.sort((a, b) => (b.rating || b.averageRating) - (a.rating || a.averageRating))
+    } else if (sortBy === 'experience') {
+      filtered.sort((a, b) => b.experience - a.experience)
+    } else if (sortBy === 'price_low') {
+      filtered.sort((a, b) => (a.fee || a.consultationFee) - (b.fee || b.consultationFee))
+    } else if (sortBy === 'price_high') {
+      filtered.sort((a, b) => (b.fee || b.consultationFee) - (a.fee || a.consultationFee))
+    }
+
+    return filtered
+  }
+
   // Load data
   const fetchData = async (p, isNew = false) => {
-    console.log('Fetching lawyers with params:', { p, isNew, spec, city, maxFee, sortBy, language, availability, minRating })
     setLoading(true)
     try {
       const params = new URLSearchParams({ page: p, limit: 8, sort: sortBy })
@@ -81,16 +123,30 @@ export default function Search() {
       const res = await fetch(`/api/search?${params.toString()}`)
       const data = await res.json()
       
-      if (isNew) {
-        setLawyers(data.lawyers)
+      if (data.lawyers && data.lawyers.length > 0) {
+        if (isNew) {
+          setLawyers(data.lawyers)
+        } else {
+          setLawyers(prev => [...prev, ...data.lawyers])
+        }
+        setHasMore(data.lawyers.length === 8)
+        setTotal(data.total)
+        setUsingDemo(false)
       } else {
-        setLawyers(prev => [...prev, ...data.lawyers])
+        // Fallback to demo data
+        const demoFiltered = getFilteredDemoLawyers()
+        setLawyers(demoFiltered)
+        setTotal(demoFiltered.length)
+        setHasMore(false)
+        setUsingDemo(true)
       }
-      
-      setHasMore(data.lawyers.length === 8)
-      setTotal(data.total)
     } catch (err) {
-      showToast('Failed to fetch lawyers', 'error')
+      // API failed — fallback to demo data
+      const demoFiltered = getFilteredDemoLawyers()
+      setLawyers(demoFiltered)
+      setTotal(demoFiltered.length)
+      setHasMore(false)
+      setUsingDemo(true)
     } finally {
       setLoading(false)
     }
@@ -98,7 +154,7 @@ export default function Search() {
 
   // Effect for page change (Infinite Scroll)
   useEffect(() => {
-    if (page > 1) fetchData(page)
+    if (page > 1 && !usingDemo) fetchData(page)
   }, [page])
 
   // Effect for filter change (Reset)
@@ -143,6 +199,22 @@ export default function Search() {
       </section>
 
       <div className="container" style={{paddingTop: '2rem'}}>
+        {/* Demo Banner */}
+        {usingDemo && showDemoBanner && lawyers.length > 0 && (
+          <div className="bg-amber-50 border border-amber-200 text-amber-800 rounded-lg px-4 py-3 text-sm mb-6 flex items-start justify-between">
+            <div className="flex gap-2">
+              <span className="text-lg leading-none">🔔</span>
+              <div>
+                <span className="font-semibold block">Showing demo profiles. Real verified lawyers joining soon.</span>
+                <span>Register to be notified.</span>
+              </div>
+            </div>
+            <button onClick={() => setShowDemoBanner(false)} className="text-amber-500 hover:text-amber-700 ml-4 flex-shrink-0">
+              <X size={16} />
+            </button>
+          </div>
+        )}
+
         {/* Header Area */}
         <div style={st.searchHeader} className="search-header-responsive">
           <div className="mobile-text-center mobile-w-full">
@@ -262,27 +334,12 @@ export default function Search() {
                     <Link href="/join-as-lawyer" style={{fontSize:'.88rem',fontWeight:700,color:'#8B1A2A',textDecoration:'none'}}>Are you a lawyer? List your profile free →</Link>
                   </div>
                 </div>
-
-                {/* Featured Advocates */}
-                <div style={{marginTop:'2.5rem'}}>
-                  <div style={{display:'flex',alignItems:'center',gap:12,marginBottom:'1rem'}}>
-                    <h3 style={{fontSize:'1.1rem',fontWeight:700,color:'#8B1A2A',margin:0}}>Featured Advocates</h3>
-                    <span style={{fontSize:'.7rem',fontWeight:700,color:'#6B4050',background:'#F5E6D3',padding:'.25rem .8rem',borderRadius:50}}>Sample Profiles — Real lawyers joining soon</span>
-                  </div>
-                  <div style={st.grid} className="grid-lawyers">
-                    {SUGGESTED_LAWYERS.map(l => (
-                      <div key={l._id} className="magnetic-hover">
-                        <LawyerCard lawyer={l} isDemo={true} />
-                      </div>
-                    ))}
-                  </div>
-                </div>
               </div>
             ) : (
               <div style={st.grid} className="grid-lawyers">
                 {lawyers.map((l, idx) => (
                   <div key={l._id} ref={idx === lawyers.length - 1 ? lastElementRef : null} className="magnetic-hover">
-                    <LawyerCard lawyer={l} />
+                    <LawyerCard lawyer={l} isDemo={l.isDemo || usingDemo} />
                   </div>
                 ))}
               </div>

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import { BookOpen, Scale, Shield, Landmark, Search, ChevronRight, FileText, AlertCircle, SearchX } from 'lucide-react'
@@ -24,6 +24,11 @@ export default function KnowledgeHub() {
   const [subscribed, setSubscribed] = useState(false)
   const { showToast } = useToast()
 
+  useEffect(() => {
+    const saved = typeof window !== 'undefined' && localStorage.getItem('jj_newsletter_email')
+    if (saved) setSubscribed(true)
+  }, [])
+
   const filtered = ARTICLES.filter(a => {
     const matchSearch = a.title.toLowerCase().includes(search.toLowerCase()) || a.desc.toLowerCase().includes(search.toLowerCase())
     const matchCat = category === 'All' || a.category === category
@@ -37,6 +42,7 @@ export default function KnowledgeHub() {
       return
     }
     setSubscribed(true)
+    if (typeof window !== 'undefined') localStorage.setItem('jj_newsletter_email', subEmail)
     showToast("✓ You're subscribed! Legal updates coming your way.", 'success')
     setSubEmail('')
   }
@@ -134,6 +140,7 @@ export default function KnowledgeHub() {
               <button type="submit" className="btn btn-primary" style={{ padding: '1rem 2rem', borderRadius: '12px', background: '#7B1D2E', color: '#fff', border: 'none', fontWeight: 600, cursor: 'pointer' }}>Subscribe</button>
             </form>
           )}
+          {!subscribed && <p style={{fontSize:'.75rem',color:'#9CA3AF',marginTop:8}}>No spam. Unsubscribe anytime.</p>}
         </div>
       </section>
     </div>

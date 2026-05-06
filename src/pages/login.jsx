@@ -38,7 +38,7 @@ export default function Login() {
       <div className="auth-visual-side">
         <div className="auth-visual-overlay" />
         <div style={{ position: 'relative', zIndex: 2, maxWidth: 450 }}>
-          <div style={{ color: '#F5C4B3', textTransform: 'uppercase', fontSize: '0.875rem', letterSpacing: '0.1em', marginBottom: '1.5rem', fontWeight: 700 }}>Boutique Legal Platform</div>
+          <div style={{ color: '#F5C4B3', textTransform: 'uppercase', fontSize: '0.875rem', letterSpacing: '0.1em', marginBottom: '1.5rem', fontWeight: 700 }}>India's Legal Discovery Platform</div>
           <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '3rem', fontWeight: 800, marginBottom: '1.5rem', lineHeight: 1.1, color: '#F9EEE4' }}>
             Equal Access <br /> to <span style={{ color: '#F5C4B3' }}>Justice</span> for All.
           </h2>

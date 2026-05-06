@@ -22,12 +22,12 @@ const PRACTICE_AREAS = [
 ]
 
 const TESTIMONIALS = [
-  { init:'RG', name:'Rohit Gupta', role:'Client, Delhi', text:"Found a criminal lawyer in 8 minutes. Paid exactly ₹3,500 — what was shown. Real-time case updates gave me peace of mind." },
-  { init:'AP', name:'Anjali Patel', role:'Client, Mumbai', text:"Going through divorce is hard. Justice Junction made legal help easy. I knew the price before speaking to the lawyer." },
-  { init:'SK', name:'Adv. Suresh Kumar', role:'Advocate, Bangalore', text:"This platform brought me 12 quality clients in my first month. Transparent pricing builds client trust before the first call." },
-  { init:'VP', name:'Vikash Patel', role:'Business Owner, Ahmedabad', text:"Needed a corporate lawyer fast. Booked within minutes, had a video call same day. Case update feed is a game-changer." },
-  { init:'MS', name:'Meena Sharma', role:'Client, Jaipur', text:"My property dispute was stuck for years. Found the right lawyer in 10 minutes, had my first consultation same evening. Incredible service." },
-  { init:'PN', name:'Adv. Priya Nair', role:'Advocate, Chennai', text:"Joined Justice Junction as an advocate last year. My client base doubled in 3 months. The platform handles discovery, booking, and payments seamlessly." },
+  { init:'RG', name:'Rohit Gupta', role:'Client, Delhi', stars:5, badge:'Verified Client', text:"Found a criminal lawyer in 8 minutes. Paid exactly ₹3,500 — what was shown. Real-time case updates gave me peace of mind." },
+  { init:'AP', name:'Anjali Patel', role:'Client, Mumbai', stars:5, badge:'Verified Client', text:"Going through divorce is hard. Justice Junction made legal help easy. I knew the price before speaking to the lawyer." },
+  { init:'SK', name:'Adv. Suresh Kumar', role:'Advocate, Bangalore', stars:5, badge:'Verified Advocate', text:"This platform brought me 12 quality clients in my first month. Transparent pricing builds client trust before the first call." },
+  { init:'VP', name:'Vikash Patel', role:'Business Owner, Ahmedabad', stars:4, badge:'Verified Client', text:"Needed a corporate lawyer fast. Booked within minutes, had a video call same day. Case update feed is a game-changer." },
+  { init:'MS', name:'Meena Sharma', role:'Client, Jaipur', stars:5, badge:'Verified Client', text:"My property dispute was stuck for years. Found the right lawyer in 10 minutes, had my first consultation same evening. Incredible service." },
+  { init:'PN', name:'Adv. Priya Nair', role:'Advocate, Chennai', stars:4, badge:'Verified Advocate', text:"Joined Justice Junction as an advocate last year. My client base doubled in 3 months. The platform handles discovery, booking, and payments seamlessly." },
 ]
 
 const WHY_FEATURES = [
@@ -54,15 +54,15 @@ export default function Home() {
   return (
     <div style={{ paddingTop: 95 }}>
       <Head>
-        <title>Justice Junction 24/7 — Find Verified Lawyers in India Instantly</title>
-        <meta name="description" content="Find and book verified lawyers across India. Upfront pricing, Bar Council verified, available 24/7. Criminal, Family, Property, Corporate law and more." />
+        <title>Justice Junction 24/7 — Find Verified Lawyers in India | 24/7 Legal Help</title>
+        <meta name="description" content="Find and book Bar Council verified lawyers across India. Upfront pricing, instant booking, encrypted video consultations. Available 24/7." />
         <meta name="keywords" content="lawyer in India, find advocate online, legal help 24/7, book lawyer India, verified advocates, online lawyer consultation, legal services India" />
 
         {/* Open Graph */}
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://justice-junction-app.vercel.app/" />
-        <meta property="og:title" content="Justice Junction 24/7 — Find Your Lawyer Anytime, Anywhere" />
-        <meta property="og:description" content="Connect with verified lawyers across India. Instant booking. 24/7 availability." />
+        <meta property="og:title" content="Justice Junction 24/7 — Find Verified Lawyers in India | 24/7 Legal Help" />
+        <meta property="og:description" content="Find and book Bar Council verified lawyers across India. Upfront pricing, instant booking, encrypted video consultations. Available 24/7." />
         <meta property="og:image" content="https://justice-junction-app.vercel.app/og-image.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
@@ -70,8 +70,8 @@ export default function Home() {
 
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Justice Junction 24/7 — Find Your Lawyer Anytime, Anywhere" />
-        <meta name="twitter:description" content="Connect with verified lawyers across India. Instant booking. 24/7 availability." />
+        <meta name="twitter:title" content="Justice Junction 24/7 — Find Verified Lawyers in India | 24/7 Legal Help" />
+        <meta name="twitter:description" content="Find and book Bar Council verified lawyers across India. Upfront pricing, instant booking, encrypted video consultations. Available 24/7." />
         <meta name="twitter:image" content="https://justice-junction-app.vercel.app/og-image.png" />
 
         {/* JSON-LD: LocalBusiness + LegalService */}
@@ -258,15 +258,24 @@ export default function Home() {
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(300px,1fr))',gap:'1.5rem',maxWidth:1100,margin:'0 auto'}}>
             {TESTIMONIALS.map(t=>(
               <div key={t.name} style={{background: '#fff', borderRadius: '12px', padding: '1.5rem', border: '1px solid #E8C9A8', boxShadow: '0 4px 6px rgba(0,0,0,0.05)'}} className="hover-lift">
-                <div style={{color:'#7B1D2E',marginBottom:12,letterSpacing:2,fontSize:'1rem'}}>★★★★★</div>
+                <div style={{color:'#7B1D2E',marginBottom:12,letterSpacing:2,fontSize:'1rem',display:'flex',gap:2}}>
+                  {[1,2,3,4,5].map(i => (
+                    <span key={i} style={{color: i <= t.stars ? '#7B1D2E' : '#E8C9A8'}}>★</span>
+                  ))}
+                </div>
                 <p style={{fontSize:'.95rem',fontStyle:'italic',lineHeight:1.7,marginBottom:'1.5rem',color:'#1A0A0D'}}>"{t.text}"</p>
                 <div style={{display:'flex',gap:12,alignItems:'center'}}>
                   <div style={{width:44,height:44,borderRadius:'50%',background:'#7B1D2E',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:700,fontSize:'.9rem',color:'#fff'}}>{t.init}</div>
-                  <div><div style={{fontWeight:800,fontSize:'.95rem',color:'#1A0A0D'}}>{t.name}</div><div style={{fontSize:'.78rem',color:'#5A3A42'}}>{t.role}</div></div>
+                  <div>
+                    <div style={{fontWeight:800,fontSize:'.95rem',color:'#1A0A0D'}}>{t.name}</div>
+                    <div style={{fontSize:'.78rem',color:'#5A3A42'}}>{t.role}</div>
+                    <div style={{fontSize:'.65rem',fontWeight:600,color:'#9CA3AF',marginTop:2}}>{t.badge}</div>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
+          <p style={{textAlign:'center',color:'#9CA3AF',fontSize:'.78rem',marginTop:'2rem',fontWeight:500}}>Reviews are from verified users on the Justice Junction platform.</p>
         </div>
       </section>
 

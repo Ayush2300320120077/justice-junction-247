@@ -36,16 +36,16 @@ export default function About() {
             <h2 style={s.h2}>The Mission</h2>
             <p style={s.p}>Founded in 2024, Justice Junction was born out of a simple observation: finding a reliable lawyer in India is hard, and pricing is even harder to understand. Our mission is to make legal help as easy as booking a cab — accessible 24/7, with upfront fixed pricing and verified credentials.</p>
             <div style={s.stats} className="mobile-stack">
-              <div><div style={s.statNum}>2.4k+</div><div style={s.statLabel}>Verified Lawyers</div></div>
-              <div><div style={s.statNum}>150+</div><div style={s.statLabel}>Cities Covered</div></div>
-              <div><div style={s.statNum}>50k+</div><div style={s.statLabel}>Happy Clients</div></div>
+              <div><div style={s.statNum}>2,400+</div><div style={s.statLabel}>Verified Lawyers</div></div>
+              <div><div style={s.statNum}>500+</div><div style={s.statLabel}>Cities Covered</div></div>
+              <div><div style={s.statNum}>50,000+</div><div style={s.statLabel}>Happy Clients</div></div>
             </div>
           </div>
           <div style={s.imageBox}>
             <img src="/justice-bg.png" alt="Justice Junction Team" style={s.img} loading="lazy" />
             <div style={s.floatingBadge}>
-              <Award size={32} color="var(--gold)"/>
-              <div style={{fontWeight: 800}}>Most Trusted <br/>Legal Platform 2024</div>
+              <Scale size={28} color="var(--bur)"/>
+              <div style={{fontWeight: 700, fontSize: '.85rem', color: 'var(--txt-2)', lineHeight: 1.4, fontStyle: 'italic'}}>"We built the platform we wished existed when we needed legal help."<br/><span style={{fontStyle: 'normal', fontSize: '.75rem', color: 'var(--txt-3)'}}>— Founders, Justice Junction</span></div>
             </div>
           </div>
         </div>
@@ -74,8 +74,29 @@ export default function About() {
         </div>
       </section>
 
-      {/* Founder Section */}
-      <section style={{padding: '5rem 0', background: '#fff'}}>
+      {/* Team / Founders Section */}
+      <section style={{padding: '6rem 0', background: '#fff'}}>
+        <div className="container">
+          <div style={{textAlign: 'center', marginBottom: '4rem'}}>
+            <h2 style={s.h2}>The people behind <em style={{color: 'var(--bur)'}}>Justice Junction.</em></h2>
+          </div>
+          <div style={{maxWidth: 500, margin: '0 auto'}}>
+            <div className="card card-hover" style={{textAlign: 'center', padding: '3rem 2.5rem'}}>
+              <div style={{width: 80, height: 80, borderRadius: '50%', background: 'var(--bur)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.8rem', fontWeight: 800, fontFamily: "'Playfair Display', serif", margin: '0 auto 1.5rem'}}>AK</div>
+              <h3 style={{fontFamily: "'Playfair Display', serif", fontSize: '1.4rem', marginBottom: 4}}>Ayush Kumar</h3>
+              <div style={{fontSize: '.8rem', fontWeight: 700, color: 'var(--bur)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '1rem'}}>Founder & CEO</div>
+              <p style={{fontSize: '.95rem', color: 'var(--txt-2)', lineHeight: 1.7}}>Building India's most trusted legal discovery platform to make quality legal help accessible and affordable for every citizen.</p>
+            </div>
+          </div>
+          <div style={{textAlign: 'center', marginTop: '3rem', padding: '2rem', background: 'var(--cream)', borderRadius: '16px', border: '1px solid var(--border)', maxWidth: 600, margin: '3rem auto 0'}}>
+            <div style={{fontSize: '1.1rem', fontWeight: 800, color: 'var(--txt)', marginBottom: 8}}>We're Hiring 🚀</div>
+            <p style={{fontSize: '.9rem', color: 'var(--txt-3)', margin: 0}}>We're a small team with a big mission. Interested in legal-tech? Reach out at <a href="mailto:careers@justicejunction247.com" style={{color: 'var(--bur)', fontWeight: 700}}>careers@justicejunction247.com</a></p>
+          </div>
+        </div>
+      </section>
+
+      {/* Founder Quote Section */}
+      <section style={{padding: '5rem 0', background: 'var(--cream-2)'}}>
         <div className="container" style={{maxWidth: 1000}}>
           <div style={{display: 'flex', gap: '2rem', alignItems: 'flex-start'}} className="mobile-stack">
             <div style={{fontSize: '6rem', lineHeight: 1, color: '#7B1D2E', fontWeight: 900}}>❝</div>

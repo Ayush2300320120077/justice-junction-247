@@ -1,43 +1,62 @@
 import { useState } from 'react'
 import Head from 'next/head'
-import { ChevronDown, HelpCircle, MessageSquare } from 'lucide-react'
+import Link from 'next/link'
+import { ChevronDown, HelpCircle, MessageSquare, Search } from 'lucide-react'
 
 const FAQS = [
   {
-    category: 'General',
+    category: 'For Clients',
     items: [
-      { q: 'Is Justice Junction 24/7 free to use?', a: 'Yes, completely free for clients. You only pay the lawyer\'s consultation fee which is shown upfront before you book. Justice Junction charges zero platform fee to clients.' },
-      { q: 'Are the lawyers on this platform verified?', a: 'Yes. Every lawyer on our platform goes through a Bar Council registration verification before their profile goes live. You can also see their Bar Council number on their profile.' },
-      { q: 'How do I book a consultation?', a: 'Search for a lawyer by practice area or city, view their profile and fee, then click Book. You\'ll be prompted to pay the consultation fee via Razorpay and confirm a time slot. You\'ll receive a confirmation on your registered email.' },
+      { q: 'Is Justice Junction 24/7 free for clients to use?', a: 'Yes. Browsing lawyer profiles, reading reviews, and using the Knowledge Hub are completely free. You pay only the lawyer\'s consultation fee, which is shown upfront before you book. We charge zero platform or booking fee to clients.' },
+      { q: 'Are the lawyers on this platform verified?', a: 'Every advocate listed on Justice Junction undergoes verification against Bar Council of India enrollment records before their profile goes live. Look for the "Verified" badge on lawyer profiles. We never list unverified practitioners.' },
+      { q: 'How do I book a consultation?', a: 'Search for a lawyer by specialization and city → view their full profile, fees, and availability → select a time slot → pay securely via Razorpay → receive instant email confirmation. The whole process takes under 5 minutes.' },
+      { q: 'What if I am not satisfied with my consultation?', a: 'Contact our support team within 24 hours of the consultation via WhatsApp or email. We will review the case and, where valid, facilitate a refund or a complimentary follow-up session. Your satisfaction is our priority.' },
+      { q: 'Is my personal information and case details kept confidential?', a: 'Absolutely. All video consultations are end-to-end encrypted. Your case details are visible only to you and the lawyer you engage. We never share personal data with third parties. Read our Privacy Policy for full details.' },
+      { q: 'Can I get help in Hindi or my regional language?', a: 'Yes. Use the Language filter on the search page to find lawyers who speak Hindi, Tamil, Bengali, Marathi, Gujarati, Telugu, Kannada, Punjabi, or Urdu. Language availability is shown on every lawyer\'s profile.' },
+      { q: 'How is this different from hiring a lawyer directly?', a: 'With Justice Junction, you see upfront pricing before you commit, verified credentials you can trust, real reviews from verified clients, and a case tracking dashboard — none of which exist when you find a lawyer through word of mouth or a directory listing.' },
     ]
   },
   {
-    category: 'Language & Accessibility',
+    category: 'Payments & Refunds',
     items: [
-      { q: 'Can I get legal help in Hindi?', a: 'Yes. You can filter lawyers by language spoken. Many of our advocates are fluent in Hindi, Bengali, Tamil, Telugu, Marathi, Gujarati, and other regional languages.' },
+      { q: 'What payment methods are accepted?', a: 'All payments are processed through Razorpay with 256-bit SSL encryption and PCI DSS compliance. Accepted methods include UPI (GPay, PhonePe, Paytm), all major debit/credit cards, and net banking.' },
+      { q: 'When is the payment charged?', a: 'Payment is charged at the time of booking confirmation. The lawyer receives their payout within 48 hours after the consultation is completed.' },
+      { q: 'Is there a cancellation or refund policy?', a: 'You can cancel a booking up to 2 hours before the scheduled consultation for a full refund. Cancellations within 2 hours are not eligible for a refund unless the lawyer is unavailable. Emergency situations are reviewed case-by-case.' },
     ]
   },
   {
-    category: 'Scope of Services',
+    category: 'For Lawyers',
     items: [
-      { q: 'What types of legal issues can I get help with?', a: 'We cover Criminal Defence, Family Law, Property Law, Corporate Law, Consumer Rights, Labour Law, Civil Disputes, Divorce, Taxation, Intellectual Property, Cyber Law, Immigration, and Constitutional Law — across all courts.' },
-      { q: 'Is my information kept confidential?', a: 'Absolutely. All communications between you and your lawyer are private. We do not share your personal data with third parties. Payments are secured by Razorpay with 256-bit encryption.' },
-      { q: 'How is this different from hiring a lawyer directly?', a: 'Direct hiring often involves opaque pricing, no reviews, and no easy way to verify credentials. Justice Junction gives you upfront fixed fees, verified Bar Council credentials, ratings from real clients, and the ability to compare multiple lawyers before deciding.' },
-      { q: 'Are the consultation fees negotiable?', a: 'No, all consultation fees on Justice Junction are fixed and shown upfront to ensure complete transparency. This eliminates bargaining and hidden costs.' },
+      { q: 'What does it cost to join as an advocate?', a: 'Registration and a basic profile listing are completely free. We offer paid plans (Basic ₹999/mo, Pro ₹2,499/mo, Elite ₹4,999/mo) for featured placement, priority search ranking, and advanced analytics. You only need to upgrade when you\'re ready to grow.' },
+      { q: 'How does Justice Junction make money?', a: 'We charge a 10% platform commission on each consultation completed through the platform, plus optional subscription plans for lawyers who want premium visibility. Clients are never charged a platform fee.' },
+      { q: 'How long does lawyer verification take?', a: 'Verification typically takes 24–48 hours after you submit your Bar Council enrollment number and supporting details. Our team verifies against official Bar Council of India records.' },
+      { q: 'Can I set my own consultation fee?', a: 'Yes. You set your own consultation fee. Justice Junction does not cap or dictate your pricing. The fee you set is exactly what clients see and pay.' },
     ]
   },
   {
-    category: 'Bookings & More',
+    category: 'Technical & Legal',
     items: [
-      { q: 'Can I cancel or reschedule a booking?', a: 'Yes. Cancellations made 24 hours before the appointment are eligible for a full refund. Reschedules can be done up to 12 hours before the appointment from your dashboard.' },
-      { q: 'What happens if a lawyer doesn\'t join the call?', a: 'We offer a 100% money-back guarantee or an immediate reschedule if a lawyer misses a scheduled consultation.' },
-      { q: 'How do lawyers join the platform?', a: 'Lawyers can register at /join-as-lawyer, complete their professional profile, and choose a subscription plan. After Bar Council verification, their profile goes live within 48 hours.' },
-      { q: 'Is there a mobile app?', a: 'Our web platform is fully mobile-optimised and works perfectly on all devices. A dedicated Android and iOS app is coming soon.' },
+      { q: 'Is Justice Junction a law firm?', a: 'No. Justice Junction 24/7 is a technology platform that connects clients with independent advocates. We are not a law firm and do not provide legal advice. All legal services are rendered by independent advocates registered with the Bar Council of India.' },
+      { q: 'What happens if I need emergency legal help at 3 AM?', a: 'Our platform is live 24/7. Search for lawyers with "Online" availability at any hour and book instantly. For urgent criminal matters (bail, FIR), use the "Bail & FIR" specialization filter — many advocates in this category offer emergency consultations.' },
     ]
   }
 ]
 
 export default function FAQPage() {
+  const [searchQuery, setSearchQuery] = useState('')
+
+  const filteredFAQs = searchQuery.trim()
+    ? FAQS.map(cat => ({
+        ...cat,
+        items: cat.items.filter(item =>
+          item.q.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.a.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      })).filter(cat => cat.items.length > 0)
+    : FAQS
+
+  const totalVisible = filteredFAQs.reduce((sum, cat) => sum + cat.items.length, 0)
+
   return (
     <div style={{ paddingTop:95, background:'#F8F9FA', minHeight:'100vh' }}>
       <Head>
@@ -58,15 +77,38 @@ export default function FAQPage() {
           <div className="sec-label" style={{justifyContent:'center'}}>Support Center</div>
           <h1 style={s.h1}>How can we <em>help you?</em></h1>
           <p style={s.heroSub}>Answers to the most common questions about using Justice Junction 24/7.</p>
+          
+          {/* Search box */}
+          <div style={{ maxWidth: 500, margin: '2rem auto 0', background: '#fff', padding: '0.75rem 1.25rem', borderRadius: '50px', display: 'flex', alignItems: 'center', gap: 10, border: '1.5px solid var(--border)', boxShadow: '0 4px 12px rgba(0,0,0,0.06)' }}>
+            <Search size={18} color="#7B1D2E"/>
+            <input 
+              style={{ flex: 1, border: 'none', outline: 'none', fontSize: '.95rem', color: 'var(--txt)', background: 'transparent' }} 
+              placeholder="Search questions..." 
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+            />
+            {searchQuery && (
+              <button onClick={() => setSearchQuery('')} style={{background:'none',border:'none',cursor:'pointer',color:'var(--txt-3)',fontSize:'1rem'}}>✕</button>
+            )}
+          </div>
         </div>
       </section>
 
       <div className="container" style={{ padding:'4rem 5vw', maxWidth:900 }}>
-        {FAQS.map((cat, catIndex) => (
+        {filteredFAQs.length === 0 && (
+          <div style={{textAlign:'center', padding:'3rem', color:'var(--txt-3)'}}>
+            <HelpCircle size={48} color="#D4A882" style={{marginBottom:'1rem'}}/>
+            <h3 style={{color:'var(--txt)', marginBottom:8}}>No results found for "{searchQuery}"</h3>
+            <p>Try a different keyword or browse the categories below.</p>
+            <button className="btn btn-ghost" style={{marginTop:'1rem'}} onClick={() => setSearchQuery('')}>Clear Search</button>
+          </div>
+        )}
+
+        {filteredFAQs.map((cat, catIndex) => (
           <div key={cat.category} style={{marginBottom:'3rem'}}>
             <h2 style={s.catTitle}>{cat.category}</h2>
             <div style={s.faqList}>
-              {cat.items.map((item, itemIndex) => <FAQItem key={item.q} q={item.q} a={item.a} isOpen={catIndex === 0 && itemIndex === 0} />)}
+              {cat.items.map((item, itemIndex) => <FAQItem key={item.q} q={item.q} a={item.a} isOpen={catIndex === 0 && itemIndex === 0 && !searchQuery} />)}
             </div>
           </div>
         ))}

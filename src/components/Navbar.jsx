@@ -116,9 +116,11 @@ export default function Navbar() {
               ['/search', <Search size={18}/>, 'Find Lawyers'],
               ['/knowledge-hub', <BookOpen size={18}/>, 'Knowledge Hub'],
               ['/document-generator', <FileText size={18}/>, 'Legal Tools'],
-              user?.role === 'admin' ? ['/admin', <Shield size={18}/>, 'Admin Panel'] : ['/dashboard', <LayoutDashboard size={18}/>, 'Dashboard'],
               ['/join-as-lawyer', <Briefcase size={18}/>, 'Join as Lawyer'],
-              ['/favorites', <Heart size={18}/>, 'Saved Lawyers'],
+              ...(isLoggedIn ? [
+                user?.role === 'admin' ? ['/admin', <Shield size={18}/>, 'Admin Panel'] : ['/dashboard', <LayoutDashboard size={18}/>, 'Dashboard'],
+                ['/favorites', <Heart size={18}/>, 'Saved Lawyers'],
+              ] : []),
             ].map(([p, i, l], idx) => (
               <Link 
                 key={p} 
