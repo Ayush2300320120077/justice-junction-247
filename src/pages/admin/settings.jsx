@@ -184,7 +184,7 @@ const s = {
   inputGroup: { marginBottom: '1.5rem' },
   label: { display: 'block', fontSize: '0.9rem', fontWeight: 600, color: '#334155', marginBottom: '0.5rem' },
   input: { width: '100%', padding: '0.75rem', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '0.95rem', outline: 'none', transition: 'border-color 0.2s', ':focus': { borderColor: '#4f46e5' } },
-  helpText: { margin: '0.25rem 0 0 0', fontSize: '0.8rem', color: '#64748b' },
+  helpText: { margin: '0.25rem 0 0 0', fontSize: '0.8rem', color: '#475569' },
   
   saveBtn: { display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.5rem', backgroundColor: '#4f46e5', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '0.95rem', fontWeight: 600, cursor: 'pointer' },
   

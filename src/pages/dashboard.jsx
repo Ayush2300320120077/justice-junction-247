@@ -398,7 +398,7 @@ const s = {
   statsRow: { display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))', gap:'1.2rem', marginBottom:'2rem' },
   statCard: { background:'#fff', border:'1px solid var(--border)', borderRadius:'20px', padding:'1.8rem', boxShadow:'0 10px 30px rgba(0,0,0,0.02)' },
   statNum: { fontFamily:"Sora, sans-serif", fontSize:'2.2rem', fontWeight:800, color:'var(--bur)', lineHeight:1 },
-  statLabel: { fontSize:'0.8rem', color:'var(--txt-3)', marginTop:8, fontWeight:700, textTransform: 'uppercase', letterSpacing: '1px' },
+  statLabel: { fontSize:'0.8rem', color:'#475569', marginTop:8, fontWeight:700, textTransform: 'uppercase', letterSpacing: '1px' },
   
   tabs: { display:'flex', gap:10, marginBottom:'2rem', flexWrap:'wrap' },
   tab: { display:'flex', alignItems:'center', gap:8, padding:'0.7rem 1.4rem', border:'1.5px solid var(--border)', borderRadius:50, fontSize:'.9rem', fontWeight:700, cursor:'pointer', background:'#fff', color:'var(--txt-2)', fontFamily:'inherit', transition:'all 0.2s' },
