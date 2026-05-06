@@ -7,4 +7,4 @@ Disallow: /my-cases
 Disallow: /book
 Disallow: /favorites
 
-Sitemap: https://justice-junction-app.vercel.app/sitemap.xml
+Sitemap: https://www.justicejunction247.com/sitemap.xml
