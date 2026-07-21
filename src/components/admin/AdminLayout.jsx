@@ -4,11 +4,13 @@ import Head from 'next/head';
 import { 
   LayoutDashboard, Scale, Users, CreditCard, 
   Inbox, FileText, AlertTriangle, BarChart3, 
-  Settings, LogOut, Menu, X 
+  Settings, LogOut, Menu, X, UserCheck, ShieldCheck
 } from 'lucide-react';
 
 const ADMIN_NAV = [
   { path: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { path: '/admin/dashboard?tab=users', label: 'User Management', icon: UserCheck },
+  { path: '/admin/dashboard?tab=verification', label: 'Verification Queue', icon: ShieldCheck },
   { path: '/admin/lawyers', label: 'Lawyers', icon: Scale },
   { path: '/admin/clients', label: 'Clients', icon: Users },
   { path: '/admin/subscriptions', label: 'Subscriptions', icon: CreditCard },
@@ -77,7 +79,7 @@ export default function AdminLayout({ children, title = 'Dashboard' }) {
         <nav style={s.nav}>
           {ADMIN_NAV.map(item => {
             const Icon = item.icon;
-            const active = router.pathname === item.path;
+            const active = router.asPath === item.path || (item.path === '/admin/dashboard' && router.pathname === '/admin/dashboard' && !router.query.tab);
             return (
               <button 
                 key={item.path}

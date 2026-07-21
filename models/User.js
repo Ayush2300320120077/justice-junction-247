@@ -6,10 +6,14 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true, lowercase: true },
   password: { type: String, required: true, minlength: 6 },
   role: { type: String, enum: ['client', 'lawyer', 'admin'], default: 'client' },
+  previousRole: { type: String, default: null },
   phone: { type: String },
   city: { type: String },
   state: { type: String },
   isBlocked: { type: Boolean, default: false },
+  verificationStatus: { type: String, enum: ['pending', 'verified', 'rejected'], default: 'pending' },
+  isVerified: { type: Boolean, default: false },
+  rejectionReason: { type: String, default: '' },
   createdAt: { type: Date, default: Date.now }
 });
 

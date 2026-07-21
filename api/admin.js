@@ -5,6 +5,7 @@ const authMiddleware = require('../middleware/auth');
 const User = require('../models/User');
 const Lawyer = require('../models/Lawyer');
 const Booking = require('../models/Booking');
+const AdminLog = require('../models/AdminLog');
 
 const app = express();
 app.use(express.json());
@@ -99,8 +100,25 @@ router.put('/lawyers/:id/block', async (req, res) => {
 router.get('/users', async (req, res) => {
   try {
     await connectDB();
-    const users = await User.find().select('-password').sort({ createdAt: -1 });
-    res.json(users);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const skip = (page - 1) * limit;
+
+    const [users, totalUsers] = await Promise.all([
+      User.find().select('-password').sort({ createdAt: -1 }).skip(skip).limit(limit),
+      User.countDocuments()
+    ]);
+
+    const totalPages = Math.ceil(totalUsers / limit);
+
+    // Return structured object if page or limit query parameters passed, or if json expected
+    res.json({
+      success: true,
+      users,
+      totalUsers,
+      totalPages,
+      currentPage: page
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -234,37 +252,158 @@ router.put('/users/:id/block', async (req, res) => {
   }
 });
 
-// Promote a user to admin by email
-router.put('/promote', async (req, res) => {
+// POST /api/admin/promote — { userId }
+router.post('/promote', async (req, res) => {
   try {
     await connectDB();
-    const { email } = req.body;
-    if (!email) return res.status(400).json({ error: "Email is required" });
+    const { userId } = req.body;
+    if (!userId) return res.status(400).json({ error: "userId is required" });
 
-    const user = await User.findOneAndUpdate(
-      { email: email.toLowerCase() },
-      { role: 'admin' },
-      { new: true }
-    );
-    
-    if (!user) return res.status(404).json({ error: "User not found with that email" });
-    res.json({ message: `Successfully promoted ${user.email} to Admin!`, user });
+    const targetUser = await User.findById(userId);
+    if (!targetUser) return res.status(404).json({ error: "User not found" });
+
+    if (targetUser.role === 'admin') {
+      return res.json({ success: true, message: "User is already an admin", user: targetUser });
+    }
+
+    if (!targetUser.previousRole) {
+      targetUser.previousRole = targetUser.role;
+    }
+    targetUser.role = 'admin';
+    await targetUser.save();
+
+    await AdminLog.create({
+      actorId: req.user.id,
+      action: 'PROMOTE',
+      targetId: userId,
+      reason: 'Promoted user to admin'
+    });
+
+    res.json({ success: true, user: targetUser });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-// Demote an admin back to client
-router.put('/demote/:id', async (req, res) => {
+// POST /api/admin/demote — { userId }
+router.post('/demote', async (req, res) => {
   try {
     await connectDB();
-    const userId = req.params.id;
-    if (req.user.id === userId) return res.status(400).json({ error: "You cannot revoke your own admin access" });
+    const { userId } = req.body;
+    if (!userId) return res.status(400).json({ error: "userId is required" });
 
-    const user = await User.findByIdAndUpdate(userId, { role: 'client' }, { new: true });
-    if (!user) return res.status(404).json({ error: "User not found" });
-    
-    res.json({ message: "Admin access revoked successfully", user });
+    const targetUser = await User.findById(userId);
+    if (!targetUser) return res.status(404).json({ error: "User not found" });
+
+    // Safeguard: block demoting yourself if you are the only remaining admin
+    const isSelfDemote = req.user.id === userId || targetUser._id.toString() === req.user.id;
+    if (isSelfDemote) {
+      const adminCount = await User.countDocuments({ role: 'admin' });
+      if (adminCount <= 1) {
+        return res.status(400).json({ error: "Cannot demote yourself: you are the only remaining admin" });
+      }
+    }
+
+    const previousRole = targetUser.previousRole || 'client';
+    targetUser.role = previousRole;
+    await targetUser.save();
+
+    await AdminLog.create({
+      actorId: req.user.id,
+      action: 'DEMOTE',
+      targetId: userId,
+      reason: 'Demoted admin to previous role'
+    });
+
+    res.json({ success: true, user: targetUser });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// POST /api/admin/verify-lawyer — { lawyerId, approved: boolean, reason?: string }
+router.post('/verify-lawyer', async (req, res) => {
+  try {
+    await connectDB();
+    const { lawyerId, approved, reason } = req.body;
+    if (!lawyerId) return res.status(400).json({ error: "lawyerId is required" });
+
+    const status = approved ? 'verified' : 'rejected';
+    const lawyer = await Lawyer.findByIdAndUpdate(
+      lawyerId,
+      {
+        verificationStatus: status,
+        isVerified: approved === true,
+        rejectionReason: approved ? '' : (reason || 'Verification rejected')
+      },
+      { new: true }
+    );
+
+    if (!lawyer) return res.status(404).json({ error: "Lawyer not found" });
+
+    await AdminLog.create({
+      actorId: req.user.id,
+      action: approved ? 'VERIFY_LAWYER' : 'REJECT_LAWYER',
+      targetId: lawyerId,
+      reason: reason || (approved ? 'Verified lawyer' : 'Rejected lawyer verification')
+    });
+
+    res.json({ success: true, lawyer });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// POST /api/admin/verify-client — { clientId, approved: boolean, reason?: string }
+router.post('/verify-client', async (req, res) => {
+  try {
+    await connectDB();
+    const { clientId, approved, reason } = req.body;
+    if (!clientId) return res.status(400).json({ error: "clientId is required" });
+
+    const status = approved ? 'verified' : 'rejected';
+    const client = await User.findByIdAndUpdate(
+      clientId,
+      {
+        verificationStatus: status,
+        isVerified: approved === true,
+        rejectionReason: approved ? '' : (reason || 'Verification rejected')
+      },
+      { new: true }
+    );
+
+    if (!client) return res.status(404).json({ error: "Client not found" });
+
+    await AdminLog.create({
+      actorId: req.user.id,
+      action: approved ? 'VERIFY_CLIENT' : 'REJECT_CLIENT',
+      targetId: clientId,
+      reason: reason || (approved ? 'Verified client identity' : 'Rejected client verification')
+    });
+
+    res.json({ success: true, client });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// GET /api/admin/pending-verifications
+router.get('/pending-verifications', async (req, res) => {
+  try {
+    await connectDB();
+    const lawyers = await Lawyer.find({
+      $or: [
+        { verificationStatus: 'pending' },
+        { isVerified: false, verificationStatus: { $ne: 'rejected' } }
+      ]
+    }).populate('user', 'email name phone createdAt');
+
+    const clients = await User.find({
+      role: 'client',
+      verificationStatus: 'pending'
+    }).select('-password');
+
+    res.json({ success: true, lawyers, clients });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

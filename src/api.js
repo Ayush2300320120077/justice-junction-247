@@ -73,4 +73,8 @@ export const API = {
   deleteBooking:   (id)         => request(`/admin/bookings/${id}`, { method: 'DELETE' }),
   promoteAdmin:    (email)      => request('/admin/promote', { method: 'PUT', body: { email } }),
   demoteAdmin:     (id)         => request(`/admin/demote/${id}`, { method: 'PUT' }),
+
+  // AI Chat
+  chat:            (body)       => request('/ai/chat', { method: 'POST', body }),
 }
+
