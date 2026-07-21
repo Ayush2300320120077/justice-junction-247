@@ -1,6 +1,8 @@
 require('dotenv').config();
 const express = require('express');
+const jwt = require('jsonwebtoken');
 const connectDB = require('../middleware/db');
+const CaseOutcome = require('../models/CaseOutcome');
 
 const app = express();
 app.use(express.json());
@@ -203,6 +205,89 @@ router.post('/generate-document', async (req, res) => {
     return res.status(200).json({ draftText, flaggedSections });
   } catch (err) {
     console.error('AI generate document endpoint error:', err);
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+/* ─── GET /api/ai/case-estimate?caseType=X ─── */
+router.get('/case-estimate', async (req, res) => {
+  try {
+    await connectDB();
+    const { caseType } = req.query;
+    if (!caseType) return res.status(400).json({ error: 'caseType query param is required' });
+
+    const results = await CaseOutcome.aggregate([
+      { $match: { caseType: { $regex: new RegExp(`^${caseType.trim()}$`, 'i') } } },
+      {
+        $group: {
+          _id: null,
+          total:        { $sum: 1 },
+          favorable:    { $sum: { $cond: [{ $in: ['$outcome', ['won', 'settled']] }, 1, 0] } },
+          totalDuration:{ $sum: '$durationDays' }
+        }
+      }
+    ]);
+
+    const sampleSize = results[0]?.total ?? 0;
+
+    if (sampleSize < 10) {
+      return res.status(200).json({ caseType, insufficientData: true, sampleSize });
+    }
+
+    const favorable      = results[0].favorable;
+    const totalDuration  = results[0].totalDuration;
+    const winRate        = Math.round((favorable / sampleSize) * 100);
+    const avgDurationDays= Math.round(totalDuration / sampleSize);
+
+    return res.status(200).json({ caseType, winRate, avgDurationDays, sampleSize, insufficientData: false });
+  } catch (err) {
+    console.error('case-estimate error:', err);
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+/* ─── POST /api/ai/log-outcome ─── */
+router.post('/log-outcome', async (req, res) => {
+  try {
+    await connectDB();
+
+    // JWT auth — same pattern as api/auth.js line 108
+    const authHeader = req.headers.authorization;
+    if (!authHeader) return res.status(401).json({ error: 'Unauthorized: no token provided' });
+    let decoded;
+    try {
+      decoded = jwt.verify(authHeader.split(' ')[1], process.env.JWT_SECRET);
+    } catch (e) {
+      return res.status(401).json({ error: 'Unauthorized: invalid or expired token' });
+    }
+    if (decoded.role !== 'lawyer') {
+      return res.status(403).json({ error: 'Forbidden: only lawyers can log case outcomes' });
+    }
+
+    const { caseType, outcome, durationDays, dateClosed } = req.body;
+
+    // Validation
+    if (!caseType || !outcome || durationDays === undefined || !dateClosed) {
+      return res.status(400).json({ error: 'caseType, outcome, durationDays, and dateClosed are all required' });
+    }
+    if (!['won', 'lost', 'settled'].includes(outcome)) {
+      return res.status(400).json({ error: 'outcome must be one of: won, lost, settled' });
+    }
+    if (typeof durationDays !== 'number' || durationDays < 0) {
+      return res.status(400).json({ error: 'durationDays must be a non-negative number' });
+    }
+
+    const doc = await CaseOutcome.create({
+      caseType: caseType.trim(),
+      outcome,
+      durationDays,
+      dateClosed: new Date(dateClosed),
+      lawyerId: decoded.id
+    });
+
+    return res.status(201).json({ success: true, outcome: doc });
+  } catch (err) {
+    console.error('log-outcome error:', err);
     return res.status(500).json({ error: err.message });
   }
 });

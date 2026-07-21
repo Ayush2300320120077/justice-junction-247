@@ -930,3 +930,6 @@ select option {
   color: #F5C4B3;
   font-style: italic;
 }
+
+/* Case Outcome Estimate Tooltip */
+.estimate-tooltip-wrap:hover > div { opacity: 1 !important; }

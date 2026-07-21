@@ -4,7 +4,7 @@ import Link from 'next/link'
 import LawyerCard from '../components/LawyerCard'
 import SkeletonCard from '../components/SkeletonCard'
 import { useToast } from '../context/ToastContext'
-import { SearchX, Filter, X, ChevronDown, Star, MapPin, Scale, DollarSign, Loader2, Globe, Video, Phone } from 'lucide-react'
+import { SearchX, Filter, X, ChevronDown, Star, MapPin, Scale, DollarSign, Loader2, Globe, Video, Phone, TrendingUp, Info } from 'lucide-react'
 import Head from 'next/head'
 import demoLawyers from '../data/demoLawyers'
 
@@ -34,6 +34,8 @@ export default function Search() {
   const [availability, setAvailability] = useState('')
   const [minRating, setMinRating] = useState('')
   const [showFilters, setShowFilters] = useState(false)
+  const [caseEstimate, setCaseEstimate] = useState(null)
+  const [estimateLoading, setEstimateLoading] = useState(false)
 
   const observer = useRef()
   const initialSyncDone = useRef(false)
@@ -223,6 +225,16 @@ export default function Search() {
 
   }, [spec, debouncedCity, maxFee, sortBy, language, availability, minRating])
 
+  // Fetch case estimate when specialization filter changes
+  useEffect(() => {
+    if (!spec) { setCaseEstimate(null); return }
+    setEstimateLoading(true)
+    fetch(`/api/ai/case-estimate?caseType=${encodeURIComponent(spec)}`)
+      .then(r => r.json())
+      .then(d => { setCaseEstimate(d); setEstimateLoading(false) })
+      .catch(() => { setCaseEstimate(null); setEstimateLoading(false) })
+  }, [spec])
+
   const clearFilters = () => {
     setSpec('')
     setCity('')
@@ -282,6 +294,37 @@ export default function Search() {
             <button className="btn btn-ghost" onClick={clearFilters}>Reset All</button>
           </div>
         </div>
+
+        {/* Case Outcome Estimate Card */}
+        {spec && (
+          <div style={st.estimateCard}>
+            <div style={{display:'flex',alignItems:'center',gap:10}}>
+              <div style={st.estimateIcon}><TrendingUp size={18} color="#7B1D2E"/></div>
+              <div style={{flex:1}}>
+                {estimateLoading ? (
+                  <div style={st.estimateSkeleton}/>
+                ) : caseEstimate && !caseEstimate.insufficientData ? (
+                  <>
+                    <div style={{fontWeight:800,fontSize:'.95rem',color:'#1A0A0D'}}>
+                      Cases like this:&nbsp;
+                      <span style={{color:'#16A34A'}}>{caseEstimate.winRate}% resolved favourably</span>,&nbsp;
+                      avg <span style={{color:'#7B1D2E'}}>{caseEstimate.avgDurationDays} days</span>
+                      &nbsp;<span style={{color:'#6B4050',fontWeight:600,fontSize:'.82rem'}}>(based on {caseEstimate.sampleSize} past cases on this platform)</span>
+                    </div>
+                  </>
+                ) : (
+                  <div style={{fontWeight:700,fontSize:'.9rem',color:'#6B4050'}}>
+                    {caseEstimate?.insufficientData ? 'Not enough data yet for this case type' : `Estimating outcomes for ${spec}...`}
+                  </div>
+                )}
+              </div>
+              <div style={{position:'relative'}} className="estimate-tooltip-wrap">
+                <Info size={16} color="#9CA3AF" style={{cursor:'help'}}/>
+                <div style={st.tooltip}>Statistical estimate from platform history, not a prediction for your specific case.</div>
+              </div>
+            </div>
+          </div>
+        )}
 
         <div style={st.layout} className="search-layout-responsive">
           {/* Sidebar Filters */}
@@ -443,5 +486,11 @@ const st = {
   promoBox: { marginTop: '2rem', padding: '1.5rem', background: '#7B1D2E', borderRadius: 20, textAlign: 'center', border: '1px solid #7B1D2E' },
   main: { flex: 1, minWidth: 0 },
   grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem' },
-  empty: { textAlign: 'center', padding: '5rem 2rem', background: '#fff', borderRadius: '24px', border: '1px solid #EDD5BE' }
+  empty: { textAlign: 'center', padding: '5rem 2rem', background: '#fff', borderRadius: '24px', border: '1px solid #EDD5BE' },
+
+  estimateCard: { background: '#fff', border: '1.5px solid #E8C9A8', borderRadius: 16, padding: '1rem 1.4rem', marginBottom: '1.8rem', boxShadow: '0 4px 20px rgba(123,29,46,0.05)' },
+  estimateIcon: { width: 38, height: 38, borderRadius: 10, background: '#FDF6EE', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid #E8C9A8' },
+  estimateSkeleton: { height: 18, width: '70%', borderRadius: 8, background: 'linear-gradient(90deg,#f0e8e0 25%,#faf4ef 50%,#f0e8e0 75%)', backgroundSize: '200% 100%', animation: 'shimmer 1.4s infinite' },
+  tooltip: { position: 'absolute', right: 0, top: '130%', background: '#1A0A0D', color: '#F5E6D3', fontSize: '.75rem', fontWeight: 600, padding: '.5rem .85rem', borderRadius: 10, width: 220, lineHeight: 1.5, zIndex: 50, pointerEvents: 'none', opacity: 0, transition: 'opacity .2s', whiteSpace: 'normal' }
 }
+

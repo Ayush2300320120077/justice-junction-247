@@ -4,11 +4,13 @@ import { useRouter } from 'next/router'
 import { API } from '../api'
 import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
-import { ClipboardList, Activity, Scale, Video, User, Search, LayoutDashboard, LogOut, Edit3, Briefcase, FileText, Upload, Plus, Trash2 } from 'lucide-react'
+import { ClipboardList, Activity, Scale, Video, User, Search, LayoutDashboard, LogOut, Edit3, Briefcase, FileText, Upload, Plus, Trash2, BarChart2, CheckCircle, XCircle, MinusCircle } from 'lucide-react'
 import Head from 'next/head'
 
 function fmt(d) { return new Date(d).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}) }
 function initials(name) { return (name||'?').split(' ').slice(0,2).map(p=>p[0]).join('').toUpperCase() }
+
+const CASE_TYPES = ['Criminal Defence','Family Law','Property Law','Corporate Law','Consumer Rights','Labour Law','Civil Disputes','Divorce','Taxation','Intellectual Property','Cyber Law','Bail & FIR']
 
 function StatusBadge({ status }) {
   const map = { pending:{bg:'rgba(201,148,58,0.12)',color:'#C9943A'}, confirmed:{bg:'rgba(45,122,79,0.1)',color:'#2D7A4F'}, completed:{bg:'rgba(123,29,46,0.08)',color:'#7B1D2E'}, cancelled:{bg:'#FEE2E2',color:'#B91C1C'} }
@@ -189,6 +191,8 @@ function LawyerDash() {
   const [tab, setTab]             = useState('bookings')
   const [loading, setLoading]     = useState(true)
   const [upForm, setUpForm]       = useState({ bookingId:'', title:'', description:'', stage:'consultation', status:'active', nextHearing:'' })
+  const [outcomeForm, setOutcomeForm] = useState({ caseType:'', outcome:'won', durationDays:'', dateClosed:'' })
+  const [submittingOutcome, setSubmittingOutcome] = useState(false)
   const { showToast }             = useToast()
 
   const load = () => {
@@ -212,6 +216,31 @@ function LawyerDash() {
     } catch (err) { showToast(err.message,'error') }
   }
 
+  const logOutcome = async () => {
+    if (!outcomeForm.caseType || !outcomeForm.outcome || !outcomeForm.durationDays || !outcomeForm.dateClosed) {
+      showToast('Please fill all fields','error'); return
+    }
+    setSubmittingOutcome(true)
+    try {
+      const token = localStorage.getItem('jj_token')
+      const res = await fetch('/api/ai/log-outcome', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({
+          caseType:    outcomeForm.caseType,
+          outcome:     outcomeForm.outcome,
+          durationDays: parseInt(outcomeForm.durationDays),
+          dateClosed:  outcomeForm.dateClosed
+        })
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Failed to log outcome')
+      showToast('Case outcome logged successfully!')
+      setOutcomeForm({ caseType:'', outcome:'won', durationDays:'', dateClosed:'' })
+    } catch (err) { showToast(err.message,'error') }
+    finally { setSubmittingOutcome(false) }
+  }
+
   const stats = [
     [bookings.length,'Total Clients'],
     [bookings.filter(b=>b.status==='pending').length,'Pending'],
@@ -231,6 +260,7 @@ function LawyerDash() {
         {[
           ['bookings',<ClipboardList size={16}/>,'Client Bookings'],
           ['post',<Edit3 size={16}/>,'Post Case Update'],
+          ['outcome',<BarChart2 size={16}/>,'Log Outcome'],
           ['profile',<User size={16}/>,'Practice Settings']
         ].map(([id,icon,label]) => (
           <button key={id} onClick={() => setTab(id)} style={{...s.tab,...(tab===id?s.tabActive:{})}}><span style={{display:'flex'}}>{icon}</span>{label}</button>
@@ -298,6 +328,52 @@ function LawyerDash() {
             </div>
             <div className="form-group"><label>Next Hearing Date (optional)</label><input type="date" value={upForm.nextHearing} onChange={e=>setUpForm(f=>({...f,nextHearing:e.target.value}))} /></div>
             <button className="btn btn-primary btn-lg" style={{width:'100%', marginTop:'1rem'}} onClick={postUpdate}>Post Update to Client →</button>
+          </div>
+        </div>
+      )}
+
+      {tab === 'outcome' && (
+        <div style={s.section} className="dash-section-responsive">
+          <h3 style={{fontWeight:800,marginBottom:'0.5rem'}}>Log Closed Case Outcome</h3>
+          <p style={{color:'#4A2030',fontSize:'.88rem',marginBottom:'1.5rem'}}>Record outcomes of closed cases to help build platform-wide statistics for clients.</p>
+          <div style={{background:'var(--cream-2)',border:'1px solid var(--border)',borderRadius:16,padding:'2rem'}}>
+
+            <div className="form-group">
+              <label>Case Type / Practice Area</label>
+              <select value={outcomeForm.caseType} onChange={e=>setOutcomeForm(f=>({...f,caseType:e.target.value}))}>
+                <option value="">— Select case type —</option>
+                {CASE_TYPES.map(ct=><option key={ct} value={ct}>{ct}</option>)}
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label>Outcome</label>
+              <div style={{display:'flex',gap:12,flexWrap:'wrap',marginTop:4}}>
+                {[['won','Won',<CheckCircle size={16}/>,'#16A34A','#F0FDF4'],['lost','Lost',<XCircle size={16}/>,'#DC2626','#FEF2F2'],['settled','Settled',<MinusCircle size={16}/>,'#D97706','#FFFBEB']].map(
+                  ([val,label,icon,color,bg])=>(
+                    <label key={val} style={{display:'flex',alignItems:'center',gap:8,padding:'.6rem 1.2rem',borderRadius:50,border:`2px solid ${outcomeForm.outcome===val?color:'var(--border)'}`,background:outcomeForm.outcome===val?bg:'#fff',cursor:'pointer',fontWeight:700,fontSize:'.88rem',color:outcomeForm.outcome===val?color:'var(--txt-2)',transition:'all .2s'}}>
+                      <input type="radio" name="outcome" value={val} checked={outcomeForm.outcome===val} onChange={()=>setOutcomeForm(f=>({...f,outcome:val}))} style={{display:'none'}}/>
+                      {icon}{label}
+                    </label>
+                  )
+                )}
+              </div>
+            </div>
+
+            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'1.5rem'}} className="dash-form-grid-responsive">
+              <div className="form-group">
+                <label>Duration (days the case ran)</label>
+                <input type="number" min="0" placeholder="e.g. 180" value={outcomeForm.durationDays} onChange={e=>setOutcomeForm(f=>({...f,durationDays:e.target.value}))}/>
+              </div>
+              <div className="form-group">
+                <label>Date Closed</label>
+                <input type="date" value={outcomeForm.dateClosed} onChange={e=>setOutcomeForm(f=>({...f,dateClosed:e.target.value}))}/>
+              </div>
+            </div>
+
+            <button className="btn btn-primary btn-lg" style={{width:'100%',marginTop:'1rem',display:'flex',alignItems:'center',justifyContent:'center',gap:8}} onClick={logOutcome} disabled={submittingOutcome}>
+              {submittingOutcome ? <><span className="spinner" style={{width:18,height:18,borderWidth:2}}/> Logging...</> : <><BarChart2 size={18}/> Submit Outcome</>}
+            </button>
           </div>
         </div>
       )}
