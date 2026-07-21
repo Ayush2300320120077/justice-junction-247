@@ -61,6 +61,8 @@ const lawyerSchema = new mongoose.Schema({
   // Online Presence (new)
   linkedinUrl: { type: String },
   websiteUrl: { type: String },
+  // Seed data flag — allows safe identification/removal of demo data without touching real profiles
+  isSeedData: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now }
 })
 

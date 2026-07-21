@@ -14,6 +14,7 @@ const userSchema = new mongoose.Schema({
   verificationStatus: { type: String, enum: ['pending', 'verified', 'rejected'], default: 'pending' },
   isVerified: { type: Boolean, default: false },
   rejectionReason: { type: String, default: '' },
+  isSeedData: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now }
 });
 
