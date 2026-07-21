@@ -35,15 +35,23 @@ export default function KnowledgeHub() {
     return matchSearch && matchCat
   })
 
-  const handleSubscribe = (e) => {
+  const handleSubscribe = async (e) => {
     e.preventDefault()
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(subEmail)) {
       showToast('Please enter a valid email address.', 'error')
       return
     }
+    try {
+      const res = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: subEmail }),
+      })
+      if (!res.ok) throw new Error('API error')
+    } catch (_) { /* DB save is best-effort */ }
     setSubscribed(true)
     if (typeof window !== 'undefined') localStorage.setItem('jj_newsletter_email', subEmail)
-    showToast("✓ You're subscribed! Legal updates coming your way.", 'success')
+    showToast("Thanks! We'll keep you updated.", 'success')
     setSubEmail('')
   }
 

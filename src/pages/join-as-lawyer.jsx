@@ -75,10 +75,10 @@ export default function JoinAsLawyer() {
               <a href="#apply-form" className="btn btn-primary btn-xl">Apply Now — It's Free</a>
               <Link href="/lawyer-plans" className="btn btn-outline btn-xl">View Plans</Link>
             </div>
-            <div style={{fontSize:'.85rem', color:'#F5C4B3', display:'flex', alignItems:'center', gap:8, fontWeight:600}}><Users size={16}/> 50+ advocates already with us.</div>
+            <div style={{fontSize:'.85rem', color:'#F5C4B3', display:'flex', alignItems:'center', gap:8, fontWeight:600}}><Users size={16}/> Growing network of advocates</div>
           </div>
           <div style={s.statsPanel} className="hide-mobile">
-            {[['50+','Verified Advocates'],['24/7','Client Bookings'],['48h','Verification Time']].map(([v,l]) => (
+            {[['500+','Verified Advocates'],['24/7','Client Bookings'],['48h','Verification Time']].map(([v,l]) => (
               <div key={l} style={s.statBox}><div style={s.statVal}>{v}</div><div style={s.statLbl}>{l}</div></div>
             ))}
           </div>

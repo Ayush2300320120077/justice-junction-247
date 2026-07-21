@@ -47,7 +47,6 @@ export default function Navbar() {
           <ul style={s.links} className="hide-mobile">
             {[
               ['/', 'Home'],
-              ['/how-it-works', 'How it Works'],
               ['/search','Find Lawyers'],
               ['/knowledge-hub','Knowledge Hub'],
               ['/document-generator','Legal Tools'],
@@ -85,7 +84,7 @@ export default function Navbar() {
               )}
             </div>
 
-            <div className="show-mobile" style={{display:'flex', alignItems:'center', gap:'0.5rem'}}>
+            <div className="show-mobile" style={{alignItems:'center', gap:'0.5rem'}}>
               <Link href="/favorites" style={{...s.iconBtn, width:36, height:36}} title="Saved Lawyers">
                 <span style={{display:'flex',color:'#8B1A2A'}}><Heart size={16}/></span>
                 {favCount > 0 && <span style={{...s.badge, width:16, height:16, fontSize:'.6rem', top:-4, right:-4}}>{favCount}</span>}
@@ -114,11 +113,10 @@ export default function Navbar() {
             </div>
             {[
               ['/', <Home size={18}/>, 'Home'],
-              ['/how-it-works', <FileText size={18}/>, 'How it Works'],
               ['/search', <Search size={18}/>, 'Find Lawyers'],
               ['/knowledge-hub', <BookOpen size={18}/>, 'Knowledge Hub'],
               ['/document-generator', <FileText size={18}/>, 'Legal Tools'],
-              ['/join-as-lawyer', <Briefcase size={18}/>, 'Join as Lawyer'],
+              ['/join-as-lawyer', <Briefcase size={18}/>, 'For Lawyers'],
               ...(isLoggedIn ? [
                 user?.role === 'admin' ? ['/admin', <Shield size={18}/>, 'Admin Panel'] : ['/dashboard', <LayoutDashboard size={18}/>, 'Dashboard'],
                 ['/favorites', <Heart size={18}/>, 'Saved Lawyers'],

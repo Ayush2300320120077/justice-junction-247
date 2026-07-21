@@ -40,7 +40,10 @@ export default function Footer() {
         <div style={s.divider}/>
 
         <div style={s.bottom}>
-          <p style={{fontSize:'.78rem',color:'rgba(245,230,211,.5)'}} className="mobile-text-center">© 2025 Justice Junction 24/7. All rights reserved.</p>
+          <p style={{fontSize:'.78rem',color:'rgba(245,230,211,.5)'}} className="mobile-text-center">
+            © 2025 Justice Junction 24/7. All rights reserved.
+            {process.env.NEXT_PUBLIC_COMPANY_CIN && ` | CIN: ${process.env.NEXT_PUBLIC_COMPANY_CIN}`}
+          </p>
           <div style={{display:'flex',gap:'1.5rem',flexWrap:'wrap', justifyContent: 'center'}}>
             <Link href="/privacy-policy" style={s.bottomLink}>Privacy Policy</Link>
             <Link href="/terms" style={s.bottomLink}>Terms of Service</Link>

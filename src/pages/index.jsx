@@ -22,12 +22,12 @@ const PRACTICE_AREAS = [
 ]
 
 const TESTIMONIALS = [
-  { init:'RG', name:'Rohit Gupta', role:'Client, Delhi', stars:5, badge:'Verified Client', text:"Found a criminal lawyer in 8 minutes. Paid exactly ₹3,500 — what was shown. Real-time case updates gave me peace of mind." },
-  { init:'AP', name:'Anjali Patel', role:'Client, Mumbai', stars:5, badge:'Verified Client', text:"Going through divorce is hard. Justice Junction made legal help easy. I knew the price before speaking to the lawyer." },
-  { init:'SK', name:'Adv. Suresh Kumar', role:'Advocate, Bangalore', stars:5, badge:'Verified Advocate', text:"This platform brought me 12 quality clients in my first month. Transparent pricing builds client trust before the first call." },
-  { init:'VP', name:'Vikash Patel', role:'Business Owner, Ahmedabad', stars:4, badge:'Verified Client', text:"Needed a corporate lawyer fast. Booked within minutes, had a video call same day. Case update feed is a game-changer." },
-  { init:'MS', name:'Meena Sharma', role:'Client, Jaipur', stars:5, badge:'Verified Client', text:"My property dispute was stuck for years. Found the right lawyer in 10 minutes, had my first consultation same evening. Incredible service." },
-  { init:'PN', name:'Adv. Priya Nair', role:'Advocate, Chennai', stars:4, badge:'Verified Advocate', text:"Joined Justice Junction as an advocate last year. My client base doubled in 3 months. The platform handles discovery, booking, and payments seamlessly." },
+  { init:'RG', name:'Rohit Gupta', role:'Client, Delhi', stars:5, badge:'Illustrative Example', text:"Found a criminal lawyer in 8 minutes. Paid exactly ₹3,500 — what was shown. Real-time case updates gave me peace of mind." },
+  { init:'AP', name:'Anjali Patel', role:'Client, Mumbai', stars:5, badge:'Illustrative Example', text:"Going through divorce is hard. Justice Junction made legal help easy. I knew the price before speaking to the lawyer." },
+  { init:'SK', name:'Adv. Suresh Kumar', role:'Advocate, Bangalore', stars:5, badge:'Illustrative Example', text:"This platform brought me 12 quality clients in my first month. Transparent pricing builds client trust before the first call." },
+  { init:'VP', name:'Vikash Patel', role:'Business Owner, Ahmedabad', stars:4, badge:'Illustrative Example', text:"Needed a corporate lawyer fast. Booked within minutes, had a video call same day. Case update feed is a game-changer." },
+  { init:'MS', name:'Meena Sharma', role:'Client, Jaipur', stars:5, badge:'Illustrative Example', text:"My property dispute was stuck for years. Found the right lawyer in 10 minutes, had my first consultation same evening. Incredible service." },
+  { init:'PN', name:'Adv. Priya Nair', role:'Advocate, Chennai', stars:4, badge:'Illustrative Example', text:"Joined Justice Junction as an advocate last year. My client base doubled in 3 months. The platform handles discovery, booking, and payments seamlessly." },
 ]
 
 const WHY_FEATURES = [
@@ -35,7 +35,7 @@ const WHY_FEATURES = [
   { emoji: '💰', title: 'Zero Platform Fee', desc: 'Clients pay only the lawyer\'s consultation fee. We charge no booking fee or hidden commission to clients.' },
   { emoji: '📹', title: 'Encrypted Video Calls', desc: 'All consultations happen over end-to-end encrypted video. Your case details stay completely private.' },
   { emoji: '📊', title: 'Real-Time Case Updates', desc: 'Your lawyer posts case progress live to your dashboard. No more chasing phone calls or WhatsApp messages.' },
-  { emoji: '🌐', title: 'Pan-India Network', desc: 'Advocates across 500+ cities. Find local expertise in your district, or consult remotely from anywhere.' },
+  { emoji: '🌐', title: 'Pan-India Network', desc: 'Advocates across 100+ cities. Find local expertise in your district, or consult remotely from anywhere.' },
   { emoji: '⏱️', title: 'Available 24/7', desc: 'Legal emergencies don\'t follow office hours. Book at midnight if needed — our advocates are always available.' },
 ]
 
@@ -112,9 +112,12 @@ export default function Home() {
       }} className="hero-responsive">
         <div className="container hero-container-responsive" style={{ position: 'relative', zIndex: 2, maxWidth: 750 }}>
           <div style={{ maxWidth: 700, width: '100%' }} className="reveal-l visible mobile-text-center">
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#7B1D2E', border: '1px solid rgba(255,255,255,0.3)', borderRadius: 50, padding: '.4rem 1.2rem', marginBottom: '2rem' }} className="mobile-mb-4">
-              <ShieldCheck size={16} color="#fff"/>
-              <span style={{fontSize:'.85rem',fontWeight:700,color:'#fff'}}>Bar Council Verified Professionals</span>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: '2rem', flexWrap: 'wrap' }} className="mobile-mb-4">
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#7B1D2E', border: '1px solid rgba(255,255,255,0.3)', borderRadius: 50, padding: '.4rem 1.2rem' }}>
+                <ShieldCheck size={16} color="#fff"/>
+                <span style={{fontSize:'.85rem',fontWeight:700,color:'#fff'}}>Bar Council Verified Professionals</span>
+              </div>
+              <span style={{ background: 'rgba(245,196,179,0.2)', border: '1px solid rgba(245,196,179,0.5)', borderRadius: 50, padding: '.3rem .9rem', fontSize: '.75rem', fontWeight: 800, color: '#F5C4B3', letterSpacing: '1.5px', textTransform: 'uppercase' }}>BETA</span>
             </div>
             
             <h1 style={{...s.h1, textShadow: '0 4px 20px rgba(0,0,0,0.5)'}} className="h1-responsive text-balance">
@@ -194,7 +197,7 @@ export default function Home() {
         <div className="container">
           <div style={{textAlign:'center',marginBottom:'3.5rem'}}>
             <div className="sec-label" style={{justifyContent:'center', color: '#7B1D2E', fontSize: '0.75rem'}}>OUR PROMISE</div>
-            <h2 className="sec-title" style={{textAlign:'center', color: '#1A0A0D', fontWeight: 700, fontSize: '2.25rem'}}>Why 50,000+ Indians Choose Justice Junction</h2>
+            <h2 className="sec-title" style={{textAlign:'center', color: '#1A0A0D', fontWeight: 700, fontSize: '2.25rem'}}>Why Indians Choose Justice Junction</h2>
             <p style={{color: '#5A3A42', fontSize: '1rem', marginTop: '0.5rem'}}>We built the platform we wished existed when we needed legal help.</p>
           </div>
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(300px,1fr))',gap:'1.5rem',maxWidth:1100,margin:'0 auto'}}>
@@ -275,7 +278,7 @@ export default function Home() {
               </div>
             ))}
           </div>
-          <p style={{textAlign:'center',color:'#9CA3AF',fontSize:'.78rem',marginTop:'2rem',fontWeight:500}}>Reviews are from verified users on the Justice Junction platform.</p>
+          <p style={{textAlign:'center',color:'#9CA3AF',fontSize:'.78rem',marginTop:'2rem',fontWeight:500,fontStyle:'italic'}}>* Testimonials shown are illustrative examples. Real reviews will appear after public launch.</p>
         </div>
       </section>
 
@@ -295,7 +298,7 @@ export default function Home() {
         `}} />
         <div className="container cta-section-bg" style={{position: 'relative'}}>
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))',gap:'2rem',textAlign:'center'}} className="grid-stats">
-            {[['2,400+','Verified Advocates'],['50,000+','Cases Handled'],['500+','Cities Covered'],['4.8 ★','Client Rating']].map(([n,l], idx)=>(
+            {[['500+','Advocates'],['10,000+','Users Served'],['100+','Cities Covered'],['4.8 ★','Client Rating']].map(([n,l], idx)=>(
               <div key={l} style={{borderRight: idx < 3 ? '1px solid rgba(255,255,255,0.2)' : 'none'}} className="mobile-border-none">
                 <div style={{fontSize:'3rem',fontWeight:900,color:'#F5C4B3',lineHeight:1}}>{n}</div>
                 <div style={{fontSize:'.875rem',color:'#F9EEE4',textTransform:'uppercase',letterSpacing:'1px',marginTop:8}}>{l}</div>
@@ -313,7 +316,7 @@ export default function Home() {
               <div style={{color: '#7B1D2E', textTransform: 'uppercase', fontSize: '0.875rem', fontWeight: 700, marginBottom: '0.5rem'}}>FOR LEGAL PROFESSIONALS</div>
               <h2 style={{fontSize: '3rem', fontWeight: 900, color: '#1A0A0D', lineHeight: 1.1, marginBottom: '1.5rem'}}>Are You a Lawyer? Grow Your Practice.</h2>
               <p style={{fontSize:'1rem',color:'#5A3A42',marginBottom:'2rem',lineHeight:1.7}}>
-                Join 2,400+ verified advocates on Justice Junction. Get quality client bookings 24/7, set your own consultation fee, and manage your entire practice from one smart dashboard.
+                Join 500+ verified advocates on Justice Junction. Get quality client bookings 24/7, set your own consultation fee, and manage your entire practice from one smart dashboard.
               </p>
               <div style={{display:'flex',flexDirection:'column',gap:12, marginBottom: '2.5rem'}}>
                 {[

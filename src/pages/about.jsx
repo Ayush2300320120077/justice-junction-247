@@ -36,13 +36,18 @@ export default function About() {
             <h2 style={s.h2}>The Mission</h2>
             <p style={s.p}>Founded in 2024, Justice Junction was born out of a simple observation: finding a reliable lawyer in India is hard, and pricing is even harder to understand. Our mission is to make legal help as easy as booking a cab — accessible 24/7, with upfront fixed pricing and verified credentials.</p>
             <div style={s.stats} className="mobile-stack">
-              <div><div style={s.statNum}>2,400+</div><div style={s.statLabel}>Verified Lawyers</div></div>
-              <div><div style={s.statNum}>500+</div><div style={s.statLabel}>Cities Covered</div></div>
-              <div><div style={s.statNum}>50,000+</div><div style={s.statLabel}>Happy Clients</div></div>
+              <div><div style={s.statNum}>500+</div><div style={s.statLabel}>Advocates</div></div>
+              <div><div style={s.statNum}>100+</div><div style={s.statLabel}>Cities Covered</div></div>
+              <div><div style={s.statNum}>10,000+</div><div style={s.statLabel}>Users</div></div>
             </div>
           </div>
           <div style={s.imageBox}>
-            <img src="/justice-bg.png" alt="Justice Junction Team" style={s.img} loading="lazy" />
+            <div style={{ width: '100%', aspectRatio: '4/3', borderRadius: '32px', background: 'linear-gradient(135deg, #7B1D2E 0%, #5C1521 50%, #3D0E16 100%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden', boxShadow: 'var(--sh-xl)' }}>
+              <div style={{ position: 'absolute', inset: 0, backgroundImage: `radial-gradient(circle at 25px 25px, rgba(255,255,255,0.04) 2px, transparent 0), radial-gradient(circle at 75px 75px, rgba(255,255,255,0.04) 2px, transparent 0)`, backgroundSize: '100px 100px' }} />
+              <Scale size={64} color="rgba(245,196,179,0.3)" style={{ marginBottom: '1.5rem', position: 'relative', zIndex: 1 }} />
+              <div style={{ fontSize: '2.5rem', fontWeight: 900, color: '#F5C4B3', fontFamily: "'Cormorant Garamond', serif", position: 'relative', zIndex: 1, letterSpacing: '-0.02em' }}>JJ 24/7</div>
+              <div style={{ fontSize: '.85rem', color: 'rgba(245,196,179,0.6)', fontWeight: 600, marginTop: '.5rem', position: 'relative', zIndex: 1, letterSpacing: '2px', textTransform: 'uppercase' }}>Justice for Every Indian</div>
+            </div>
             <div style={s.floatingBadge}>
               <Scale size={28} color="var(--bur)"/>
               <div style={{fontWeight: 700, fontSize: '.85rem', color: 'var(--txt-2)', lineHeight: 1.4, fontStyle: 'italic'}}>"We built the platform we wished existed when we needed legal help."<br/><span style={{fontStyle: 'normal', fontSize: '.75rem', color: 'var(--txt-3)'}}>— Founders, Justice Junction</span></div>
@@ -90,7 +95,7 @@ export default function About() {
           </div>
           <div style={{textAlign: 'center', marginTop: '3rem', padding: '2rem', background: 'var(--cream)', borderRadius: '16px', border: '1px solid var(--border)', maxWidth: 600, margin: '3rem auto 0'}}>
             <div style={{fontSize: '1.1rem', fontWeight: 800, color: 'var(--txt)', marginBottom: 8}}>We're Hiring 🚀</div>
-            <p style={{fontSize: '.9rem', color: 'var(--txt-3)', margin: 0}}>We're a small team with a big mission. Interested in legal-tech? Reach out at <a href="mailto:careers@justicejunction247.com" style={{color: 'var(--bur)', fontWeight: 700}}>careers@justicejunction247.com</a></p>
+            <p style={{fontSize: '.9rem', color: 'var(--txt-3)', margin: 0}}>We're a small team with a big mission. Interested in legal-tech? Reach out at <a href="mailto:careers@justicejunction.in" style={{color: 'var(--bur)', fontWeight: 700}}>careers@justicejunction.in</a></p>
           </div>
         </div>
       </section>
@@ -141,7 +146,7 @@ export default function About() {
       <section style={{padding:'4rem 0',background:'var(--bur)'}}>
         <div className="container">
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))',gap:'2rem',textAlign:'center'}}>
-            {[['Founded','2024'],['2,400+','Verified Advocates'],['500+','Cities Covered'],['50,000+','Clients Served']].map(([n,l])=>(
+            {[['Founded','2024'],['500+','Advocates'],['100+','Cities Covered'],['10,000+','Users Served']].map(([n,l])=>(
               <div key={l}>
                 <div style={{fontSize:'2.5rem',fontWeight:800,color:'#fff',fontFamily:"'Sora',sans-serif",lineHeight:1}}>{n}</div>
                 <div style={{fontSize:'.78rem',fontWeight:700,color:'#F5E6D3',textTransform:'uppercase',letterSpacing:'1.5px',marginTop:8}}>{l}</div>

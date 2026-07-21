@@ -567,7 +567,7 @@ export default function Rights() {
       <div className="container" style={{padding:'4rem 5vw'}}>
         <div style={{display:'flex', gap:'1rem', flexWrap:'wrap', marginBottom:'3rem'}}>
           {CATEGORIES.map(cat => (
-            <Link key={cat} href={cat==='All' ? '/rights' : `/knowledge-hub?category=${encodeURIComponent(cat)}`}
+            <Link key={cat} href={cat==='All' ? '/knowledge-hub' : `/knowledge-hub?category=${encodeURIComponent(cat)}`}
               style={{...s.catChip, ...(cat==='All'?s.catActive:{})}}>
               {cat}
             </Link>

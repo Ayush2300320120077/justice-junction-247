@@ -1,7 +1,7 @@
 import connectDB from '../../../middleware/db'
 import LawyerApplication from '../../../models/LawyerApplication'
 
-const ADMIN_EMAIL = '121ayushkumar121@gmail.com'
+const ADMIN_EMAIL = process.env.SUPPORT_EMAIL || 'supportjusticejunction247@gmail.com'
 
 async function sendEmailNotification(application) {
   // Uses a simple fetch to a free email API. For production, replace with nodemailer or SendGrid.

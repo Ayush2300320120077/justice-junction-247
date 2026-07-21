@@ -4,7 +4,7 @@ const PlatformSettingsSchema = new mongoose.Schema({
   maintenanceMode: { type: Boolean, default: false },
   registrationsPaused: { type: Boolean, default: false },
   dangerZoneEnabled: { type: Boolean, default: false },
-  supportEmail: { type: String, default: 'support@justicejunction.in' },
+  supportEmail: { type: String, default: process.env.SUPPORT_EMAIL || 'supportjusticejunction247@gmail.com' },
   platformFeePercentage: { type: Number, default: 10 },
   updatedAt: { type: Date, default: Date.now }
 });

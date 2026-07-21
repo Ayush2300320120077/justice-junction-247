@@ -110,7 +110,7 @@ export default function LawyerPlans() {
         <div style={{position:'relative'}}>
           <div style={{display:'inline-flex',alignItems:'center',gap:6,background:'rgba(255,255,255,.12)',border:'1px solid rgba(255,255,255,.2)',borderRadius:50,padding:'.3rem 1rem',fontSize:'.7rem',fontWeight:800,color:'rgba(255,255,255,.85)',textTransform:'uppercase',letterSpacing:'.12em',marginBottom:'1.5rem',backdropFilter:'blur(4px)'}}>For Advocates</div>
           <h1 style={{fontFamily:"'Playfair Display',serif",fontSize:'clamp(2.5rem,5vw,3.5rem)',fontWeight:700,color:'#fff',marginBottom:'1.2rem',lineHeight:1.15, textShadow:'0 2px 10px rgba(0,0,0,0.5)'}}>Grow your practice with<br/><em style={{color:'var(--gold-l)'}}>Justice Junction.</em></h1>
-          <p style={{color:'rgba(255,255,255,.85)',maxWidth:520,margin:'0 auto 2.5rem',fontSize:'1.05rem',lineHeight:1.8, textShadow:'0 1px 4px rgba(0,0,0,0.5)'}}>Join 2,400+ verified advocates. Set your own fee. Get quality clients. All in one dashboard.</p>
+          <p style={{color:'rgba(255,255,255,.85)',maxWidth:520,margin:'0 auto 2.5rem',fontSize:'1.05rem',lineHeight:1.8, textShadow:'0 1px 4px rgba(0,0,0,0.5)'}}>Join 500+ verified advocates. Set your own fee. Get quality clients. All in one dashboard.</p>
           <div style={{display:'flex',alignItems:'center',justifyContent:'center',gap:12,marginBottom:'1rem'}}>
             <span style={{fontSize:'.9rem',color:'rgba(255,255,255,.9)',fontWeight:600}}>Monthly</span>
             <div style={{position:'relative',width:48,height:26,background:annual?'var(--gold)':'rgba(255,255,255,.3)',borderRadius:50,cursor:'pointer',transition:'background .2s',boxShadow:'inset 0 2px 4px rgba(0,0,0,0.2)'}} onClick={()=>setAnnual(a=>!a)}>

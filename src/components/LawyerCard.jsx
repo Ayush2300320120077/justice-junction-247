@@ -123,7 +123,10 @@ export default function LawyerCard({ lawyer, onCompare, compareList=[], isDemo=f
             ? <span style={s.available}><CircleCheck size={12}/> Available</span>
             : <span style={s.unavailable}>Busy</span>
           }
-          <button className="btn btn-primary btn-sm" onClick={handleBook} disabled={isDemo}>{isDemo ? 'Coming Soon' : 'Book Now'}</button>
+          {isDemo
+            ? <button className="btn btn-outline btn-sm" onClick={(e) => { e.stopPropagation(); router.push(`/search`) }}>View Profile</button>
+            : <button className="btn btn-primary btn-sm" onClick={handleBook}>Book Now</button>
+          }
         </div>
       </div>
 

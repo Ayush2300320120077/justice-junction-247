@@ -8,7 +8,6 @@ const STATIC_PAGES = [
   { url: '/', priority: '1.0', changefreq: 'weekly' },
   { url: '/search', priority: '0.9', changefreq: 'daily' },
   { url: '/knowledge-hub', priority: '0.8', changefreq: 'weekly' },
-  { url: '/rights', priority: '0.8', changefreq: 'weekly' },
   { url: '/document-generator', priority: '0.7', changefreq: 'monthly' },
   { url: '/faq', priority: '0.7', changefreq: 'monthly' },
   { url: '/join-as-lawyer', priority: '0.8', changefreq: 'monthly' },

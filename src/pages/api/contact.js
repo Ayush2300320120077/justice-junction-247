@@ -35,7 +35,7 @@ export default async function handler(req, res) {
 
       await transporter.sendMail({
         from: `"Justice Junction Contact" <${emailUser}>`,
-        to: 'support@justicejunction.in',
+        to: process.env.SUPPORT_EMAIL || 'supportjusticejunction247@gmail.com',
         replyTo: email,
         subject: `[JJ Contact] ${subject || 'New Message'} — from ${name}`,
         html: `

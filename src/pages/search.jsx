@@ -207,9 +207,8 @@ export default function Search() {
     }
     setPage(1)
     fetchData(1, true)
-  }, [spec, debouncedCity, maxFee, sortBy, language, availability, minRating])
 
-  const updateUrl = () => {
+    // Silently update URL without triggering Next.js router transitions
     const p = new URLSearchParams()
     if (spec) p.set('specialization', spec)
     if (debouncedCity) p.set('city', debouncedCity)
@@ -220,16 +219,8 @@ export default function Search() {
     if (sortBy !== 'rating') p.set('sort', sortBy)
     
     const newUrl = `/search${p.toString() ? '?' + p.toString() : ''}`
-    if (router.asPath !== newUrl) {
-      router.push(newUrl, undefined, { shallow: true, scroll: false })
-    }
-  }
+    window.history.replaceState({ ...window.history.state, as: newUrl, url: newUrl }, '', newUrl)
 
-  // Only update URL on explicit actions or after a very long pause
-  useEffect(() => {
-    if (!hasMounted.current) return
-    const timer = setTimeout(updateUrl, 3000)
-    return () => clearTimeout(timer)
   }, [spec, debouncedCity, maxFee, sortBy, language, availability, minRating])
 
   const clearFilters = () => {
@@ -316,8 +307,7 @@ export default function Search() {
                   placeholder="City or Pincode" 
                   value={city} 
                   onChange={e => setCity(e.target.value)} 
-                  onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), updateUrl())}
-                  onBlur={updateUrl}
+                  onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), setDebouncedCity(e.target.value))}
                 />
               </div>
 
