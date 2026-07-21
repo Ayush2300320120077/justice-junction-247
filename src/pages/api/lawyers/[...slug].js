@@ -19,7 +19,15 @@ export default async function handler(req, res) {
     // GET /api/lawyers
     if (req.method === 'GET' && !slug) {
       const { city, state, specialization, minExp, maxFee, sort, page = 1, limit = 12 } = req.query
-      const filter = { isVerified: true }
+      const filter = {
+        $or: [
+          { verificationStatus: 'verified' },
+          { isVerified: true },
+          { verificationStatus: { $exists: false } }
+        ],
+        verificationStatus: { $ne: 'rejected' },
+        isBlocked: { $ne: true }
+      }
       if (city) filter.city = new RegExp(city, 'i')
       if (state) filter.state = new RegExp(state, 'i')
       if (specialization) filter.specializations = { $in: [new RegExp(specialization, 'i')] }

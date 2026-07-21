@@ -23,8 +23,10 @@ router.get('/', async (req, res) => {
     const filter = {
       $or: [
         { verificationStatus: 'verified' },
-        { isVerified: true, verificationStatus: { $exists: false } }
+        { isVerified: true },
+        { verificationStatus: { $exists: false } }
       ],
+      verificationStatus: { $ne: 'rejected' },
       isBlocked: { $ne: true }
     };
     if (city) filter.city = new RegExp(city, 'i');

@@ -8,7 +8,15 @@ export default async function handler(req, res) {
     await connectDB()
     const { city, specialization, maxFee, minRating, language, availability, sort = 'rating', page = 1, limit = 12 } = req.query
     
-    const filter = { isVerified: true, isBlocked: { $ne: true } }
+    const filter = {
+      $or: [
+        { verificationStatus: 'verified' },
+        { isVerified: true },
+        { verificationStatus: { $exists: false } }
+      ],
+      verificationStatus: { $ne: 'rejected' },
+      isBlocked: { $ne: true }
+    }
     if (city) {
       filter.$or = [
         { city: new RegExp(city, 'i') },
