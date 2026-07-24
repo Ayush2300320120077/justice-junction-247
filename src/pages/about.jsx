@@ -95,7 +95,7 @@ export default function About() {
           </div>
           <div style={{textAlign: 'center', marginTop: '3rem', padding: '2rem', background: 'var(--cream)', borderRadius: '16px', border: '1px solid var(--border)', maxWidth: 600, margin: '3rem auto 0'}}>
             <div style={{fontSize: '1.1rem', fontWeight: 800, color: 'var(--txt)', marginBottom: 8}}>We're Hiring 🚀</div>
-            <p style={{fontSize: '.9rem', color: 'var(--txt-3)', margin: 0}}>We're a small team with a big mission. Interested in legal-tech? Reach out at <a href="mailto:careers@justicejunction.in" style={{color: 'var(--bur)', fontWeight: 700}}>careers@justicejunction.in</a></p>
+            <p style={{fontSize: '.9rem', color: 'var(--txt-3)', margin: 0}}>We're a small team with a big mission. Interested in legal-tech? Reach out at <a href="mailto:supportjusticejunction@gmail.com" style={{color: 'var(--bur)', fontWeight: 700}}>supportjusticejunction@gmail.com</a></p>
           </div>
         </div>
       </section>
