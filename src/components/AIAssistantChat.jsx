@@ -1,15 +1,15 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-import { MessageSquare, X, Send, Bot, User, Trash2, Shield, AlertTriangle, ArrowRight } from 'lucide-react'
+import { MessageSquare, X, Send, Bot, User, Trash2, Shield, AlertTriangle } from 'lucide-react'
 import { API } from '../api'
 
 const SUGGESTIONS = [
-  "I need help with a property dispute",
-  "How to handle a divorce in India?",
-  "What to do if someone cheats me financially?",
-  "Wrongful termination from my job",
-  "Draft a rental agreement"
+  'I need help with a property dispute',
+  'How to handle a divorce in India?',
+  'What to do if someone cheats me?',
+  'Wrongful termination from job',
+  'Rental agreement help'
 ]
 
 export default function AIAssistantChat() {
@@ -18,8 +18,17 @@ export default function AIAssistantChat() {
   const [input, setInput] = useState('')
   const [isTyping, setIsTyping] = useState(false)
   const [sessionId, setSessionId] = useState('')
+  const [isMobile, setIsMobile] = useState(false)
   const scrollRef = useRef(null)
   const router = useRouter()
+
+  // Detect mobile
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   // Generate or retrieve persistent Session ID
   useEffect(() => {
@@ -46,7 +55,7 @@ export default function AIAssistantChat() {
     if (saved) {
       try {
         setMessages(JSON.parse(saved))
-      } catch (e) {
+      } catch {
         setMessages(getInitialMessage())
       }
     } else {
@@ -62,10 +71,8 @@ export default function AIAssistantChat() {
     }
   }, [messages])
 
-  // Don't show chat widget on admin dashboard
-  if (router.pathname.startsWith('/admin')) {
-    return null
-  }
+  // Don't show on admin pages
+  if (router.pathname.startsWith('/admin')) return null
 
   function getInitialMessage() {
     return [{
@@ -93,144 +100,283 @@ export default function AIAssistantChat() {
     setIsTyping(true)
 
     try {
-      // Build rolling history (exclude system prompts and keep formatting clean)
       const conversationHistory = updatedMessages
         .filter(m => m.role === 'user' || m.role === 'assistant')
-        .map(m => ({
-          role: m.role,
-          content: m.text
-        }))
+        .map(m => ({ role: m.role, content: m.text }))
 
-      const data = await API.assistant({
-        message: msgText,
-        conversationHistory,
-        sessionId
-      })
+      const data = await API.assistant({ message: msgText, conversationHistory, sessionId })
 
-      const botMsg = {
+      setMessages(prev => [...prev, {
         id: Date.now() + 1,
         role: 'assistant',
-        text: data.reply || "I am currently unable to draft a response. Please consult a verified lawyer on JusticeJunction directly.",
+        text: data.reply || 'I am unable to respond right now. Please consult a verified lawyer on JusticeJunction.',
         category: data.category || null,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      }
-
-      setMessages(prev => [...prev, botMsg])
-    } catch (err) {
-      console.error('AI Assistant Chat Error:', err)
-      const errorMsg = {
+      }])
+    } catch {
+      setMessages(prev => [...prev, {
         id: Date.now() + 1,
         role: 'assistant',
-        text: "I'm temporarily having connection issues. For direct and professional legal advice, please consult a verified lawyer on JusticeJunction.",
+        text: "I'm temporarily unavailable. Please consult a verified lawyer on JusticeJunction for direct legal help.",
         category: null,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      }
-      setMessages(prev => [...prev, errorMsg])
+      }])
     } finally {
       setIsTyping(false)
     }
   }
 
   const clearChat = () => {
-    if (window.confirm("Are you sure you want to clear your chat history?")) {
+    if (window.confirm('Are you sure you want to clear your chat history?')) {
       const initial = getInitialMessage()
       setMessages(initial)
       localStorage.setItem('jj_ai_chat_history', JSON.stringify(initial))
     }
   }
 
+  // ── Dynamic positions based on screen size ──────────────────────────────────
+  const launcherStyle = {
+    position: 'fixed',
+    bottom: isMobile ? 80 : 96,        // 80px mobile, 96px desktop — stacks above WhatsApp
+    right: isMobile ? 16 : 24,
+    zIndex: 9998,
+    width: 56,
+    height: 56,
+    borderRadius: '50%',
+    background: '#7B1D2E',
+    color: '#fff',
+    border: 'none',
+    boxShadow: '0 8px 28px rgba(123,29,46,0.40)',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    transition: 'transform 0.2s ease, background 0.2s ease',
+  }
+
+  const panelStyle = isMobile ? {
+    // Mobile: near-full-screen panel
+    position: 'fixed',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    top: 'auto',
+    height: '90vh',
+    maxHeight: '90vh',
+    width: '100%',
+    zIndex: 9999,
+    display: 'flex',
+    flexDirection: 'column',
+    borderRadius: '20px 20px 0 0',
+    boxShadow: '0 -8px 40px rgba(0,0,0,0.18)',
+    overflow: 'hidden',
+    background: '#fff',
+    border: '1px solid #E8C9A8',
+  } : {
+    // Desktop: fixed bottom-right panel
+    position: 'fixed',
+    bottom: 96,                         // sits above the WhatsApp button (bottom-6 = 24px + 56px height + 16px gap)
+    right: 24,
+    width: 380,
+    height: 560,
+    maxHeight: 'calc(100vh - 120px)',
+    maxWidth: 'calc(100vw - 2rem)',
+    zIndex: 9999,
+    display: 'flex',
+    flexDirection: 'column',
+    borderRadius: 20,
+    boxShadow: '0 20px 60px rgba(0,0,0,0.18)',
+    overflow: 'hidden',
+    background: '#fff',
+    border: '1px solid #E8C9A8',
+  }
+
   return (
-    <div className="fixed bottom-6 right-6 z-[9999] font-sans">
-      
-      {/* Floating Chat Icon - Unified entry point */}
+    <>
+      {/* ── LAUNCHER BUTTON (collapsed state) ─────────────────────────── */}
       {!isOpen && (
-        <button 
-          onClick={() => setIsOpen(true)} 
-          className="w-16 h-16 rounded-3xl bg-[#7B1D2E] hover:bg-[#5C1521] text-white border-none shadow-2xl flex items-center justify-center transition-all duration-300 transform hover:scale-105 relative group"
+        <button
+          onClick={() => setIsOpen(true)}
+          style={launcherStyle}
           aria-label="Open AI Legal Assistant"
+          title="Ask AI Legal Assistant"
+          onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.08)'; e.currentTarget.style.background = '#5C1521' }}
+          onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.background = '#7B1D2E' }}
         >
-          <MessageSquare size={28} />
-          {/* Label tooltip */}
-          <span className="absolute right-20 hidden md:inline-block bg-white text-[#1A0A0D] border border-[#E8C9A8] px-4 py-2 rounded-2xl text-xs font-bold shadow-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-            Ask AI Legal Assistant
-          </span>
+          <MessageSquare size={26} />
         </button>
       )}
 
-      {/* Slide-Up Chat Panel */}
+      {/* ── CHAT PANEL (open state) ────────────────────────────────────── */}
       {isOpen && (
-        <div className="w-[380px] h-[580px] max-w-[calc(100vw-2rem)] max-h-[calc(100vh-2rem)] bg-white rounded-3xl shadow-2xl flex flex-col overflow-hidden border border-[#E8C9A8] animate-[slideUpChat_0.35s_ease-out] fixed bottom-6 right-6 md:right-6 md:bottom-6 sm:max-w-md mobile-full-screen">
-          
-          {/* Header */}
-          <div className="px-5 py-4 bg-[#7B1D2E] text-white flex justify-between items-center">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center">
-                <Bot size={20} className="text-[#F5C4B3]" />
+        <div style={panelStyle}>
+
+          {/* 1. HEADER */}
+          <div style={{
+            flexShrink: 0,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '12px 16px',
+            background: '#7B1D2E',
+            color: '#fff',
+          }}>
+            {/* Left: avatar + title */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <div style={{
+                width: 36, height: 36, borderRadius: 12,
+                background: 'rgba(255,255,255,0.18)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                flexShrink: 0,
+              }}>
+                <Bot size={20} color="#F5C4B3" />
               </div>
               <div>
-                <div className="font-extrabold text-sm tracking-wide">AI Legal Assistant</div>
-                <div className="text-[10px] text-[#F5C4B3] flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                <div style={{ fontWeight: 800, fontSize: '0.875rem', letterSpacing: '0.01em', color: '#fff' }}>
+                  AI Legal Assistant
+                </div>
+                <div style={{ fontSize: '0.65rem', color: '#F5C4B3', display: 'flex', alignItems: 'center', gap: 5, marginTop: 2 }}>
+                  <span style={{
+                    width: 7, height: 7, borderRadius: '50%',
+                    background: '#4ADE80',
+                    display: 'inline-block',
+                    animation: 'pulseDot 2s infinite',
+                  }} />
                   Online · General Info Only
                 </div>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <button 
-                onClick={clearChat} 
-                className="p-1.5 rounded-lg hover:bg-white/10 text-white/80 hover:text-white transition"
-                title="Clear Chat History"
+
+            {/* Right: action buttons */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+              <button
+                onClick={clearChat}
+                title="Clear Chat"
+                style={{
+                  background: 'none', border: 'none', color: 'rgba(255,255,255,0.75)',
+                  cursor: 'pointer', padding: 6, borderRadius: 8, lineHeight: 1,
+                  transition: 'opacity 0.15s',
+                }}
+                onMouseEnter={e => e.currentTarget.style.color = '#fff'}
+                onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.75)'}
               >
                 <Trash2 size={16} />
               </button>
-              <button 
-                onClick={() => setIsOpen(false)} 
-                className="p-1.5 rounded-lg hover:bg-white/10 text-white/80 hover:text-white transition"
-                title="Close Chat"
+              <button
+                onClick={() => setIsOpen(false)}
+                title="Close"
+                style={{
+                  background: 'none', border: 'none', color: 'rgba(255,255,255,0.75)',
+                  cursor: 'pointer', padding: 6, borderRadius: 8, lineHeight: 1,
+                }}
+                onMouseEnter={e => e.currentTarget.style.color = '#fff'}
+                onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.75)'}
               >
                 <X size={20} />
               </button>
             </div>
           </div>
 
-          {/* Persistent Top Disclaimer */}
-          <div className="px-4 py-2 bg-[#FEF3C7] text-[#92400E] text-[11px] font-bold flex items-center gap-2 border-b border-[#FCD34D] select-none">
-            <AlertTriangle size={13} className="flex-shrink-0 text-[#EA580C]" />
+          {/* 2. DISCLAIMER BANNER */}
+          <div style={{
+            flexShrink: 0,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 6,
+            padding: '7px 14px',
+            background: '#FFFBEB',
+            borderBottom: '1px solid #FCD34D',
+            color: '#92400E',
+            fontSize: '0.7rem',
+            fontWeight: 700,
+            userSelect: 'none',
+          }}>
+            <AlertTriangle size={13} color="#EA580C" style={{ flexShrink: 0 }} />
             <span>This assistant provides general information, not legal advice.</span>
           </div>
 
-          {/* Message History Area */}
-          <div className="flex-1 p-4 overflow-y-auto bg-[#FDF6EE]/30 flex flex-col gap-4">
+          {/* 3. MESSAGE AREA */}
+          <div style={{
+            flex: 1,
+            overflowY: 'auto',
+            padding: '14px 14px 6px',
+            background: '#FAFAF9',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 12,
+          }}>
             {messages.map(m => (
-              <div key={m.id} className="flex flex-col">
-                <div className={`flex gap-2.5 items-end max-w-[85%] ${m.role === 'user' ? 'self-end flex-row-reverse' : 'self-start'}`}>
+              <div key={m.id} style={{ display: 'flex', flexDirection: 'column' }}>
+                {/* Message row */}
+                <div style={{
+                  display: 'flex',
+                  gap: 8,
+                  alignItems: 'flex-end',
+                  maxWidth: '85%',
+                  alignSelf: m.role === 'user' ? 'flex-end' : 'flex-start',
+                  flexDirection: m.role === 'user' ? 'row-reverse' : 'row',
+                }}>
                   {/* Avatar */}
-                  <div className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 ${m.role === 'user' ? 'bg-[#7B1D2E] text-white' : 'bg-[#E8C9A8]/40 text-[#7B1D2E]'}`}>
+                  <div style={{
+                    width: 28, height: 28, borderRadius: 9, flexShrink: 0,
+                    background: m.role === 'user' ? '#7B1D2E' : 'rgba(232,201,168,0.35)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    color: m.role === 'user' ? '#fff' : '#7B1D2E',
+                  }}>
                     {m.role === 'user' ? <User size={13} /> : <Bot size={13} />}
                   </div>
-                  
+
                   {/* Bubble */}
-                  <div className={`p-3 rounded-2xl text-[13.5px] leading-relaxed shadow-sm font-sans whitespace-pre-line ${
-                    m.role === 'user' 
-                      ? 'bg-[#7B1D2E] text-white rounded-br-sm' 
-                      : 'bg-white text-[#1A0A0D] border border-[#E8C9A8]/60 rounded-bl-sm'
-                  }`}>
+                  <div style={{
+                    padding: '10px 14px',
+                    borderRadius: m.role === 'user' ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
+                    background: m.role === 'user' ? '#7B1D2E' : '#fff',
+                    color: m.role === 'user' ? '#fff' : '#1A0A0D',
+                    border: m.role === 'user' ? 'none' : '1px solid rgba(232,201,168,0.6)',
+                    fontSize: '0.84rem',
+                    lineHeight: 1.55,
+                    boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
+                    whiteSpace: 'pre-line',
+                    wordBreak: 'break-word',
+                  }}>
                     {m.text}
-                    <div className={`text-[9px] mt-1.5 opacity-60 text-right ${m.role === 'user' ? 'text-white/80' : 'text-[#5A3A42]/80'}`}>
+                    <div style={{
+                      fontSize: '0.65rem',
+                      marginTop: 6,
+                      opacity: 0.55,
+                      textAlign: 'right',
+                      color: m.role === 'user' ? 'rgba(255,255,255,0.8)' : '#5A3A42',
+                    }}>
                       {m.time}
                     </div>
                   </div>
                 </div>
 
-                {/* Suggested Specialization Search Route Button */}
+                {/* Lawyer search CTA button */}
                 {m.role === 'assistant' && m.category && (
-                  <div className="ml-9 mt-2 flex flex-col items-start">
-                    <Link 
+                  <div style={{ marginLeft: 36, marginTop: 6 }}>
+                    <Link
                       href={`/search?specialization=${encodeURIComponent(m.category)}`}
                       onClick={() => setIsOpen(false)}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-[#7B1D2E] text-[#7B1D2E] hover:bg-[#7B1D2E] hover:text-white text-xs font-bold shadow-sm transition-all"
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 5,
+                        padding: '5px 12px',
+                        borderRadius: 10,
+                        background: '#fff',
+                        border: '1.5px solid #7B1D2E',
+                        color: '#7B1D2E',
+                        fontSize: '0.72rem',
+                        fontWeight: 700,
+                        textDecoration: 'none',
+                        boxShadow: '0 1px 4px rgba(123,29,46,0.08)',
+                        transition: 'all 0.15s',
+                      }}
+                      onMouseEnter={e => { e.currentTarget.style.background = '#7B1D2E'; e.currentTarget.style.color = '#fff' }}
+                      onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = '#7B1D2E' }}
                     >
-                      <Shield size={12} />
+                      <Shield size={11} />
                       Find {m.category} Lawyers →
                     </Link>
                   </div>
@@ -238,30 +384,72 @@ export default function AIAssistantChat() {
               </div>
             ))}
 
-            {/* Loading/Typing Indicator */}
+            {/* Typing indicator */}
             {isTyping && (
-              <div className="flex gap-2.5 items-end max-w-[85%] self-start">
-                <div className="w-7 h-7 rounded-lg bg-[#E8C9A8]/40 text-[#7B1D2E] flex items-center justify-center flex-shrink-0">
+              <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end', maxWidth: '85%', alignSelf: 'flex-start' }}>
+                <div style={{
+                  width: 28, height: 28, borderRadius: 9,
+                  background: 'rgba(232,201,168,0.35)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  color: '#7B1D2E', flexShrink: 0,
+                }}>
                   <Bot size={13} />
                 </div>
-                <div className="p-3 bg-white border border-[#E8C9A8]/60 rounded-2xl rounded-bl-sm flex items-center gap-1.5 shadow-sm">
-                  <span className="w-2 h-2 rounded-full bg-[#7B1D2E]/60 animate-bounce" style={{ animationDelay: '0ms' }} />
-                  <span className="w-2 h-2 rounded-full bg-[#7B1D2E]/60 animate-bounce" style={{ animationDelay: '150ms' }} />
-                  <span className="w-2 h-2 rounded-full bg-[#7B1D2E]/60 animate-bounce" style={{ animationDelay: '300ms' }} />
+                <div style={{
+                  padding: '10px 16px',
+                  borderRadius: '18px 18px 18px 4px',
+                  background: '#fff',
+                  border: '1px solid rgba(232,201,168,0.6)',
+                  display: 'flex', gap: 5, alignItems: 'center',
+                  boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
+                }}>
+                  {[0, 150, 300].map(delay => (
+                    <span key={delay} style={{
+                      width: 7, height: 7,
+                      borderRadius: '50%',
+                      background: 'rgba(123,29,46,0.55)',
+                      display: 'inline-block',
+                      animation: 'bounce 1.2s infinite',
+                      animationDelay: `${delay}ms`,
+                    }} />
+                  ))}
                 </div>
               </div>
             )}
             <div ref={scrollRef} />
           </div>
 
-          {/* Quick suggestions if history is fresh */}
+          {/* 4. QUICK SUGGESTIONS (shown when chat is fresh) */}
           {messages.length < 3 && !isTyping && (
-            <div className="px-3 pb-3 pt-1 flex gap-2 overflow-x-auto scrollbar-none select-none">
+            <div style={{
+              flexShrink: 0,
+              display: 'flex',
+              gap: 7,
+              overflowX: 'auto',
+              padding: '8px 12px',
+              background: '#FAFAF9',
+              borderTop: '1px solid rgba(232,201,168,0.4)',
+              scrollbarWidth: 'none',
+            }}>
               {SUGGESTIONS.map(sug => (
-                <button 
-                  key={sug} 
-                  onClick={() => handleSend(sug)} 
-                  className="px-3 py-1.5 bg-white border border-[#E8C9A8] rounded-full text-xs font-semibold text-[#5A3A42] hover:bg-[#FDF6EE] whitespace-nowrap cursor-pointer transition flex-shrink-0"
+                <button
+                  key={sug}
+                  onClick={() => handleSend(sug)}
+                  style={{
+                    padding: '5px 12px',
+                    background: '#fff',
+                    border: '1px solid #E8C9A8',
+                    borderRadius: 50,
+                    fontSize: '0.72rem',
+                    fontWeight: 600,
+                    color: '#5A3A42',
+                    cursor: 'pointer',
+                    whiteSpace: 'nowrap',
+                    flexShrink: 0,
+                    transition: 'all 0.15s',
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.background = '#FDF6EE' }}
+                  onMouseLeave={e => { e.currentTarget.style.background = '#fff' }}
                 >
                   {sug}
                 </button>
@@ -269,49 +457,83 @@ export default function AIAssistantChat() {
             </div>
           )}
 
-          {/* Input Footer Form */}
-          <div className="p-3 bg-white border-t border-[#E8C9A8]/60 flex gap-2 items-center">
-            <input 
-              type="text" 
+          {/* 5. INPUT BAR */}
+          <div style={{
+            flexShrink: 0,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
+            padding: '10px 12px',
+            background: '#fff',
+            borderTop: '1px solid #E8C9A8',
+          }}>
+            <input
+              type="text"
               placeholder="Ask any general legal question..."
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleSend()}
               disabled={isTyping}
-              className="flex-1 bg-[#F9EEE4]/40 border border-[#E8C9A8]/40 rounded-xl px-4 py-2.5 text-[13.5px] outline-none focus:border-[#7B1D2E]/50 focus:ring-1 focus:ring-[#7B1D2E]/25 text-[#1A0A0D]"
+              style={{
+                flex: 1,
+                border: '1.5px solid #E8C9A8',
+                borderRadius: 50,
+                padding: '8px 16px',
+                fontSize: '0.84rem',
+                outline: 'none',
+                color: '#1A0A0D',
+                background: isTyping ? '#F9F9F9' : '#fff',
+                fontFamily: 'var(--font-body)',
+                transition: 'border-color 0.15s',
+              }}
+              onFocus={e => e.target.style.borderColor = 'rgba(123,29,46,0.5)'}
+              onBlur={e => e.target.style.borderColor = '#E8C9A8'}
             />
-            <button 
-              onClick={() => handleSend()} 
+            <button
+              onClick={() => handleSend()}
               disabled={!input.trim() || isTyping}
-              className="w-10 h-10 rounded-xl bg-[#7B1D2E] hover:bg-[#5C1521] text-white flex items-center justify-center cursor-pointer transition disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{
+                width: 38, height: 38,
+                borderRadius: '50%',
+                background: '#7B1D2E',
+                color: '#fff',
+                border: 'none',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                cursor: !input.trim() || isTyping ? 'not-allowed' : 'pointer',
+                opacity: !input.trim() || isTyping ? 0.5 : 1,
+                flexShrink: 0,
+                transition: 'background 0.15s, opacity 0.15s',
+              }}
+              onMouseEnter={e => { if (!e.currentTarget.disabled) e.currentTarget.style.background = '#5C1521' }}
+              onMouseLeave={e => { e.currentTarget.style.background = '#7B1D2E' }}
             >
-              <Send size={16} />
+              <Send size={15} />
             </button>
           </div>
 
-          {/* Footnote */}
-          <div className="bg-[#FAF4ED] text-[10px] text-[#5A3A42] px-4 py-2 text-center border-t border-[#E8C9A8]/30">
+          {/* 6. FOOTER DISCLAIMER */}
+          <div style={{
+            flexShrink: 0,
+            background: '#FAF4ED',
+            borderTop: '1px solid rgba(232,201,168,0.3)',
+            padding: '6px 14px',
+            textAlign: 'center',
+            fontSize: '0.65rem',
+            color: '#5A3A42',
+          }}>
             For case outcomes or professional advice, speak with a verified lawyer.
           </div>
 
         </div>
       )}
 
-      {/* Styled inline helper classes for responsive mobile layout */}
-      <style jsx global>{`
-        @media (max-width: 640px) {
-          .mobile-full-screen {
-            width: 100vw !important;
-            height: 100vh !important;
-            max-width: 100vw !important;
-            max-height: 100vh !important;
-            bottom: 0 !important;
-            right: 0 !important;
-            border-radius: 0 !important;
-          }
+      {/* Bounce keyframe for typing dots */}
+      <style>{`
+        @keyframes bounce {
+          0%, 80%, 100% { transform: translateY(0); }
+          40% { transform: translateY(-6px); }
         }
       `}</style>
-
-    </div>
+    </>
   )
 }

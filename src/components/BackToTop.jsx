@@ -34,7 +34,7 @@ export default function BackToTop() {
 
 const s = {
   btn: {
-    position: 'fixed', bottom: 100, right: 30, zIndex: 9997,
+    position: 'fixed', bottom: 164, right: 24, zIndex: 9997,
     width: 44, height: 44, borderRadius: '50%',
     background: 'var(--bur)', color: '#fff',
     border: 'none', boxShadow: '0 8px 24px rgba(123,29,46,0.25)',
