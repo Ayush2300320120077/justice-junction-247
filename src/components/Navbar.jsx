@@ -50,7 +50,8 @@ export default function Navbar() {
               ['/search','Find Lawyers'],
               ['/knowledge-hub','Knowledge Hub'],
               ['/document-generator','Legal Tools'],
-              ['/join-as-lawyer','For Lawyers']
+              ['/join-as-lawyer','For Lawyers'],
+              ['/about','About Us']
             ].map(([p,l])=>(
               <li key={p}><Link href={p} style={{...s.link,...(isActive(p)?s.linkActive:{})}}>{l}</Link></li>
             ))}
@@ -117,6 +118,7 @@ export default function Navbar() {
               ['/knowledge-hub', <BookOpen size={18}/>, 'Knowledge Hub'],
               ['/document-generator', <FileText size={18}/>, 'Legal Tools'],
               ['/join-as-lawyer', <Briefcase size={18}/>, 'For Lawyers'],
+              ['/about', <Info size={18}/>, 'About Us'],
               ...(isLoggedIn ? [
                 user?.role === 'admin' ? ['/admin', <Shield size={18}/>, 'Admin Panel'] : ['/dashboard', <LayoutDashboard size={18}/>, 'Dashboard'],
                 ['/favorites', <Heart size={18}/>, 'Saved Lawyers'],
