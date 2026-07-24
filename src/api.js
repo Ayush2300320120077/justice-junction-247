@@ -76,5 +76,6 @@ export const API = {
 
   // AI Chat
   chat:            (body)       => request('/ai/chat', { method: 'POST', body }),
+  assistant:       (body)       => request('/ai/assistant', { method: 'POST', body }),
 }
 

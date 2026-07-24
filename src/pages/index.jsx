@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { CheckCircle, Video, Lock, Zap, Bell, Search, BarChart2, Calendar, Activity, DollarSign, Smartphone, Scale, TrendingUp, CreditCard, LayoutDashboard, Star, Gift, ClipboardList, ShieldCheck, Award, Users, Clock, Globe, MapPin } from 'lucide-react'
+import { CheckCircle, Video, Lock, Zap, Bell, Search, BarChart2, Calendar, Activity, DollarSign, Smartphone, Scale, TrendingUp, CreditCard, LayoutDashboard, Star, Gift, ClipboardList, ShieldCheck, Award, Users, Clock, Globe, MapPin, Bot } from 'lucide-react'
 import Head from 'next/head'
 
 const SPECS = ['Criminal Defence','Family Law','Property Law','Corporate Law','Consumer Rights','Labour Law']
@@ -118,6 +118,27 @@ export default function Home() {
                 <span style={{fontSize:'.85rem',fontWeight:700,color:'#fff'}}>Bar Council Verified Professionals</span>
               </div>
               <span style={{ background: 'rgba(245,196,179,0.2)', border: '1px solid rgba(245,196,179,0.5)', borderRadius: 50, padding: '.3rem .9rem', fontSize: '.75rem', fontWeight: 800, color: '#F5C4B3', letterSpacing: '1.5px', textTransform: 'uppercase' }}>BETA</span>
+              <button 
+                onClick={() => window.dispatchEvent(new CustomEvent('open-ai-chat'))}
+                style={{ 
+                  background: 'rgba(255,255,255,0.15)', 
+                  border: '1px solid rgba(255,255,255,0.3)', 
+                  borderRadius: 50, 
+                  padding: '.35rem 1.1rem', 
+                  fontSize: '.75rem', 
+                  fontWeight: 800, 
+                  color: '#fff', 
+                  cursor: 'pointer', 
+                  display: 'inline-flex', 
+                  alignItems: 'center', 
+                  gap: 6, 
+                  transition: 'all 0.2s' 
+                }}
+                className="hover-glow hover-lift"
+              >
+                <Bot size={14} className="text-[#F5C4B3]" />
+                <span>Ask AI Legal Assistant</span>
+              </button>
             </div>
             
             <h1 style={{...s.h1, textShadow: '0 4px 20px rgba(0,0,0,0.5)'}} className="h1-responsive text-balance">

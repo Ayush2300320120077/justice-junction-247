@@ -5,7 +5,7 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import dynamic from 'next/dynamic'
 import { useEffect } from 'react'
-const AIChatWidget = dynamic(() => import('../components/AIChatWidget'), { ssr: false })
+const AIAssistantChat = dynamic(() => import('../components/AIAssistantChat'), { ssr: false })
 const WhatsAppHelpline = dynamic(() => import('../components/WhatsAppHelpline'), { ssr: false })
 const CookieConsent = dynamic(() => import('../components/CookieConsent'), { ssr: false })
 const BackToTop = dynamic(() => import('../components/BackToTop'), { ssr: false })
@@ -61,7 +61,7 @@ function MyApp({ Component, pageProps }) {
             <Component {...pageProps} />
           </div>
           <Footer />
-          <AIChatWidget />
+          <AIAssistantChat />
           <WhatsAppHelpline />
           <BackToTop />
           <CookieConsent />
