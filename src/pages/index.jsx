@@ -3,7 +3,6 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { CheckCircle, Video, Lock, Zap, Bell, Search, BarChart2, Calendar, Activity, DollarSign, Smartphone, Scale, TrendingUp, CreditCard, LayoutDashboard, Star, Gift, ClipboardList, ShieldCheck, Award, Users, Clock, Globe, MapPin } from 'lucide-react'
 import Head from 'next/head'
-import AboutSection from '../components/AboutSection'
 
 const SPECS = ['Criminal Defence','Family Law','Property Law','Corporate Law','Consumer Rights','Labour Law']
 
@@ -168,9 +167,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* ══════ ABOUT US SECTION ══════ */}
-      <AboutSection />
 
       {/* ══════ PRACTICE AREAS ══════ */}
       <section style={{padding:'5rem 0',background:'#fff'}}>
