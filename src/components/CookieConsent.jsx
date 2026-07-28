@@ -1,5 +1,5 @@
+import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react'
-import Link from 'next/link'
 
 export default function CookieConsent() {
   const [show, setShow] = useState(false)
@@ -25,10 +25,10 @@ export default function CookieConsent() {
       <div style={s.banner} className="cookie-consent-animate">
         <div style={s.text}>
           We use cookies to improve your experience. By continuing, you agree to our{' '}
-          <Link href="/privacy-policy" style={s.link}>Privacy Policy</Link> and Cookie Policy.
+          <Link to="/privacy-policy" style={s.link}>Privacy Policy</Link> and Cookie Policy.
         </div>
         <div style={s.actions}>
-          <Link href="/privacy-policy" className="btn btn-ghost btn-sm" style={{ fontSize: '.8rem' }}>
+          <Link to="/privacy-policy" className="btn btn-ghost btn-sm" style={{ fontSize: '.8rem' }}>
             Learn More
           </Link>
           <button className="btn btn-primary btn-sm" onClick={handleAccept} style={{ fontSize: '.8rem' }}>

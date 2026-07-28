@@ -1,6 +1,6 @@
+import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react'
-import Head from 'next/head'
-import Link from 'next/link'
 import { BookOpen, Scale, Shield, Landmark, Search, ChevronRight, FileText, AlertCircle, SearchX } from 'lucide-react'
 import { useToast } from '../context/ToastContext'
 
@@ -57,10 +57,10 @@ export default function KnowledgeHub() {
 
   return (
     <div style={{ paddingTop: 95, background: '#FDF8F4', minHeight: '100vh' }}>
-      <Head>
+      <Helmet>
         <title>Know Your Legal Rights | Justice Junction 24/7</title>
         <meta name="description" content="Empower yourself with legal knowledge. Read articles on RTI, FIR, Consumer Rights, and more." />
-      </Head>
+      </Helmet>
 
       {/* Header */}
       <section style={{ padding: '6rem 0', position: 'relative', overflow: 'hidden', background: '#7B1D2E', color: '#fff' }}>
@@ -115,7 +115,7 @@ export default function KnowledgeHub() {
               </div>
               <h3 style={s.cardTitle}>{a.title}</h3>
               <p style={s.cardDesc}>{a.desc}</p>
-              <Link href={`/knowledge/${a.id}`} style={s.readMore}>
+              <Link to={`/knowledge/${a.id}`} style={s.readMore}>
                 Read Full Guide <ChevronRight size={16}/>
               </Link>
             </div>

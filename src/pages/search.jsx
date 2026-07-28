@@ -1,18 +1,20 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { useRouter } from 'next/router'
-import Link from 'next/link'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import LawyerCard from '../components/LawyerCard'
 import SkeletonCard from '../components/SkeletonCard'
 import { useToast } from '../context/ToastContext'
-import { SearchX, Filter, X, ChevronDown, Star, MapPin, Scale, DollarSign, Loader2, Globe, Video, Phone, TrendingUp, Info } from 'lucide-react'
-import Head from 'next/head'
+import { SearchX, Filter, X, ChevronDown, Star, MapPin, Scale, DollarSign, Loader2, Globe, Video, Phone, TrendingUp, Info, Sparkles, Bot, AlertTriangle } from 'lucide-react'
+import { Helmet } from 'react-helmet-async'
 import demoLawyers from '../data/demoLawyers'
+import { API } from '../api'
 
 const SPECS = ['Criminal Defence','Family Law','Property Law','Corporate Law','Consumer Rights','Labour Law','Civil Disputes','Divorce','Taxation','Intellectual Property','Cyber Law','Bail & FIR']
 const CITIES = ['Delhi','Mumbai','Bangalore','Hyderabad','Chennai','Kolkata','Ahmedabad','Pune','Jaipur','Lucknow']
 
 export default function Search() {
-  const router = useRouter()
+  const [searchParams] = useSearchParams()
+  const navigate = useNavigate()
   const { showToast } = useToast()
   
   // States
@@ -37,6 +39,35 @@ export default function Search() {
   const [caseEstimate, setCaseEstimate] = useState(null)
   const [estimateLoading, setEstimateLoading] = useState(false)
 
+  // AI Free-Text Issue Classification States
+  const [aiProblemText, setAiProblemText] = useState('')
+  const [classifying, setClassifying] = useState(false)
+  const [aiNote, setAiNote] = useState('')
+  const [urgencyFlag, setUrgencyFlag] = useState(null)
+
+  const handleAiClassify = async () => {
+    if (!aiProblemText.trim() || classifying) return
+    setClassifying(true)
+    try {
+      const res = await API.classify({ text: aiProblemText })
+      if (res && res.category) {
+        setSpec(res.category)
+        setAiNote(`AI suggested: ${res.category} — you can change this anytime`)
+        if (res.urgency === 'emergency') {
+          setUrgencyFlag('emergency')
+          setAvailability('available')
+        } else {
+          setUrgencyFlag('routine')
+        }
+      }
+    } catch (err) {
+      console.warn('AI Classify error:', err)
+    } finally {
+      setClassifying(false)
+    }
+  }
+
+
   const observer = useRef()
   const initialSyncDone = useRef(false)
   const lastElementRef = useCallback(node => {
@@ -60,11 +91,14 @@ export default function Search() {
 
   // Sync state with URL or LocalStorage on mount
   useEffect(() => {
-    if (!router.isReady || initialSyncDone.current) return
+    if (initialSyncDone.current) return
     initialSyncDone.current = true
     
     // Try URL first, then LocalStorage
-    const { specialization, city: qCity, maxFee: qFee, sort } = router.query
+    const specialization = searchParams.get('specialization')
+    const qCity = searchParams.get('city')
+    const qFee = searchParams.get('maxFee')
+    const sort = searchParams.get('sort')
     const saved = JSON.parse(localStorage.getItem('jj_search_filters') || '{}')
 
     const initialSpec = specialization || saved.spec || ''
@@ -83,7 +117,7 @@ export default function Search() {
     if (saved.language) setLanguage(saved.language)
     if (saved.availability) setAvailability(saved.availability)
     if (saved.minRating) setMinRating(saved.minRating)
-  }, [router.isReady])
+  }, [])
 
   // Persist filters to localStorage whenever they change
   useEffect(() => {
@@ -248,10 +282,10 @@ export default function Search() {
   return (
     <div style={{background:'#FDF8F4',minHeight:'100vh'}}>
       <div className="page-wrap" style={{background: 'transparent'}}>
-      <Head>
+      <Helmet>
         <title>Find Verified Lawyers in India | Justice Junction 24/7</title>
         <meta name="description" content="Browse and compare top-rated advocates by specialization, fee, and location. Book instant video consultations." />
-      </Head>
+      </Helmet>
 
       {/* Hero Banner */}
       <section style={{ padding: '6rem 0', background: '#7B1D2E', color: '#F9EEE4', textAlign: 'center' }}>
@@ -295,6 +329,19 @@ export default function Search() {
           </div>
         </div>
 
+        {/* Emergency Case Alert Banner */}
+        {urgencyFlag === 'emergency' && (
+          <div style={{ background: '#FEF2F2', border: '1px solid #FCA5A5', borderRadius: '16px', padding: '1rem 1.25rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: 12 }}>
+            <AlertTriangle size={24} color="#DC2626" style={{ flexShrink: 0 }} />
+            <div>
+              <div style={{ fontWeight: 800, color: '#991B1B', fontSize: '.95rem' }}>🚨 Emergency Case Flagged by AI</div>
+              <div style={{ color: '#B91C1C', fontSize: '.82rem', marginTop: 2 }}>
+                This matter indicates an urgent legal situation (arrest/FIR/eviction/threat). Showing currently available lawyers first.
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Case Outcome Estimate Card */}
         {spec && (
           <div style={st.estimateCard}>
@@ -335,13 +382,54 @@ export default function Search() {
             </div>
             
             <div style={{overflowY: 'auto', flex: 1, paddingRight: 5}}>
+              {/* Free-Text AI Classifier Input */}
+              <div style={st.filterGroup}>
+                <label style={st.label}><Sparkles size={14} color="#7B1D2E"/> Describe Problem (AI Classifier)</label>
+                <textarea
+                  style={{ ...st.input, minHeight: 60, resize: 'vertical', fontSize: '.82rem' }}
+                  placeholder="Or describe your problem in your own words..."
+                  value={aiProblemText}
+                  onChange={e => setAiProblemText(e.target.value)}
+                />
+                <button
+                  type="button"
+                  onClick={handleAiClassify}
+                  disabled={classifying || !aiProblemText.trim()}
+                  style={{
+                    marginTop: 6,
+                    width: '100%',
+                    padding: '.45rem .8rem',
+                    background: 'var(--bur)',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '10px',
+                    fontSize: '.78rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 6
+                  }}
+                >
+                  {classifying ? <Loader2 size={13} className="animate-spin" /> : <Bot size={13} />}
+                  {classifying ? 'Analyzing with AI...' : 'AI Auto-Match Specialization'}
+                </button>
+              </div>
+
               <div style={st.filterGroup}>
                 <label style={st.label}><Scale size={14} color="#7B1D2E"/> Specialization</label>
                 <select style={st.select} value={spec} onChange={e => setSpec(e.target.value)}>
                   <option value="">All Practice Areas</option>
                   {SPECS.map(sp => <option key={sp} value={sp}>{sp}</option>)}
                 </select>
+                {aiNote && (
+                  <div style={{ fontSize: '.72rem', color: '#166534', background: '#F0FDF4', padding: '.35rem .6rem', borderRadius: '8px', marginTop: 4, fontWeight: 700, border: '1px solid #BBF7D0' }}>
+                    {aiNote}
+                  </div>
+                )}
               </div>
+
 
               <div style={st.filterGroup}>
                 <label style={st.label}><MapPin size={14} color="#7B1D2E"/> Location</label>
@@ -431,7 +519,7 @@ export default function Search() {
                   </p>
                   <button className="btn btn-outline" onClick={clearFilters}>Clear All Filters</button>
                   <div style={{marginTop:'1rem'}}>
-                    <Link href="/join-as-lawyer" style={{fontSize:'.88rem',fontWeight:700,color:'#8B1A2A',textDecoration:'none'}}>Are you a lawyer? List your profile free →</Link>
+                    <Link to="/join-as-lawyer" style={{fontSize:'.88rem',fontWeight:700,color:'#8B1A2A',textDecoration:'none'}}>Are you a lawyer? List your profile free →</Link>
                   </div>
                 </div>
               </div>

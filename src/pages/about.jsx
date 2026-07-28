@@ -1,11 +1,11 @@
-import Head from 'next/head'
-import Link from 'next/link'
+import { Helmet } from 'react-helmet-async'
+import { Link } from 'react-router-dom'
 import { Shield, Clock, Users, Award, MapPin, Scale, Target, Globe, Zap } from 'lucide-react'
 
 export default function About() {
   return (
     <div className="page-wrap" style={{background: 'var(--cream)'}}>
-      <Head>
+      <Helmet>
         <title>About Us — Justice Junction 24/7</title>
         <meta name="description" content="Learn about India's first transparent lawyer discovery platform and our mission to democratize legal access." />
         <meta property="og:title" content="About Us — Justice Junction 24/7" />
@@ -13,7 +13,7 @@ export default function About() {
         <meta property="og:image" content="https://justice-junction-app.vercel.app/og-image.png" />
         <meta property="og:url" content="https://justice-junction-app.vercel.app/about" />
         <meta property="og:type" content="website" />
-      </Head>
+      </Helmet>
 
       {/* Hero */}
       <section style={{
@@ -31,7 +31,7 @@ export default function About() {
 
       {/* Mission */}
       <section style={{padding: '6rem 0', background: '#fff'}}>
-        <div className="container" style={s.grid2} className="mobile-stack container">
+        <div style={s.grid2} className="mobile-stack container">
           <div>
             <h2 style={s.h2}>The Mission</h2>
             <p style={s.p}>Founded in 2024, Justice Junction was born out of a simple observation: finding a reliable lawyer in India is hard, and pricing is even harder to understand. Our mission is to make legal help as easy as booking a cab — accessible 24/7, with upfront fixed pricing and verified credentials.</p>
@@ -191,8 +191,8 @@ export default function About() {
           <h2 style={{fontSize: '2rem', fontWeight: 900, color: '#fff', marginBottom: '1rem'}}>Justice for every Indian — not just the privileged.</h2>
           <p style={{fontSize: '1.1rem', color: '#F5C4B3', marginBottom: '2rem', maxWidth: 600, margin: '0 auto 2rem'}}>Join us in making legal help accessible, transparent, and fair for every citizen in India.</p>
           <div style={{display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap'}}>
-            <Link href="/search" className="btn btn-white btn-lg" style={{color: '#7B1D2E'}}>Find a Lawyer</Link>
-            <Link href="/join-as-lawyer" className="btn btn-outline-white btn-lg">Join as Advocate</Link>
+            <Link to="/search" className="btn btn-white btn-lg" style={{color: '#7B1D2E'}}>Find a Lawyer</Link>
+            <Link to="/join-as-lawyer" className="btn btn-outline-white btn-lg">Join as Advocate</Link>
           </div>
         </div>
       </section>

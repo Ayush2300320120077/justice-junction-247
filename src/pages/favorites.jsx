@@ -1,9 +1,9 @@
+import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react'
 import LawyerCard from '../components/LawyerCard'
 import { API } from '../api'
 import { Heart, Search } from 'lucide-react'
-import Link from 'next/link'
-import Head from 'next/head'
 
 export default function Favorites() {
   const [lawyers, setLawyers] = useState([])
@@ -34,9 +34,9 @@ export default function Favorites() {
 
   return (
     <div className="page-wrap" style={{background: '#F8F9FA'}}>
-      <Head>
+      <Helmet>
         <title>Saved Lawyers — Justice Junction 24/7</title>
-      </Head>
+      </Helmet>
       <div className="container" style={{paddingTop: '3rem'}}>
         <div style={{marginBottom: '2rem'}}>
           <h1 style={{fontFamily: "'Playfair Display', serif", fontSize: '2.5rem', fontWeight: 800}}>Your Saved Lawyers</h1>
@@ -50,7 +50,7 @@ export default function Favorites() {
             <Heart size={64} color="var(--border-2)" strokeWidth={1} />
             <h2 style={{marginTop: '1.5rem', fontWeight: 800}}>No saved lawyers</h2>
             <p style={{color: 'var(--txt-3)', marginBottom: '2rem'}}>Shortlist lawyers to easily find them later.</p>
-            <Link href="/search" className="btn btn-primary">Browse Lawyers</Link>
+            <Link to="/search" className="btn btn-primary">Browse Lawyers</Link>
           </div>
         ) : (
           <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem'}}>

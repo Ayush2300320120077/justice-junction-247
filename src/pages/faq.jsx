@@ -1,6 +1,6 @@
+import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { useState } from 'react'
-import Head from 'next/head'
-import Link from 'next/link'
 import { ChevronDown, HelpCircle, MessageSquare, Search } from 'lucide-react'
 
 const FAQS = [
@@ -59,7 +59,7 @@ export default function FAQPage() {
 
   return (
     <div style={{ paddingTop:95, background:'#F8F9FA', minHeight:'100vh' }}>
-      <Head>
+      <Helmet>
         <title>FAQ — Justice Junction 24/7</title>
         <meta name="description" content="Frequently asked questions about booking lawyers, payments, cancellations and platform features." />
         <meta property="og:title" content="FAQ — Justice Junction 24/7" />
@@ -70,7 +70,7 @@ export default function FAQPage() {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="FAQ — Justice Junction 24/7" />
         <meta name="twitter:image" content="https://justice-junction-app.vercel.app/og-image.png" />
-      </Head>
+      </Helmet>
 
       <section style={s.hero}>
         <div className="container" style={{textAlign:'center'}}>

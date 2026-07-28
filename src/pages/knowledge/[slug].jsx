@@ -1,5 +1,5 @@
-import Head from 'next/head'
-import Link from 'next/link'
+import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { Clock, Share2, MessageSquare, ChevronLeft, BookOpen } from 'lucide-react'
 import { ARTICLES } from '../rights'
 
@@ -61,7 +61,7 @@ export default function ArticlePage({ article }) {
 
   return (
     <div className="page-wrap" style={{background:'var(--cream)'}}>
-      <Head>
+      <Helmet>
         <title>{ogTitle}</title>
         <meta name="description" content={ogDesc} />
         <meta property="og:title" content={ogTitle} />
@@ -81,10 +81,10 @@ export default function ArticlePage({ article }) {
           "publisher": { "@type": "Organization", "name": "Justice Junction 24/7", "url": "https://justice-junction-app.vercel.app/" },
           "url": ogUrl
         })}} />
-      </Head>
+      </Helmet>
 
       <div className="container" style={{padding:'3rem 5vw', maxWidth:860}}>
-        <Link href="/knowledge-hub" style={cs.back}><ChevronLeft size={16}/> Back to Knowledge Hub</Link>
+        <Link to="/knowledge-hub" style={cs.back}><ChevronLeft size={16}/> Back to Knowledge Hub</Link>
 
         <article style={cs.article}>
           {/* Header */}
@@ -123,7 +123,7 @@ export default function ArticlePage({ article }) {
               </div>
             </div>
             <div style={{display:'flex', gap:10, flexWrap:'wrap'}}>
-              <Link href="/search" className="btn btn-primary">Find a Lawyer →</Link>
+              <Link to="/search" className="btn btn-primary">Find a Lawyer →</Link>
               <a href={`https://wa.me/919188371233?text=${encodeURIComponent(`Hi, I read the article "${article.title}" on Justice Junction 24/7 and need legal advice.`)}`}
                 target="_blank" rel="noreferrer" className="btn btn-outline">
                 Chat on WhatsApp

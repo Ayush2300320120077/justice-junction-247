@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import Head from 'next/head'
-import Link from 'next/link'
+import { Helmet } from 'react-helmet-async'
+import { Link } from 'react-router-dom'
 import { Mail, Phone, MapPin, MessageSquare, Send, CheckCircle, Loader2 } from 'lucide-react'
 import emailjs from '@emailjs/browser'
 import { useToast } from '../context/ToastContext'
@@ -79,7 +79,7 @@ export default function Contact() {
 
   return (
     <div className="page-wrap" style={{background:'var(--cream)'}}>
-      <Head>
+      <Helmet>
         <title>Contact Us — Justice Junction 24/7</title>
         <meta name="description" content="Get in touch with Justice Junction support. Available 24/7 via WhatsApp, email and phone." />
         <meta property="og:title" content="Contact Us — Justice Junction 24/7" />
@@ -89,7 +89,7 @@ export default function Contact() {
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:image" content="https://justice-junction-app.vercel.app/og-image.png" />
-      </Head>
+      </Helmet>
 
       <section style={s.hero}>
         <div className="container" style={{textAlign:'center'}}>
@@ -127,7 +127,7 @@ export default function Contact() {
             <div style={s.faqCard}>
               <div style={{fontWeight:800, fontSize:'1rem', marginBottom:8}}>Frequently Asked Questions</div>
               <p style={{fontSize:'.85rem', color:'rgba(255,255,255,.7)', marginBottom:'1rem'}}>Many answers are already in our FAQ section.</p>
-              <Link href="/faq" className="btn btn-white btn-sm" style={{width:'100%', justifyContent:'center'}}>Browse FAQs</Link>
+              <Link to="/faq" className="btn btn-white btn-sm" style={{width:'100%', justifyContent:'center'}}>Browse FAQs</Link>
             </div>
           </div>
 

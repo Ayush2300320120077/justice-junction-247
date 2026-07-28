@@ -1,3 +1,4 @@
+import { useNavigate, useLocation, useSearchParams, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
 import AdminRoute from '../../components/admin/AdminRoute';
@@ -7,11 +8,10 @@ import {
   ShieldAlert, UserCheck, ShieldCheck, LayoutDashboard, ChevronLeft, 
   ChevronRight, CheckCircle, XCircle, AlertTriangle, RefreshCw
 } from 'lucide-react';
-import { useRouter } from 'next/router';
 import { useToast } from '../../context/ToastContext';
 
 export default function AdminDashboard() {
-  const router = useRouter();
+  const navigate = useNavigate(); const location = useLocation(); const [searchParams] = useSearchParams(); const params = useParams();;
   const { showToast } = useToast();
 
   const currentTab = router.query.tab || 'overview';
@@ -122,7 +122,7 @@ export default function AdminDashboard() {
   };
 
   const handleTabChange = (tabName) => {
-    router.push(`/admin/dashboard${tabName === 'overview' ? '' : `?tab=${tabName}`}`);
+    navigate(`/admin/dashboard${tabName === 'overview' ? '' : `?tab=${tabName}`}`);
   };
 
   // Open confirmation modal for admin operations
@@ -276,9 +276,9 @@ export default function AdminDashboard() {
                 {/* ROW 2: Status Cards */}
                 <div style={s.grid4}>
                   <StatusCard title="Pending Verification Queue" value={pendingLawyers.length + pendingClients.length} color="#f59e0b" onClick={() => handleTabChange('verification')} />
-                  <StatusCard title="Lawyers Directory" value={stats.totalLawyers || 0} color="#3b82f6" onClick={() => router.push('/admin/lawyers')} />
+                  <StatusCard title="Lawyers Directory" value={stats.totalLawyers || 0} color="#3b82f6" onClick={() => navigate('/admin/lawyers')} />
                   <StatusCard title="User Accounts" value={stats.totalUsers || 0} color="#10b981" onClick={() => handleTabChange('users')} />
-                  <StatusCard title="System Reports" value={0} color="#ef4444" onClick={() => router.push('/admin/reports')} />
+                  <StatusCard title="System Reports" value={0} color="#ef4444" onClick={() => navigate('/admin/reports')} />
                 </div>
 
                 {/* ROW 3: Charts */}

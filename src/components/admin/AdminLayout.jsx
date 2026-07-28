@@ -1,16 +1,17 @@
+import { useNavigate, useLocation, useSearchParams, useParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import Head from 'next/head';
 import { 
   LayoutDashboard, Scale, Users, CreditCard, 
   Inbox, FileText, AlertTriangle, BarChart3, 
-  Settings, LogOut, Menu, X, UserCheck, ShieldCheck
+  Settings, LogOut, Menu, X, UserCheck, ShieldCheck, Bot
 } from 'lucide-react';
 
 const ADMIN_NAV = [
   { path: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { path: '/admin/dashboard?tab=users', label: 'User Management', icon: UserCheck },
   { path: '/admin/dashboard?tab=verification', label: 'Verification Queue', icon: ShieldCheck },
+  { path: '/admin/ai-eval', label: 'AI Evaluation', icon: Bot },
   { path: '/admin/lawyers', label: 'Lawyers', icon: Scale },
   { path: '/admin/clients', label: 'Clients', icon: Users },
   { path: '/admin/subscriptions', label: 'Subscriptions', icon: CreditCard },
@@ -21,8 +22,9 @@ const ADMIN_NAV = [
   { path: '/admin/settings', label: 'Settings', icon: Settings },
 ];
 
+
 export default function AdminLayout({ children, title = 'Dashboard' }) {
-  const router = useRouter();
+  const navigate = useNavigate(); const location = useLocation(); const [searchParams] = useSearchParams(); const params = useParams();;
   const [adminUser, setAdminUser] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [time, setTime] = useState('');
@@ -43,15 +45,15 @@ export default function AdminLayout({ children, title = 'Dashboard' }) {
   const handleLogout = () => {
     localStorage.removeItem('jj_admin_token');
     localStorage.removeItem('jj_admin_user');
-    router.push('/admin/login');
+    navigate('/admin/login');
   };
 
   return (
     <div style={s.layout}>
-      <Head>
+      <Helmet>
         <title>{title} — JJ Admin</title>
         <meta name="robots" content="noindex, nofollow" />
-      </Head>
+      </Helmet>
 
       {/* Sidebar Overlay (Mobile) */}
       {mobileOpen && (
@@ -79,11 +81,11 @@ export default function AdminLayout({ children, title = 'Dashboard' }) {
         <nav style={s.nav}>
           {ADMIN_NAV.map(item => {
             const Icon = item.icon;
-            const active = router.asPath === item.path || (item.path === '/admin/dashboard' && router.pathname === '/admin/dashboard' && !router.query.tab);
+            const active = router.asPath === item.path || (item.path === '/admin/dashboard' && location.pathname === '/admin/dashboard' && !router.query.tab);
             return (
               <button 
                 key={item.path}
-                onClick={() => { router.push(item.path); setMobileOpen(false); }}
+                onClick={() => { navigate(item.path); setMobileOpen(false); }}
                 style={{ ...s.navItem, ...(active ? s.navItemActive : {}) }}
               >
                 <Icon size={18} style={{ opacity: active ? 1 : 0.7 }} />

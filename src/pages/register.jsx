@@ -1,9 +1,8 @@
 import { useState } from 'react'
-import { useRouter } from 'next/router'
+import { useNavigate, Link } from 'react-router-dom'
 import { API } from '../api'
 import { useToast } from '../context/ToastContext'
-import Link from 'next/link'
-import Head from 'next/head'
+import { Helmet } from 'react-helmet-async'
 import { Mail, Lock, User, UserPlus, Scale } from 'lucide-react'
 import LawyerRegistrationWizard from '../components/LawyerRegistrationWizard'
 
@@ -11,7 +10,7 @@ export default function Register() {
   const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'client' })
   const [loading, setLoading] = useState(false)
   const { showToast } = useToast()
-  const router = useRouter()
+  const navigate = useNavigate()
 
   const handleRegister = async (e) => {
     e.preventDefault()
@@ -19,7 +18,7 @@ export default function Register() {
     try {
       await API.register(formData)
       showToast('Account created! Please login.', 'success')
-      router.push('/login')
+      navigate('/login')
     } catch (err) {
       showToast(err.message, 'error')
     } finally {
@@ -31,7 +30,7 @@ export default function Register() {
   if (formData.role === 'lawyer') {
     return (
       <div className="page-reveal" style={{ paddingTop: 95, minHeight: '100vh', background: 'var(--cream)' }}>
-        <Head><title>Lawyer Registration — Justice Junction 24/7</title></Head>
+        <Helmet><title>Lawyer Registration — Justice Junction 24/7</title></Helmet>
         <div className="container" style={{ maxWidth: 800, paddingTop: '2rem', paddingBottom: '4rem' }}>
           <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
             <h1 className="h1-responsive" style={{ fontSize: '2.2rem', marginBottom: 8 }}>Lawyer <span className="gradient-text">Registration</span></h1>
@@ -61,7 +60,7 @@ export default function Register() {
           <LawyerRegistrationWizard />
 
           <div style={{ textAlign: 'center', marginTop: '2rem', fontSize: '.9rem', color: 'var(--txt-3)' }}>
-            Already have an account? <Link href="/login" style={{ color: 'var(--bur)', fontWeight: 800 }}>Login Here</Link>
+            Already have an account? <Link to="/login" style={{ color: 'var(--bur)', fontWeight: 800 }}>Login Here</Link>
           </div>
         </div>
       </div>
@@ -71,7 +70,7 @@ export default function Register() {
   // Client registration — original form unchanged
   return (
     <div className="auth-layout page-reveal">
-      <Head><title>Register Free | Justice Junction 24/7</title></Head>
+      <Helmet><title>Register Free | Justice Junction 24/7</title></Helmet>
 
       {/* Visual Side */}
       <div className="auth-visual-side">
@@ -146,7 +145,7 @@ export default function Register() {
           </form>
 
           <div style={{ textAlign: 'center', marginTop: '2rem', fontSize: '.9rem', color: 'var(--txt-3)' }}>
-            Already have an account? <Link href="/login" style={{ color: 'var(--bur)', fontWeight: 800 }}>Login Here</Link>
+            Already have an account? <Link to="/login" style={{ color: 'var(--bur)', fontWeight: 800 }}>Login Here</Link>
           </div>
         </div>
       </div>

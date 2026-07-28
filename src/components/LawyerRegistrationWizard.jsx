@@ -1,5 +1,5 @@
+import { useNavigate, useLocation, useSearchParams, useParams } from 'react-router-dom';
 import { useState } from 'react'
-import { useRouter } from 'next/router'
 import { API } from '../api'
 import { useToast } from '../context/ToastContext'
 import StepProgressBar from './StepProgressBar'
@@ -39,7 +39,7 @@ export default function LawyerRegistrationWizard() {
   const [errors, setErrors] = useState({})
   const [loading, setLoading] = useState(false)
   const { showToast } = useToast()
-  const router = useRouter()
+  const navigate = useNavigate(); const location = useLocation(); const [searchParams] = useSearchParams(); const params = useParams();
 
   const set = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }))
@@ -92,7 +92,7 @@ export default function LawyerRegistrationWizard() {
     try {
       await API.register(formData)
       showToast('Account created! Please login.', 'success')
-      router.push('/login')
+      navigate('/login')
     } catch (err) {
       showToast(err.message, 'error')
     } finally {

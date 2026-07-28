@@ -1,0 +1,35 @@
+CHAPTER I - PRELIMINARY
+
+Section 1. Short title, extent, commencement and application.
+(1) This Act may be called the Consumer Protection Act, 2019.
+(2) It extends to the whole of India.
+(3) It shall come into force on such date as the Central Government may, by notification, appoint.
+
+Section 2. Definitions.
+In this Act, unless the context otherwise requires,—
+(1) "applicant" means a consumer who files a complaint before the Consumer Disputes Redressal Commission;
+(2) "complainant" means a consumer, or any voluntary consumer association registered under any law for the time being in force;
+(6) "complaint" means any allegation in writing made by a complainant for obtaining any relief provided by or under this Act;
+(7) "consumer" means any person who buys any goods for a consideration which has been paid or promised or partly paid and partly promised;
+(10) "defective product" means any product which has a manufacturing defect, deficiency in quality, or non-conformance to standards prescribed under law.
+
+
+CHAPTER IV - CONSUMER DISPUTES REDRESSAL COMMISSION
+
+Section 34. Jurisdiction of District Commission.
+(1) Subject to the other provisions of this Act, the District Commission shall have jurisdiction to entertain complaints where the value of the goods or services paid as consideration does not exceed one crore rupees.
+(2) A complaint shall be instituted in a District Commission within the local limits of whose jurisdiction—
+(a) the respondent or each of the respondents resides or carries on business;
+(b) the cause of action, wholly or in part, arises.
+
+Section 35. Manner in which complaint shall be made.
+(1) A complaint, in relation to any goods sold or delivered or agreed to be sold or delivered or any service provided or agreed to be provided, may be filed with a District Commission by—
+(a) the consumer to whom such goods are sold or delivered or such service is provided;
+(b) any recognized consumer association;
+(c) one or more consumers, where there are numerous consumers having the same interest;
+(2) Every complaint filed under sub-section (1) shall be accompanied with such fee and in such manner as may be prescribed.
+(3) The District Commission may, on receipt of a complaint under sub-section (1), allow the complaint to be proceeded with or rejected: Provided that no complaint shall be rejected under this sub-section without giving the complainant an opportunity of being heard.
+
+Section 82. Product Liability Action.
+(1) An action for product liability may be brought by a complainant against a product manufacturer or a product seller or a product service provider for any harm caused to him on account of a defective product.
+(2) A product manufacturer shall be liable in a product liability action if the product contains a manufacturing defect, or is defective in design, or deviates from manufacturing specifications.

@@ -1,8 +1,7 @@
 import { useState } from 'react'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
+import { Link, useNavigate } from 'react-router-dom'
 import { CheckCircle, Video, Lock, Zap, Bell, Search, BarChart2, Calendar, Activity, DollarSign, Smartphone, Scale, TrendingUp, CreditCard, LayoutDashboard, Star, Gift, ClipboardList, ShieldCheck, Award, Users, Clock, Globe, MapPin, Bot } from 'lucide-react'
-import Head from 'next/head'
+import { Helmet } from 'react-helmet-async'
 
 const SPECS = ['Criminal Defence','Family Law','Property Law','Corporate Law','Consumer Rights','Labour Law']
 
@@ -42,18 +41,18 @@ const WHY_FEATURES = [
 export default function Home() {
   const [spec, setSpec] = useState('')
   const [query, setQuery] = useState('')
-  const router = useRouter()
+  const navigate = useNavigate()
 
   const goSearch = () => {
     const p = new URLSearchParams()
     if (spec) p.set('specialization', spec)
     if (query) p.set('query', query)
-    router.push('/search?' + p.toString())
+    navigate('/search?' + p.toString())
   }
 
   return (
     <div style={{ paddingTop: 95 }}>
-      <Head>
+      <Helmet>
         <title>Justice Junction 24/7 — Find Verified Lawyers in India | 24/7 Legal Help</title>
         <meta name="description" content="Find and book Bar Council verified lawyers across India. Upfront pricing, instant booking, encrypted video consultations. Available 24/7." />
         <meta name="keywords" content="lawyer in India, find advocate online, legal help 24/7, book lawyer India, verified advocates, online lawyer consultation, legal services India" />
@@ -102,7 +101,7 @@ export default function Home() {
             }
           ])
         }} />
-      </Head>
+      </Helmet>
 
       {/* ══════ HERO SECTION ══════ */}
       <section style={{
@@ -199,7 +198,7 @@ export default function Home() {
           </div>
           <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(250px,1fr))',gap:'1.2rem',maxWidth:1100,margin:'0 auto'}}>
             {PRACTICE_AREAS.map(area => (
-              <Link href={`/search?specialization=${encodeURIComponent(area.name)}`} key={area.name} style={{textDecoration:'none'}}>
+              <Link to={`/search?specialization=${encodeURIComponent(area.name)}`} key={area.name} style={{textDecoration:'none'}}>
                 <div style={{background: '#fff', borderRadius: '12px', border: '1px solid #E8C9A8', padding: '1.25rem', transition: 'all 0.2s', cursor: 'pointer', display: 'flex', flexDirection: 'column', height: '100%'}} className="hover-lift">
                   <div style={{background: '#FDF6EE', borderRadius: '8px', padding: '8px', display: 'inline-flex', alignSelf: 'flex-start', marginBottom: '0.75rem'}}>
                     <span style={{fontSize:'1.5rem', lineHeight: 1}}>{area.emoji}</span>
@@ -355,8 +354,8 @@ export default function Home() {
                 ))}
               </div>
               <div style={{display:'flex', gap:'1rem', flexWrap:'wrap'}}>
-                <Link href="/join-as-lawyer" className="btn btn-primary btn-lg hover-lift">Join as Advocate — Free</Link>
-                <Link href="/lawyer-plans" className="btn btn-outline btn-lg hover-lift">View Pricing Plans</Link>
+                <Link to="/join-as-lawyer" className="btn btn-primary btn-lg hover-lift">Join as Advocate — Free</Link>
+                <Link to="/lawyer-plans" className="btn btn-outline btn-lg hover-lift">View Pricing Plans</Link>
               </div>
             </div>
             
@@ -392,8 +391,8 @@ export default function Home() {
           <h2 style={{ fontFamily: "'Cormorant Garamond',serif", fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 800, marginBottom: '1.5rem', color: '#fff' }} className="text-balance">Ready to resolve your <em style={{color:'#F9EEE4'}}>legal matters?</em></h2>
           <p style={{ fontSize: '1.1rem', color: '#F9EEE4', marginBottom: '2.5rem', maxWidth: 600, margin: '0 auto 2.5rem', lineHeight: 1.7 }} className="text-balance">Join thousands of Indians who found their trusted legal advocate on Justice Junction 24/7. Free to sign up. No hidden fees. Legal help in minutes.</p>
           <div style={{display:'flex', gap:'1rem', justifyContent:'center', flexWrap:'wrap'}} className="mobile-stack">
-            <Link href="/search" className="btn btn-white btn-xl mobile-w-full" style={{color:'#7B1D2E',background:'#fff'}}>Find Your Lawyer Now</Link>
-            <Link href="/register?role=lawyer" className="btn btn-outline-white btn-xl mobile-w-full">Join as Advocate</Link>
+            <Link to="/search" className="btn btn-white btn-xl mobile-w-full" style={{color:'#7B1D2E',background:'#fff'}}>Find Your Lawyer Now</Link>
+            <Link to="/register?role=lawyer" className="btn btn-outline-white btn-xl mobile-w-full">Join as Advocate</Link>
           </div>
         </div>
       </section>

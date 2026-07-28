@@ -74,8 +74,12 @@ export const API = {
   promoteAdmin:    (email)      => request('/admin/promote', { method: 'PUT', body: { email } }),
   demoteAdmin:     (id)         => request(`/admin/demote/${id}`, { method: 'PUT' }),
 
-  // AI Chat
+  // AI Chat & Classifier
   chat:            (body)       => request('/ai/chat', { method: 'POST', body }),
   assistant:       (body)       => request('/ai/assistant', { method: 'POST', body }),
+  rateInteraction: (body)       => request('/ai/feedback', { method: 'PATCH', body }),
+  classify:        (body)       => request('/ai/classify', { method: 'POST', body }),
 }
+
+
 

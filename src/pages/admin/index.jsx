@@ -1,11 +1,11 @@
+import { useNavigate, useLocation, useSearchParams, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
-import { useRouter } from 'next/router';
 
 export default function AdminIndex() {
-  const router = useRouter();
+  const navigate = useNavigate(); const location = useLocation(); const [searchParams] = useSearchParams(); const params = useParams();;
 
   useEffect(() => {
-    router.replace('/admin/dashboard');
+    navigate('/admin/dashboard');
   }, [router]);
 
   return null;

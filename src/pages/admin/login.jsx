@@ -1,6 +1,6 @@
+import { useNavigate, useLocation, useSearchParams, useParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import Head from 'next/head';
 import { Eye, EyeOff, ShieldAlert, ShieldCheck } from 'lucide-react';
 
 export default function AdminLogin() {
@@ -9,13 +9,13 @@ export default function AdminLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
+  const navigate = useNavigate(); const location = useLocation(); const [searchParams] = useSearchParams(); const params = useParams();;
 
   // Redirect if already logged in
   useEffect(() => {
     const token = localStorage.getItem('jj_admin_token');
     if (token) {
-      router.replace('/admin/dashboard');
+      navigate('/admin/dashboard');
     }
   }, [router]);
 
@@ -39,7 +39,7 @@ export default function AdminLogin() {
 
       localStorage.setItem('jj_admin_token', data.token);
       localStorage.setItem('jj_admin_user', JSON.stringify(data.admin));
-      router.push('/admin/dashboard');
+      navigate('/admin/dashboard');
 
     } catch (err) {
       setError(err.message);
@@ -50,10 +50,10 @@ export default function AdminLogin() {
 
   return (
     <div style={s.page}>
-      <Head>
+      <Helmet>
         <title>Admin Login — Justice Junction</title>
         <meta name="robots" content="noindex, nofollow" />
-      </Head>
+      </Helmet>
 
       <div style={s.card}>
         <div style={s.logoWrapper}>

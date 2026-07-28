@@ -3,6 +3,9 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const connectDB = require('../middleware/db');
 const CaseOutcome = require('../models/CaseOutcome');
+const AiInteractionLog = require('../models/AiInteractionLog');
+const { retrieveContext } = require('../backend/ai/retrieve');
+const { classifyIssue } = require('../backend/ai/classify');
 
 const app = express();
 app.use(express.json());
@@ -292,8 +295,62 @@ router.post('/log-outcome', async (req, res) => {
   }
 });
 
+/* ─── PATCH /api/ai/feedback ─── */
+router.patch('/feedback', async (req, res) => {
+  try {
+    await connectDB();
+    const { logId, rating } = req.body;
+    if (!logId || rating === undefined) {
+      return res.status(400).json({ error: 'logId and rating are required' });
+    }
+    const numRating = Number(rating);
+    if (isNaN(numRating) || numRating < 1 || numRating > 5) {
+      return res.status(400).json({ error: 'rating must be a number between 1 and 5' });
+    }
+    const updated = await AiInteractionLog.findByIdAndUpdate(
+      logId,
+      { userFeedbackRating: numRating },
+      { new: true }
+    );
+    if (!updated) {
+      return res.status(404).json({ error: 'Log entry not found' });
+    }
+    return res.status(200).json({ success: true, logId: updated._id, userFeedbackRating: updated.userFeedbackRating });
+  } catch (err) {
+    console.error('AI feedback endpoint error:', err);
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+/* ─── POST /api/ai/classify ─── */
+router.post('/classify', async (req, res) => {
+  try {
+    const { text } = req.body;
+    if (!text || typeof text !== 'string' || !text.trim()) {
+      return res.status(400).json({ error: 'text string is required' });
+    }
+
+    let userId = null;
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      try {
+        const decoded = jwt.verify(authHeader.split(' ')[1], process.env.JWT_SECRET);
+        userId = decoded?.id || null;
+      } catch (e) {}
+    }
+
+    const result = await classifyIssue(text, { userId });
+    return res.status(200).json(result);
+  } catch (err) {
+    console.error('POST /api/ai/classify error:', err);
+    return res.status(500).json({ error: err.message });
+  }
+});
+
 /* ─── Rate Limiter for AI Chat (20 msgs / hr per IP/User) ─── */
 const chatRateLimitMap = new Map();
+
+
 
 /* ─── POST /api/ai/chat ─── */
 const CHAT_SYSTEM_PROMPT = `You are Justice Junction's official AI Legal Assistant specializing in Indian law (IPC/BNS, CPC, Constitution, Consumer Protection, RTI, Family Law, etc.).
@@ -316,6 +373,7 @@ You MUST respond with valid JSON with no markdown formatting or backticks around
 Note: "suggestedAction" is optional and should only be included if a specific platform feature is relevant.`;
 
 router.post('/chat', async (req, res) => {
+  const startTime = Date.now();
   try {
     const { message, history } = req.body;
     if (!message || typeof message !== 'string' || !message.trim()) {
@@ -324,11 +382,15 @@ router.post('/chat', async (req, res) => {
 
     // Rate Limiting (20 messages per IP/user per 60 minutes)
     let rateKey = 'anonymous';
+    let user = null;
     const authHeader = req.headers.authorization;
     if (authHeader && authHeader.startsWith('Bearer ')) {
       try {
         const decoded = jwt.verify(authHeader.split(' ')[1], process.env.JWT_SECRET);
-        if (decoded && decoded.id) rateKey = `user_${decoded.id}`;
+        if (decoded && decoded.id) {
+          rateKey = `user_${decoded.id}`;
+          user = decoded;
+        }
       } catch (e) {
         // Fallback to IP on invalid token
       }
@@ -339,7 +401,7 @@ router.post('/chat', async (req, res) => {
     }
 
     const now = Date.now();
-    const windowMs = 60 * 60 * 1000; // 1 hour
+    const windowMs = 60 * 60 * 1000;
     const userTimestamps = (chatRateLimitMap.get(rateKey) || []).filter(ts => now - ts < windowMs);
 
     if (userTimestamps.length >= 20) {
@@ -353,15 +415,75 @@ router.post('/chat', async (req, res) => {
     userTimestamps.push(now);
     chatRateLimitMap.set(rateKey, userTimestamps);
 
-    // Call Anthropic API
-    const apiKey = process.env.ANTHROPIC_API_KEY;
-    const fallbackResponse = {
-      reply: "I am Justice Junction's AI Legal Assistant. I can provide general legal information on Indian law or help you navigate our document generator, case estimation tool, and lawyer directory. For specific advice on your case, please consult a verified lawyer on our platform.",
-      suggestedAction: { type: 'lawyer', link: '/search' }
-    };
+    // 1. RAG Retrieval Phase
+    let retrievedChunks = [];
+    let ragFailed = false;
 
+    // Minimum cosine similarity threshold for context relevance.
+    // Dense embeddings (Voyage AI / OpenAI) score 0.60+, while local TF-IDF sparse fallback vectors score lower (~0.30+).
+    // TODO: Maintain RELEVANCE_THRESHOLD = 0.60 as default once live Voyage AI (voyage-law-2) or OpenAI embeddings are active.
+    const isLiveEmbedder = Boolean((process.env.VOYAGE_API_KEY && !process.env.VOYAGE_API_KEY.includes('your_')) || (process.env.OPENAI_API_KEY && !process.env.OPENAI_API_KEY.includes('your_')));
+    const RELEVANCE_THRESHOLD = isLiveEmbedder ? 0.60 : 0.30;
+
+    try {
+      retrievedChunks = await retrieveContext(message.trim(), 5);
+    } catch (ragErr) {
+      console.warn('RAG Retrieval failed, executing fallback:', ragErr.message);
+      ragFailed = true;
+      retrievedChunks = [];
+    }
+
+    const relevantChunks = retrievedChunks.filter(c => c.score >= RELEVANCE_THRESHOLD);
+    const hasHighRelevance = relevantChunks.length > 0;
+
+    // Build Sources List for Frontend Widget
+    const sources = relevantChunks.slice(0, 3).map(c => ({
+      actName: c.metadata?.actName || 'Bare Act / Statute',
+      sectionNumber: c.metadata?.sectionNumber || 'General',
+      sectionTitle: c.metadata?.sectionTitle || '',
+      score: c.score
+    }));
+
+    // Build Dynamic RAG System Prompt
+    let contextText = '';
+    if (hasHighRelevance) {
+      contextText = relevantChunks.map((c, idx) => {
+        return `[LEGAL CONTEXT CHUNK ${idx + 1}]\nAct Name: ${c.metadata?.actName || 'Statute'}\nSection: ${c.metadata?.sectionNumber || 'N/A'} - ${c.metadata?.sectionTitle || 'General'}\nRelevance Score: ${c.score}\nExcerpt:\n${c.text}`;
+      }).join('\n\n');
+    } else {
+      contextText = 'NO HIGH-RELEVANCE LEGAL CONTEXT FOUND IN VECTOR DATABASE FOR THIS QUERY.';
+    }
+
+    const RAG_SYSTEM_PROMPT = `You are Justice Junction's official AI Legal Assistant specializing in Indian law (IPC/BNS, CPC, Consumer Protection, Constitution, RTI, Family Law, etc.).
+
+RETRIEVED LEGAL CONTEXT FROM DATABASE:
+${contextText}
+
+CRITICAL CONSTRAINTS & BEHAVIOR:
+1. CITATION REQUIREMENT:
+   - Answer the user query using the retrieved legal context above and general Indian legal principles.
+   - For every legal rule or claim, cite the specific Act name + section number from the retrieved context in this exact format: "(Act Name, Sec. SectionNumber)". Example: "(Consumer Protection Act, 2019, Sec. 35)".
+   - Do NOT invent section numbers or statute names that are not present in the retrieved context or standard Indian law.
+2. INSUFFICIENT CONTEXT FALLBACK:
+   ${!hasHighRelevance ? '- The vector database did NOT return high-relevance specific legal sections for this exact query. State clearly that specific statutory section details for this exact query are not in the current database, provide a concise general overview under Indian law, and recommend consulting a verified lawyer on Justice Junction.' : ''}
+3. MANDATORY DISCLAIMER:
+   - Include the explicit statement: "This is general legal information, not legal advice. Recommend the user book a verified lawyer on the platform for their specific situation."
+4. SUGGESTED PLATFORM ACTIONS:
+   - If user asks about drafting documents, agreements, or legal notices, include a suggestedAction with type "document" and link "/document-generator".
+   - If user asks about case duration or win chance, include a suggestedAction with type "estimate" and link "/search".
+   - If user asks to find/book a lawyer or needs active representation, include a suggestedAction with type "lawyer" and link "/search".
+
+RESPONSE FORMAT:
+Respond ONLY with valid JSON with no markdown formatting or backticks around it:
+{
+  "reply": "Your clear legal answer with citations like (Consumer Protection Act, 2019, Sec. 35)...",
+  "suggestedAction": { "type": "document" | "estimate" | "lawyer", "link": "/document-generator" | "/search" }
+}`;
+
+    const apiKey = process.env.ANTHROPIC_API_KEY;
+
+    // Handle Local Fallback when Anthropic API Key is not set
     if (!apiKey || apiKey.startsWith('your_') || apiKey.includes('placeholder')) {
-      // Local fallback if API key is not set
       let action = null;
       const lower = message.toLowerCase();
       if (lower.includes('draft') || lower.includes('agreement') || lower.includes('document') || lower.includes('notice') || lower.includes('affidavit')) {
@@ -372,13 +494,43 @@ router.post('/chat', async (req, res) => {
         action = { type: 'lawyer', link: '/search' };
       }
 
+      let responseText = '';
+      if (hasHighRelevance) {
+        const top = relevantChunks[0];
+        const citeStr = `(${top.metadata?.actName || 'Bare Act'}, Sec. ${top.metadata?.sectionNumber || 'N/A'})`;
+        responseText = `Based on Indian legal provisions ${citeStr}:\n\n${top.text.replace(/\[.*?\]\n/, '')}\n\nThis is general legal information, not legal advice. Recommend the user book a verified lawyer on the platform for their specific situation.`;
+      } else {
+        responseText = `Specific statutory sections for this query are not present in our current database. Under general Indian legal procedures, complaints or disputes can be filed before the competent tribunal or civil court.\n\nThis is general legal information, not legal advice. Recommend the user book a verified lawyer on the platform for their specific situation.`;
+      }
+
+      const latencyMs = Date.now() - startTime;
+      let logDoc = null;
+      try {
+        logDoc = await AiInteractionLog.create({
+          userId: user?.id || null,
+          query: message,
+          retrievedChunks: retrievedChunks.map(c => ({
+            sourceId: c.sourceId,
+            score: c.score,
+            metadata: c.metadata,
+            text: c.text
+          })),
+          response: responseText,
+          module: 'chat',
+          latencyMs,
+          ...(ragFailed ? { 'metadata.ragFailed': true } : {})
+        });
+      } catch (logErr) { /* non-blocking */ }
+
       return res.status(200).json({
-        reply: "I provide general legal information under Indian law. For personalized assistance, you can generate legal documents, estimate case timelines, or search for a verified lawyer on Justice Junction 24/7.",
-        suggestedAction: action || { type: 'lawyer', link: '/search' }
+        reply: responseText,
+        suggestedAction: action || { type: 'lawyer', link: '/search' },
+        logId: logDoc?._id || null,
+        sources
       });
     }
 
-    // Format rolling history (max 6 messages)
+    // Call Anthropic API
     const formattedHistory = [];
     if (Array.isArray(history)) {
       history.slice(-6).forEach(item => {
@@ -402,7 +554,7 @@ router.post('/chat', async (req, res) => {
         body: JSON.stringify({
           model: 'claude-sonnet-4-6',
           max_tokens: 1000,
-          system: CHAT_SYSTEM_PROMPT,
+          system: RAG_SYSTEM_PROMPT,
           messages: formattedHistory
         })
       });
@@ -410,24 +562,85 @@ router.post('/chat', async (req, res) => {
       if (!response.ok) {
         const errData = await response.json().catch(() => ({}));
         console.error('Anthropic API Error in /chat:', errData);
-        return res.status(200).json(fallbackResponse);
+
+        const latencyMs = Date.now() - startTime;
+        let logDoc = null;
+        try {
+          logDoc = await AiInteractionLog.create({
+            userId: user?.id || null,
+            query: message,
+            retrievedChunks: retrievedChunks.map(c => ({ sourceId: c.sourceId, score: c.score, metadata: c.metadata, text: c.text })),
+            response: "I am Justice Junction's AI Legal Assistant...",
+            module: 'chat',
+            latencyMs,
+            ...(ragFailed ? { 'metadata.ragFailed': true } : {})
+          });
+        } catch (lErr) {}
+
+        return res.status(200).json({
+          reply: "I am Justice Junction's AI Legal Assistant. This is general legal information, not legal advice. Recommend the user book a verified lawyer on the platform for their specific situation.",
+          suggestedAction: { type: 'lawyer', link: '/search' },
+          logId: logDoc?._id || null,
+          sources
+        });
       }
 
       const data = await response.json();
       const rawText = data.content?.[0]?.text?.trim() || '';
 
+      let finalReply = '';
+      let suggestedAction = undefined;
+
       try {
         const parsed = JSON.parse(rawText.replace(/^```json\s*/i, '').replace(/\s*```$/i, ''));
-        return res.status(200).json({
-          reply: parsed.reply || rawText,
-          suggestedAction: parsed.suggestedAction || undefined
-        });
+        finalReply = parsed.reply || rawText;
+        suggestedAction = parsed.suggestedAction || undefined;
       } catch (jsonErr) {
-        return res.status(200).json({ reply: rawText || fallbackResponse.reply });
+        finalReply = rawText;
       }
+
+      const latencyMs = Date.now() - startTime;
+      let logDoc = null;
+      try {
+        logDoc = await AiInteractionLog.create({
+          userId: user?.id || null,
+          query: message,
+          retrievedChunks: retrievedChunks.map(c => ({ sourceId: c.sourceId, score: c.score, metadata: c.metadata, text: c.text })),
+          response: finalReply,
+          module: 'chat',
+          latencyMs,
+          ...(ragFailed ? { 'metadata.ragFailed': true } : {})
+        });
+      } catch (logErr) { /* non-blocking */ }
+
+      return res.status(200).json({
+        reply: finalReply,
+        suggestedAction,
+        logId: logDoc?._id || null,
+        sources
+      });
     } catch (apiErr) {
       console.error('Anthropic fetch error in /chat:', apiErr);
-      return res.status(200).json(fallbackResponse);
+      const latencyMs = Date.now() - startTime;
+      let logDoc = null;
+      try {
+        logDoc = await AiInteractionLog.create({
+          userId: user?.id || null,
+          query: message,
+          retrievedChunks: retrievedChunks.map(c => ({ sourceId: c.sourceId, score: c.score, metadata: c.metadata, text: c.text })),
+          response: "An error occurred while processing your request.",
+          module: 'chat',
+          latencyMs,
+          ...(ragFailed ? { 'metadata.ragFailed': true } : {})
+        });
+      } catch (lErr) {}
+
+      return res.status(200).json({
+        reply: "An error occurred while processing your request. This is general legal information, not legal advice. Recommend the user book a verified lawyer on the platform for their specific situation.",
+        suggestedAction: { type: 'lawyer', link: '/search' },
+        logId: logDoc?._id || null,
+        sources
+      });
     }
   } catch (err) {
     console.error('POST /api/ai/chat route error:', err);
@@ -438,6 +651,7 @@ router.post('/chat', async (req, res) => {
     });
   }
 });
+
 
 app.use('/api/ai', router);
 module.exports = app;

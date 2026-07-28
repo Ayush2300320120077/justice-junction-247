@@ -6,6 +6,8 @@ const User = require('../models/User');
 const Lawyer = require('../models/Lawyer');
 const Booking = require('../models/Booking');
 const AdminLog = require('../models/AdminLog');
+const AiInteractionLog = require('../models/AiInteractionLog');
+
 
 const app = express();
 app.use(express.json());
@@ -409,5 +411,227 @@ router.get('/pending-verifications', async (req, res) => {
   }
 });
 
+// GET /api/admin/stats — aggregated dashboard stats
+router.get('/stats', async (req, res) => {
+  try {
+    await connectDB();
+    const user = req.user;
+    if (!user || user.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
+    const User = require('../models/User');
+    const Lawyer = require('../models/Lawyer');
+    const Booking = require('../models/Booking');
+    const [totalUsers, totalLawyers, totalBookings, pendingLawyers, completedBookings] = await Promise.all([
+      User.countDocuments({ role: 'client' }),
+      Lawyer.countDocuments(),
+      Booking.countDocuments(),
+      Lawyer.countDocuments({ isVerified: false }),
+      Booking.countDocuments({ status: 'completed' })
+    ]);
+    res.json({ totalUsers, totalLawyers, totalBookings, pendingLawyers, completedBookings });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// PUT /api/admin/lawyers/:id/verify — approve or reject lawyer
+router.put('/lawyers/:id/verify', async (req, res) => {
+  try {
+    await connectDB();
+    const user = req.user;
+    if (!user || user.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
+    const Lawyer = require('../models/Lawyer');
+    const { isVerified } = req.body;
+    const lawyer = await Lawyer.findByIdAndUpdate(req.params.id, { isVerified }, { new: true });
+    if (!lawyer) return res.status(404).json({ error: 'Lawyer not found' });
+    res.json({ lawyer, message: `Lawyer ${isVerified ? 'approved' : 'rejected'}` });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// GET /api/admin/articles — list all articles
+router.get('/articles', async (req, res) => {
+  try {
+    await connectDB();
+    const user = req.user;
+    if (!user || user.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
+    const Article = require('../models/Article');
+    const articles = await Article.find().sort({ createdAt: -1 });
+    res.json({ articles });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// PUT /api/admin/articles/:id/publish — toggle publish status
+router.put('/articles/:id/publish', async (req, res) => {
+  try {
+    await connectDB();
+    const user = req.user;
+    if (!user || user.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
+    const Article = require('../models/Article');
+    const article = await Article.findById(req.params.id);
+    if (!article) return res.status(404).json({ error: 'Article not found' });
+    article.isPublished = !article.isPublished;
+    await article.save();
+    res.json({ article, message: `Article ${article.isPublished ? 'published' : 'unpublished'}` });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// GET /api/admin/subscription-plans — manage plans
+router.get('/subscription-plans', async (req, res) => {
+  try {
+    await connectDB();
+    const user = req.user;
+    if (!user || user.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
+    const SubscriptionPlan = require('../models/SubscriptionPlan');
+    const plans = await SubscriptionPlan.find().sort({ price: 1 });
+    res.json({ plans });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// GET /api/admin/ai-stats — aggregate metrics for RAG/AI evaluation
+router.get('/ai-stats', async (req, res) => {
+  try {
+    await connectDB();
+    const statsByModule = await AiInteractionLog.aggregate([
+      {
+        $group: {
+          _id: '$module',
+          total: { $sum: 1 },
+          avgLatencyMs: { $avg: '$latencyMs' },
+          avgUserRating: { $avg: '$userFeedbackRating' },
+          ragFailedCount: {
+            $sum: { $cond: [{ $eq: ['$metadata.ragFailed', true] }, 1, 0] }
+          }
+        }
+      }
+    ]);
+
+    const totalLogs = await AiInteractionLog.countDocuments();
+    const overallAvgRating = await AiInteractionLog.aggregate([
+      { $match: { userFeedbackRating: { $ne: null } } },
+      { $group: { _id: null, avgRating: { $avg: '$userFeedbackRating' } } }
+    ]);
+    const totalRagFailed = await AiInteractionLog.countDocuments({ 'metadata.ragFailed': true });
+    const overallAvgLatency = await AiInteractionLog.aggregate([
+      { $group: { _id: null, avgLatency: { $avg: '$latencyMs' } } }
+    ]);
+
+    res.json({
+      totalLogs,
+      statsByModule,
+      overallAvgRating: overallAvgRating[0]?.avgRating ? Number(overallAvgRating[0].avgRating.toFixed(2)) : 0,
+      totalRagFailed,
+      ragFailedRate: totalLogs > 0 ? Number(((totalRagFailed / totalLogs) * 100).toFixed(1)) : 0,
+      overallAvgLatency: overallAvgLatency[0]?.avgLatency ? Math.round(overallAvgLatency[0].avgLatency) : 0
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/admin/ai-logs — paginated and filterable AiInteractionLog entries
+router.get('/ai-logs', async (req, res) => {
+  try {
+    await connectDB();
+    const { page = 1, limit = 20, module: mod, ragFailed, userFeedbackRating } = req.query;
+
+    const filter = {};
+    if (mod && mod !== 'all') {
+      filter.module = mod;
+    }
+    if (ragFailed === 'true') {
+      filter['metadata.ragFailed'] = true;
+    } else if (ragFailed === 'false') {
+      filter['metadata.ragFailed'] = { $ne: true };
+    }
+    if (userFeedbackRating && userFeedbackRating !== 'all') {
+      filter.userFeedbackRating = Number(userFeedbackRating);
+    }
+
+    const skip = (Number(page) - 1) * Number(limit);
+    const total = await AiInteractionLog.countDocuments(filter);
+    const logs = await AiInteractionLog.find(filter)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(Number(limit))
+      .lean();
+
+    res.json({
+      logs,
+      total,
+      page: Number(page),
+      totalPages: Math.ceil(total / Number(limit)) || 1
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// PATCH /api/admin/ai-logs/:id/annotate — annotate reviewer rating & notes
+router.patch('/ai-logs/:id/annotate', async (req, res) => {
+  try {
+    await connectDB();
+    const { reviewerRating, reviewerNotes } = req.body;
+    const updateData = {};
+
+    if (reviewerRating !== undefined) {
+      const num = Number(reviewerRating);
+      if (!isNaN(num) && num >= 1 && num <= 5) {
+        updateData.reviewerRating = num;
+      }
+    }
+    if (reviewerNotes !== undefined) {
+      updateData.reviewerNotes = String(reviewerNotes);
+    }
+
+    const updated = await AiInteractionLog.findByIdAndUpdate(
+      req.params.id,
+      { $set: updateData },
+      { new: true }
+    );
+
+    if (!updated) return res.status(404).json({ error: 'Log entry not found' });
+    res.json({ success: true, log: updated });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/admin/ai-logs/export-csv — export filtered logs as CSV
+router.get('/ai-logs/export-csv', async (req, res) => {
+  try {
+    await connectDB();
+    const { module: mod, ragFailed, userFeedbackRating } = req.query;
+
+    const filter = {};
+    if (mod && mod !== 'all') filter.module = mod;
+    if (ragFailed === 'true') filter['metadata.ragFailed'] = true;
+    else if (ragFailed === 'false') filter['metadata.ragFailed'] = { $ne: true };
+    if (userFeedbackRating && userFeedbackRating !== 'all') filter.userFeedbackRating = Number(userFeedbackRating);
+
+    const logs = await AiInteractionLog.find(filter).sort({ createdAt: -1 }).lean();
+
+    const headers = ['Log ID', 'Created At', 'Module', 'Query', 'Response', 'Latency (ms)', 'Chunks Count', 'RAG Failed', 'User Rating', 'Reviewer Rating', 'Reviewer Notes'];
+    const rows = logs.map(l => [
+      l._id.toString(),
+      new Date(l.createdAt).toISOString(),
+      l.module,
+      `"${(l.query || '').replace(/"/g, '""')}"`,
+      `"${(l.response || '').replace(/"/g, '""')}"`,
+      l.latencyMs || 0,
+      l.retrievedChunks?.length || 0,
+      l.metadata?.ragFailed ? 'TRUE' : 'FALSE',
+      l.userFeedbackRating || '',
+      l.reviewerRating || '',
+      `"${(l.reviewerNotes || '').replace(/"/g, '""')}"`
+    ]);
+
+    const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', `attachment; filename=ai_evaluation_logs_${Date.now()}.csv`);
+    return res.send(csvContent);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.use('/api/admin', router);
 module.exports = app;
+

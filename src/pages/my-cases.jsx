@@ -1,8 +1,7 @@
+import { Link, useNavigate, useLocation, useSearchParams, useParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react'
-import Head from 'next/head'
-import Link from 'next/link'
 import { useAuth } from '../context/AuthContext'
-import { useRouter } from 'next/router'
 import { useToast } from '../context/ToastContext'
 import { PlusCircle, Briefcase, Calendar, Trash2, FileText, Bell, ChevronDown, ChevronUp, Edit3, X, Check } from 'lucide-react'
 
@@ -10,7 +9,7 @@ const STATUS_COLORS = { active:'var(--green)', pending:'var(--gold)', closed:'va
 
 export default function MyCases() {
   const { isLoggedIn, token } = useAuth()
-  const router = useRouter()
+  const navigate = useNavigate(); const location = useLocation(); const [searchParams] = useSearchParams(); const params = useParams();
   const { showToast } = useToast()
   const [cases, setCases] = useState([])
   const [loading, setLoading] = useState(true)
@@ -19,7 +18,7 @@ export default function MyCases() {
   const [form, setForm] = useState({ title:'', courtName:'', caseNumber:'', nextHearingDate:'', notes:'' })
   const [submitting, setSubmitting] = useState(false)
 
-  useEffect(() => { if (!isLoggedIn) router.push('/login') }, [isLoggedIn])
+  useEffect(() => { if (!isLoggedIn) navigate('/login') }, [isLoggedIn])
 
   useEffect(() => {
     if (!isLoggedIn) return
@@ -81,10 +80,10 @@ export default function MyCases() {
 
   return (
     <div className="page-wrap" style={{background:'#F8F9FA'}}>
-      <Head>
+      <Helmet>
         <title>My Cases — Case Tracker — Justice Junction 24/7</title>
         <meta name="description" content="Track your legal cases, court dates, and hearing schedules on Justice Junction 24/7." />
-      </Head>
+      </Helmet>
 
       <div className="container" style={{padding:'2.5rem 5vw'}}>
         <div style={s.pageHeader}>

@@ -1,11 +1,11 @@
-import Head from 'next/head'
-import Link from 'next/link'
+import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { Search, BarChart2, Calendar, Activity, UserPlus, ShieldCheck, Settings, Users, Lock, CreditCard, Eye, Phone } from 'lucide-react'
 
 export default function HowItWorks() {
   return (
     <div className="page-wrap" style={{ background: 'var(--cream)' }}>
-      <Head>
+      <Helmet>
         <title>How It Works — Justice Junction 24/7</title>
         <meta name="description" content="Learn how Justice Junction connects clients with verified lawyers in 4 easy steps. For clients and lawyers alike." />
         <meta property="og:title" content="How It Works — Justice Junction 24/7" />
@@ -13,7 +13,7 @@ export default function HowItWorks() {
         <meta property="og:image" content="https://justice-junction-app.vercel.app/og-image.png" />
         <meta property="og:url" content="https://justice-junction-app.vercel.app/how-it-works" />
         <meta property="og:type" content="website" />
-      </Head>
+      </Helmet>
 
       {/* Hero */}
       <section style={s.hero}>
@@ -116,8 +116,8 @@ export default function HowItWorks() {
             Whether you need legal help or want to grow your practice — Justice Junction is here for you.
           </p>
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/search" className="btn btn-gold btn-xl">Find a Lawyer</Link>
-            <Link href="/join-as-lawyer" className="btn btn-outline-white btn-xl">Join as Advocate</Link>
+            <Link to="/search" className="btn btn-gold btn-xl">Find a Lawyer</Link>
+            <Link to="/join-as-lawyer" className="btn btn-outline-white btn-xl">Join as Advocate</Link>
           </div>
         </div>
       </section>

@@ -1,23 +1,26 @@
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/router'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
-import Head from 'next/head'
+import { Helmet } from 'react-helmet-async'
 import { Calendar, Clock, ShieldCheck, Video, CreditCard, ChevronRight } from 'lucide-react'
 
 export default function Book() {
-  const router = useRouter()
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const { user, isLoggedIn } = useAuth()
   const { showToast } = useToast()
   
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({ date: '', time: '', caseType: 'General Consultation', description: '' })
 
-  const { lawyerId, lawyerName, fee } = router.query
+  const lawyerId = searchParams.get('lawyerId')
+  const lawyerName = searchParams.get('lawyerName')
+  const fee = searchParams.get('fee')
 
   useEffect(() => {
-    if (router.isReady && !isLoggedIn) router.push('/login')
-  }, [router.isReady, isLoggedIn])
+    if (!isLoggedIn) navigate('/login')
+  }, [isLoggedIn])
 
   const handlePay = async () => {
     if (!formData.date || !formData.time) { showToast('Please select date and time', 'error'); return }
@@ -26,15 +29,15 @@ export default function Book() {
     // Simulate Razorpay flow
     setTimeout(() => {
       showToast('Payment Successful! Appointment Booked.', 'success')
-      router.push('/dashboard')
+      navigate('/dashboard')
     }, 2000)
   }
 
-  if (!router.isReady || !isLoggedIn) return null
+  if (!isLoggedIn) return null
 
   return (
     <div className="page-wrap" style={{background: 'var(--cream-2)', padding: '4rem 1rem'}}>
-      <Head><title>Book Consultation — {lawyerName}</title></Head>
+      <Helmet><title>Book Consultation — {lawyerName}</title></Helmet>
       <div className="container" style={{maxWidth: 1000}}>
         <div style={{display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '2.5rem'}}>
           {/* Form */}

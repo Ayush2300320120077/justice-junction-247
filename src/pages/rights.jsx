@@ -1,5 +1,5 @@
-import Head from 'next/head'
-import Link from 'next/link'
+import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { BookOpen, Scale, Shield, Landmark, FileText, AlertCircle, Users, Smartphone } from 'lucide-react'
 
 export const ARTICLES = [
@@ -542,7 +542,7 @@ const CATEGORIES = ['All', 'Consumer Rights', 'Criminal Rights', 'Tenant Rights'
 export default function Rights() {
   return (
     <div style={{ paddingTop:95, background:'var(--cream)', minHeight:'100vh' }}>
-      <Head>
+      <Helmet>
         <title>Know Your Rights — Legal Guides for Indians — Justice Junction 24/7</title>
         <meta name="description" content="Free legal guides on Consumer Rights, Tenant Rights, Criminal Rights, RTI, Family Law, Cyber Law and Labour Rights for Indian citizens." />
         <meta property="og:title" content="Know Your Rights — Justice Junction 24/7" />
@@ -553,7 +553,7 @@ export default function Rights() {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Know Your Rights — Justice Junction 24/7" />
         <meta name="twitter:image" content="https://justice-junction-app.vercel.app/og-image.png" />
-      </Head>
+      </Helmet>
 
       <section style={s.hero}>
         <div className="container" style={{textAlign:'center', position:'relative', zIndex:2}}>
@@ -584,7 +584,7 @@ export default function Rights() {
               <span style={s.category}>{a.category}</span>
               <h3 style={s.cardTitle}>{a.title}</h3>
               <p style={s.cardDesc}>{a.desc}</p>
-              <Link href={`/knowledge/${a.id}`} style={s.readMore}>Read Full Guide →</Link>
+              <Link to={`/knowledge/${a.id}`} style={s.readMore}>Read Full Guide →</Link>
             </div>
           ))}
         </div>
@@ -594,7 +594,7 @@ export default function Rights() {
         <div className="container">
           <h2 style={{fontFamily:"'Playfair Display',serif", fontSize:'clamp(1.8rem,4vw,2.8rem)', marginBottom:'1rem'}}>Need Personalised Legal Advice?</h2>
           <p style={{color:'rgba(255,255,255,.8)', marginBottom:'2.5rem', fontSize:'1.05rem'}}>These guides provide general information. For your specific situation, speak to a verified lawyer.</p>
-          <Link href="/search" className="btn btn-gold btn-xl">Find a Verified Lawyer →</Link>
+          <Link to="/search" className="btn btn-gold btn-xl">Find a Verified Lawyer →</Link>
         </div>
       </section>
     </div>

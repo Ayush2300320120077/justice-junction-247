@@ -1,10 +1,9 @@
+import { Link, useNavigate, useLocation, useSearchParams, useParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { useState } from 'react'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
 import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
 import { Sprout, Scale, Trophy, ChevronDown } from 'lucide-react'
-import Head from 'next/head'
 
 const PLANS = [
   {
@@ -43,10 +42,10 @@ export default function LawyerPlans() {
   const [annual, setAnnual] = useState(false)
   const { isLoggedIn, user } = useAuth()
   const { showToast } = useToast()
-  const router = useRouter()
+  const navigate = useNavigate(); const location = useLocation(); const [searchParams] = useSearchParams(); const params = useParams();
 
   const handleSubscribe = async (planId, price) => {
-    if (!isLoggedIn) { router.push('/register?role=lawyer'); return }
+    if (!isLoggedIn) { navigate('/register?role=lawyer'); return }
     if (user?.role !== 'lawyer') { showToast('Only lawyers can subscribe to plans', 'error'); return }
     setLoading(planId)
     try {
@@ -83,7 +82,7 @@ export default function LawyerPlans() {
               const vData = await verify.json()
               if (!verify.ok) throw new Error(vData.error)
               showToast(`🎉 ${PLANS.find(p=>p.id===planId)?.name} plan activated!`)
-              router.push('/dashboard')
+              navigate('/dashboard')
             } catch (err) { showToast(err.message, 'error') }
           }
         })
@@ -100,10 +99,10 @@ export default function LawyerPlans() {
 
   return (
     <div style={{paddingTop:95}}>
-      <Head>
+      <Helmet>
         <title>For Lawyers — Plans & Pricing — Justice Junction 24/7</title>
         <meta name="description" content="Subscription plans for lawyers on Justice Junction 24/7. Grow your practice with featured listings and priority placement." />
-      </Head>
+      </Helmet>
       {/* Header */}
       <section style={{padding:'5rem 5vw',background:`linear-gradient(rgba(42, 22, 32, 0.85), rgba(123, 29, 46, 0.9)), url('/justice-bg.png')`, backgroundSize:'cover', backgroundPosition:'center', backgroundAttachment:'fixed', textAlign:'center', position:'relative', overflow:'hidden', boxShadow:'inset 0 -20px 40px rgba(0,0,0,0.2)'}}>
         <div style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at 50% 0%,rgba(201,148,58,.15),transparent 70%)',pointerEvents:'none'}}/>
@@ -199,8 +198,8 @@ export default function LawyerPlans() {
         <h2 style={{fontFamily:"'Playfair Display',serif",fontSize:'2rem',fontWeight:700,color:'#fff',marginBottom:'1rem'}}>Start growing your practice <em style={{color:'var(--gold-l)'}}>today.</em></h2>
         <p style={{color:'rgba(255,255,255,.7)',marginBottom:'2rem'}}>Register free. Upgrade when you're ready. No lock-in.</p>
         <div style={{display:'flex',gap:'1rem',justifyContent:'center',flexWrap:'wrap'}}>
-          <Link href="/register?role=lawyer" className="btn btn-gold btn-lg">Register Free as Lawyer</Link>
-          <Link href="/search" className="btn btn-outline-white btn-lg">Browse the Platform</Link>
+          <Link to="/register?role=lawyer" className="btn btn-gold btn-lg">Register Free as Lawyer</Link>
+          <Link to="/search" className="btn btn-outline-white btn-lg">Browse the Platform</Link>
         </div>
       </section>
     </div>

@@ -1,5 +1,5 @@
-import Head from 'next/head'
-import { useRouter } from 'next/router'
+import { Link, useNavigate, useLocation, useSearchParams, useParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { MapPin, Landmark, Star, CheckCircle, Clock, ShieldCheck, MessageCircle, Gavel, Languages, Phone, Calendar, Video, Briefcase, Globe, ExternalLink, CalendarDays } from 'lucide-react'
 import connectDB from '../../../middleware/db'
 import Lawyer from '../../../models/Lawyer'
@@ -26,7 +26,7 @@ export async function getServerSideProps(context) {
 }
 
 export default function LawyerProfile({ lawyer }) {
-  const router = useRouter()
+  const navigate = useNavigate(); const location = useLocation(); const [searchParams] = useSearchParams(); const params = useParams();
   const { isLoggedIn } = useAuth()
   
   const ogTitle = `${lawyer.name} — ${lawyer.specializations?.[0] || 'Lawyer'} in ${lawyer.city}`
@@ -34,8 +34,8 @@ export default function LawyerProfile({ lawyer }) {
   const ogUrl = `https://justice-junction-app.vercel.app/lawyer/${lawyer._id}`
 
   const handleBook = () => {
-    if (!isLoggedIn) { router.push('/login'); return }
-    router.push(`/book?lawyerId=${lawyer._id}&lawyerName=${encodeURIComponent(lawyer.name)}&fee=${lawyer.consultationFee}`)
+    if (!isLoggedIn) { navigate('/login'); return }
+    navigate(`/book?lawyerId=${lawyer._id}&lawyerName=${encodeURIComponent(lawyer.name)}&fee=${lawyer.consultationFee}`)
   }
 
   const handleWhatsApp = () => {
@@ -45,7 +45,7 @@ export default function LawyerProfile({ lawyer }) {
   
   return (
     <div className="page-reveal" style={{ background: 'var(--cream)', paddingBottom: '5rem' }}>
-      <Head>
+      <Helmet>
         <title>{ogTitle}</title>
         <meta name="description" content={ogDesc} />
         <meta property="og:type" content="profile" />
@@ -74,7 +74,7 @@ export default function LawyerProfile({ lawyer }) {
             "priceRange": `₹${lawyer.consultationFee}`
           })
         }} />
-      </Head>
+      </Helmet>
 
       {/* Cinematic Profile Hero */}
       <div className="profile-hero parallax">

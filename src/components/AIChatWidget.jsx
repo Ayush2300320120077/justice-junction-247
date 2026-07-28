@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef } from 'react'
-import { MessageSquare, X, Send, Bot, User, Trash2, Calendar, FileText, Scale, AlertTriangle, ArrowRight } from 'lucide-react'
+import { MessageSquare, X, Send, Bot, User, Trash2, Calendar, FileText, Scale, AlertTriangle, ArrowRight, ThumbsUp, ThumbsDown, BookOpen, ChevronDown, ChevronUp } from 'lucide-react'
 import { useLocation, Link } from 'react-router-dom'
 import { API } from '../api'
 
 const SUGGESTIONS = [
-  "How to file a divorce?",
+  "How to file a consumer complaint for a defective product?",
   "How do I draft a rental agreement?",
   "Estimate my consumer case outcome",
   "Rights during arrest in India",
@@ -16,6 +16,7 @@ export default function AIChatWidget() {
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
   const [isTyping, setIsTyping] = useState(false)
+  const [expandedSources, setExpandedSources] = useState({})
   const scrollRef = useRef(null)
 
   // Safe React Router location check to hide widget on /admin routes
@@ -96,6 +97,9 @@ export default function AIChatWidget() {
         role: 'bot',
         text: data.reply || "I couldn't process your query. Please try again.",
         suggestedAction: data.suggestedAction || undefined,
+        logId: data.logId || null,
+        sources: data.sources || [],
+        userRating: null,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       }
 
@@ -113,6 +117,20 @@ export default function AIChatWidget() {
     } finally {
       setIsTyping(false)
     }
+  }
+
+  const handleFeedback = async (msgId, logId, rating) => {
+    if (!logId) return
+    setMessages(prev => prev.map(m => m.id === msgId ? { ...m, userRating: rating } : m))
+    try {
+      await API.rateInteraction({ logId, rating })
+    } catch (err) {
+      console.warn('Failed to send interaction rating:', err)
+    }
+  }
+
+  const toggleSources = (msgId) => {
+    setExpandedSources(prev => ({ ...prev, [msgId]: !prev[msgId] }))
   }
 
   const clearChat = () => {
@@ -153,6 +171,63 @@ export default function AIChatWidget() {
     )
   }
 
+  const renderSources = (msg) => {
+    if (!msg.sources || msg.sources.length === 0) return null
+    const isExpanded = expandedSources[msg.id]
+
+    return (
+      <div style={s.sourcesBox}>
+        <button style={s.sourcesToggleBtn} onClick={() => toggleSources(msg.id)}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <BookOpen size={13} style={{ color: '#7B1D2E' }} />
+            <span>Cited Legal Sources ({msg.sources.length})</span>
+          </div>
+          {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+        </button>
+
+        {isExpanded && (
+          <div style={s.sourcesList}>
+            {msg.sources.map((src, idx) => (
+              <div key={idx} style={s.sourceItem}>
+                <div style={{ fontWeight: 700, color: 'var(--txt)' }}>
+                  {src.actName} · Sec. {src.sectionNumber}
+                </div>
+                {src.sectionTitle && <div style={{ fontSize: '.7rem', color: '#6B7280' }}>{src.sectionTitle}</div>}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  const renderFeedbackButtons = (msg) => {
+    if (msg.role !== 'bot' || !msg.logId) return null
+
+    const isUp = msg.userRating === 5
+    const isDown = msg.userRating === 1
+
+    return (
+      <div style={s.feedbackRow}>
+        <span style={{ fontSize: '.68rem', color: '#9CA3AF' }}>Helpful?</span>
+        <button
+          style={{ ...s.feedbackBtn, ...(isUp ? s.feedbackBtnActive : {}) }}
+          onClick={() => handleFeedback(msg.id, msg.logId, 5)}
+          title="Thumbs Up"
+        >
+          <ThumbsUp size={13} />
+        </button>
+        <button
+          style={{ ...s.feedbackBtn, ...(isDown ? s.feedbackBtnActive : {}) }}
+          onClick={() => handleFeedback(msg.id, msg.logId, 1)}
+          title="Thumbs Down"
+        >
+          <ThumbsDown size={13} />
+        </button>
+      </div>
+    )
+  }
+
   return (
     <div style={s.container}>
       {!isOpen && (
@@ -171,7 +246,7 @@ export default function AIChatWidget() {
               <div>
                 <div style={{ fontWeight: 800, fontSize: '.9rem' }}>AI Legal Assistant</div>
                 <div style={{ fontSize: '.7rem', color: 'rgba(255,255,255,0.7)', display: 'flex', alignItems: 'center', gap: 4 }}>
-                  <span style={s.onlineDot} /> Online · Indian Law
+                  <span style={s.onlineDot} /> RAG Enabled · Indian Law
                 </div>
               </div>
             </div>
@@ -199,6 +274,8 @@ export default function AIChatWidget() {
                   </div>
                   {m.role === 'user' && <div style={{ ...s.msgAvatar, background: 'var(--bur)', color: '#fff' }}><User size={14}/></div>}
                 </div>
+                {m.role === 'bot' && renderSources(m)}
+                {m.role === 'bot' && renderFeedbackButtons(m)}
                 {m.role === 'bot' && m.suggestedAction && renderSuggestedAction(m.suggestedAction)}
               </div>
             ))}
@@ -262,6 +339,13 @@ const s = {
   botBubble: { background: '#fff', color: 'var(--txt)', border: '1px solid var(--border)', borderBottomLeftRadius: 4 },
   userBubble: { background: 'var(--bur)', color: '#fff', borderBottomRightRadius: 4 },
   msgTime: { fontSize: '.62rem', marginTop: 4, opacity: 0.55, textAlign: 'right' },
+  sourcesBox: { marginLeft: 36, marginTop: 6, background: '#F3F4F6', borderRadius: '12px', border: '1px solid #E5E7EB', overflow: 'hidden' },
+  sourcesToggleBtn: { width: '100%', padding: '.45rem .75rem', background: 'none', border: 'none', fontSize: '.74rem', fontWeight: 700, color: 'var(--txt)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' },
+  sourcesList: { padding: '.5rem .75rem', borderTop: '1px solid #E5E7EB', display: 'flex', flexDirection: 'column', gap: 6, fontSize: '.74rem', background: '#fff' },
+  sourceItem: { padding: '.35rem .5rem', background: '#F9FAFB', borderRadius: '8px', border: '1px solid #F3F4F6' },
+  feedbackRow: { marginLeft: 36, marginTop: 4, display: 'flex', alignItems: 'center', gap: 6 },
+  feedbackBtn: { background: 'none', border: '1px solid #E5E7EB', borderRadius: '6px', padding: '3px 6px', color: '#6B7280', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all .2s' },
+  feedbackBtnActive: { background: '#7B1D2E', color: '#fff', borderColor: '#7B1D2E' },
   ctaCard: { marginLeft: 36, marginTop: 8, background: '#FFFBEB', border: '1px solid #FCD34D', borderRadius: '16px', padding: '.75rem 1rem', display: 'flex', flexDirection: 'column', gap: 6 },
   ctaBtn: { marginTop: 4, background: 'var(--bur)', color: '#fff', padding: '.4rem .9rem', borderRadius: '10px', fontSize: '.78rem', fontWeight: 700, textDecoration: 'none', textAlign: 'center', display: 'inline-block' },
   typing: { background: '#fff', padding: '.8rem 1.2rem', borderRadius: '18px', border: '1px solid var(--border)', display: 'flex', gap: 5 },
@@ -272,3 +356,4 @@ const s = {
   sendBtn: { width: 44, height: 44, borderRadius: '14px', background: 'var(--bur)', color: '#fff', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' },
   footer: { padding: '.45rem', textAlign: 'center', fontSize: '.62rem', color: 'var(--txt-3)', background: '#F9FAFB', borderTop: '1px solid var(--border)' }
 }
+

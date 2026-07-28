@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
+import { Link } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { API } from '../api'
 import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
 import { ClipboardList, Activity, Scale, Video, User, Search, LayoutDashboard, LogOut, Edit3, Briefcase, FileText, Upload, Plus, Trash2, BarChart2, CheckCircle, XCircle, MinusCircle } from 'lucide-react'
-import Head from 'next/head'
+import { Helmet } from 'react-helmet-async'
 
 function fmt(d) { return new Date(d).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}) }
 function initials(name) { return (name||'?').split(' ').slice(0,2).map(p=>p[0]).join('').toUpperCase() }
@@ -86,11 +86,11 @@ function ClientDash() {
         <div style={s.section} className="dash-section-responsive">
           <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'1.2rem'}}>
             <h3 style={{fontWeight:800}}>My Bookings</h3>
-            <Link href="/search" className="btn btn-primary btn-sm">+ New Booking</Link>
+            <Link to="/search" className="btn btn-primary btn-sm">+ New Booking</Link>
           </div>
           {loading ? <div className="spinner-wrap"><div className="spinner"></div></div> :
           bookings.length === 0 ? (
-            <div style={s.empty}><div style={{color:'var(--txt-3)',display:'flex',justifyContent:'center',marginBottom:12}}><ClipboardList size={40}/></div><p>No bookings yet.</p><Link href="/search" className="btn btn-primary" style={{marginTop:12,display:'inline-block'}}>Find a Lawyer</Link></div>
+            <div style={s.empty}><div style={{color:'var(--txt-3)',display:'flex',justifyContent:'center',marginBottom:12}}><ClipboardList size={40}/></div><p>No bookings yet.</p><Link to="/search" className="btn btn-primary" style={{marginTop:12,display:'inline-block'}}>Find a Lawyer</Link></div>
           ) : bookings.map(b => (
             <div key={b._id} style={s.bookingItem} className="case-card-premium">
               <div style={s.biIcon}><Scale size={20} color="var(--bur)" /></div>
@@ -397,23 +397,24 @@ function LawyerDash() {
 /* ─── MAIN DASHBOARD ─── */
 export default function Dashboard() {
   const { user, isLoggedIn, logout } = useAuth()
-  const router = useRouter()
+  const navigate = useNavigate()
+  const location = useLocation()
 
   useEffect(() => {
-    if (router.isReady && !isLoggedIn) {
-      router.replace('/login')
+    if (!isLoggedIn) {
+      navigate('/login', { replace: true })
     }
-  }, [isLoggedIn, router.isReady])
+  }, [isLoggedIn])
 
   if (!isLoggedIn) return null
 
-  const handleLogout = () => { logout(); router.push('/') }
+  const handleLogout = () => { logout(); navigate('/') }
 
   return (
     <div className="page-reveal" style={{ paddingTop: 95, background: '#F8F9FA', minHeight: '100vh' }}>
-      <Head>
+      <Helmet>
         <title>My Dashboard — Justice Junction 24/7</title>
-      </Head>
+      </Helmet>
       <div className="container" style={{ maxWidth: 1400 }}>
         
         {/* Personalized Welcome Banner */}
@@ -444,9 +445,9 @@ export default function Dashboard() {
               </div>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-              <Link href="/dashboard" style={{ ...s.sbLink, ...(router.pathname === '/dashboard' ? s.sbLinkActive : {}) }}><LayoutDashboard size={18} /> Dashboard</Link>
-              <Link href="/search" style={s.sbLink}><Search size={18} /> Browse Lawyers</Link>
-              <Link href="/knowledge-hub" style={s.sbLink}><FileText size={18} /> Knowledge Hub</Link>
+              <Link to="/dashboard" style={{ ...s.sbLink, ...(location.pathname === '/dashboard' ? s.sbLinkActive : {}) }}><LayoutDashboard size={18} /> Dashboard</Link>
+              <Link to="/search" style={s.sbLink}><Search size={18} /> Browse Lawyers</Link>
+              <Link to="/knowledge-hub" style={s.sbLink}><FileText size={18} /> Knowledge Hub</Link>
               <div style={{ margin: '1.5rem 0', height: 1, background: 'var(--border)' }} />
               <button onClick={handleLogout} style={{ ...s.sbLink, background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', color: '#B91C1C' }}><LogOut size={18} /> Logout</button>
             </div>

@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { Scale, Heart, Home, Search, Shield, LayoutDashboard, Briefcase, Info, LogOut, BookOpen, FileText } from 'lucide-react'
 import Logo from './Logo'
 
 export default function Navbar() {
   const { user, isLoggedIn, logout } = useAuth()
-  const router = useRouter()
+  const navigate = useNavigate()
+  const location = useLocation()
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [favCount, setFavCount] = useState(0)
@@ -22,10 +22,10 @@ export default function Navbar() {
     window.addEventListener('scroll', onScroll)
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
-  useEffect(() => setMobileOpen(false), [router.pathname])
+  useEffect(() => setMobileOpen(false), [location.pathname])
 
-  const handleLogout = () => { logout(); router.push('/') }
-  const isActive = (p) => router.pathname === p
+  const handleLogout = () => { logout(); navigate('/') }
+  const isActive = (p) => location.pathname === p
 
   return (
     <>
@@ -34,13 +34,13 @@ export default function Navbar() {
         <span style={s.eDot}></span>
         <span className="hide-mobile" style={{fontSize:'.75rem',fontWeight:700,color:'#F5E6D3'}}>Emergency Legal Help Available 24/7 - </span>
         <span className="show-mobile-inline" style={{fontSize:'.7rem',fontWeight:700,color:'#F5E6D3'}}>Legal Help 24/7 - </span>
-        <Link href="/search" style={{fontSize:'.7rem',color:'#F5C4B3',fontWeight:700,marginLeft:4,textDecoration:'underline'}}>Find a Lawyer →</Link>
+        <Link to="/search" style={{fontSize:'.7rem',color:'#F5C4B3',fontWeight:700,marginLeft:4,textDecoration:'underline'}}>Find a Lawyer →</Link>
       </div>
 
       {/* Main nav */}
       <nav style={{...s.nav,...(scrolled?s.navScrolled:{})}} className="mobile-px-4">
         <div style={s.inner}>
-          <Link href="/" style={{textDecoration:'none'}}>
+          <Link to="/" style={{textDecoration:'none'}}>
             <Logo color="#fff" subColor="#F5E6D3" />
           </Link>
 
@@ -53,13 +53,13 @@ export default function Navbar() {
               ['/join-as-lawyer','For Lawyers'],
               ['/about','About Us']
             ].map(([p,l])=>(
-              <li key={p}><Link href={p} style={{...s.link,...(isActive(p)?s.linkActive:{})}}>{l}</Link></li>
+              <li key={p}><Link to={p} style={{...s.link,...(isActive(p)?s.linkActive:{})}}>{l}</Link></li>
             ))}
           </ul>
 
           <div style={{display:'flex', alignItems:'center', gap:'1rem'}}>
             <div style={s.actions} className="hide-mobile">
-              <Link href="/favorites" style={s.iconBtn} title="Saved Lawyers">
+              <Link to="/favorites" style={s.iconBtn} title="Saved Lawyers">
                 <span style={{display:'flex',color:'#8B1A2A'}}><Heart size={18}/></span>
                 {favCount > 0 && <span style={s.badge}>{favCount}</span>}
               </Link>
@@ -71,22 +71,22 @@ export default function Navbar() {
                     <span style={{fontSize:'.85rem',fontWeight:700,color:'#1A0A0D'}}>{user?.name?.split(' ')[0]}</span>
                   </div>
                   {user?.role === 'admin' ? (
-                    <Link href="/admin" className="btn btn-sm" style={{background:'#fff',color:'#8B1A2A',border:'none',fontWeight:700,borderRadius:6}}>Admin Panel</Link>
+                    <Link to="/admin" className="btn btn-sm" style={{background:'#fff',color:'#8B1A2A',border:'none',fontWeight:700,borderRadius:6}}>Admin Panel</Link>
                   ) : (
-                    <Link href="/dashboard" className="btn btn-sm" style={{border:'1.5px solid #fff',color:'#fff',background:'transparent',borderRadius:6}}>Dashboard</Link>
+                    <Link to="/dashboard" className="btn btn-sm" style={{border:'1.5px solid #fff',color:'#fff',background:'transparent',borderRadius:6}}>Dashboard</Link>
                   )}
                   <button className="btn btn-sm" onClick={handleLogout} style={{border:'1.5px solid rgba(255,255,255,0.4)',color:'#F5E6D3',background:'transparent',borderRadius:6}}>Logout</button>
                 </>
               ) : (
                 <>
-                  <Link href="/login" className="btn btn-sm" style={{border:'1.5px solid #fff',color:'#fff',background:'transparent',borderRadius:6}}>Login</Link>
-                  <Link href="/register" className="btn btn-sm" style={{background:'#fff',color:'#8B1A2A',border:'none',fontWeight:700,borderRadius:6}}>Register Free</Link>
+                  <Link to="/login" className="btn btn-sm" style={{border:'1.5px solid #fff',color:'#fff',background:'transparent',borderRadius:6}}>Login</Link>
+                  <Link to="/register" className="btn btn-sm" style={{background:'#fff',color:'#8B1A2A',border:'none',fontWeight:700,borderRadius:6}}>Register Free</Link>
                 </>
               )}
             </div>
 
             <div className="show-mobile" style={{alignItems:'center', gap:'0.5rem'}}>
-              <Link href="/favorites" style={{...s.iconBtn, width:36, height:36}} title="Saved Lawyers">
+              <Link to="/favorites" style={{...s.iconBtn, width:36, height:36}} title="Saved Lawyers">
                 <span style={{display:'flex',color:'#8B1A2A'}}><Heart size={16}/></span>
                 {favCount > 0 && <span style={{...s.badge, width:16, height:16, fontSize:'.6rem', top:-4, right:-4}}>{favCount}</span>}
               </Link>
@@ -151,8 +151,8 @@ export default function Navbar() {
               )
               : (
                 <div style={{display:'flex', flexDirection:'column', gap: 10}}>
-                  <Link href="/login" onClick={()=>setMobileOpen(false)} className="btn btn-outline btn-lg" style={{width:'100%', borderRadius: 14}}>Login</Link>
-                  <Link href="/register" onClick={()=>setMobileOpen(false)} className="btn btn-primary btn-lg" style={{width:'100%', borderRadius: 14}}>Register Free</Link>
+                  <Link to="/login" onClick={()=>setMobileOpen(false)} className="btn btn-outline btn-lg" style={{width:'100%', borderRadius: 14}}>Login</Link>
+                  <Link to="/register" onClick={()=>setMobileOpen(false)} className="btn btn-primary btn-lg" style={{width:'100%', borderRadius: 14}}>Register Free</Link>
                 </div>
               )
             }

@@ -1,10 +1,9 @@
 import { useState } from 'react'
-import { useRouter } from 'next/router'
+import { useNavigate, Link } from 'react-router-dom'
 import { API, setAuth } from '../api'
 import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
-import Link from 'next/link'
-import Head from 'next/head'
+import { Helmet } from 'react-helmet-async'
 import { Mail, Lock, LogIn } from 'lucide-react'
 
 export default function Login() {
@@ -13,7 +12,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false)
   const { login } = useAuth()
   const { showToast } = useToast()
-  const router = useRouter()
+  const navigate = useNavigate()
 
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -22,7 +21,7 @@ export default function Login() {
       const data = await API.login({ email, password })
       login(data.token, data.user)
       showToast('Welcome back!', 'success')
-      router.push('/dashboard')
+      navigate('/dashboard')
     } catch (err) {
       showToast(err.message, 'error')
     } finally {
@@ -32,7 +31,7 @@ export default function Login() {
 
   return (
     <div className="auth-layout page-reveal">
-      <Head><title>Login | Justice Junction 24/7</title></Head>
+      <Helmet><title>Login | Justice Junction 24/7</title></Helmet>
       
       {/* Visual Side */}
       <div className="auth-visual-side">
@@ -81,7 +80,7 @@ export default function Login() {
           </form>
 
           <div style={{ textAlign: 'center', marginTop: '2rem', fontSize: '.9rem', color: '#5A3A42' }}>
-            Don't have an account? <Link href="/register" style={{ color: '#7B1D2E', fontWeight: 600, textDecoration: 'underline' }}>Register Now</Link>
+            Don't have an account? <Link to="/register" style={{ color: '#7B1D2E', fontWeight: 600, textDecoration: 'underline' }}>Register Now</Link>
           </div>
         </div>
       </div>

@@ -1,9 +1,8 @@
+import { Link, useNavigate, useLocation, useSearchParams, useParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { useState } from 'react'
-import Head from 'next/head'
-import Link from 'next/link'
 import { FileText, Download, CheckCircle, ShieldCheck, Info, ChevronDown, Stamp, IndianRupee, Printer } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
-import { useRouter } from 'next/router'
 
 const TEMPLATES = [
   {
@@ -435,7 +434,7 @@ export default function DocumentGenerator() {
   const [generatedId, setGeneratedId] = useState(null)
   const [fieldErrors, setFieldErrors] = useState({})
   const { isLoggedIn } = useAuth()
-  const router = useRouter()
+  const navigate = useNavigate(); const location = useLocation(); const [searchParams] = useSearchParams(); const params = useParams();
 
   // New AI state variables
   const [aiMode, setAiMode] = useState(false)
@@ -451,7 +450,7 @@ export default function DocumentGenerator() {
       return
     }
     if (!isLoggedIn) {
-      router.push('/login?returnUrl=/document-generator')
+      navigate('/login?returnUrl=/document-generator')
       return
     }
     if (expandedTemplate === templateId) {
@@ -582,7 +581,7 @@ export default function DocumentGenerator() {
 
   return (
     <div style={{ paddingTop: 95, background: '#FDF8F4', minHeight: '100vh' }}>
-      <Head>
+      <Helmet>
         <title>Legal Document Generator | Justice Junction 24/7</title>
         <meta name="description" content="Generate professional legal documents: Rental Agreements, Legal Notices, NDA, Affidavits, Consumer Complaints and more. Free download." />
         <meta property="og:title" content="Legal Document Generator — Justice Junction 24/7" />
@@ -593,7 +592,7 @@ export default function DocumentGenerator() {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Legal Document Generator — Justice Junction 24/7" />
         <meta name="twitter:image" content="https://justice-junction-app.vercel.app/og-image.png" />
-      </Head>
+      </Helmet>
 
       {/* Hero Section */}
       <section style={{ padding: '6rem 0', background: 'linear-gradient(135deg, #7B1D2E 0%, #5C1521 100%)', color: '#fff', textAlign: 'center' }}>
@@ -903,7 +902,7 @@ export default function DocumentGenerator() {
                       <p style={{ fontSize: '0.85rem', color: '#5A3A42', marginBottom: '8px', fontWeight: 500 }}>
                         Need an expert to check these clauses and finalize the agreement?
                       </p>
-                      <Link href="/search">
+                      <Link to="/search">
                         <button className="btn btn-primary btn-sm" style={{ background: '#7B1D2E', color: '#fff', borderRadius: '8px', padding: '6px 16px', fontSize: '0.8rem' }}>
                           Get this reviewed by a Lawyer
                         </button>
@@ -1098,7 +1097,7 @@ export default function DocumentGenerator() {
                         </div>
                         <div style={{ fontSize: '0.8rem', color: '#555', fontWeight: 500, paddingLeft: 26 }}>
                           We strongly recommend having the drafted document reviewed by a verified legal professional before signature.
-                          <Link href="/search" style={{marginLeft:6,color:'#7B1D2E',fontWeight:700,textDecoration:'underline'}}>Find a Lawyer →</Link>
+                          <Link to="/search" style={{marginLeft:6,color:'#7B1D2E',fontWeight:700,textDecoration:'underline'}}>Find a Lawyer →</Link>
                         </div>
                       </div>
                     )}

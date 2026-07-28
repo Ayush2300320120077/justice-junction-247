@@ -1,6 +1,5 @@
+import { Link, useNavigate, useLocation, useSearchParams, useParams } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react'
-import { useRouter } from 'next/router'
-import Link from 'next/link'
 import { MessageSquare, X, Send, Bot, User, Trash2, Shield, AlertTriangle } from 'lucide-react'
 import { API } from '../api'
 
@@ -20,7 +19,7 @@ export default function AIAssistantChat() {
   const [sessionId, setSessionId] = useState('')
   const [isMobile, setIsMobile] = useState(false)
   const scrollRef = useRef(null)
-  const router = useRouter()
+  const navigate = useNavigate(); const location = useLocation(); const [searchParams] = useSearchParams(); const params = useParams();
 
   // Detect mobile
   useEffect(() => {
@@ -72,7 +71,7 @@ export default function AIAssistantChat() {
   }, [messages])
 
   // Don't show on admin pages
-  if (router.pathname.startsWith('/admin')) return null
+  if (location.pathname.startsWith('/admin')) return null
 
   function getInitialMessage() {
     return [{
@@ -355,8 +354,7 @@ export default function AIAssistantChat() {
                 {/* Lawyer search CTA button */}
                 {m.role === 'assistant' && m.category && (
                   <div style={{ marginLeft: 36, marginTop: 6 }}>
-                    <Link
-                      href={`/search?specialization=${encodeURIComponent(m.category)}`}
+                    <Link to={`/search?specialization=${encodeURIComponent(m.category)}`}
                       onClick={() => setIsOpen(false)}
                       style={{
                         display: 'inline-flex',

@@ -1,13 +1,13 @@
-import Head from 'next/head'
-import Link from 'next/link'
+import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 
 export default function Terms() {
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#FDF6EE' }}>
-      <Head>
+      <Helmet>
         <title>Terms of Service — Justice Junction 24/7</title>
         <meta name="description" content="Read the Terms of Service for Justice Junction 24/7 — India's verified lawyer discovery platform." />
-      </Head>
+      </Helmet>
       
       {/* Hero Section */}
       <div style={{ backgroundColor: '#7B1D2E', padding: '4rem 0', textAlign: 'center', paddingTop: '120px' }}>
@@ -21,14 +21,14 @@ export default function Terms() {
           Last updated: April 2025
         </div>
         <div style={{ color: 'rgba(245,196,179,0.7)', fontSize: '0.875rem', marginTop: '1rem' }}>
-          <Link href="/" style={{ textDecoration: 'none', color: 'inherit' }}>Home</Link> &gt; Terms of Service
+          <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>Home</Link> &gt; Terms of Service
         </div>
       </div>
 
       {/* Content Area */}
       <div style={{ maxWidth: '48rem', margin: '0 auto', padding: '4rem 1.5rem' }}>
         <div style={{ marginBottom: '2rem' }}>
-          <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', backgroundColor: '#fff', border: '1px solid #E8C9A8', color: '#7B1D2E', fontWeight: 600, padding: '0.5rem 1rem', borderRadius: '0.5rem', textDecoration: 'none', transition: 'all 0.2s' }} className="legal-back-btn">
+          <Link to="/" style={{ display: 'inline-flex', alignItems: 'center', backgroundColor: '#fff', border: '1px solid #E8C9A8', color: '#7B1D2E', fontWeight: 600, padding: '0.5rem 1rem', borderRadius: '0.5rem', textDecoration: 'none', transition: 'all 0.2s' }} className="legal-back-btn">
             ← Back to Home
           </Link>
           <style>{`.legal-back-btn:hover { background-color: #7B1D2E !important; color: #fff !important; }`}</style>
@@ -81,7 +81,7 @@ export default function Terms() {
         </Section>
 
         <Section title="11. Contact Us" isLast={true}>
-          For any questions about these Terms, please contact us via our <Link href="/contact" style={{ color: '#7B1D2E', fontWeight: 600, textDecoration: 'underline' }}>Contact page</Link> or WhatsApp at +91 9188371233.
+          For any questions about these Terms, please contact us via our <Link to="/contact" style={{ color: '#7B1D2E', fontWeight: 600, textDecoration: 'underline' }}>Contact page</Link> or WhatsApp at +91 9188371233.
         </Section>
       </div>
     </div>

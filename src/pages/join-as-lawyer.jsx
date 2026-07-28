@@ -1,6 +1,6 @@
+import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { useState } from 'react'
-import Head from 'next/head'
-import Link from 'next/link'
 import { CheckCircle, Users, BarChart, Globe, Shield, Award, Send, Phone, Mail, MapPin, Briefcase, Hash } from 'lucide-react'
 import { useToast } from '../context/ToastContext'
 
@@ -50,7 +50,7 @@ export default function JoinAsLawyer() {
 
   return (
     <div style={{ paddingTop:95, background:'#fff', minHeight:'100vh' }}>
-      <Head>
+      <Helmet>
         <title>Join as Advocate | Justice Junction 24/7</title>
         <meta name="description" content="Register as a verified advocate. Get quality clients, manage your cases, and grow your legal practice online." />
         <meta property="og:title" content="Join as an Advocate — Justice Junction 24/7" />
@@ -61,7 +61,7 @@ export default function JoinAsLawyer() {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Join as an Advocate — Justice Junction 24/7" />
         <meta name="twitter:image" content="https://justice-junction-app.vercel.app/og-image.png" />
-      </Head>
+      </Helmet>
 
       <section style={{...s.hero, background: 'linear-gradient(135deg, #7B1D2E 0%, #5C1521 100%)'}} className="page-reveal">
         <div className="container" style={s.heroGrid}>
@@ -73,7 +73,7 @@ export default function JoinAsLawyer() {
             <p style={{fontSize:'1.1rem', color:'#F9EEE4', marginBottom:'2rem', lineHeight:1.7}}>Join India's fastest-growing legal-tech platform. Get clients 24/7, build your online reputation, and manage your entire practice from one smart dashboard.</p>
             <div style={{display:'flex', gap:12, flexWrap:'wrap', marginBottom:'1.5rem'}}>
               <a href="#apply-form" className="btn btn-primary btn-xl">Apply Now — It's Free</a>
-              <Link href="/lawyer-plans" className="btn btn-outline btn-xl">View Plans</Link>
+              <Link to="/lawyer-plans" className="btn btn-outline btn-xl">View Plans</Link>
             </div>
             <div style={{fontSize:'.85rem', color:'#F5C4B3', display:'flex', alignItems:'center', gap:8, fontWeight:600}}><Users size={16}/> Growing network of advocates</div>
           </div>
@@ -161,7 +161,7 @@ export default function JoinAsLawyer() {
               <CheckCircle size={52} color="var(--green)"/>
               <h3 style={{fontSize:'1.5rem', fontFamily:"'Playfair Display',serif", marginTop:'1.5rem', marginBottom:8}}>Application Received!</h3>
               <p style={{color:'var(--txt-3)', marginBottom:'2rem'}}>We'll contact you within 24–48 hours at <strong>{form.email}</strong>.</p>
-              <Link href="/" className="btn btn-primary btn-lg">Back to Home</Link>
+              <Link to="/" className="btn btn-primary btn-lg">Back to Home</Link>
             </div>
           ) : (
             <form onSubmit={handleSubmit} style={s.form} noValidate>
@@ -182,7 +182,7 @@ export default function JoinAsLawyer() {
                 <Send size={18}/>{submitting ? 'Submitting...' : 'Submit Application'}
               </button>
               <p style={{textAlign:'center', fontSize:'.75rem', color:'var(--txt-3)', marginTop:'1rem'}}>
-                By submitting you agree to our <Link href="/terms" style={{color:'var(--bur)'}}>Terms</Link> and <Link href="/privacy-policy" style={{color:'var(--bur)'}}>Privacy Policy</Link>.
+                By submitting you agree to our <Link to="/terms" style={{color:'var(--bur)'}}>Terms</Link> and <Link to="/privacy-policy" style={{color:'var(--bur)'}}>Privacy Policy</Link>.
               </p>
             </form>
           )}

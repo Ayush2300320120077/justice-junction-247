@@ -1,14 +1,14 @@
-import Link from 'next/link'
-import Head from 'next/head'
+import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { Home, Search, AlertTriangle } from 'lucide-react'
 
 export default function NotFound() {
   return (
     <div className="page-wrap page-reveal" style={{ background: 'var(--cream)', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '80vh' }}>
-      <Head>
+      <Helmet>
         <title>404 — Page Not Found | Justice Junction 24/7</title>
         <meta name="robots" content="noindex" />
-      </Head>
+      </Helmet>
 
       <div style={s.container}>
         <div style={s.iconWrap}>
@@ -23,16 +23,16 @@ export default function NotFound() {
         </p>
 
         <div style={s.actions}>
-          <Link href="/" className="btn btn-primary btn-lg" style={{ gap: 8 }}>
+          <Link to="/" className="btn btn-primary btn-lg" style={{ gap: 8 }}>
             <Home size={18} /> Go Home
           </Link>
-          <Link href="/search" className="btn btn-outline btn-lg" style={{ gap: 8 }}>
+          <Link to="/search" className="btn btn-outline btn-lg" style={{ gap: 8 }}>
             <Search size={18} /> Find a Lawyer
           </Link>
         </div>
 
         <div style={s.helpText}>
-          Need assistance? <Link href="/contact" style={{ color: 'var(--bur)', fontWeight: 700 }}>Contact our support team</Link>
+          Need assistance? <Link to="/contact" style={{ color: 'var(--bur)', fontWeight: 700 }}>Contact our support team</Link>
         </div>
       </div>
     </div>

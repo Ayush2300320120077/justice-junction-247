@@ -1,5 +1,5 @@
+import { useNavigate, useLocation, useSearchParams, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/router'
 
 const WA_ICON = () => (
   <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
@@ -10,7 +10,7 @@ const WA_ICON = () => (
 const HIDDEN_ROUTES = ['/login', '/register', '/dashboard', '/admin']
 
 export default function WhatsAppHelpline() {
-  const router = useRouter()
+  const navigate = useNavigate(); const location = useLocation(); const [searchParams] = useSearchParams(); const params = useParams();
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
@@ -20,7 +20,7 @@ export default function WhatsAppHelpline() {
   }, [])
 
   // Hide on certain routes
-  if (HIDDEN_ROUTES.some(r => router.pathname.startsWith(r))) return null
+  if (HIDDEN_ROUTES.some(r => location.pathname.startsWith(r))) return null
 
   return (
     <a

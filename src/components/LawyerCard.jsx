@@ -1,5 +1,5 @@
+import { useNavigate, useLocation, useSearchParams, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/router'
 import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
 import { Heart, Scale, MapPin, Landmark, CircleCheck } from 'lucide-react'
@@ -12,7 +12,7 @@ const levelMap={senior:'badge-senior',mid:'badge-mid',junior:'badge-junior'}
 
 export default function LawyerCard({ lawyer, onCompare, compareList=[], isDemo=false }) {
   const { isLoggedIn } = useAuth()
-  const router = useRouter()
+  const navigate = useNavigate(); const location = useLocation(); const [searchParams] = useSearchParams(); const params = useParams();
   const { showToast } = useToast()
   const [hovered, setHovered] = useState(false)
   const color = avatarColor(lawyer.name)
@@ -36,8 +36,8 @@ export default function LawyerCard({ lawyer, onCompare, compareList=[], isDemo=f
 
   const handleBook = (e) => {
     e.stopPropagation()
-    if (!isLoggedIn) { router.push('/login'); return }
-    router.push(`/book?lawyerId=${lawyer._id}&lawyerName=${encodeURIComponent(lawyer.name)}&fee=${lawyer.consultationFee}`)
+    if (!isLoggedIn) { navigate('/login'); return }
+    navigate(`/book?lawyerId=${lawyer._id}&lawyerName=${encodeURIComponent(lawyer.name)}&fee=${lawyer.consultationFee}`)
   }
 
   const inCompare = compareList.includes(lawyer._id)
@@ -48,7 +48,7 @@ export default function LawyerCard({ lawyer, onCompare, compareList=[], isDemo=f
       style={{...s.card,...(hovered?s.cardHovered:{})}}
       onMouseEnter={()=>setHovered(true)}
       onMouseLeave={()=>setHovered(false)}
-      onClick={() => router.push(`/lawyer/${lawyer._id}`)}
+      onClick={() => navigate(`/lawyer/${lawyer._id}`)}
     >
       {/* Avatar + Info */}
       <div style={s.top}>
@@ -124,7 +124,7 @@ export default function LawyerCard({ lawyer, onCompare, compareList=[], isDemo=f
             : <span style={s.unavailable}>Busy</span>
           }
           {isDemo
-            ? <button className="btn btn-outline btn-sm" onClick={(e) => { e.stopPropagation(); router.push(`/search`) }}>View Profile</button>
+            ? <button className="btn btn-outline btn-sm" onClick={(e) => { e.stopPropagation(); navigate(`/search`) }}>View Profile</button>
             : <button className="btn btn-primary btn-sm" onClick={handleBook}>Book Now</button>
           }
         </div>
