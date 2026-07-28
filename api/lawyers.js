@@ -108,4 +108,6 @@ router.post('/seed/demo', async (req, res) => {
 });
 
 app.use('/api/lawyers', router);
+app.use('/api/search', router);
 module.exports = app;
+
