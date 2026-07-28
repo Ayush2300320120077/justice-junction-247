@@ -3,6 +3,8 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const connectDB = require('../middleware/db');
 const Lawyer = require('../models/Lawyer');
+const mongoose = require('mongoose');
+
 
 const app = express();
 app.use(express.json());
@@ -51,11 +53,15 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     await connectDB();
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ error: 'Invalid lawyer ID' });
+    }
     const lawyer = await Lawyer.findById(req.params.id).select('-user -__v');
     if (!lawyer) return res.status(404).json({ error: 'Lawyer not found' });
     res.json({ lawyer });
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
+
 
 router.post('/:id/review', async (req, res) => {
   try {

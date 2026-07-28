@@ -54,10 +54,48 @@ router.get('/stats', async (req, res) => {
 router.get('/lawyers', async (req, res) => {
   try {
     await connectDB();
-    const lawyers = await Lawyer.find()
+    let lawyers = await Lawyer.find()
       .populate('user', 'email')
       .sort({ createdAt: -1 });
+
+    if (!lawyers || lawyers.length === 0) {
+      const demo = [
+        { name:'Adv. Priya Sharma', email:'priya@demo.com', barRegistrationNumber:'BAR001', specializations:['Criminal Defence','Bail & FIR'], experience:15, experienceLevel:'senior', city:'Delhi', state:'Delhi', consultationFee:4500, averageRating:4.9, totalReviews:124, isVerified:true, isAvailable:true, bio:'Senior criminal defence specialist with 15 years of high court experience.' },
+        { name:'Adv. Rahul Mehta', email:'rahul@demo.com', barRegistrationNumber:'BAR002', specializations:['Family Law','Divorce'], experience:7, experienceLevel:'mid', city:'Mumbai', state:'Maharashtra', consultationFee:2200, averageRating:4.8, totalReviews:98, isVerified:true, isAvailable:true, bio:'Compassionate family law advocate helping families navigate difficult transitions.' },
+        { name:'Adv. Sneha Joshi', email:'sneha@demo.com', barRegistrationNumber:'BAR003', specializations:['Consumer Rights','Civil Disputes'], experience:2, experienceLevel:'junior', city:'Bangalore', state:'Karnataka', consultationFee:800, averageRating:4.6, totalReviews:52, isVerified:true, isAvailable:true, bio:'Passionate consumer rights advocate.' },
+        { name:'Adv. Arjun Kapoor', email:'arjun@demo.com', barRegistrationNumber:'BAR004', specializations:['Corporate Law','Intellectual Property'], experience:20, experienceLevel:'senior', city:'Gurgaon', state:'Haryana', consultationFee:8000, averageRating:5.0, totalReviews:211, isVerified:true, isAvailable:true, bio:'Top-tier corporate lawyer trusted by startups and enterprises.' },
+        { name:'Adv. Nisha Rao', email:'nisha@demo.com', barRegistrationNumber:'BAR005', specializations:['Property Law','Civil Disputes'], experience:10, experienceLevel:'mid', city:'Hyderabad', state:'Telangana', consultationFee:3000, averageRating:4.7, totalReviews:76, isVerified:true, isAvailable:true, bio:'Property law specialist with deep expertise in land disputes.' }
+      ];
+      lawyers = await Lawyer.insertMany(demo);
+    }
     res.json(lawyers);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.put('/lawyers/:id', async (req, res) => {
+  try {
+    await connectDB();
+    const { action, payload } = req.body || {};
+    const lawyer = await Lawyer.findById(req.params.id);
+    if (!lawyer) return res.status(404).json({ error: 'Lawyer not found' });
+
+    if (action === 'toggleVerify') {
+      lawyer.isVerified = !lawyer.isVerified;
+      lawyer.verificationStatus = lawyer.isVerified ? 'verified' : 'pending';
+    } else if (action === 'toggleBlock') {
+      lawyer.isBlocked = !lawyer.isBlocked;
+    } else if (action === 'update' && payload) {
+      Object.assign(lawyer, payload);
+    } else if (req.body.isVerified !== undefined) {
+      lawyer.isVerified = req.body.isVerified;
+      lawyer.verificationStatus = lawyer.isVerified ? 'verified' : 'pending';
+    } else if (req.body.isBlocked !== undefined) {
+      lawyer.isBlocked = req.body.isBlocked;
+    }
+    await lawyer.save();
+    res.json({ lawyer });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -69,7 +107,7 @@ router.put('/lawyers/:id/verify', async (req, res) => {
     const { isVerified } = req.body;
     const lawyer = await Lawyer.findByIdAndUpdate(
       req.params.id,
-      { isVerified },
+      { isVerified, verificationStatus: isVerified ? 'verified' : 'pending' },
       { new: true }
     );
     if (!lawyer) return res.status(404).json({ error: 'Lawyer not found' });
@@ -89,15 +127,75 @@ router.put('/lawyers/:id/block', async (req, res) => {
       { new: true }
     );
     if (!lawyer) return res.status(404).json({ error: 'Lawyer not found' });
-    
-    // Also block/unblock the associated user account to prevent login if blocked
-    await User.findByIdAndUpdate(lawyer.user, { isBlocked });
-    
+    if (lawyer.user) await User.findByIdAndUpdate(lawyer.user, { isBlocked });
     res.json(lawyer);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
+
+router.get('/clients', async (req, res) => {
+  try {
+    await connectDB();
+    let clients = await User.find({ role: { $ne: 'admin' } })
+      .select('-password')
+      .sort({ createdAt: -1 });
+
+    if (!clients || clients.length === 0) {
+      const demoClients = [
+        { name: 'Amit Verma', email: 'amit@example.com', role: 'client', city: 'Delhi', phone: '+91 98765 43210', isVerified: true },
+        { name: 'Ritu Sen', email: 'ritu@example.com', role: 'client', city: 'Kolkata', phone: '+91 98765 43211', isVerified: true },
+        { name: 'Karan Patel', email: 'karan@example.com', role: 'client', city: 'Ahmedabad', phone: '+91 98765 43212', isVerified: true }
+      ];
+      clients = await User.insertMany(demoClients);
+    }
+    res.json(clients);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.put('/clients/:id', async (req, res) => {
+  try {
+    await connectDB();
+    const client = await User.findById(req.params.id);
+    if (!client) return res.status(404).json({ error: 'Client not found' });
+    client.isBlocked = !client.isBlocked;
+    await client.save();
+    res.json({ client });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.delete('/clients/:id', async (req, res) => {
+  try {
+    await connectDB();
+    await User.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Client deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.get('/pending-verifications', async (req, res) => {
+  try {
+    await connectDB();
+    const lawyers = await Lawyer.find({
+      $or: [{ isVerified: false }, { verificationStatus: 'pending' }]
+    }).sort({ createdAt: -1 });
+
+    const clients = await User.find({
+      role: 'client',
+      $or: [{ isVerified: false }, { verificationStatus: 'pending' }]
+    }).sort({ createdAt: -1 });
+
+    res.json({ lawyers, clients });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 
 router.get('/users', async (req, res) => {
   try {
