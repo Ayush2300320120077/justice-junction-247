@@ -42,6 +42,8 @@ const AdminAnalytics  = lazy(() => import('./pages/admin/analytics'))
 const AdminInbox      = lazy(() => import('./pages/admin/contact-inbox'))
 const AdminReports    = lazy(() => import('./pages/admin/reports'))
 const AdminTemplates  = lazy(() => import('./pages/admin/templates'))
+const AdminAiEval     = lazy(() => import('./pages/admin/ai-eval'))
+
 
 // Floating widgets (loaded lazily, no SSR concerns now)
 const AIAssistantChat  = lazy(() => import('./components/AIAssistantChat'))
@@ -132,6 +134,8 @@ export default function App() {
             <Route path="/admin/contact-inbox" element={<AdminInbox />} />
             <Route path="/admin/reports" element={<AdminReports />} />
             <Route path="/admin/templates" element={<AdminTemplates />} />
+            <Route path="/admin/ai-eval" element={<AdminAiEval />} />
+
 
             {/* 404 fallback */}
             <Route path="*" element={<NotFound />} />

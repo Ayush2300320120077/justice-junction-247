@@ -81,8 +81,10 @@ export default function AdminLayout({ children, title = 'Dashboard' }) {
         <nav style={s.nav}>
           {ADMIN_NAV.map(item => {
             const Icon = item.icon;
-            const active = router.asPath === item.path || (item.path === '/admin/dashboard' && location.pathname === '/admin/dashboard' && !router.query.tab);
+            const currentPath = location.pathname + location.search;
+            const active = currentPath === item.path || (item.path === '/admin/dashboard' && location.pathname === '/admin/dashboard' && !searchParams.get('tab'));
             return (
+
               <button 
                 key={item.path}
                 onClick={() => { navigate(item.path); setMobileOpen(false); }}

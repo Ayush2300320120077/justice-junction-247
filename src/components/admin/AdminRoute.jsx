@@ -3,7 +3,8 @@ import { useEffect, useState } from 'react';
 import { jwtDecode } from 'jwt-decode';
 
 export default function AdminRoute({ children }) {
-  const navigate = useNavigate(); const location = useLocation(); const [searchParams] = useSearchParams(); const params = useParams();;
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isAuthorized, setIsAuthorized] = useState(false);
 
   useEffect(() => {
@@ -18,7 +19,7 @@ export default function AdminRoute({ children }) {
       const decoded = jwtDecode(token);
       const currentTime = Date.now() / 1000;
 
-      if (decoded.exp < currentTime || decoded.type !== 'admin') {
+      if (decoded.exp < currentTime || (decoded.type !== 'admin' && decoded.role !== 'admin')) {
         localStorage.removeItem('jj_admin_token');
         localStorage.removeItem('jj_admin_user');
         navigate('/admin/login');
@@ -30,7 +31,7 @@ export default function AdminRoute({ children }) {
       localStorage.removeItem('jj_admin_user');
       navigate('/admin/login');
     }
-  }, [router]);
+  }, [navigate]);
 
   if (!isAuthorized) {
     return <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0f172a', color: '#fff' }}>Authorizing...</div>;

@@ -14,7 +14,8 @@ export default function AdminDashboard() {
   const navigate = useNavigate(); const location = useLocation(); const [searchParams] = useSearchParams(); const params = useParams();;
   const { showToast } = useToast();
 
-  const currentTab = router.query.tab || 'overview';
+  const currentTab = searchParams.get('tab') || 'overview';
+
 
   // Overview stats state
   const [stats, setStats] = useState(null);
