@@ -1,7 +1,8 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 
-const LIVE_URL = 'https://jj-fixed.vercel.app';
+const LIVE_URL = 'https://justice-junction-app.vercel.app';
+
 
 async function runAudit() {
   console.log('====================================================');
