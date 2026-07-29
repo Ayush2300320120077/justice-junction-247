@@ -1,0 +1,1184 @@
+/*
+ * join-as-lawyer.css
+ * Premium landing page styles for /join-as-lawyer
+ *
+ * Placeholder image sources (royalty-free, swap when ready):
+ *   Hero poster  → Pexels: https://www.pexels.com/search/courtroom/
+ *   Proof images → Pixabay: https://pixabay.com/images/search/indian%20lawyer/
+ *   Coverr (video): https://coverr.co/search?q=office+professional
+ *
+ * Color tokens are inherited from src/index.css (:root)
+ * This file adds only page-scoped classes prefixed with "jl-"
+ */
+
+/* ═══════════════════════════════════════════
+   1. HERO — Full-viewport video section
+   ═══════════════════════════════════════════ */
+.jl-hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  /* Account for fixed navbar (28px emergency bar + 72px nav) */
+  padding-top: 100px;
+  padding-bottom: 4rem;
+}
+
+/* Dark gradient overlay — ensures text legibility over video */
+.jl-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(26, 10, 13, 0.82) 0%,
+    rgba(92, 21, 33, 0.70) 50%,
+    rgba(26, 10, 13, 0.75) 100%
+  );
+  z-index: 1;
+}
+
+/* Video background — desktop only */
+.jl-hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 0;
+}
+
+/* Static image fallback — shown on mobile, hidden on desktop */
+.jl-hero-img-fallback {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  z-index: 0;
+  display: none; /* hidden by default; shown via media query below */
+}
+
+.jl-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 860px;
+}
+
+.jl-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(249, 238, 228, 0.15);
+  border: 1px solid rgba(249, 238, 228, 0.3);
+  color: #F9EEE4;
+  padding: 0.4rem 1.2rem;
+  border-radius: 50px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 1.5rem;
+  backdrop-filter: blur(8px);
+}
+
+.jl-hero-badge-dot {
+  width: 7px;
+  height: 7px;
+  background: #4ADE80;
+  border-radius: 50%;
+  animation: jl-pulse-dot 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+.jl-hero-h1 {
+  font-family: 'Plus Jakarta Sans', 'Cormorant Garamond', serif;
+  font-size: clamp(2.4rem, 6vw, 4.2rem);
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  margin-bottom: 1.5rem;
+}
+
+.jl-hero-h1 em {
+  font-style: normal;
+  color: #F5C4B3;
+}
+
+.jl-hero-sub {
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  color: rgba(249, 238, 228, 0.85);
+  line-height: 1.75;
+  max-width: 600px;
+  margin-bottom: 2.2rem;
+}
+
+.jl-hero-cta-row {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 2.5rem;
+}
+
+.jl-cta-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  color: #7B1D2E;
+  padding: 1rem 2.4rem;
+  border-radius: 10px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  text-decoration: none;
+  transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
+  border: none;
+  cursor: pointer;
+}
+
+.jl-cta-primary:hover {
+  background: #F5E0C8;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.3);
+}
+
+.jl-cta-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: #fff;
+  padding: 1rem 2.4rem;
+  border-radius: 10px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-decoration: none;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+  backdrop-filter: blur(6px);
+}
+
+.jl-cta-secondary:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: #fff;
+  transform: translateY(-2px);
+}
+
+.jl-hero-trust-bar {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.jl-trust-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: rgba(249, 238, 228, 0.8);
+}
+
+.jl-trust-item svg {
+  flex-shrink: 0;
+}
+
+.jl-trust-divider {
+  width: 1px;
+  height: 18px;
+  background: rgba(249, 238, 228, 0.25);
+}
+
+/* Scroll-down cue */
+.jl-scroll-cue {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: rgba(249, 238, 228, 0.55);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.jl-scroll-arrow {
+  width: 28px;
+  height: 28px;
+  border-right: 2px solid rgba(249, 238, 228, 0.4);
+  border-bottom: 2px solid rgba(249, 238, 228, 0.4);
+  transform: rotate(45deg);
+  animation: jl-scroll-bounce 1.6s ease-in-out infinite;
+}
+
+/* ═══════════════════════════════════════════
+   2. SECTION SCAFFOLDING
+   ═══════════════════════════════════════════ */
+.jl-section {
+  padding: 6rem 0;
+}
+
+.jl-section--cream {
+  background: var(--cream-2, #F5E0C8);
+}
+
+.jl-section--white {
+  background: #fff;
+}
+
+.jl-section--dark {
+  background: #1A0D10;
+  color: #F9EEE4;
+}
+
+.jl-section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--bur, #7B1D2E);
+  margin-bottom: 0.9rem;
+}
+
+.jl-section-label::before {
+  content: '';
+  display: block;
+  width: 28px;
+  height: 2px;
+  background: var(--bur, #7B1D2E);
+  border-radius: 2px;
+}
+
+.jl-section--dark .jl-section-label {
+  color: #F5C4B3;
+}
+
+.jl-section--dark .jl-section-label::before {
+  background: #F5C4B3;
+}
+
+.jl-section-title {
+  font-family: 'Plus Jakarta Sans', serif;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: #1A0A0D;
+  margin-bottom: 0.8rem;
+}
+
+.jl-section--dark .jl-section-title {
+  color: #fff;
+}
+
+.jl-section-title em {
+  font-style: normal;
+  color: var(--bur, #7B1D2E);
+}
+
+.jl-section--dark .jl-section-title em {
+  color: #F5C4B3;
+}
+
+.jl-section-sub {
+  font-size: 1.05rem;
+  color: var(--txt-3, #5A3A42);
+  line-height: 1.7;
+  max-width: 580px;
+}
+
+.jl-section--dark .jl-section-sub {
+  color: rgba(245, 196, 179, 0.75);
+}
+
+/* ═══════════════════════════════════════════
+   3. SCROLL-REVEAL ANIMATIONS
+   ═══════════════════════════════════════════ */
+.jl-reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition:
+    opacity 0.7s cubic-bezier(0.23, 1, 0.32, 1),
+    transform 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.jl-reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.jl-reveal-left {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition:
+    opacity 0.75s cubic-bezier(0.23, 1, 0.32, 1),
+    transform 0.75s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.jl-reveal-left.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.jl-reveal-right {
+  opacity: 0;
+  transform: translateX(40px);
+  transition:
+    opacity 0.75s cubic-bezier(0.23, 1, 0.32, 1),
+    transform 0.75s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.jl-reveal-right.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Staggered children delay */
+.jl-reveal[data-delay="1"] { transition-delay: 0.1s; }
+.jl-reveal[data-delay="2"] { transition-delay: 0.2s; }
+.jl-reveal[data-delay="3"] { transition-delay: 0.3s; }
+.jl-reveal[data-delay="4"] { transition-delay: 0.4s; }
+
+/* ═══════════════════════════════════════════
+   4. WHY JOIN — Benefit Cards
+   ═══════════════════════════════════════════ */
+.jl-benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-top: 3.5rem;
+}
+
+.jl-benefit-card {
+  background: #fff;
+  border: 1px solid var(--border, #E8C9A8);
+  border-radius: 20px;
+  padding: 2.2rem 1.8rem;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.jl-benefit-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--bur, #7B1D2E), #9B2D42);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.jl-benefit-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 48px rgba(123, 29, 46, 0.12);
+  border-color: var(--border-2, #D4A882);
+}
+
+.jl-benefit-card:hover::before {
+  opacity: 1;
+}
+
+.jl-benefit-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--bur, #7B1D2E), #9B2D42);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.4rem;
+  box-shadow: 0 6px 18px rgba(123, 29, 46, 0.25);
+}
+
+.jl-benefit-title {
+  font-size: 1.08rem;
+  font-weight: 800;
+  color: #1A0A0D;
+  margin-bottom: 0.6rem;
+  line-height: 1.3;
+}
+
+.jl-benefit-desc {
+  font-size: 0.88rem;
+  color: var(--txt-3, #5A3A42);
+  line-height: 1.7;
+}
+
+/* ═══════════════════════════════════════════
+   5. HOW IT WORKS — Horizontal Timeline
+   ═══════════════════════════════════════════ */
+.jl-timeline {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr;
+  align-items: start;
+  gap: 0;
+  margin-top: 4rem;
+  position: relative;
+}
+
+.jl-timeline-connector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 28px; /* align with circle center */
+}
+
+.jl-timeline-arrow {
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--bur, #7B1D2E) 0%, rgba(123,29,46,0.2) 100%);
+  position: relative;
+}
+
+.jl-timeline-arrow::after {
+  content: '›';
+  position: absolute;
+  right: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--bur, #7B1D2E);
+  font-size: 1.4rem;
+  line-height: 0;
+}
+
+.jl-timeline-step {
+  text-align: center;
+  padding: 0 1rem;
+}
+
+.jl-timeline-num {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--bur, #7B1D2E), #9B2D42);
+  color: #fff;
+  font-family: 'Sora', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.2rem;
+  box-shadow: 0 8px 24px rgba(123, 29, 46, 0.3);
+  position: relative;
+  z-index: 1;
+}
+
+.jl-timeline-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(123, 29, 46, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+  color: var(--bur, #7B1D2E);
+}
+
+.jl-timeline-label {
+  font-size: 0.62rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--bur, #7B1D2E);
+  margin-bottom: 0.5rem;
+}
+
+.jl-timeline-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #1A0A0D;
+  margin-bottom: 0.6rem;
+  line-height: 1.3;
+}
+
+.jl-timeline-desc {
+  font-size: 0.83rem;
+  color: var(--txt-3, #5A3A42);
+  line-height: 1.7;
+}
+
+/* ═══════════════════════════════════════════
+   6. PLATFORM PROOF — Alternating Blocks
+   ═══════════════════════════════════════════ */
+.jl-proof-section {
+  padding: 6rem 0;
+  background: var(--cream, #FDF6EE);
+}
+
+.jl-proof-block {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: center;
+  margin-bottom: 6rem;
+}
+
+.jl-proof-block:last-child {
+  margin-bottom: 0;
+}
+
+.jl-proof-block--reverse {
+  direction: rtl;
+}
+
+.jl-proof-block--reverse > * {
+  direction: ltr;
+}
+
+.jl-proof-img-wrap {
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  box-shadow: 0 24px 56px rgba(123, 29, 46, 0.14);
+}
+
+.jl-proof-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.jl-proof-img-wrap:hover img {
+  transform: scale(1.04);
+}
+
+/* Decorative corner accent */
+.jl-proof-img-wrap::after {
+  content: '';
+  position: absolute;
+  bottom: -16px;
+  right: -16px;
+  width: 100px;
+  height: 100px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, var(--bur, #7B1D2E), transparent);
+  opacity: 0.12;
+  z-index: -1;
+}
+
+.jl-proof-text {}
+
+.jl-proof-tag {
+  display: inline-block;
+  background: rgba(123, 29, 46, 0.08);
+  color: var(--bur, #7B1D2E);
+  padding: 0.3rem 0.9rem;
+  border-radius: 50px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 1rem;
+}
+
+.jl-proof-title {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 800;
+  color: #1A0A0D;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+.jl-proof-title em {
+  font-style: normal;
+  color: var(--bur, #7B1D2E);
+}
+
+.jl-proof-body {
+  font-size: 0.95rem;
+  color: var(--txt-3, #5A3A42);
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+}
+
+.jl-proof-checklist {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.jl-proof-checklist li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #1A0A0D;
+}
+
+.jl-check-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--bur, #7B1D2E), #9B2D42);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+  font-size: 0.65rem;
+  font-weight: 900;
+}
+
+/* ═══════════════════════════════════════════
+   7. TESTIMONIAL CAROUSEL
+   ═══════════════════════════════════════════ */
+.jl-testimonials {
+  padding: 6rem 0;
+  background: #fff;
+  overflow: hidden;
+}
+
+.jl-carousel-track-wrap {
+  position: relative;
+  overflow: hidden;
+  border-radius: 24px;
+  margin-top: 3.5rem;
+}
+
+.jl-carousel-track {
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  /* Hide scrollbar */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  cursor: grab;
+  padding-bottom: 4px; /* prevent clip of card shadow */
+}
+
+.jl-carousel-track::-webkit-scrollbar {
+  display: none;
+}
+
+.jl-carousel-track:active {
+  cursor: grabbing;
+}
+
+/* Pause on hover/focus-within — JS interval is cleared instead (see JSX) */
+.jl-carousel-track:hover,
+.jl-carousel-track:focus-within {
+  scroll-behavior: smooth;
+}
+
+.jl-testimonial-card {
+  flex: 0 0 calc(33.333% - 1rem);
+  min-width: 300px;
+  scroll-snap-align: start;
+  background: var(--cream, #FDF6EE);
+  border: 1px solid var(--border, #E8C9A8);
+  border-radius: 20px;
+  padding: 2.2rem;
+  position: relative;
+  transition: box-shadow 0.3s ease;
+}
+
+.jl-testimonial-card:focus-within,
+.jl-testimonial-card:focus {
+  outline: 2px solid var(--bur, #7B1D2E);
+  outline-offset: 2px;
+}
+
+.jl-testimonial-card:hover {
+  box-shadow: 0 12px 36px rgba(123, 29, 46, 0.1);
+}
+
+.jl-testimonial-quote-icon {
+  position: absolute;
+  top: 1.6rem;
+  right: 1.8rem;
+  font-size: 3.5rem;
+  color: var(--bur, #7B1D2E);
+  opacity: 0.1;
+  font-family: Georgia, serif;
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+.jl-testimonial-stars {
+  color: #F59E0B;
+  font-size: 0.9rem;
+  letter-spacing: 2px;
+  margin-bottom: 1rem;
+}
+
+.jl-testimonial-text {
+  font-size: 0.93rem;
+  color: #1A0A0D;
+  line-height: 1.8;
+  font-style: italic;
+  margin-bottom: 1.6rem;
+}
+
+.jl-testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.jl-testimonial-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--bur, #7B1D2E), #9B2D42);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Sora', sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.jl-testimonial-name {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #1A0A0D;
+}
+
+.jl-testimonial-role {
+  font-size: 0.75rem;
+  color: var(--txt-3, #5A3A42);
+  margin-top: 2px;
+}
+
+/* Carousel nav dots */
+.jl-carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 2rem;
+}
+
+.jl-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border-2, #D4A882);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+}
+
+.jl-dot.active {
+  background: var(--bur, #7B1D2E);
+  width: 24px;
+  border-radius: 4px;
+}
+
+.jl-dot:focus {
+  outline: 2px solid var(--bur, #7B1D2E);
+  outline-offset: 2px;
+}
+
+/* Carousel prev/next buttons (keyboard + click) */
+.jl-carousel-nav {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 1.5rem;
+}
+
+.jl-carousel-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid var(--border, #E8C9A8);
+  background: #fff;
+  color: var(--bur, #7B1D2E);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-size: 1.1rem;
+}
+
+.jl-carousel-btn:hover {
+  background: var(--bur, #7B1D2E);
+  color: #fff;
+  border-color: var(--bur, #7B1D2E);
+  transform: scale(1.08);
+}
+
+.jl-carousel-btn:focus {
+  outline: 2px solid var(--bur, #7B1D2E);
+  outline-offset: 2px;
+}
+
+/* ═══════════════════════════════════════════
+   8. STATS BAND — Animated Counters
+   ═══════════════════════════════════════════ */
+.jl-stats-band {
+  background: linear-gradient(135deg, #1A0D10 0%, #3A0E1A 50%, #1A0D10 100%);
+  padding: 5rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.jl-stats-band::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.jl-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: rgba(245, 196, 179, 0.15);
+  border: 1px solid rgba(245, 196, 179, 0.15);
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+.jl-stat-item {
+  text-align: center;
+  padding: 3rem 2rem;
+  background: transparent;
+  position: relative;
+}
+
+.jl-stat-value {
+  font-family: 'Sora', var(--font-number, sans-serif);
+  font-size: clamp(2.4rem, 5vw, 3.4rem);
+  font-weight: 800;
+  color: #fff;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.03em;
+}
+
+.jl-stat-value .jl-stat-suffix {
+  color: #F5C4B3;
+  font-size: 0.6em;
+}
+
+.jl-stat-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(245, 196, 179, 0.7);
+}
+
+.jl-stat-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: rgba(245, 196, 179, 0.08);
+  border: 1px solid rgba(245, 196, 179, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.2rem;
+  color: #F5C4B3;
+}
+
+/* ═══════════════════════════════════════════
+   9. FINAL CTA SECTION
+   ═══════════════════════════════════════════ */
+.jl-final-cta {
+  background: linear-gradient(135deg, var(--bur, #7B1D2E) 0%, #5C1521 100%);
+  padding: 6rem 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.jl-final-cta::before {
+  content: '⚖';
+  position: absolute;
+  font-size: 28rem;
+  color: rgba(255, 255, 255, 0.025);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  user-select: none;
+  line-height: 1;
+}
+
+.jl-final-cta-content {
+  position: relative;
+  z-index: 1;
+}
+
+.jl-final-urgency {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.15);
+  color: #F9EEE4;
+  padding: 0.4rem 1.2rem;
+  border-radius: 50px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.jl-final-h2 {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  margin-bottom: 1rem;
+}
+
+.jl-final-sub {
+  font-size: 1.05rem;
+  color: rgba(249, 238, 228, 0.8);
+  max-width: 520px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.7;
+}
+
+.jl-final-cta-row {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.jl-final-trust {
+  margin-top: 2rem;
+  font-size: 0.78rem;
+  color: rgba(245, 196, 179, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* ═══════════════════════════════════════════
+   10. APPLICATION FORM SECTION
+   ═══════════════════════════════════════════ */
+.jl-form-section {
+  padding: 6rem 0;
+  background: var(--cream, #FDF6EE);
+}
+
+.jl-form-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+/* ═══════════════════════════════════════════
+   11. KEYFRAME ANIMATIONS
+   ═══════════════════════════════════════════ */
+@keyframes jl-pulse-dot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.75; }
+}
+
+@keyframes jl-scroll-bounce {
+  0%, 100% { transform: rotate(45deg) translateY(0); opacity: 0.55; }
+  50% { transform: rotate(45deg) translateY(6px); opacity: 0.9; }
+}
+
+@keyframes jl-count-pulse {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.06); }
+  60% { transform: scale(0.98); }
+  100% { transform: scale(1); }
+}
+
+.jl-stat-value.counting {
+  animation: jl-count-pulse 0.4s ease;
+}
+
+/* ═══════════════════════════════════════════
+   12. RESPONSIVE BREAKPOINTS
+   ═══════════════════════════════════════════ */
+
+/* Tablet (641px – 1024px) */
+@media (max-width: 1024px) {
+  .jl-benefits-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .jl-timeline {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .jl-timeline-connector {
+    display: none;
+  }
+
+  .jl-timeline-step {
+    text-align: left;
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    padding: 0;
+  }
+
+  .jl-timeline-num {
+    flex-shrink: 0;
+    margin: 0;
+  }
+
+  .jl-proof-block {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .jl-proof-block--reverse {
+    direction: ltr;
+  }
+
+  .jl-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .jl-testimonial-card {
+    flex: 0 0 calc(50% - 0.75rem);
+  }
+}
+
+/* Mobile (≤640px) */
+@media (max-width: 640px) {
+  /* Swap video for static image on mobile */
+  .jl-hero-video {
+    display: none;
+  }
+
+  .jl-hero-img-fallback {
+    display: block;
+  }
+
+  .jl-hero {
+    min-height: 100svh;
+    padding-top: 110px;
+    padding-bottom: 3rem;
+  }
+
+  .jl-hero-trust-bar {
+    gap: 1rem;
+  }
+
+  .jl-trust-divider {
+    display: none;
+  }
+
+  .jl-benefits-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .jl-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .jl-testimonial-card {
+    flex: 0 0 calc(100% - 0);
+    min-width: auto;
+  }
+
+  .jl-scroll-cue {
+    display: none;
+  }
+
+  .jl-section {
+    padding: 4rem 0;
+  }
+
+  .jl-proof-section {
+    padding: 4rem 0;
+  }
+
+  .jl-stats-band {
+    padding: 3.5rem 0;
+  }
+
+  .jl-final-cta {
+    padding: 4.5rem 0;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   13. PREFERS-REDUCED-MOTION
+   Disable/shorten all animations for users
+   who have requested reduced motion
+   ═══════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  /* Scroll-reveal: skip animation, just fade in */
+  .jl-reveal,
+  .jl-reveal-left,
+  .jl-reveal-right {
+    opacity: 0;
+    transform: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .jl-reveal.visible,
+  .jl-reveal-left.visible,
+  .jl-reveal-right.visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Pulsing dot */
+  .jl-hero-badge-dot {
+    animation: none;
+  }
+
+  /* Scroll cue bounce */
+  .jl-scroll-arrow {
+    animation: none;
+    opacity: 0.55;
+  }
+
+  /* Counter pulse */
+  .jl-stat-value.counting {
+    animation: none;
+  }
+
+  /* Proof image hover zoom */
+  .jl-proof-img-wrap:hover img {
+    transform: none;
+  }
+
+  /* Card hover lift */
+  .jl-benefit-card:hover,
+  .jl-cta-primary:hover,
+  .jl-cta-secondary:hover,
+  .jl-carousel-btn:hover {
+    transform: none;
+  }
+}

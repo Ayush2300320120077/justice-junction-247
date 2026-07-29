@@ -77,6 +77,10 @@ h3 { font-size: clamp(1.2rem, 3vw, 1.8rem); }
   --bur: #7B1D2E;
   --bur-d: #5C1521;
   --bur-l: #9B2D42;
+  --bur-dark: #3D0E16;
+  --bur-darker: #1A0A0D;
+  --bur-light: #9E2A3F;
+  --blush-light: #F5C4B3;
   --cream: #FDF6EE;
   --cream-2: #F5E0C8;
   --cream-3: #E8C9A8;
