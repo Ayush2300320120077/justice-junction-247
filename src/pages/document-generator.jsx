@@ -85,13 +85,109 @@ const TEMPLATES = [
     ],
   },
   {
-    id: 'stamp-paper', name: 'e-Stamp Paper', description: 'Generate a printable e-Stamp Paper for legal agreements, affidavits, and notarization.',
+    id: 'promissory', name: 'Promissory Note', description: 'Legal document for debt acknowledgment and repayment under Negotiable Instruments Act 1881.',
     fields: [
-      { name: 'denomination', label: 'Stamp Value (₹)', type: 'select', options: ['10', '20', '50', '100', '200', '500', '1000'], required: true },
+      { name: 'borrower', label: 'Borrower Full Name', type: 'text', required: true },
+      { name: 'borrowerAddress', label: 'Borrower Address', type: 'textarea', required: true },
+      { name: 'lender', label: 'Lender Full Name', type: 'text', required: true },
+      { name: 'amount', label: 'Loan Amount in ₹', type: 'number', required: true },
+      { name: 'interest', label: 'Interest Rate % per annum', type: 'number' },
+      { name: 'repaymentDate', label: 'Repayment Date', type: 'date', required: true },
+      { name: 'city', label: 'City', type: 'text', required: true },
+    ],
+  },
+  {
+    id: 'consumer-complaint', name: 'Consumer Complaint', description: 'Complaint to Consumer Forum under Consumer Protection Act 2019.',
+    fields: [
+      { name: 'complainantName', label: 'Complainant Name', type: 'text', required: true },
+      { name: 'complainantAddress', label: 'Complainant Address', type: 'textarea', required: true },
+      { name: 'oppositeParty', label: 'Opposite Party Name', type: 'text', required: true },
+      { name: 'oppositePartyAddress', label: 'Opposite Party Address', type: 'textarea', required: true },
+      { name: 'product', label: 'Product/Service Purchased', type: 'text', required: true },
+      { name: 'purchaseDate', label: 'Date of Purchase', type: 'date', required: true },
+      { name: 'amountPaid', label: 'Amount Paid in ₹', type: 'number', required: true },
+      { name: 'complaintDetails', label: 'Nature of Defect/Deficiency', type: 'textarea', required: true },
+      { name: 'reliefRequested', label: 'Relief Requested', type: 'textarea', required: true },
+    ],
+  },
+  {
+    id: 'rti', name: 'RTI Application', description: 'Right to Information application under RTI Act 2005 to any public authority.',
+    fields: [
+      { name: 'applicantName', label: 'Applicant Full Name', type: 'text', required: true },
+      { name: 'applicantAddress', label: 'Applicant Address', type: 'textarea', required: true },
+      { name: 'applicantPhone', label: 'Phone Number', type: 'text', required: true },
+      { name: 'authority', label: 'Public Authority / Department Name', type: 'text', required: true },
+      { name: 'authorityAddress', label: 'Department Address', type: 'textarea', required: true },
+      { name: 'information', label: 'Information Required (describe clearly)', type: 'textarea', required: true },
+      { name: 'period', label: 'Period to which information pertains', type: 'text', required: true },
+      { name: 'city', label: 'City', type: 'text', required: true },
+      { name: 'date', label: 'Date of Application', type: 'date', required: true },
+    ],
+  },
+  {
+    id: 'poa', name: 'Power of Attorney', description: 'General or specific power of attorney to authorize another person to act on your behalf.',
+    fields: [
+      { name: 'grantor', label: 'Grantor (Principal) Full Name', type: 'text', required: true },
+      { name: 'grantorAddress', label: 'Grantor Address', type: 'textarea', required: true },
+      { name: 'grantorAge', label: 'Grantor Age', type: 'number', required: true },
+      { name: 'attorney', label: 'Attorney (Agent) Full Name', type: 'text', required: true },
+      { name: 'attorneyAddress', label: 'Attorney Address', type: 'textarea', required: true },
+      { name: 'poaType', label: 'Type of POA', type: 'select', options: ['General Power of Attorney', 'Special Power of Attorney', 'Irrevocable Power of Attorney'], required: true },
+      { name: 'powers', label: 'Powers Granted (describe the acts authorized)', type: 'textarea', required: true },
+      { name: 'validity', label: 'Validity Period (e.g. 1 year, or leave blank for no expiry)', type: 'text' },
+      { name: 'city', label: 'City', type: 'text', required: true },
+      { name: 'date', label: 'Date', type: 'date', required: true },
+    ],
+  },
+  {
+    id: 'employment', name: 'Employment Agreement', description: 'Standard offer letter and employment contract for hiring in India.',
+    fields: [
+      { name: 'companyName', label: 'Company / Employer Name', type: 'text', required: true },
+      { name: 'companyAddress', label: 'Company Address', type: 'textarea', required: true },
+      { name: 'employeeName', label: 'Employee Full Name', type: 'text', required: true },
+      { name: 'designation', label: 'Designation / Role', type: 'text', required: true },
+      { name: 'department', label: 'Department', type: 'text', required: true },
+      { name: 'startDate', label: 'Date of Joining', type: 'date', required: true },
+      { name: 'ctc', label: 'Annual CTC in ₹', type: 'number', required: true },
+      { name: 'probation', label: 'Probation Period (months)', type: 'number', required: true },
+      { name: 'noticePeriod', label: 'Notice Period (months)', type: 'number', required: true },
+      { name: 'city', label: 'Place of Work', type: 'text', required: true },
+    ],
+  },
+  {
+    id: 'indemnity', name: 'Indemnity Bond', description: 'Bond to protect one party from loss or damage caused by another — required for lost documents, insurance, banks.',
+    fields: [
+      { name: 'indemnifier', label: 'Indemnifier Name (who gives bond)', type: 'text', required: true },
+      { name: 'indemnifierAddress', label: 'Indemnifier Address', type: 'textarea', required: true },
+      { name: 'indemnified', label: 'Indemnified Party Name (who is protected)', type: 'text', required: true },
+      { name: 'reason', label: 'Reason for Indemnity Bond', type: 'textarea', required: true },
+      { name: 'amount', label: 'Indemnity Amount in ₹', type: 'number', required: true },
+      { name: 'city', label: 'City', type: 'text', required: true },
+      { name: 'date', label: 'Date', type: 'date', required: true },
+    ],
+  },
+  {
+    id: 'gift-deed', name: 'Gift Deed', description: 'Transfer of movable or immovable property as a gift under Transfer of Property Act 1882.',
+    fields: [
+      { name: 'donor', label: 'Donor (Giver) Full Name', type: 'text', required: true },
+      { name: 'donorAddress', label: 'Donor Address', type: 'textarea', required: true },
+      { name: 'donee', label: 'Donee (Recipient) Full Name', type: 'text', required: true },
+      { name: 'doneeAddress', label: 'Donee Address', type: 'textarea', required: true },
+      { name: 'relationship', label: 'Relationship between Donor & Donee', type: 'text', required: true },
+      { name: 'propertyDesc', label: 'Description of Property / Gift', type: 'textarea', required: true },
+      { name: 'propertyValue', label: 'Market Value of Property in ₹', type: 'number', required: true },
+      { name: 'city', label: 'City', type: 'text', required: true },
+      { name: 'date', label: 'Date', type: 'date', required: true },
+    ],
+  },
+  {
+    id: 'stamp-paper', name: 'e-Stamp Certificate', description: 'Generate a printable SHCIL-format e-Stamp Paper. For real e-stamps purchase from shcilestamp.com.',
+    fields: [
+      { name: 'denomination', label: 'Stamp Value (₹)', type: 'select', options: ['10', '20', '50', '100', '200', '500', '1000', '2000', '5000', '10000', '20000', '50000'], required: true },
       { name: 'state', label: 'State / UT', type: 'select', options: ['Delhi', 'Maharashtra', 'Karnataka', 'Tamil Nadu', 'Uttar Pradesh', 'Rajasthan', 'Gujarat', 'Madhya Pradesh', 'West Bengal', 'Telangana', 'Andhra Pradesh', 'Kerala', 'Punjab', 'Haryana', 'Bihar', 'Odisha', 'Jharkhand', 'Chhattisgarh', 'Assam', 'Uttarakhand', 'Himachal Pradesh', 'Goa', 'Jammu & Kashmir', 'Other'], required: true },
       { name: 'purchaserName', label: 'First Party / Purchaser Name', type: 'text', required: true },
       { name: 'secondPartyName', label: 'Second Party Name (if applicable)', type: 'text' },
-      { name: 'purpose', label: 'Purpose / Description of Document', type: 'select', options: ['Rental Agreement', 'Affidavit', 'Sale Deed', 'Power of Attorney', 'Indemnity Bond', 'Gift Deed', 'Mortgage Deed', 'Partnership Deed', 'General Agreement', 'Other'], required: true },
+      { name: 'purpose', label: 'Purpose / Description of Document', type: 'select', options: ['Rental Agreement', 'Affidavit', 'Sale Deed', 'Power of Attorney', 'Indemnity Bond', 'Gift Deed', 'Mortgage Deed', 'Partnership Deed', 'Employment Agreement', 'NDA / Confidentiality Agreement', 'Promissory Note', 'General Agreement', 'Other'], required: true },
       { name: 'considerationAmount', label: 'Consideration Amount in ₹ (if any)', type: 'number' },
     ],
     isStampPaper: true,
@@ -423,6 +519,182 @@ _________________________          _________________________
 Signature of Party A               Signature of Party B
 (${data.partyA || '________'})     (${data.partyB || '________'})${DISCLAIMER}`
 
+    case 'rti':
+      return `APPLICATION UNDER THE RIGHT TO INFORMATION ACT, 2005
+
+To,
+The Public Information Officer,
+${data.authority || '________'},
+${data.authorityAddress || '________'}
+
+Date: ${data.date || now}
+
+Subject: Request for Information under Section 6 of the RTI Act, 2005
+
+Sir/Madam,
+
+I, ${data.applicantName || '________'}, residing at ${data.applicantAddress || '________'}, wish to obtain the following information under the Right to Information Act, 2005.
+
+INFORMATION REQUIRED:
+${data.information || '________'}
+
+PERIOD TO WHICH INFORMATION PERTAINS:
+${data.period || '________'}
+
+I am ready to pay the prescribed fee as applicable. I hereby declare that I am a citizen of India.
+
+Please provide the information within the stipulated time of 30 days as prescribed under the RTI Act, 2005. In case the required information is held by another public authority, please transfer this application to the concerned PIO under Section 6(3) of the RTI Act.
+
+Thanking you,
+
+Yours faithfully,
+
+
+_________________________
+Name: ${data.applicantName || '________'}
+Address: ${data.applicantAddress || '________'}
+Phone: ${data.applicantPhone || '________'}
+Date: ${data.date || now}
+Place: ${data.city || '________'}
+
+Note: Enclosed — Demand Draft / IPO / Court Fee Stamp of ₹10 as RTI application fee (BPL card holders are exempt — attach card copy).${DISCLAIMER}`
+
+    case 'poa':
+      return `${data.poaType || 'POWER OF ATTORNEY'}\n\nKnow all men by these presents that I, ${data.grantor || '________'}, son/daughter of ____________, aged ${data.grantorAge || '___'} years, residing at ${data.grantorAddress || '________'}, (hereinafter called the \"PRINCIPAL\") do hereby appoint and constitute ${data.attorney || '________'}, residing at ${data.attorneyAddress || '________'}, (hereinafter called the \"ATTORNEY\") as my true and lawful attorney to act on my behalf.
+
+THE PRINCIPAL hereby grants to the ATTORNEY the authority to do the following:
+
+${data.powers || '________'}
+
+This Power of Attorney shall ${data.validity ? `remain valid for ${data.validity} from the date of execution` : 'remain valid until expressly revoked in writing'}.
+
+The PRINCIPAL hereby ratifies and confirms all that the ATTORNEY lawfully does or causes to be done by virtue of these presents.
+
+IN WITNESS WHEREOF, I have hereunto set my hand at ${data.city || '________'} on this ${data.date || now}.
+
+
+_________________________
+Signature of Principal / Grantor
+(${data.grantor || '________'})
+
+
+WITNESS:
+1. _________________________      2. _________________________
+   Name & Address                     Name & Address
+
+[To be attested by Notary / Sub-Registrar]${DISCLAIMER}`
+
+    case 'employment':
+      return `EMPLOYMENT AGREEMENT / OFFER LETTER
+
+Date: ${now}
+
+To,
+${data.employeeName || '________'}
+
+Dear ${data.employeeName || '________'},
+
+We are pleased to offer you employment with ${data.companyName || '________'}, having its registered office at ${data.companyAddress || '________'}, on the following terms and conditions:
+
+1. DESIGNATION: ${data.designation || '________'}, ${data.department || '________'} Department.
+
+2. DATE OF JOINING: ${data.startDate || now}
+
+3. PLACE OF POSTING: ${data.city || '________'} (subject to transfer at the Company's discretion).
+
+4. REMUNERATION: Your total cost to company (CTC) shall be ₹${parseInt(data.ctc || 0).toLocaleString('en-IN')} per annum (breakup to be provided in your appointment letter).
+
+5. PROBATION: You shall be on probation for a period of ${data.probation || '6'} months from the date of joining, during which either party may terminate employment with 7 days' notice.
+
+6. NOTICE PERIOD: After confirmation, either party shall give ${data.noticePeriod || '1'} month(s) written notice for termination of service.
+
+7. CONFIDENTIALITY: You shall maintain strict confidentiality of all proprietary and business information of the Company.
+
+8. GOVERNING LAW: This agreement shall be governed by the laws of India.
+
+Please sign and return a copy of this letter as acceptance of the offer.
+
+Yours sincerely,
+
+
+_________________________            _________________________
+Authorized Signatory                  Acceptance by Employee
+${data.companyName || '________'}     ${data.employeeName || '________'}${DISCLAIMER}`
+
+    case 'indemnity':
+      return `INDEMNITY BOND
+
+THIS INDEMNITY BOND is executed on ${data.date || now} at ${data.city || '________'} by:
+
+${data.indemnifier || '________'}, residing at ${data.indemnifierAddress || '________'} (hereinafter referred to as the \"INDEMNIFIER\")
+
+IN FAVOUR OF:
+
+${data.indemnified || '________'} (hereinafter referred to as the \"INDEMNIFIED PARTY\")
+
+WHEREAS: ${data.reason || '________'}
+
+NOW THIS DEED WITNESSETH that in consideration of the above and the Indemnified Party agreeing to the request of the Indemnifier, the Indemnifier hereby undertakes and agrees:
+
+1. To indemnify and keep indemnified the Indemnified Party against all losses, damages, costs, claims, demands, and expenses up to a sum of ₹${parseInt(data.amount || 0).toLocaleString('en-IN')} (Rupees only) that the Indemnified Party may suffer or incur as a result of the above.
+
+2. That this Indemnity Bond shall be binding upon the Indemnifier, their heirs, legal representatives, successors, and assigns.
+
+IN WITNESS WHEREOF, the Indemnifier has set their hand on the day and year first above written.
+
+
+_________________________
+Signature of Indemnifier
+(${data.indemnifier || '________'})
+
+WITNESS:
+1. _________________________
+2. _________________________${DISCLAIMER}`
+
+    case 'gift-deed':
+      return `GIFT DEED
+
+This GIFT DEED is executed on ${data.date || now} at ${data.city || '________'} by:
+
+DONOR: ${data.donor || '________'}
+Address: ${data.donorAddress || '________'}
+(Hereinafter called the "DONOR")
+
+IN FAVOUR OF:
+
+DONEE: ${data.donee || '________'}
+Address: ${data.doneeAddress || '________'}
+(Hereinafter called the "DONEE")
+
+RELATIONSHIP: The Donee is the ${data.relationship || '________'} of the Donor.
+
+WHEREAS the Donor is the absolute owner of the property described below and desires to gift the same to the Donee out of natural love and affection:
+
+PROPERTY / GIFT DESCRIPTION:
+${data.propertyDesc || '________'}
+
+APPROXIMATE MARKET VALUE: ₹${parseInt(data.propertyValue || 0).toLocaleString('en-IN')} (Rupees only)
+
+The Donor declares:
+1. That this gift is made voluntarily, without any coercion, fraud, or undue influence.
+2. That the Donor has clear title over the above property and it is free from all encumbrances.
+3. That the Donee accepts this gift with gratitude.
+
+This deed shall take effect from the date of execution.
+
+IN WITNESS WHEREOF, the parties have signed this deed on the day and year first written above.
+
+
+_________________________          _________________________
+Signature of Donor                 Acceptance by Donee
+(${data.donor || '________'})      (${data.donee || '________'})
+
+WITNESS:
+1. _________________________
+2. _________________________
+
+[Note: Gift Deed for immovable property must be compulsorily registered at Sub-Registrar's office. Stamp duty applies.]${DISCLAIMER}`
+
     default:
       return 'Document template not found.'
   }
@@ -446,9 +718,6 @@ export default function DocumentGenerator() {
   const activeTemplate = TEMPLATES.find(t => t.id === expandedTemplate)
 
   const handleSelectTemplate = (templateId) => {
-    if (['promissory', 'consumer-complaint', 'nda'].includes(templateId)) {
-      return
-    }
     if (!isLoggedIn) {
       navigate('/login?returnUrl=/document-generator')
       return
@@ -460,7 +729,6 @@ export default function DocumentGenerator() {
       setFormData({})
       setGeneratedId(null)
       setFieldErrors({})
-      // Clear AI states as well
       setAiMode(false)
       setGeneratedDraftText('')
       setFlaggedSections([])
@@ -595,88 +863,75 @@ export default function DocumentGenerator() {
       </Helmet>
 
       {/* Hero Section */}
-      <section style={{ padding: '6rem 0', background: 'linear-gradient(135deg, #7B1D2E 0%, #5C1521 100%)', color: '#fff', textAlign: 'center' }}>
-        <div className="container">
-          <div className="sec-label" style={{ justifyContent: 'center', color: '#F5C4B3' }}>DIY Legal Tools</div>
-          <h1 className="sec-title" style={{ color: '#fff', fontFamily: "'Cormorant Garamond', serif", fontSize: 'clamp(2.5rem, 5vw, 3.5rem)' }}>Legal <em style={{ color: '#F5C4B3', fontStyle: 'normal' }}>Document Generator</em></h1>
-          <p style={{ color: '#F9EEE4', maxWidth: 600, margin: '0 auto', fontSize: '1.1rem', lineHeight: 1.6 }}>Create professional drafts for common legal needs in minutes. Just fill the details and download your document.</p>
+      <section style={{
+        position: 'relative', overflow: 'hidden', paddingTop: '9rem', paddingBottom: '5rem',
+        backgroundImage: `url('https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1920&q=80')`,
+        backgroundSize: 'cover', backgroundPosition: 'center'
+      }}>
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(150deg, rgba(8,3,5,0.95) 0%, rgba(78,18,28,0.9) 55%, rgba(8,3,5,0.96) 100%)' }} />
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 100, background: 'linear-gradient(to bottom, transparent, #F5F0EC)' }} />
+        <div className="container" style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(245,196,179,0.1)', border: '1px solid rgba(245,196,179,0.2)', borderRadius: 30, padding: '.35rem 1.1rem', marginBottom: '1.5rem' }}>
+            <FileText size={12} color="#F5C4B3" />
+            <span style={{ fontSize: '.7rem', color: '#F5C4B3', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '2.5px' }}>Free Legal Document Tools</span>
+          </div>
+          <h1 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(2.2rem, 5vw, 3.8rem)', fontWeight: 900, color: '#fff', letterSpacing: '-0.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
+            Draft Legal Documents <span style={{ color: '#F5C4B3' }}>in Minutes</span>
+          </h1>
+          <p style={{ color: 'rgba(245,224,200,0.75)', maxWidth: 600, margin: '0 auto 2rem', fontSize: '1.05rem', lineHeight: 1.8 }}>
+            {TEMPLATES.filter(t => !t.isStampPaper).length} professionally drafted templates — Rental Agreements, RTI, Power of Attorney, Gift Deed, Employment Contracts and more. Fill, generate & download instantly.
+          </p>
+          <div style={{ display: 'flex', gap: '2rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+            {[['📄', `${TEMPLATES.filter(t=>!t.isStampPaper).length} Templates`], ['⚡', 'Instant Download'], ['🏛️', 'Court-Ready Format'], ['🆓', 'Completely Free']].map(([icon, label]) => (
+              <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '.85rem', fontWeight: 700, color: 'rgba(245,224,200,0.8)' }}>
+                <span>{icon}</span> {label}
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      <div className="container" style={{ padding: '4rem 5vw' }}>
+      {/* SHCIL redirect banner for real stamp */}
+      <div style={{ background: '#FFFBEB', borderBottom: '1px solid #FDE68A', padding: '.85rem 0' }}>
+        <div className="container" style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
+          <span style={{ fontSize: '.85rem', fontWeight: 700, color: '#92400E' }}>🏷️ Need a <strong>legally valid e-Stamp Certificate</strong>? Purchase from the official government portal:</span>
+          <a href="https://www.shcilestamp.com" target="_blank" rel="noopener noreferrer" style={{ background: '#D97706', color: '#fff', borderRadius: 10, padding: '.4rem 1rem', fontWeight: 800, fontSize: '.82rem', textDecoration: 'none' }}>Visit shcilestamp.com →</a>
+        </div>
+      </div>
+
+      <div className="container" style={{ padding: '3rem 0 5rem' }}>
         <div style={s.grid}>
           {TEMPLATES.map(t => {
-            const isComingSoon = ['promissory', 'consumer-complaint', 'nda'].includes(t.id)
+            const ICONS = {
+              rental: '🏠', affidavit: '📋', 'legal-notice': '⚠️',
+              nda: '🤝', promissory: '💰', 'consumer-complaint': '🛒',
+              rti: '📝', poa: '✍️', employment: '👔',
+              indemnity: '🛡️', 'gift-deed': '🎁', 'stamp-paper': '🏛️'
+            }
             const isPremium = t.isStampPaper
-            const isAvailable = !isComingSoon
-
             return (
               <div key={t.id} style={{ position: 'relative' }}>
                 <div style={s.templateCard} className="card-hover" onClick={() => handleSelectTemplate(t.id)}>
-                  {/* Coming Soon Overlay */}
-                  {isComingSoon && (
-                    <div style={{
-                      position: 'absolute',
-                      inset: 0,
-                      background: 'rgba(253, 248, 244, 0.85)',
-                      backdropFilter: 'blur(3px)',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      borderRadius: '24px',
-                      zIndex: 10,
-                      cursor: 'not-allowed'
-                    }} onClick={(e) => e.stopPropagation()}>
-                      <span style={{
-                        background: '#7B1D2E',
-                        color: '#fff',
-                        padding: '8px 20px',
-                        borderRadius: '50px',
-                        fontSize: '0.8rem',
-                        fontWeight: 800,
-                        boxShadow: '0 4px 10px rgba(123, 29, 46, 0.25)',
-                        letterSpacing: '1px',
-                        textTransform: 'uppercase'
-                      }}>Coming Soon</span>
-                    </div>
-                  )}
-
-                  <div style={s.iconBox}>{t.isStampPaper ? <Stamp size={32}/> : <FileText size={32}/>}</div>
-                  <h3 style={{fontFamily: "'Playfair Display', serif", fontSize: '1.4rem', marginBottom: 8}}>{t.name}</h3>
-                  
-                  {isAvailable && !isPremium && (
-                    <span style={{
-                      display: 'inline-block',
-                      background: 'rgba(34, 197, 94, 0.1)',
-                      color: '#16a34a',
-                      fontSize: '0.65rem',
-                      fontWeight: 800,
-                      padding: '3px 12px',
-                      borderRadius: 50,
-                      marginBottom: 8,
-                      border: '1px solid rgba(34, 197, 94, 0.2)',
-                      letterSpacing: '0.5px'
-                    }}>AVAILABLE</span>
-                  )}
+                  <div style={{ height: 4, background: isPremium ? 'linear-gradient(90deg,#B8860B,#DAA520)' : 'linear-gradient(90deg,#7B1D2E,#C44B6B)', borderRadius: '22px 22px 0 0', margin: '-2rem -2rem 1.5rem' }} />
+                  <div style={{ fontSize: '2.2rem', marginBottom: '.8rem' }}>{ICONS[t.id] || '📄'}</div>
+                  <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '1.05rem', marginBottom: 6, fontWeight: 800, color: '#1A0A0D', lineHeight: 1.3 }}>{t.name}</h3>
+                  <span style={{
+                    display: 'inline-block',
+                    background: isPremium ? 'rgba(212,175,55,0.1)' : 'rgba(22,163,74,0.08)',
+                    color: isPremium ? '#B8860B' : '#15803D',
+                    fontSize: '.65rem', fontWeight: 800, padding: '3px 10px',
+                    borderRadius: 50, marginBottom: 10,
+                    border: `1px solid ${isPremium ? 'rgba(212,175,55,0.25)' : 'rgba(22,163,74,0.2)'}`,
+                    letterSpacing: '.5px'
+                  }}>{isPremium ? '⭐ STAMP PAPER' : '✅ AVAILABLE FREE'}</span>
+                  <p style={{ fontSize: '.85rem', color: '#5A3A42', lineHeight: 1.6, marginBottom: '1.2rem' }}>{t.description}</p>
                   {isPremium && (
-                    <span style={{
-                      display:'inline-block',
-                      background:'rgba(212, 175, 55, 0.1)',
-                      color:'#B8860B',
-                      fontSize:'.65rem',
-                      fontWeight:800,
-                      padding:'3px 12px',
-                      borderRadius:50,
-                      marginBottom:8,
-                      border: '1px solid rgba(212, 175, 55, 0.2)',
-                      letterSpacing:'.5px'
-                    }}>PREMIUM · AVAILABLE</span>
+                    <p style={{ fontSize: '.72rem', color: '#9A7A84', marginBottom: '1rem' }}>
+                      For legally valid stamp paper: <a href="https://www.shcilestamp.com" target="_blank" rel="noopener noreferrer" style={{ color: '#7B1D2E', fontWeight: 700 }}>shcilestamp.com</a>
+                    </p>
                   )}
-
-                  <p style={{fontSize: '.9rem', color: 'var(--txt-3)', lineHeight: 1.6}}>{t.description}</p>
-                  <button className="btn btn-outline" style={{marginTop: '1.5rem', width: '100%', gap: 6}} disabled={isComingSoon}>
-                    Select Template
+                  <button className="btn btn-outline" style={{ marginTop: 'auto', width: '100%', gap: 6 }}>
+                    Use Template
                   </button>
                 </div>
               </div>
