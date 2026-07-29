@@ -341,21 +341,26 @@ export default function Search() {
             Browse <strong style={{ color: '#F5C4B3' }}>1,338+</strong> Bar Council verified advocates across India.
             Filter by area, location, language, fee & availability.
           </p>
-          {/* Quick spec chips */}
-          <div style={{ display: 'flex', gap: 8, justifyContent: 'center', flexWrap: 'wrap', marginBottom: '1rem' }}>
-            {['Criminal Defence','Family Law','Property Law','Corporate Law','Cyber Law','Bail & FIR'].map(s => (
-              <button key={s} onClick={() => setSpec(s === spec ? '' : s)} style={{
-                background: spec === s ? '#F5C4B3' : 'rgba(255,255,255,0.08)',
-                border: `1px solid ${spec === s ? '#F5C4B3' : 'rgba(255,255,255,0.18)'}`,
-                color: spec === s ? '#1A0A0D' : 'rgba(255,255,255,0.82)',
-                borderRadius: 30, padding: '.38rem 1rem',
-                fontSize: '.78rem', fontWeight: 700, cursor: 'pointer',
-                transition: 'all 0.2s', backdropFilter: 'blur(6px)'
-              }}>{s}</button>
-            ))}
-          </div>
+
         </div>
       </section>
+
+      {/* ── Practice area quick-filter strip ── */}
+      <div style={{ background: '#fff', borderBottom: '1px solid #EDD5BE', padding: '.85rem 0', overflowX: 'auto' }}>
+        <div className="container" style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'nowrap', minWidth: 'max-content' }}>
+          <span style={{ fontSize: '.72rem', fontWeight: 800, color: '#9A7A84', textTransform: 'uppercase', letterSpacing: '1.5px', flexShrink: 0, marginRight: 4 }}>Quick filter:</span>
+          {['Criminal Defence','Family Law','Property Law','Corporate Law','Cyber Law','Bail & FIR','Divorce','Taxation','Labour Law'].map(s => (
+            <button key={s} onClick={() => setSpec(s === spec ? '' : s)} style={{
+              background: spec === s ? '#7B1D2E' : 'transparent',
+              border: `1.5px solid ${spec === s ? '#7B1D2E' : '#E8C9A8'}`,
+              color: spec === s ? '#fff' : '#4A2030',
+              borderRadius: 30, padding: '.38rem 1rem',
+              fontSize: '.78rem', fontWeight: 700, cursor: 'pointer',
+              transition: 'all 0.18s', whiteSpace: 'nowrap', flexShrink: 0
+            }}>{s}</button>
+          ))}
+        </div>
+      </div>
 
       <div className="container" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
 
