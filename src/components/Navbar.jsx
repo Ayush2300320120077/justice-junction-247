@@ -40,7 +40,7 @@ export default function Navbar() {
       {/* Main nav */}
       <nav style={{...s.nav,...(scrolled?s.navScrolled:{})}} className="mobile-px-4">
         <div style={s.inner}>
-          <Link to="/" style={{textDecoration:'none'}}>
+          <Link to="/" style={{textDecoration:'none', flexShrink: 0}}>
             <Logo color="#fff" subColor="#F5E6D3" />
           </Link>
 
@@ -57,7 +57,7 @@ export default function Navbar() {
             ))}
           </ul>
 
-          <div style={{display:'flex', alignItems:'center', gap:'1rem'}}>
+          <div style={{display:'flex', alignItems:'center', gap:'0.75rem', flexShrink: 0}}>
             <div style={s.actions} className="hide-mobile">
               <Link to="/favorites" style={s.iconBtn} title="Saved Lawyers">
                 <span style={{display:'flex',color:'#8B1A2A'}}><Heart size={18}/></span>
@@ -85,12 +85,12 @@ export default function Navbar() {
               )}
             </div>
 
-            <div className="show-mobile" style={{alignItems:'center', gap:'0.5rem'}}>
+            <div className="show-mobile-flex" style={{alignItems:'center', gap:'0.5rem'}}>
               <Link to="/favorites" style={{...s.iconBtn, width:36, height:36}} title="Saved Lawyers">
                 <span style={{display:'flex',color:'#8B1A2A'}}><Heart size={16}/></span>
                 {favCount > 0 && <span style={{...s.badge, width:16, height:16, fontSize:'.6rem', top:-4, right:-4}}>{favCount}</span>}
               </Link>
-              <button style={s.burger} onClick={() => setMobileOpen(o => !o)}>
+              <button style={s.burger} onClick={() => setMobileOpen(o => !o)} aria-label="Toggle Navigation Menu">
                 {mobileOpen ? '✕' : '☰'}
               </button>
             </div>
@@ -109,7 +109,7 @@ export default function Navbar() {
         }} className="backdrop-blur">
           <div className="container" style={{display:'flex', flexDirection:'column', gap: 8, paddingTop: '1rem', position: 'relative'}}>
             <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', paddingBottom: '1rem'}}>
-              <h3 style={{color: '#1A0A0D', margin: 0}}>Menu</h3>
+              <h3 style={{color: '#1A0A0D', margin: 0}}>Navigation</h3>
               <button onClick={() => setMobileOpen(false)} style={{background: 'transparent', border: 'none', fontSize: '1.5rem', color: '#1A0A0D', cursor: 'pointer'}}>✕</button>
             </div>
             {[
@@ -126,7 +126,7 @@ export default function Navbar() {
             ].map(([p, i, l], idx) => (
               <Link 
                 key={p} 
-                href={p} 
+                to={p} 
                 style={{...s.mLink, animationDelay: `${idx * 0.05}s`}} 
                 onClick={() => setMobileOpen(false)}
                 className="page-reveal"
@@ -177,8 +177,7 @@ const s = {
   badge:{position:'absolute',top:-2,right:-2,width:18,height:18,background:'#8B1A2A',color:'#fff',borderRadius:'50%',fontSize:'.65rem',fontWeight:800,display:'flex',alignItems:'center',justifyContent:'center',border: '2px solid #fff'},
   userChip:{display:'flex',alignItems:'center',gap:8,padding:'.4rem .8rem',background:'#fff',borderRadius:50,border:'1px solid #E8C9A8', boxShadow: 'var(--sh-sm)'},
   userAv:{width:28,height:28,borderRadius:'50%',background:'#7B1D2E',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'.8rem',fontWeight:700},
-  burger:{width:40,height:40,background:'rgba(255,255,255,0.15)',border:'1px solid rgba(255,255,255,0.25)',borderRadius:12,cursor:'pointer',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:10, transition: 'all 0.2s', color: '#fff', fontSize: '1.2rem'},
-  bl:{width:20,height:2,background:'#fff',borderRadius:2,display:'block',transition:'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'},
-  mobileMenu:{position:'fixed',top:104,left:0,right:0,bottom:0,zIndex:199,background:'rgba(253,248,244,0.98)',padding:'1.5rem 0',display:'flex',flexDirection:'column',transition:'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)', overflowY: 'auto'},
+  burger:{width:40,height:40,background:'rgba(255,255,255,0.15)',border:'1px solid rgba(255,255,255,0.25)',borderRadius:12,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',transition: 'all 0.2s', color: '#fff', fontSize: '1.2rem'},
+  mobileMenu:{position:'fixed',top:100,left:0,right:0,bottom:0,zIndex:199,background:'rgba(253,248,244,0.98)',padding:'1.5rem 0',display:'flex',flexDirection:'column',transition:'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)', overflowY: 'auto'},
   mLink:{padding:'1rem',borderRadius:16,fontSize:'1.05rem',fontWeight:700,color:'#1A0A0D',textDecoration:'none',display:'flex',gap:15,alignItems:'center', background: '#fff', border: '1px solid #EDD5BE', transition: 'all 0.2s'},
 }
