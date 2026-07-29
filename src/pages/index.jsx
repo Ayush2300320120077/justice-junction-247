@@ -118,7 +118,7 @@ export default function Home() {
           "@context":"https://schema.org","@type":"LegalService",
           "name":"Justice Junction 24/7","url":"https://justice-junction-app.vercel.app/",
           "areaServed":"India","priceRange":"₹500–₹10,000",
-          "founder":{"@type":"Person","name":"Ayush Kumar"}
+          "provider":{"@type":"Organization","name":"Justice Junction 24/7"}
         })}} />
       </Helmet>
 
@@ -208,7 +208,7 @@ export default function Home() {
           }}>
             <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#4ADE80', animation: 'pulseGlow 2s infinite' }} />
             <span style={{ fontSize: '.72rem', fontWeight: 800, color: '#F5C4B3', letterSpacing: '2.5px', textTransform: 'uppercase' }}>
-              Live · India's #1 Legal Marketplace · Founded by Ayush Kumar
+              Live · India's #1 Legal Marketplace · 24/7 Legal Access
             </span>
           </div>
 
