@@ -312,7 +312,7 @@ export default function Search() {
       {/* ── Cinematic Hero ── */}
       <section style={{
         position: 'relative', overflow: 'hidden',
-        padding: '5.5rem 0 4rem',
+        padding: '9rem 0 5rem',
         backgroundImage: `url('https://images.unsplash.com/photo-1505664194779-8beaceb93744?w=1920&q=85')`,
         backgroundSize: 'cover', backgroundPosition: 'center top'
       }}>
