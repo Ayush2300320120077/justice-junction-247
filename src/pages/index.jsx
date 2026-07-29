@@ -308,9 +308,9 @@ export default function Home() {
           animation: particleDrift var(--dur,7s) var(--delay,0s) infinite ease-out;
         }
 
-        /* ── Hero Ken Burns BG ── */
+        /* ── Hero BG (static, no zoom) ── */
         .hero-bg-img {
-          animation: heroKenBurns 28s ease-in-out infinite;
+          /* no animation — keeps image steady */
         }
 
         /* ── Light Rays ── */
