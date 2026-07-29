@@ -205,116 +205,165 @@ export default function Home() {
       </Helmet>
 
       <style dangerouslySetInnerHTML={{ __html: `
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=Sora:wght@400;700;900&display=swap');
+
+        /* ── Core Keyframes ── */
         @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-        @keyframes fadeUp { from{opacity:0;transform:translateY(32px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes fadeUp { from{opacity:0;transform:translateY(36px)} to{opacity:1;transform:translateY(0)} }
         @keyframes fadeIn { from{opacity:0} to{opacity:1} }
-        @keyframes pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.08);opacity:0.8} }
-        @keyframes pulseRing { 0%{transform:scale(1);opacity:0.6} 100%{transform:scale(1.8);opacity:0} }
-        @keyframes float { 0%,100%{transform:translateY(0px) rotate(0deg)} 33%{transform:translateY(-14px) rotate(1.5deg)} 66%{transform:translateY(-7px) rotate(-1deg)} }
-        @keyframes shimmer { 0%{background-position:-200% center} 100%{background-position:200% center} }
+        @keyframes pulseRing { 0%{transform:scale(1);opacity:0.7} 100%{transform:scale(2.2);opacity:0} }
         @keyframes marqueeFlow { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
-        @keyframes rotateGlow { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
-        @keyframes slideInLeft { from{opacity:0;transform:translateX(-40px)} to{opacity:1;transform:translateX(0)} }
-        @keyframes slideInRight { from{opacity:0;transform:translateX(40px)} to{opacity:1;transform:translateX(0)} }
-        @keyframes countBand { from{opacity:0;transform:scale(.92)} to{opacity:1;transform:scale(1)} }
+        @keyframes countBand { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+        /* ── Hero Animations ── */
+        @keyframes heroKenBurns {
+          0%   { transform: scale(1.0) translate(0px, 0px); }
+          50%  { transform: scale(1.07) translate(-18px, -10px); }
+          100% { transform: scale(1.0) translate(0px, 0px); }
+        }
+        @keyframes lightRay1 {
+          0%,100% { opacity: 0.12; transform: rotate(-15deg) scaleY(1); }
+          50%     { opacity: 0.22; transform: rotate(-15deg) scaleY(1.04); }
+        }
+        @keyframes lightRay2 {
+          0%,100% { opacity: 0.08; transform: rotate(10deg) scaleY(1); }
+          50%     { opacity: 0.16; transform: rotate(10deg) scaleY(1.05); }
+        }
+        @keyframes floatScales {
+          0%,100% { transform: translateY(0px) rotate(-2deg); }
+          50%     { transform: translateY(-22px) rotate(2deg); }
+        }
+        @keyframes glowPulse {
+          0%,100% { opacity: 0.25; }
+          50%     { opacity: 0.5; }
+        }
         @keyframes particleDrift {
-          0% { transform: translateY(0px) translateX(0px); opacity: 0; }
-          10% { opacity: 0.6; }
-          90% { opacity: 0.2; }
-          100% { transform: translateY(-120px) translateX(30px); opacity: 0; }
+          0%   { transform: translateY(0) translateX(0); opacity: 0; }
+          15%  { opacity: var(--po, 0.7); }
+          85%  { opacity: calc(var(--po, 0.7) * 0.3); }
+          100% { transform: translateY(-160px) translateX(var(--px, 20px)); opacity: 0; }
+        }
+        @keyframes scanLine {
+          0%   { transform: translateY(-100%); }
+          100% { transform: translateY(100vh); }
+        }
+        @keyframes heroTextGlow {
+          0%,100% { text-shadow: 0 0 40px rgba(245,196,179,0); }
+          50%     { text-shadow: 0 0 40px rgba(245,196,179,0.18); }
         }
 
-        .hero-text-in { animation: fadeUp 0.9s cubic-bezier(.23,1,.32,1) both; }
-        .hero-text-in:nth-child(1){animation-delay:0.05s}
-        .hero-text-in:nth-child(2){animation-delay:0.18s}
-        .hero-text-in:nth-child(3){animation-delay:0.32s}
-        .hero-text-in:nth-child(4){animation-delay:0.46s}
-        .hero-text-in:nth-child(5){animation-delay:0.60s}
-        .hero-text-in:nth-child(6){animation-delay:0.74s}
+        /* ── Staggered Hero Text ── */
+        .hero-text-in { animation: fadeUp 1s cubic-bezier(.16,1,.3,1) both; }
+        .hero-text-in:nth-child(1){animation-delay:0.1s}
+        .hero-text-in:nth-child(2){animation-delay:0.25s}
+        .hero-text-in:nth-child(3){animation-delay:0.40s}
+        .hero-text-in:nth-child(4){animation-delay:0.55s}
+        .hero-text-in:nth-child(5){animation-delay:0.70s}
+        .hero-text-in:nth-child(6){animation-delay:0.85s}
 
-        .area-card { transition: all 0.38s cubic-bezier(.23,1,.32,1); }
-        .area-card:hover { transform: translateY(-8px) scale(1.02) !important; box-shadow: 0 32px 60px rgba(0,0,0,0.5) !important; }
-        .area-card:hover .area-card-bg { transform: scale(1.15) !important; }
+        /* ── Practice Area Cards ── */
+        .area-card { transition: transform 0.4s cubic-bezier(.23,1,.32,1), box-shadow 0.4s ease; }
+        .area-card:hover { transform: translateY(-10px) scale(1.03) !important; box-shadow: 0 40px 70px rgba(0,0,0,0.55) !important; }
+        .area-card:hover .area-card-bg { transform: scale(1.18) !important; }
         .area-card:hover .area-overlay { opacity: 1 !important; }
-        .area-card:hover .area-arrow { opacity: 1 !important; transform: translateX(4px) !important; }
+        .area-card:hover .area-arrow { opacity: 1 !important; transform: translateX(5px) !important; }
+        .area-card-bg { transition: transform 0.6s ease; }
 
-        .tool-card:hover { transform: translateY(-6px) !important; box-shadow: 0 24px 48px rgba(123,29,46,0.16) !important; border-color: var(--bur) !important; }
-        .why-card.revealed { animation: fadeUp 0.6s cubic-bezier(.23,1,.32,1) both; }
-        .cta-btn:hover { transform: translateY(-2px); }
+        /* ── Tool Cards ── */
+        .tool-card { transition: all 0.3s cubic-bezier(.23,1,.32,1); }
+        .tool-card:hover { transform: translateY(-7px) !important; box-shadow: 0 28px 56px rgba(123,29,46,0.18) !important; border-color: var(--bur) !important; }
+
+        /* ── Why Cards ── */
+        .why-card { transition: box-shadow 0.3s ease, border-color 0.3s ease; }
+        .why-card:hover { border-color: rgba(123,29,46,0.3) !important; box-shadow: 0 12px 30px rgba(123,29,46,0.10) !important; }
+        .why-card.revealed { animation: fadeUp 0.65s cubic-bezier(.16,1,.3,1) both; }
+
+        /* ── Misc UI ── */
+        .cta-btn { transition: all 0.25s ease; }
+        .cta-btn:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(0,0,0,0.25) !important; }
         .review-dot { transition: all 0.3s ease; }
-        .review-dot.active { background: var(--bur) !important; transform: scale(1.3); }
+        .review-dot.active { transform: scale(1.3); }
+        .news-card { transition: all 0.28s ease; }
+        .news-card:hover { border-color: rgba(123,29,46,0.35) !important; transform: translateY(-3px); box-shadow: 0 12px 30px rgba(123,29,46,0.10) !important; }
+        .step-icon-wrap { transition: all 0.35s ease; }
+        .step-icon-wrap:hover { transform: translateY(-4px) scale(1.08); box-shadow: 0 16px 36px rgba(123,29,46,0.18) !important; }
 
-        .news-card:hover { border-color: rgba(123,29,46,0.35) !important; background: rgba(123,29,46,0.03) !important; transform: translateY(-2px); }
-        .news-card { transition: all 0.25s ease; }
+        /* ── Scrolling Marquee ── */
+        .marquee-track { animation: marqueeFlow 38s linear infinite; }
 
-        .marquee-track { animation: marqueeFlow 35s linear infinite; }
-
-        .step-num {
-          font-family: 'Sora', sans-serif;
-          font-size: 5rem;
-          font-weight: 900;
-          color: rgba(123,29,46,0.06);
-          position: absolute;
-          top: -1rem;
-          left: -0.5rem;
-          line-height: 1;
-          pointer-events: none;
-          user-select: none;
-        }
-
-        /* Glassy card effect */
+        /* ── Glass effect ── */
         .glass-card {
-          background: rgba(255,255,255,0.06);
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
-          border: 1px solid rgba(255,255,255,0.12);
+          background: rgba(255,255,255,0.05);
+          backdrop-filter: blur(22px);
+          -webkit-backdrop-filter: blur(22px);
+          border: 1px solid rgba(255,255,255,0.10);
         }
 
-        /* Shimmer text */
-        .shimmer-text {
-          background: linear-gradient(90deg, #F5C4B3 0%, #fff 40%, #F5C4B3 80%);
-          background-size: 200% auto;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          animation: shimmer 3s linear infinite;
-        }
-
-        /* Particle dots */
+        /* ── Particles ── */
         .particle {
           position: absolute;
-          width: 3px;
-          height: 3px;
+          width: 4px; height: 4px;
           border-radius: 50%;
-          background: rgba(245,196,179,0.5);
-          animation: particleDrift var(--dur, 6s) var(--delay, 0s) infinite ease-out;
+          background: rgba(245,196,179,0.65);
+          animation: particleDrift var(--dur,7s) var(--delay,0s) infinite ease-out;
         }
 
+        /* ── Hero Ken Burns BG ── */
+        .hero-bg-img {
+          animation: heroKenBurns 28s ease-in-out infinite;
+        }
+
+        /* ── Light Rays ── */
+        .hero-ray-1 { animation: lightRay1 8s ease-in-out infinite; }
+        .hero-ray-2 { animation: lightRay2 11s ease-in-out infinite; }
+
+        /* ── Floating scales ── */
+        .hero-scales { animation: floatScales 9s ease-in-out infinite; }
+
+        /* ── Cinematic scan line ── */
+        .hero-scanline {
+          position: absolute; left: 0; right: 0; height: 2px;
+          background: linear-gradient(90deg, transparent, rgba(245,196,179,0.12), transparent);
+          animation: scanLine 8s linear infinite;
+          pointer-events: none; zIndex: 4;
+        }
+
+        /* ── Step number watermark ── */
+        .step-num {
+          font-family: 'Sora',sans-serif; font-size: 5.5rem;
+          font-weight: 900; color: rgba(123,29,46,0.05);
+          position: absolute; top: -1.2rem; left: -0.5rem;
+          line-height: 1; pointer-events: none; user-select: none;
+        }
+
+        /* ── Responsive ── */
         @media (max-height: 900px) {
-          .hero-section { padding-top: 100px !important; min-height: auto !important; }
+          .hero-section { min-height: 90vh !important; }
         }
         @media (max-width: 640px) {
           .hero-dual-cta { flex-direction: column !important; }
-          .hero-dual-cta a, .hero-dual-cta button { width: 100% !important; justify-content: center !important; }
+          .hero-dual-cta > * { width: 100% !important; justify-content: center !important; }
           .tools-grid { grid-template-columns: 1fr !important; }
           .stats-band-grid { grid-template-columns: repeat(2,1fr) !important; }
           .final-cta-split { grid-template-columns: 1fr !important; }
           .final-cta-lawyer { border-top: 1px solid rgba(255,255,255,0.08) !important; border-left: none !important; }
-          .lawyer-split { grid-template-columns: 1fr !important; gap: 2.5rem !important; }
-          .hero-search-row { flex-direction: column !important; }
-          .step-grid { grid-template-columns: 1fr !important; }
+          .lawyer-split { grid-template-columns: 1fr !important; gap: 3rem !important; }
+          .hero-search-row { flex-direction: column !important; gap: 0 !important; }
+          .hero-search-divider { display: none !important; }
+          .step-grid { grid-template-columns: 1fr 1fr !important; }
           .news-grid { grid-template-columns: 1fr !important; }
-          .hero-img-split { display: none !important; }
+          .stats-grid { grid-template-columns: repeat(2,1fr) !important; }
         }
         @media (max-width: 768px) {
-          .stats-grid { grid-template-columns: repeat(2,1fr) !important; }
           .area-grid { grid-template-columns: repeat(2,1fr) !important; }
           .why-grid { grid-template-columns: 1fr 1fr !important; }
           .news-grid { grid-template-columns: 1fr 1fr !important; }
+          .step-grid { grid-template-columns: 1fr 1fr !important; }
         }
         @media (max-width: 480px) {
           .area-grid { grid-template-columns: 1fr !important; }
           .why-grid { grid-template-columns: 1fr !important; }
+          .step-grid { grid-template-columns: 1fr !important; }
         }
         @media (min-width: 641px) and (max-width: 1024px) {
           .tools-grid { grid-template-columns: repeat(2,1fr) !important; }
@@ -324,16 +373,14 @@ export default function Home() {
           .lawyer-split { grid-template-columns: 1fr !important; }
         }
         @media (prefers-reduced-motion: reduce) {
-          *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
-          .hero-text-in { animation: none !important; opacity: 1 !important; }
-          .why-card.revealed { animation: none !important; opacity: 1 !important; }
-          .marquee-track { animation: none !important; }
-          .particle { animation: none !important; }
+          *, *::before, *::after { animation: none !important; transition-duration: 0.01ms !important; }
+          .hero-text-in { opacity: 1 !important; }
+          .why-card.revealed { opacity: 1 !important; }
         }
       `}} />
 
       {/* ══════════════════════════════════════════════════════
-          SECTION 1 — CINEMATIC HERO
+          SECTION 1 — CINEMATIC HERO (Fixed: no overlaps, full-width BG)
       ══════════════════════════════════════════════════════ */}
       <section
         ref={heroRef}
@@ -344,173 +391,194 @@ export default function Home() {
           paddingTop: 80, background: '#060103'
         }}
       >
-        {/* BACKGROUND: Cinematic courtroom image with parallax */}
-        <div style={{
-          position: 'absolute', inset: '-5%',
-          backgroundImage: 'url(/images/hero-courtroom.jpg)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center 30%',
-          transform: `translateY(${scrollY * 0.25}px)`,
-          transition: 'transform 0.1s linear',
-          willChange: 'transform',
-          zIndex: 0
-        }} />
+        {/* ── Layer 0: Slow Ken Burns BG Image ── */}
+        <div
+          className="hero-bg-img"
+          style={{
+            position: 'absolute',
+            inset: '-8%',
+            backgroundImage: 'url(/images/hero-wide.jpg)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center center',
+            zIndex: 0,
+            willChange: 'transform'
+          }}
+        />
 
-        {/* Dark cinematic overlay — layered for depth */}
+        {/* ── Layer 1: Primary dark cinematic gradient (full width, no image cutout) ── */}
         <div style={{
           position: 'absolute', inset: 0, zIndex: 1,
-          background: `
-            linear-gradient(180deg,
-              rgba(6,1,3,0.82) 0%,
-              rgba(26,10,13,0.65) 35%,
-              rgba(26,10,13,0.72) 65%,
-              rgba(6,1,3,0.95) 100%
-            )
-          `
+          background:
+            'linear-gradient(180deg,' +
+            'rgba(4,1,2,0.78) 0%,' +
+            'rgba(12,4,7,0.62) 30%,' +
+            'rgba(16,6,9,0.70) 65%,' +
+            'rgba(4,1,2,0.96) 100%)'
         }} />
 
-        {/* Dramatic red vignette lighting from center-left */}
+        {/* ── Layer 2: Warm burgundy glow emanating from left-center ── */}
         <div style={{
-          position: 'absolute', inset: 0, zIndex: 2,
-          background: `
-            radial-gradient(ellipse 75% 60% at 25% 55%,
-              rgba(123,29,46,0.35) 0%,
-              rgba(61,14,22,0.15) 50%,
-              transparent 80%
-            )
-          `,
-          pointerEvents: 'none'
+          position: 'absolute', inset: 0, zIndex: 2, pointerEvents: 'none',
+          background:
+            'radial-gradient(ellipse 65% 70% at 18% 58%,' +
+            'rgba(123,29,46,0.40) 0%,' +
+            'rgba(61,14,22,0.18) 45%,' +
+            'transparent 78%)'
         }} />
 
-        {/* Golden light shaft from top */}
+        {/* ── Layer 3: Gold-tinted top-right directional light (like a courtroom skylight) ── */}
         <div style={{
-          position: 'absolute', inset: 0, zIndex: 2,
-          background: `
-            radial-gradient(ellipse 40% 70% at 60% -10%,
-              rgba(245,196,179,0.10) 0%,
-              transparent 70%
-            )
-          `,
-          pointerEvents: 'none'
+          position: 'absolute', inset: 0, zIndex: 2, pointerEvents: 'none',
+          background:
+            'radial-gradient(ellipse 55% 80% at 80% -5%,' +
+            'rgba(232,182,120,0.13) 0%,' +
+            'transparent 65%)'
         }} />
 
-        {/* Animated floating particles */}
+        {/* ── Layer 4: Animated CSS light rays (no separate image) ── */}
+        <div className="hero-ray-1" style={{
+          position: 'absolute', zIndex: 3, pointerEvents: 'none',
+          top: '-20%', left: '55%', width: '18%', height: '130%',
+          background: 'linear-gradient(180deg, rgba(232,182,120,0.18) 0%, transparent 100%)',
+          transform: 'rotate(-15deg)', transformOrigin: 'top center',
+          filter: 'blur(28px)'
+        }} />
+        <div className="hero-ray-2" style={{
+          position: 'absolute', zIndex: 3, pointerEvents: 'none',
+          top: '-20%', left: '70%', width: '10%', height: '110%',
+          background: 'linear-gradient(180deg, rgba(245,196,179,0.12) 0%, transparent 100%)',
+          transform: 'rotate(10deg)', transformOrigin: 'top center',
+          filter: 'blur(18px)'
+        }} />
+
+        {/* ── Layer 5: Cinematic scan-line ── */}
+        <div className="hero-scanline" style={{ zIndex: 4 }} />
+
+        {/* ── Layer 6: Animated floating Scales of Justice (SVG — right side, low opacity) ── */}
+        <div className="hero-scales" style={{
+          position: 'absolute', right: '5%', top: '50%',
+          width: 'clamp(260px,28vw,420px)', height: 'clamp(260px,28vw,420px)',
+          zIndex: 4, opacity: 0.10, pointerEvents: 'none',
+          transform: 'translateY(-50%)'
+        }}>
+          <svg viewBox="0 0 420 420" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%' }}>
+            {/* Pillar */}
+            <line x1="210" y1="390" x2="210" y2="65" stroke="#F5C4B3" strokeWidth="4" strokeLinecap="round"/>
+            <rect x="155" y="383" width="110" height="14" rx="7" stroke="#F5C4B3" strokeWidth="3" fill="none"/>
+            {/* Crown */}
+            <polygon points="210,38 220,62 200,62" stroke="#F5C4B3" strokeWidth="3" fill="none"/>
+            <circle cx="210" cy="32" r="7" stroke="#F5C4B3" strokeWidth="2.5" fill="none"/>
+            {/* Main beam */}
+            <path d="M55 130 Q210 110 365 130" stroke="#F5C4B3" strokeWidth="4" strokeLinecap="round" fill="none"/>
+            <circle cx="210" cy="118" r="9" stroke="#F5C4B3" strokeWidth="3" fill="none"/>
+            {/* Left chain */}
+            <line x1="55" y1="130" x2="30" y2="230" stroke="#F5C4B3" strokeWidth="2.5" strokeDasharray="6 4"/>
+            <line x1="55" y1="130" x2="80" y2="230" stroke="#F5C4B3" strokeWidth="2.5" strokeDasharray="6 4"/>
+            {/* Left pan */}
+            <path d="M18 230 Q55 258 92 230" stroke="#F5C4B3" strokeWidth="3" fill="none"/>
+            <line x1="18" y1="230" x2="92" y2="230" stroke="#F5C4B3" strokeWidth="2"/>
+            {/* Right chain */}
+            <line x1="365" y1="130" x2="340" y2="215" stroke="#F5C4B3" strokeWidth="2.5" strokeDasharray="6 4"/>
+            <line x1="365" y1="130" x2="390" y2="215" stroke="#F5C4B3" strokeWidth="2.5" strokeDasharray="6 4"/>
+            {/* Right pan (slightly tipped) */}
+            <path d="M328 222 Q365 248 402 222" stroke="#F5C4B3" strokeWidth="3" fill="none"/>
+            <line x1="328" y1="222" x2="402" y2="222" stroke="#F5C4B3" strokeWidth="2"/>
+            {/* Decorative column lines */}
+            <line x1="195" y1="150" x2="195" y2="360" stroke="#F5C4B3" strokeWidth="1" strokeDasharray="5 6" opacity="0.5"/>
+            <line x1="225" y1="150" x2="225" y2="360" stroke="#F5C4B3" strokeWidth="1" strokeDasharray="5 6" opacity="0.5"/>
+          </svg>
+        </div>
+
+        {/* ── Layer 7: Floating particles ── */}
         {[
-          { left: '12%', top: '65%', dur: '7s', delay: '0s' },
-          { left: '22%', top: '75%', dur: '9s', delay: '1.2s' },
-          { left: '38%', top: '80%', dur: '6s', delay: '0.5s' },
-          { left: '55%', top: '72%', dur: '8s', delay: '2s' },
-          { left: '70%', top: '78%', dur: '10s', delay: '0.8s' },
-          { left: '82%', top: '70%', dur: '7.5s', delay: '1.5s' },
-          { left: '8%', top: '55%', dur: '11s', delay: '3s' },
-          { left: '46%', top: '60%', dur: '8.5s', delay: '2.5s' },
+          { left: '8%',  top: '70%', dur: '7s',   delay: '0s',    px: '20px', po: '0.7' },
+          { left: '18%', top: '78%', dur: '9.5s',  delay: '1.3s',  px: '-15px', po: '0.5' },
+          { left: '32%', top: '82%', dur: '6.5s',  delay: '0.6s',  px: '25px', po: '0.6' },
+          { left: '48%', top: '75%', dur: '8s',    delay: '2.1s',  px: '-10px', po: '0.4' },
+          { left: '63%', top: '80%', dur: '10s',   delay: '0.9s',  px: '30px', po: '0.5' },
+          { left: '76%', top: '72%', dur: '7.8s',  delay: '1.6s',  px: '-20px', po: '0.3' },
+          { left: '88%', top: '76%', dur: '9s',    delay: '3.2s',  px: '15px', po: '0.4' },
+          { left: '26%', top: '65%', dur: '11s',   delay: '2.8s',  px: '-25px', po: '0.3' },
         ].map((p, i) => (
           <div key={i} className="particle" style={{
-            left: p.left, top: p.top,
+            left: p.left, top: p.top, zIndex: 4,
             '--dur': p.dur, '--delay': p.delay,
-            zIndex: 2
+            '--px': p.px, '--po': p.po
           }} />
         ))}
 
-        {/* Floating hero image — right side */}
-        <div className="hero-img-split" style={{
-          position: 'absolute', right: 0, top: 0, bottom: 0,
-          width: '42%', zIndex: 3,
-          overflow: 'hidden'
-        }}>
-          <div style={{
-            position: 'absolute', inset: 0,
-            backgroundImage: 'url(/images/lawyer-hero.jpg)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center top',
-            opacity: 0.45,
-            transform: `translateY(${scrollY * 0.15}px)`,
-            transition: 'transform 0.1s linear'
-          }} />
-          {/* Fade left edge */}
-          <div style={{
-            position: 'absolute', inset: 0,
-            background: 'linear-gradient(90deg, #060103 0%, rgba(6,1,3,0.5) 30%, transparent 65%)'
-          }} />
-          {/* Fade bottom */}
-          <div style={{
-            position: 'absolute', inset: 0,
-            background: 'linear-gradient(180deg, transparent 40%, rgba(6,1,3,0.9) 100%)'
-          }} />
-        </div>
-
-        {/* Bottom fade to next section */}
+        {/* ── Layer 8: Bottom fade to cream ── */}
         <div style={{
           position: 'absolute', bottom: 0, left: 0, right: 0,
-          height: 200, zIndex: 4,
-          background: 'linear-gradient(to bottom, transparent, var(--cream))',
-          pointerEvents: 'none'
+          height: 220, zIndex: 5, pointerEvents: 'none',
+          background: 'linear-gradient(to bottom, transparent, var(--cream))'
         }} />
 
-        {/* CONTENT */}
+        {/* ══ HERO CONTENT ══ */}
         <div className="container" style={{
-          position: 'relative', zIndex: 5,
-          padding: '4rem 0 clamp(8rem, 15vh, 10rem)',
+          position: 'relative', zIndex: 6,
+          padding: '3rem 0 clamp(9rem, 16vh, 11rem)',
           maxWidth: 1280
         }}>
 
           {/* Live badge */}
           <div className="hero-text-in" style={{
             display: 'inline-flex', alignItems: 'center', gap: 10,
-            background: 'rgba(245,196,179,0.08)',
+            background: 'rgba(245,196,179,0.07)',
             border: '1px solid rgba(245,196,179,0.22)',
-            borderRadius: 40, padding: '.42rem 1.2rem',
-            marginBottom: '2rem', backdropFilter: 'blur(14px)',
-            boxShadow: '0 4px 20px rgba(0,0,0,0.3)'
+            borderRadius: 40, padding: '.42rem 1.25rem',
+            marginBottom: '2.2rem',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            boxShadow: '0 4px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)'
           }}>
-            <div style={{ position: 'relative' }}>
+            <div style={{ position: 'relative', width: 8, height: 8, flexShrink: 0 }}>
+              <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#4ADE80' }} />
               <div style={{
-                width: 8, height: 8, borderRadius: '50%', background: '#4ADE80'
-              }} />
-              <div style={{
-                position: 'absolute', inset: -3, borderRadius: '50%',
+                position: 'absolute', inset: -4, borderRadius: '50%',
                 border: '1.5px solid #4ADE80',
                 animation: 'pulseRing 2s ease-out infinite'
               }} />
             </div>
             <span style={{
-              fontSize: '.72rem', fontWeight: 800, color: 'rgba(245,196,179,0.90)',
+              fontSize: '.7rem', fontWeight: 800,
+              color: 'rgba(245,196,179,0.88)',
               letterSpacing: '2.5px', textTransform: 'uppercase'
             }}>
               LIVE · India's #1 Legal Marketplace · 24/7 Emergency Access
             </span>
           </div>
 
-          {/* Main headline */}
+          {/* Main headline — maxWidth 640 keeps it clear of SVG on right */}
           <h1 className="hero-text-in" style={{
             fontFamily: "'Plus Jakarta Sans', sans-serif",
-            fontSize: 'clamp(2.6rem, 6vw, 5.4rem)',
-            fontWeight: 900, lineHeight: 1.06, letterSpacing: '-0.045em',
-            color: '#fff', marginBottom: '1.6rem', maxWidth: 860
+            fontSize: 'clamp(2.4rem, 5.2vw, 4.8rem)',
+            fontWeight: 900, lineHeight: 1.08, letterSpacing: '-0.04em',
+            color: '#fff', marginBottom: '1.5rem',
+            maxWidth: 640
           }}>
-            Find Your{' '}
-            <TypingWord />
+            Find Your <TypingWord />
             <br />
             <span style={{
-              fontStyle: 'italic', fontWeight: 700,
-              fontSize: '0.85em',
-              background: 'linear-gradient(90deg, rgba(255,255,255,0.75), rgba(245,196,179,0.9))',
+              fontStyle: 'italic', fontWeight: 600,
+              fontSize: '0.82em',
+              background: 'linear-gradient(90deg, rgba(255,255,255,0.72) 0%, rgba(245,196,179,0.88) 100%)',
               WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
               backgroundClip: 'text'
             }}>
-              — Anytime. Anywhere in India.
+              Anytime. Anywhere in India.
             </span>
           </h1>
 
-          {/* Sub */}
+          {/* Sub — constrained to 560px */}
           <p className="hero-text-in" style={{
-            fontSize: 'clamp(.95rem, 1.45vw, 1.15rem)',
-            color: 'rgba(245,224,200,0.78)', maxWidth: 600, lineHeight: 1.85,
+            fontSize: 'clamp(.9rem, 1.35vw, 1.1rem)',
+            color: 'rgba(245,218,196,0.76)', maxWidth: 560, lineHeight: 1.88,
             marginBottom: '2.8rem', fontWeight: 400
           }}>
             India's first 100% price-transparent legal marketplace.{' '}
-            <strong style={{ color: '#F5C4B3', fontWeight: 700 }}>1,338+ Bar Council verified advocates</strong> across{' '}
-            <strong style={{ color: '#F5C4B3', fontWeight: 700 }}>100+ cities</strong>.
+            <strong style={{ color: '#F5C4B3', fontWeight: 700 }}>1,338+ Bar Council verified advocates</strong>{' '}
+            across <strong style={{ color: '#F5C4B3', fontWeight: 700 }}>100+ cities</strong>.
             Instant booking. Encrypted video calls. AI-powered matching.
           </p>
 
