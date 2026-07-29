@@ -470,12 +470,12 @@ export default function Home() {
           section { padding-top: 5rem !important; padding-bottom: 5rem !important; }
         }
 
-        /* ── Hero search bar: stack on mobile ── */
+        /* ── Hero search bar: stack neatly on mobile ── */
         @media (max-width: 640px) {
-          .hero-search-box { border-radius: 16px !important; }
-          .hero-search-row { flex-direction: column !important; }
-          .hero-search-row > div { border-right: none !important; border-bottom: 1px solid rgba(232,201,168,0.3) !important; }
-          .hero-search-row > button { margin: 8px !important; width: calc(100% - 16px) !important; justify-content: center !important; }
+          .hero-search-box { border-radius: 14px !important; padding: 6px !important; }
+          .hero-search-row { flex-direction: column !important; gap: 0 !important; }
+          .hero-search-field { width: 100% !important; padding: 12px 14px !important; border-bottom: 1px solid #F3F4F6 !important; }
+          .hero-search-btn { width: 100% !important; margin: 8px 0 0 0 !important; justify-content: center !important; height: 48px !important; border-radius: 10px !important; }
           .hero-search-divider { display: none !important; }
         }
 
@@ -738,50 +738,63 @@ export default function Home() {
             Instant booking. Encrypted video calls. AI-powered matching.
           </p>
 
-          {/* Hero search */}
+          {/* Hero search bar - Crisp, Sharp, High-Contrast & Ultra-Usable */}
           <div className="hero-text-in hero-search-box" style={{
-            background: 'rgba(255,255,255,0.97)', borderRadius: 24,
-            padding: '10px', marginBottom: '2.2rem', maxWidth: 820,
-            boxShadow: '0 30px 90px rgba(0,0,0,0.4), 0 0 0 1px rgba(232,201,168,0.5)'
+            background: '#FFFFFF',
+            borderRadius: 16,
+            padding: '8px',
+            marginBottom: '2.5rem',
+            maxWidth: 840,
+            border: '1px solid rgba(255, 255, 255, 0.9)',
+            boxShadow: '0 24px 60px -12px rgba(0, 0, 0, 0.45), 0 4px 16px rgba(0, 0, 0, 0.1)'
           }}>
             <div className="hero-search-row" style={{ display: 'flex', alignItems: 'center', gap: 0 }}>
-              <div style={{ flex: '1 1 230px', padding: '14px 22px', minWidth: 0 }}>
+              
+              {/* Field 1: Legal Issue */}
+              <div className="hero-search-field" style={{ flex: '1 1 240px', padding: '10px 18px', minWidth: 0 }}>
                 <label htmlFor="hero-issue-sel" style={{
-                  display: 'block', fontSize: '.6rem', fontWeight: 900,
+                  display: 'block', fontSize: '.64rem', fontWeight: 800,
                   color: 'var(--bur)', textTransform: 'uppercase',
-                  letterSpacing: '2.5px', marginBottom: 6
+                  letterSpacing: '1.8px', marginBottom: 4
                 }}>Legal Issue</label>
-                <select
-                  id="hero-issue-sel"
-                  style={{
-                    border: 'none', background: 'none', fontSize: '.97rem',
-                    fontWeight: 700, color: 'var(--txt)', outline: 'none',
-                    cursor: 'pointer', width: '100%', padding: 0
-                  }}
-                  value={spec} onChange={e => setSpec(e.target.value)}
-                >
-                  <option value="">What do you need help with?</option>
-                  {SPECS.map(s => <option key={s} value={s}>{s}</option>)}
-                </select>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <Scale size={18} color="var(--bur)" style={{ flexShrink: 0, opacity: 0.9 }} />
+                  <select
+                    id="hero-issue-sel"
+                    style={{
+                      border: 'none', background: 'none', fontSize: '.95rem',
+                      fontWeight: 700, color: '#111827', outline: 'none',
+                      cursor: 'pointer', width: '100%', padding: '2px 0'
+                    }}
+                    value={spec} onChange={e => setSpec(e.target.value)}
+                  >
+                    <option value="">What do you need help with?</option>
+                    {SPECS.map(s => <option key={s} value={s}>{s}</option>)}
+                  </select>
+                </div>
               </div>
-              <div style={{
-                width: 1, height: 50, background: 'rgba(232,201,168,0.7)',
+
+              {/* Crisp Divider */}
+              <div className="hero-search-divider" style={{
+                width: 1, height: 42, background: '#E5E7EB',
                 flexShrink: 0, margin: '0 4px'
               }} />
-              <div style={{ flex: '1 1 190px', padding: '14px 22px', minWidth: 0 }}>
+
+              {/* Field 2: City / Pincode */}
+              <div className="hero-search-field" style={{ flex: '1 1 210px', padding: '10px 18px', minWidth: 0 }}>
                 <label htmlFor="hero-city-inp" style={{
-                  display: 'block', fontSize: '.6rem', fontWeight: 900,
+                  display: 'block', fontSize: '.64rem', fontWeight: 800,
                   color: 'var(--bur)', textTransform: 'uppercase',
-                  letterSpacing: '2.5px', marginBottom: 6
+                  letterSpacing: '1.8px', marginBottom: 4
                 }}>City / Pincode</label>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <MapPin size={15} color="var(--bur-l)" style={{ flexShrink: 0 }} />
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <MapPin size={18} color="var(--bur)" style={{ flexShrink: 0, opacity: 0.9 }} />
                   <input
                     id="hero-city-inp"
                     style={{
-                      border: 'none', background: 'none', fontSize: '.97rem',
-                      fontWeight: 700, color: 'var(--txt)', outline: 'none',
-                      width: '100%', padding: 0
+                      border: 'none', background: 'none', fontSize: '.95rem',
+                      fontWeight: 700, color: '#111827', outline: 'none',
+                      width: '100%', padding: '2px 0'
                     }}
                     placeholder="Delhi, 110001, Mumbai…"
                     value={query} onChange={e => setQuery(e.target.value)}
@@ -789,15 +802,17 @@ export default function Home() {
                   />
                 </div>
               </div>
+
+              {/* Action Button */}
               <button
                 onClick={goSearch}
+                className="hero-search-btn cta-btn"
                 style={{
                   background: 'linear-gradient(135deg, var(--bur) 0%, var(--bur-d) 100%)',
-                  color: '#fff', border: 'none', borderRadius: 18,
-                  padding: '1.15rem 2.2rem', fontWeight: 800, fontSize: '.97rem',
-                  cursor: 'pointer', flexShrink: 0, margin: '5px',
-                  boxShadow: '0 8px 28px rgba(123,29,46,0.45)',
-                  transition: 'all 0.25s ease',
+                  color: '#FFFFFF', border: 'none', borderRadius: 12,
+                  padding: '0.95rem 2.2rem', fontWeight: 800, fontSize: '.95rem',
+                  cursor: 'pointer', flexShrink: 0, margin: '2px',
+                  boxShadow: '0 6px 20px rgba(123, 29, 46, 0.4)',
                   display: 'flex', alignItems: 'center', gap: 8, whiteSpace: 'nowrap'
                 }}
               >
