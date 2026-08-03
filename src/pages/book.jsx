@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import { API } from '../api'
 import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
 import { Helmet } from 'react-helmet-async'
@@ -25,12 +26,21 @@ export default function Book() {
   const handlePay = async () => {
     if (!formData.date || !formData.time) { showToast('Please select date and time', 'error'); return }
     setLoading(true)
-    
-    // Simulate Razorpay flow
-    setTimeout(() => {
+    try {
+      await API.createBooking({
+        lawyerId,
+        caseType: formData.caseType,
+        description: formData.description,
+        scheduledDate: formData.date,
+        scheduledTime: formData.time
+      })
       showToast('Payment Successful! Appointment Booked.', 'success')
       navigate('/dashboard')
-    }, 2000)
+    } catch (err) {
+      showToast(err.message || 'Failed to create booking. Please try again.', 'error')
+    } finally {
+      setLoading(false)
+    }
   }
 
   if (!isLoggedIn) return null
