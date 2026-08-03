@@ -24,18 +24,18 @@ app.get('/health', (req, res) => res.json({ status: 'ok' }));
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 
 // Mount sub-apps
-app.use(require('./auth'));
-app.use(require('./lawyers'));
-app.use(require('./bookings'));
-app.use(require('./payments'));
-app.use(require('./admin'));
-app.use(require('./ai'));
-app.use(require('./cases'));
-app.use(require('./subscriptions'));
-app.use(require('./documents'));
-app.use(require('./articles'));
-app.use(require('./reviews'));
-app.use(require('./contact'));
+app.use(require('./_routes/auth'));
+app.use(require('./_routes/lawyers'));
+app.use(require('./_routes/bookings'));
+app.use(require('./_routes/payments'));
+app.use(require('./_routes/admin'));
+app.use(require('./_routes/ai'));
+app.use(require('./_routes/cases'));
+app.use(require('./_routes/subscriptions'));
+app.use(require('./_routes/documents'));
+app.use(require('./_routes/articles'));
+app.use(require('./_routes/reviews'));
+app.use(require('./_routes/contact'));
 
 
 module.exports = app;
