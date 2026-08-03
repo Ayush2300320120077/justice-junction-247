@@ -3,11 +3,12 @@ import { useNavigate, Link } from 'react-router-dom'
 import { API } from '../api'
 import { useToast } from '../context/ToastContext'
 import { Helmet } from 'react-helmet-async'
-import { Mail, Lock, User, UserPlus, Scale } from 'lucide-react'
+import { Mail, Lock, User, UserPlus, Scale, Eye, EyeOff, ShieldCheck, Sparkles } from 'lucide-react'
 import LawyerRegistrationWizard from '../components/LawyerRegistrationWizard'
 
 export default function Register() {
   const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'client' })
+  const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const { showToast } = useToast()
   const navigate = useNavigate()
@@ -17,10 +18,10 @@ export default function Register() {
     setLoading(true)
     try {
       await API.register(formData)
-      showToast('Account created! Please login.', 'success')
+      showToast('Account created successfully! Please login.', 'success')
       navigate('/login')
     } catch (err) {
-      showToast(err.message, 'error')
+      showToast(err.message || 'Registration failed', 'error')
     } finally {
       setLoading(false)
     }
@@ -29,27 +30,31 @@ export default function Register() {
   // If lawyer is selected, show the multi-step wizard
   if (formData.role === 'lawyer') {
     return (
-      <div className="page-reveal" style={{ paddingTop: 95, minHeight: '100vh', background: 'var(--cream)' }}>
+      <div className="page-reveal" style={{ paddingTop: 95, minHeight: '100vh', background: '#0D0709', color: '#FFF9F2' }}>
         <Helmet><title>Lawyer Registration — Justice Junction 24/7</title></Helmet>
         <div className="container" style={{ maxWidth: 800, paddingTop: '2rem', paddingBottom: '4rem' }}>
           <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-            <h1 className="h1-responsive" style={{ fontSize: '2.2rem', marginBottom: 8 }}>Lawyer <span className="gradient-text">Registration</span></h1>
-            <p style={{ color: 'var(--txt-3)', fontSize: '.9rem' }}>Create your professional profile on Justice Junction.</p>
+            <h1 className="h1-responsive" style={{ fontSize: '2.4rem', marginBottom: 8, color: '#FFF9F2' }}>
+              Lawyer <span style={{ color: '#F5C4B3' }}>Registration</span>
+            </h1>
+            <p style={{ color: '#F5E6D3', opacity: 0.85, fontSize: '.95rem' }}>
+              Join India's premiere verified advocate platform.
+            </p>
           </div>
 
-          {/* Role toggle — still available */}
+          {/* Role toggle */}
           <div style={{ display: 'flex', gap: 10, marginBottom: '2rem', maxWidth: 400, margin: '0 auto 2rem' }}>
             <button 
               className="magnetic-hover"
-              style={{ flex: 1, padding: '1rem', borderRadius: 16, border: '2px solid #E8C9A8', background: '#fff', cursor: 'pointer', transition: 'all .2s' }}
+              style={{ flex: 1, padding: '1rem', borderRadius: 16, border: '1px solid rgba(245, 196, 179, 0.3)', background: 'rgba(255,255,255,0.06)', cursor: 'pointer', transition: 'all .2s' }}
               onClick={() => setFormData({...formData, role:'client'})}
             >
-              <User size={24} color="#1A0D10" style={{ marginBottom: 8 }}/>
-              <div style={{ fontWeight: 800, fontSize: '.9rem', color: '#1A0D10' }}>Client</div>
+              <User size={24} color="#F5C4B3" style={{ marginBottom: 8 }}/>
+              <div style={{ fontWeight: 800, fontSize: '.9rem', color: '#FFF9F2' }}>Client</div>
             </button>
             <button 
               className="magnetic-hover"
-              style={{ flex: 1, padding: '1rem', borderRadius: 16, border: '2px solid #7B1D2E', background: '#7B1D2E', cursor: 'pointer', transition: 'all .2s', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }}
+              style={{ flex: 1, padding: '1rem', borderRadius: 16, border: '1px solid #F5C4B3', background: 'linear-gradient(135deg, #7B1D2E, #9B2D42)', cursor: 'pointer', transition: 'all .2s', boxShadow: '0 4px 14px rgba(123, 29, 46, 0.4)' }}
               onClick={() => setFormData({...formData, role:'lawyer'})}
             >
               <Scale size={24} color="#fff" style={{ marginBottom: 8 }}/>
@@ -59,93 +64,264 @@ export default function Register() {
 
           <LawyerRegistrationWizard />
 
-          <div style={{ textAlign: 'center', marginTop: '2rem', fontSize: '.9rem', color: 'var(--txt-3)' }}>
-            Already have an account? <Link to="/login" style={{ color: 'var(--bur)', fontWeight: 800 }}>Login Here</Link>
+          <div style={{ textAlign: 'center', marginTop: '2rem', fontSize: '.9rem', color: '#F5E6D3' }}>
+            Already have an account? <Link to="/login" style={{ color: '#F5C4B3', fontWeight: 800, textDecoration: 'underline' }}>Login Here</Link>
           </div>
         </div>
       </div>
     )
   }
 
-  // Client registration — original form unchanged
+  // Client registration
   return (
     <div className="auth-layout page-reveal">
-      <Helmet><title>Register Free | Justice Junction 24/7</title></Helmet>
+      <Helmet><title>Register Free — Cinematic Portal | Justice Junction 24/7</title></Helmet>
 
-      {/* Visual Side */}
-      <div className="auth-visual-side">
+      {/* Visual Side with Ambient Video & Backdrop */}
+      <div className="auth-visual-side" style={{ backgroundImage: "url('/images/hero-courtroom.jpg')" }}>
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          poster="/images/hero-courtroom.jpg"
+          className="auth-video-bg"
+        >
+          <source src="https://assets.mixkit.co/videos/preview/mixkit-scales-of-justice-close-up-42861-large.mp4" type="video/mp4" />
+        </video>
+        
         <div className="auth-visual-overlay" />
-        <div style={{ position: 'relative', zIndex: 2, maxWidth: 450 }}>
-          <div style={{ color: '#F5C4B3', textTransform: 'uppercase', fontSize: '0.875rem', letterSpacing: '0.1em', marginBottom: '1.5rem', fontWeight: 700 }}>Trusted by thousands across India</div>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '3rem', fontWeight: 800, marginBottom: '1.5rem', lineHeight: 1.1, color: '#F9EEE4' }}>
-            Empower Your <span style={{ color: '#F5C4B3' }}>Legal</span> Journey.
-          </h2>
-          <p style={{ fontSize: '1.125rem', color: '#F9EEE4', lineHeight: 1.625, fontStyle: 'italic' }}>
-            "Whether you are seeking resolution or providing counsel, we provide the platform for meaningful legal connection."
-          </p>
-          <div style={{ marginTop: '2.5rem', display: 'flex', gap: 12, alignItems: 'center' }}>
-            <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(255,255,255,0.2)', border: '1px solid rgba(255,255,255,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 700, fontSize: '1.5rem' }}>JJ</div>
-            <div style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', fontSize: '0.75rem', padding: '4px 12px', borderRadius: '9999px', fontWeight: 600 }}>VERIFIED LEGAL NETWORK</div>
+
+        <div className="auth-visual-content">
+          {/* Top Bar */}
+          <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+            <div style={{
+              width: 42,
+              height: 42,
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, #7B1D2E, #5C1521)',
+              border: '1.5px solid rgba(245, 196, 179, 0.5)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#FFF9F2',
+              fontWeight: 800,
+              fontSize: '1.1rem'
+            }}>
+              JJ
+            </div>
+            <div>
+              <div style={{ color: '#F5C4B3', fontSize: '0.72rem', fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+                Justice Junction 24/7
+              </div>
+              <div style={{ color: '#FFF9F2', fontSize: '0.8rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4 }}>
+                <ShieldCheck size={14} color="#4ADE80" /> TRUSTED BY 50,000+ CITIZENS
+              </div>
+            </div>
+          </div>
+
+          {/* Main Hero Showcase */}
+          <div style={{ maxWidth: 520, marginTop: 'auto', marginBottom: 'auto', paddingTop: '3rem', paddingBottom: '2rem' }}>
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              padding: '6px 16px',
+              borderRadius: 30,
+              background: 'rgba(123, 29, 46, 0.4)',
+              border: '1px solid rgba(245, 196, 179, 0.3)',
+              color: '#F5C4B3',
+              fontSize: '0.75rem',
+              fontWeight: 800,
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              marginBottom: '1.5rem',
+              backdropFilter: 'blur(8px)'
+            }}>
+              <Sparkles size={14} /> JOIN THE LEGAL DISCOVERY REVOLUTION
+            </div>
+
+            <h2 style={{
+              fontFamily: "'Plus Jakarta Sans', Georgia, serif",
+              fontSize: 'clamp(2.2rem, 4.5vw, 3.2rem)',
+              fontWeight: 900,
+              marginBottom: '1.2rem',
+              lineHeight: 1.15,
+              color: '#FFF9F2'
+            }}>
+              Empower Your <br />
+              <span style={{
+                background: 'linear-gradient(135deg, #F5C4B3 0%, #E8C9A8 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent'
+              }}>Legal Rights Today.</span>
+            </h2>
+
+            <p style={{
+              fontSize: '1.08rem',
+              color: '#F5E6D3',
+              lineHeight: 1.7,
+              fontStyle: 'italic',
+              background: 'rgba(18, 8, 11, 0.45)',
+              padding: '1.2rem 1.5rem',
+              borderRadius: 16,
+              borderLeft: '4px solid #F5C4B3',
+              backdropFilter: 'blur(10px)'
+            }}>
+              "Whether seeking legal guidance, drafting court documents, or connecting with top advocates — your journey begins with a free account."
+            </p>
+          </div>
+
+          <div style={{ display: 'flex', gap: 20, paddingTop: '1.5rem', borderTop: '1px solid rgba(245, 196, 179, 0.15)', color: 'rgba(255,255,255,0.7)', fontSize: '0.8rem' }}>
+            <span>✓ Free Account</span>
+            <span>•</span>
+            <span>✓ Instant Case Matching</span>
+            <span>•</span>
+            <span>✓ Confidential & Secure</span>
           </div>
         </div>
       </div>
 
       {/* Form Side */}
       <div className="auth-form-side">
-        <div style={{ width: '100%', maxWidth: 450, background: '#fff', borderRadius: '1rem', padding: '2rem', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)', border: '1px solid #E8C9A8' }}>
-          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-            <h1 className="h1-responsive" style={{ fontSize: '2.5rem', marginBottom: 8, color: '#1A0D10', fontWeight: 900 }}>Create Account</h1>
-            <p style={{ color: '#5A3A42', fontSize: '.9rem' }}>Choose your role and start your journey.</p>
+        <div className="glass-auth-card">
+          <div style={{ marginBottom: '1.8rem' }}>
+            <h1 style={{ fontSize: '2rem', color: '#FFF9F2', fontWeight: 900, letterSpacing: '-0.02em', margin: '0 0 6px 0' }}>
+              Create Account
+            </h1>
+            <p style={{ color: '#F5E6D3', opacity: 0.8, fontSize: '.88rem', margin: 0 }}>
+              Select your account type to get started.
+            </p>
           </div>
 
-          <div style={{ display: 'flex', gap: 10, marginBottom: '2rem' }}>
+          {/* Role selector buttons */}
+          <div style={{ display: 'flex', gap: 10, marginBottom: '1.8rem' }}>
             <button 
-              className="magnetic-hover"
-              style={{ flex: 1, padding: '1rem', borderRadius: 16, border: `2px solid ${formData.role==='client'?'#7B1D2E':'#E8C9A8'}`, background: formData.role==='client'?'#7B1D2E':'#fff', cursor: 'pointer', transition: 'all .2s', boxShadow: formData.role==='client'?'0 4px 6px -1px rgba(0, 0, 0, 0.1)':'none' }}
+              type="button"
+              style={{
+                flex: 1,
+                padding: '0.85rem',
+                borderRadius: 14,
+                border: `1.5px solid ${formData.role==='client'?'#F5C4B3':'rgba(245,196,179,0.2)'}`,
+                background: formData.role==='client'?'linear-gradient(135deg, #7B1D2E, #9B2D42)':'rgba(255,255,255,0.05)',
+                color: '#FFF9F2',
+                cursor: 'pointer',
+                transition: 'all .25s ease',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 8,
+                fontWeight: 700
+              }}
               onClick={() => setFormData({...formData, role:'client'})}
             >
-              <User size={24} color={formData.role==='client'?'#fff':'#1A0D10'} style={{ marginBottom: 8 }}/>
-              <div style={{ fontWeight: 800, fontSize: '.9rem', color: formData.role==='client'?'#fff':'#1A0D10' }}>Client</div>
+              <User size={18} color={formData.role==='client'?'#fff':'#F5C4B3'} />
+              <span>Client</span>
             </button>
             <button 
-              className="magnetic-hover"
-              style={{ flex: 1, padding: '1rem', borderRadius: 16, border: `2px solid ${formData.role==='lawyer'?'#7B1D2E':'#E8C9A8'}`, background: formData.role==='lawyer'?'#7B1D2E':'#fff', cursor: 'pointer', transition: 'all .2s', boxShadow: formData.role==='lawyer'?'0 4px 6px -1px rgba(0, 0, 0, 0.1)':'none' }}
+              type="button"
+              style={{
+                flex: 1,
+                padding: '0.85rem',
+                borderRadius: 14,
+                border: `1.5px solid ${formData.role==='lawyer'?'#F5C4B3':'rgba(245,196,179,0.2)'}`,
+                background: formData.role==='lawyer'?'linear-gradient(135deg, #7B1D2E, #9B2D42)':'rgba(255,255,255,0.05)',
+                color: '#FFF9F2',
+                cursor: 'pointer',
+                transition: 'all .25s ease',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 8,
+                fontWeight: 700
+              }}
               onClick={() => setFormData({...formData, role:'lawyer'})}
             >
-              <Scale size={24} color={formData.role==='lawyer'?'#fff':'#1A0D10'} style={{ marginBottom: 8 }}/>
-              <div style={{ fontWeight: 800, fontSize: '.9rem', color: formData.role==='lawyer'?'#fff':'#1A0D10' }}>Lawyer</div>
+              <Scale size={18} color={formData.role==='lawyer'?'#fff':'#F5C4B3'} />
+              <span>Lawyer</span>
             </button>
           </div>
 
           <form onSubmit={handleRegister}>
-            <div className="form-group">
-              <label>Full Name</label>
+            <div className="form-group" style={{ marginBottom: '1.2rem' }}>
+              <label style={{ color: '#F5C4B3', fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.08em' }}>
+                FULL NAME
+              </label>
               <div className="input-wrap">
                 <User size={18} className="input-icon" />
-                <input type="text" value={formData.name} onChange={e=>setFormData({...formData, name:e.target.value})} required placeholder="John Doe" />
+                <input
+                  type="text"
+                  value={formData.name}
+                  onChange={e=>setFormData({...formData, name:e.target.value})}
+                  required
+                  placeholder="e.g. Adv. Rajesh Sharma or Priya Patel"
+                />
               </div>
             </div>
-            <div className="form-group">
-              <label>Email Address</label>
+
+            <div className="form-group" style={{ marginBottom: '1.2rem' }}>
+              <label style={{ color: '#F5C4B3', fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.08em' }}>
+                EMAIL ADDRESS
+              </label>
               <div className="input-wrap">
                 <Mail size={18} className="input-icon" />
-                <input type="email" value={formData.email} onChange={e=>setFormData({...formData, email:e.target.value})} required placeholder="john@example.com" />
+                <input
+                  type="email"
+                  value={formData.email}
+                  onChange={e=>setFormData({...formData, email:e.target.value})}
+                  required
+                  placeholder="you@example.com"
+                />
               </div>
             </div>
-            <div className="form-group">
-              <label>Password</label>
+
+            <div className="form-group" style={{ marginBottom: '1.5rem' }}>
+              <label style={{ color: '#F5C4B3', fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.08em' }}>
+                PASSWORD
+              </label>
               <div className="input-wrap">
                 <Lock size={18} className="input-icon" />
-                <input type="password" value={formData.password} onChange={e=>setFormData({...formData, password:e.target.value})} required placeholder="••••••••" minLength={6} />
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={formData.password}
+                  onChange={e=>setFormData({...formData, password:e.target.value})}
+                  required
+                  placeholder="••••••••"
+                  minLength={6}
+                />
+                <button
+                  type="button"
+                  className="password-toggle-btn"
+                  onClick={() => setShowPassword(!showPassword)}
+                  title={showPassword ? 'Hide Password' : 'Show Password'}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
               </div>
             </div>
-            <button className="btn btn-primary btn-lg magnetic-hover" style={{ width: '100%', marginTop: '1rem' }} disabled={loading}>
-              {loading ? 'Creating account...' : <><UserPlus size={18}/> Create Account</>}
+
+            <button
+              className="btn btn-primary btn-lg magnetic-hover"
+              style={{
+                width: '100%',
+                padding: '1rem',
+                borderRadius: 14,
+                background: 'linear-gradient(135deg, #7B1D2E 0%, #9B2D42 100%)',
+                boxShadow: '0 8px 24px rgba(123, 29, 46, 0.4)',
+                border: '1px solid rgba(245, 196, 179, 0.4)',
+                fontSize: '1.02rem',
+                fontWeight: 800,
+                color: '#fff',
+                cursor: loading ? 'not-allowed' : 'pointer'
+              }}
+              disabled={loading}
+            >
+              {loading ? 'Creating account...' : <><UserPlus size={18}/> Register Free Account</>}
             </button>
           </form>
 
-          <div style={{ textAlign: 'center', marginTop: '2rem', fontSize: '.9rem', color: 'var(--txt-3)' }}>
-            Already have an account? <Link to="/login" style={{ color: 'var(--bur)', fontWeight: 800 }}>Login Here</Link>
+          <div style={{ textAlign: 'center', marginTop: '1.8rem', fontSize: '.88rem', color: '#F5E6D3', opacity: 0.9 }}>
+            Already have an account? <Link to="/login" style={{ color: '#F5C4B3', fontWeight: 800, textDecoration: 'underline' }}>Login Here →</Link>
           </div>
         </div>
       </div>

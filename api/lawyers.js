@@ -3,6 +3,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const connectDB = require('../middleware/db');
 const Lawyer = require('../models/Lawyer');
+const LawyerApplication = require('../models/LawyerApplication');
 const mongoose = require('mongoose');
 
 
@@ -113,7 +114,48 @@ router.post('/seed/demo', async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+// ── POST /api/lawyer-application — join-as-lawyer form submission ────────────
+const applicationRouter = express.Router();
+
+applicationRouter.post('/', async (req, res) => {
+  try {
+    const { name, phone, email, barCouncilNumber, specialization, city, yearsOfExperience } = req.body;
+
+    if (!name || !phone || !email || !barCouncilNumber || !specialization || !city || !yearsOfExperience) {
+      return res.status(400).json({ error: 'All fields are required.' });
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({ error: 'Please enter a valid email address.' });
+    }
+    if (!/^\d{10}$/.test(phone)) {
+      return res.status(400).json({ error: 'Please enter a valid 10-digit phone number.' });
+    }
+
+    await connectDB();
+
+    const existing = await LawyerApplication.findOne({ $or: [{ email }, { barCouncilNumber }] });
+    if (existing) {
+      return res.status(409).json({ error: 'An application with this email or Bar Council number already exists.' });
+    }
+
+    const application = await LawyerApplication.create({
+      name, phone, email, barCouncilNumber, specialization,
+      city, yearsOfExperience: parseInt(yearsOfExperience)
+    });
+
+    console.log('NEW LAWYER APPLICATION received:', application._id, name, email);
+    return res.status(201).json({
+      message: 'Application submitted successfully! We will review and contact you within 24–48 hours.',
+      id: application._id
+    });
+  } catch (err) {
+    console.error('Lawyer application error:', err);
+    return res.status(500).json({ error: 'Server error. Please try again later.' });
+  }
+});
+
 app.use('/api/lawyers', router);
 app.use('/api/search', router);
+app.use('/api/lawyer-application', applicationRouter);
 module.exports = app;
 

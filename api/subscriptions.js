@@ -6,6 +6,7 @@ const authMiddleware = require('../middleware/auth');
 const SubscriptionPlan = require('../models/SubscriptionPlan');
 const UserSubscription = require('../models/UserSubscription');
 const Payment = require('../models/Payment');
+const Subscriber = require('../models/Subscriber');
 
 const app = express();
 app.use(express.json());
@@ -105,5 +106,29 @@ router.get('/my', authMiddleware, async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+// ── POST /api/subscribe — newsletter email subscription (no auth required) ───
+
+const newsletterRouter = express.Router();
+
+newsletterRouter.post('/', async (req, res) => {
+  const { email } = req.body;
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return res.status(400).json({ error: 'Valid email is required' });
+  }
+  try {
+    await connectDB();
+    await Subscriber.findOneAndUpdate(
+      { email: email.toLowerCase().trim() },
+      { email: email.toLowerCase().trim(), isActive: true, subscribedAt: new Date() },
+      { upsert: true, new: true }
+    );
+    return res.status(200).json({ message: 'Subscribed successfully' });
+  } catch (err) {
+    console.error('Subscribe error:', err);
+    return res.status(500).json({ error: 'Failed to subscribe' });
+  }
+});
+
 app.use('/api/subscriptions', router);
+app.use('/api/subscribe', newsletterRouter);
 module.exports = app;

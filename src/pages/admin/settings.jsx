@@ -8,7 +8,7 @@ export default function AdminSettings() {
     maintenanceMode: false,
     registrationsPaused: false,
     dangerZoneEnabled: false,
-    supportEmail: process.env.NEXT_PUBLIC_SUPPORT_EMAIL || 'supportjusticejunction247@gmail.com',
+    supportEmail: import.meta.env.VITE_SUPPORT_EMAIL || 'supportjusticejunction247@gmail.com',
     platformFeePercentage: 10
   });
   const [loading, setLoading] = useState(true);

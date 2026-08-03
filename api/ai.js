@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const connectDB = require('../middleware/db');
 const CaseOutcome = require('../models/CaseOutcome');
 const AiInteractionLog = require('../models/AiInteractionLog');
+const ChatQuery = require('../models/ChatQuery');
 const { retrieveContext } = require('../backend/ai/retrieve');
 const { classifyIssue } = require('../backend/ai/classify');
 
@@ -612,6 +613,17 @@ Respond ONLY with valid JSON with no markdown formatting or backticks around it:
           ...(ragFailed ? { 'metadata.ragFailed': true } : {})
         });
       } catch (logErr) { /* non-blocking */ }
+
+      // ChatQuery log for research/analytics (fire-and-forget)
+      try {
+        await ChatQuery.create({
+          userId: user?.id || null,
+          query: message,
+          classifiedCategory: suggestedAction?.type || null,
+          response: finalReply,
+          sessionId: rateKey
+        });
+      } catch (cqErr) { /* non-blocking */ }
 
       return res.status(200).json({
         reply: finalReply,

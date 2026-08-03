@@ -24,7 +24,7 @@ export default function WhatsAppHelpline() {
 
   return (
     <a
-      href="https://wa.me/919188371233?text=Hi, I need legal help"
+      href={`https://wa.me/${import.meta.env.VITE_WA_NUMBER || '919188371233'}?text=Hi, I need legal help`}
       target="_blank"
       rel="noreferrer"
       style={{

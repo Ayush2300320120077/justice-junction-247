@@ -5,6 +5,7 @@ const crypto = require('crypto');
 const connectDB = require('../middleware/db');
 const Booking = require('../models/Booking');
 const Lawyer = require('../models/Lawyer');
+const Payment = require('../models/Payment');
 
 const app = express();
 app.use(express.json());
@@ -61,6 +62,19 @@ router.post('/verify', async (req, res) => {
     booking.paymentOrderId = razorpay_order_id;
     booking.isPaid = true;
     await booking.save();
+    // Log payment record for audit trail & analytics
+    try {
+      await Payment.create({
+        userId: user.id,
+        amount: booking.amount || bookingData.amount || 0,
+        razorpayOrderId: razorpay_order_id,
+        razorpayPaymentId: razorpay_payment_id,
+        razorpaySignature: razorpay_signature,
+        status: 'paid',
+        type: 'booking',
+        referenceId: booking._id
+      });
+    } catch (logErr) { console.error('Payment log error (non-blocking):', logErr.message); }
     res.json({ success: true, booking, message: 'Payment successful! Booking confirmed.' });
   } catch (err) { res.status(500).json({ error: err.message }); }
 });

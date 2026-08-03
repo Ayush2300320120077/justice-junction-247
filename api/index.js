@@ -35,5 +35,7 @@ app.use(require('./subscriptions'));
 app.use(require('./documents'));
 app.use(require('./articles'));
 app.use(require('./reviews'));
+app.use(require('./contact'));
+
 
 module.exports = app;

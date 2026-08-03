@@ -107,7 +107,8 @@ async function runAudit() {
   }
 
   // 7. Admin Auth & AI Stats
-  const adminToken = jwt.sign({ id: 'admin_test_id', role: 'admin' }, process.env.JWT_SECRET || 'REMOVED_JWT_SECRET');
+  if (!process.env.JWT_SECRET) throw new Error('JWT_SECRET env var is not set. Run with a .env file or set it in your environment before running this script.');
+  const adminToken = jwt.sign({ id: 'admin_test_id', role: 'admin' }, process.env.JWT_SECRET);
   try {
     const res = await fetch(`${LIVE_URL}/api/admin/ai-stats`, {
       headers: { Authorization: `Bearer ${adminToken}` }

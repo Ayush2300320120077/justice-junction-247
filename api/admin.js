@@ -525,7 +525,7 @@ let globalSettings = {
   maintenanceMode: false,
   registrationsPaused: false,
   dangerZoneEnabled: false,
-  supportEmail: 'supportjusticejunction247@gmail.com',
+  supportEmail: process.env.SUPPORT_EMAIL || '',
   platformFeePercentage: 10,
   autoVerifyLawyers: true
 };

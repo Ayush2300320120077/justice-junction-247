@@ -2,6 +2,7 @@ import React, { Suspense, lazy, useState, useEffect } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
+import AdminRoute from './components/admin/AdminRoute'
 
 // Lazy load all pages
 const Home            = lazy(() => import('./pages/index'))
@@ -122,19 +123,19 @@ export default function App() {
             <Route path="/favorites" element={<Favorites />} />
 
             {/* Admin routes */}
-            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
             <Route path="/admin/login" element={<AdminLogin />} />
-            <Route path="/admin/dashboard" element={<AdminDashboard />} />
-            <Route path="/admin/lawyers" element={<AdminLawyers />} />
-            <Route path="/admin/clients" element={<AdminClients />} />
-            <Route path="/admin/content" element={<AdminContent />} />
-            <Route path="/admin/settings" element={<AdminSettings />} />
-            <Route path="/admin/subscriptions" element={<AdminSubs />} />
-            <Route path="/admin/analytics" element={<AdminAnalytics />} />
-            <Route path="/admin/contact-inbox" element={<AdminInbox />} />
-            <Route path="/admin/reports" element={<AdminReports />} />
-            <Route path="/admin/templates" element={<AdminTemplates />} />
-            <Route path="/admin/ai-eval" element={<AdminAiEval />} />
+            <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+            <Route path="/admin/lawyers" element={<AdminRoute><AdminLawyers /></AdminRoute>} />
+            <Route path="/admin/clients" element={<AdminRoute><AdminClients /></AdminRoute>} />
+            <Route path="/admin/content" element={<AdminRoute><AdminContent /></AdminRoute>} />
+            <Route path="/admin/settings" element={<AdminRoute><AdminSettings /></AdminRoute>} />
+            <Route path="/admin/subscriptions" element={<AdminRoute><AdminSubs /></AdminRoute>} />
+            <Route path="/admin/analytics" element={<AdminRoute><AdminAnalytics /></AdminRoute>} />
+            <Route path="/admin/contact-inbox" element={<AdminRoute><AdminInbox /></AdminRoute>} />
+            <Route path="/admin/reports" element={<AdminRoute><AdminReports /></AdminRoute>} />
+            <Route path="/admin/templates" element={<AdminRoute><AdminTemplates /></AdminRoute>} />
+            <Route path="/admin/ai-eval" element={<AdminRoute><AdminAiEval /></AdminRoute>} />
 
 
             {/* 404 fallback */}

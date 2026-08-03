@@ -10,7 +10,8 @@ async function testAdminAiEval() {
   app.use(express.json());
   app.use(adminSubApp);
 
-  const adminToken = jwt.sign({ id: 'test_admin_id', role: 'admin' }, process.env.JWT_SECRET || 'REMOVED_JWT_SECRET');
+  if (!process.env.JWT_SECRET) throw new Error('JWT_SECRET env var is not set. Run with a .env file or set it in your environment before running this script.');
+  const adminToken = jwt.sign({ id: 'test_admin_id', role: 'admin' }, process.env.JWT_SECRET);
 
   const server = app.listen(0, async () => {
     const port = server.address().port;

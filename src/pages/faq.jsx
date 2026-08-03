@@ -121,7 +121,7 @@ export default function FAQPage() {
               <p style={{margin:0, fontSize:'.9rem', color:'rgba(255,255,255,.7)'}}>Our support team is available 24/7 via WhatsApp.</p>
             </div>
           </div>
-          <button className="btn btn-white btn-lg" onClick={() => window.open('https://wa.me/919188371233', '_blank')}>Chat on WhatsApp</button>
+          <button className="btn btn-white btn-lg" onClick={() => window.open(`https://wa.me/${import.meta.env.VITE_WA_NUMBER || '919188371233'}`, '_blank')}>Chat on WhatsApp</button>
         </div>
       </div>
     </div>

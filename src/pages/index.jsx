@@ -561,15 +561,15 @@ export default function Home() {
           }}
         />
 
-        {/* ── Layer 1: Primary dark cinematic gradient (full width, no image cutout) ── */}
+        {/* ── Layer 1: Maroon-toned cinematic gradient — matches navbar #7B1D2E at top ── */}
         <div style={{
           position: 'absolute', inset: 0, zIndex: 1,
           background:
             'linear-gradient(180deg,' +
-            'rgba(4,1,2,0.78) 0%,' +
-            'rgba(12,4,7,0.62) 30%,' +
-            'rgba(16,6,9,0.70) 65%,' +
-            'rgba(4,1,2,0.96) 100%)'
+            'rgba(123,29,46,0.92) 0%,' +
+            'rgba(80,18,30,0.78) 30%,' +
+            'rgba(50,11,19,0.82) 65%,' +
+            'rgba(20,5,10,0.96) 100%)'
         }} />
 
         {/* ── Layer 2: Warm burgundy glow emanating from left-center ── */}

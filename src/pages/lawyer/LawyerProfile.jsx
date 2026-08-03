@@ -39,7 +39,7 @@ export default function LawyerProfile() {
 
   const handleWhatsApp = () => {
     const text = encodeURIComponent(`Hi ${lawyer.name}, I found you on Justice Junction 24/7. I need help with a legal issue. Can we schedule a consultation?`)
-    window.open(`https://wa.me/919188371233?text=${text}`, '_blank')
+    window.open(`https://wa.me/${import.meta.env.VITE_WA_NUMBER || '919188371233'}?text=${text}`, '_blank')
   }
 
   return (

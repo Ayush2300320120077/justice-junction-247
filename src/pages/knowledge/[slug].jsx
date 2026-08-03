@@ -124,7 +124,7 @@ export default function ArticlePage({ article }) {
             </div>
             <div style={{display:'flex', gap:10, flexWrap:'wrap'}}>
               <Link to="/search" className="btn btn-primary">Find a Lawyer →</Link>
-              <a href={`https://wa.me/919188371233?text=${encodeURIComponent(`Hi, I read the article "${article.title}" on Justice Junction 24/7 and need legal advice.`)}`}
+              <a href={`https://wa.me/${import.meta.env.VITE_WA_NUMBER || '919188371233'}?text=${encodeURIComponent(`Hi, I read the article "${article.title}" on Justice Junction 24/7 and need legal advice.`)}`}
                 target="_blank" rel="noreferrer" className="btn btn-outline">
                 Chat on WhatsApp
               </a>

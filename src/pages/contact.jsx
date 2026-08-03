@@ -6,7 +6,7 @@ import emailjs from '@emailjs/browser'
 import { useToast } from '../context/ToastContext'
 
 export default function Contact() {
-  const supportEmail = process.env.NEXT_PUBLIC_SUPPORT_EMAIL || 'supportjusticejunction247@gmail.com'
+  const supportEmail = import.meta.env.VITE_SUPPORT_EMAIL || 'supportjusticejunction247@gmail.com'
   const [form, setForm] = useState({ name:'', email:'', subject:'', message:'' })
   const [errors, setErrors] = useState({})
   const [submitted, setSubmitted] = useState(false)
@@ -41,9 +41,9 @@ export default function Contact() {
     } catch (_) { /* DB save is best-effort */ }
 
     // 2. Send email via EmailJS
-    const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID
-    const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID
-    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY
 
     if (serviceId && templateId && publicKey) {
       try {
@@ -104,9 +104,9 @@ export default function Contact() {
           {/* Info Cards */}
           <div style={{display:'flex', flexDirection:'column', gap:'1.5rem'}}>
             {[
-              { icon:<MessageSquare size={22}/>, title:'WhatsApp Support', desc:'Chat with our team directly. Available 24/7.', action:'Chat Now', href:'https://wa.me/919188371233?text=Hi, I need help with Justice Junction 24/7' },
+              { icon:<MessageSquare size={22}/>, title:'WhatsApp Support', desc:'Chat with our team directly. Available 24/7.', action:'Chat Now', href:`https://wa.me/${import.meta.env.VITE_WA_NUMBER || '919188371233'}?text=Hi, I need help with Justice Junction 24/7` },
               { icon:<Mail size={22}/>, title:'Email Us', desc:supportEmail, action:'Send Email', href:`mailto:${supportEmail}` },
-              { icon:<Phone size={22}/>, title:'Helpline', descComponent: true, action:'Call Now', href:'tel:+919188371233' },
+              { icon:<Phone size={22}/>, title:'Helpline', descComponent: true, action:'Call Now', href:`tel:+${import.meta.env.VITE_WA_NUMBER || '919188371233'}` },
             ].map(item => (
               <div key={item.title} style={s.infoCard}>
                 <div style={s.infoIcon}>{item.icon}</div>

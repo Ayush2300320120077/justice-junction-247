@@ -24,6 +24,8 @@ app.use(require('./api/subscriptions'))
 app.use(require('./api/documents'))
 app.use(require('./api/articles'))
 app.use(require('./api/reviews'))
+app.use(require('./api/contact'))
+
 
 // Health check
 app.get('/health', (req, res) => res.json({ status: 'ok' }))

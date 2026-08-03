@@ -4,7 +4,8 @@ const jwt = require('jsonwebtoken');
 const LIVE_URL = 'https://jj-fixed.vercel.app';
 
 async function testLiveAdminData() {
-  const adminToken = jwt.sign({ id: 'admin_test_id', role: 'admin' }, process.env.JWT_SECRET || 'REMOVED_JWT_SECRET');
+  if (!process.env.JWT_SECRET) throw new Error('JWT_SECRET env var is not set. Run with a .env file or set it in your environment before running this script.');
+  const adminToken = jwt.sign({ id: 'admin_test_id', role: 'admin' }, process.env.JWT_SECRET);
 
   console.log('Testing live Admin data endpoints on:', LIVE_URL);
 
