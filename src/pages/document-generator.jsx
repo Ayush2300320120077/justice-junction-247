@@ -848,7 +848,7 @@ export default function DocumentGenerator() {
   }
 
   return (
-    <div style={{ paddingTop: 95, background: '#FDF8F4', minHeight: '100vh' }}>
+    <div style={{ background: '#FDF8F4', minHeight: '100vh' }}>
       <Helmet>
         <title>Legal Document Generator | Justice Junction 24/7</title>
         <meta name="description" content="Generate professional legal documents: Rental Agreements, Legal Notices, NDA, Affidavits, Consumer Complaints and more. Free download." />

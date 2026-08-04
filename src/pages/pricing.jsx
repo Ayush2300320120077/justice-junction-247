@@ -128,7 +128,7 @@ export default function ClientPricing() {
   const displayPrice = (price) => annual ? Math.round(price * 10) : price
 
   return (
-    <div style={{ backgroundColor: '#0f0508', color: '#fff', minHeight: '100vh', overflowX: 'hidden', paddingTop: 72 }}>
+    <div style={{ backgroundColor: '#0f0508', color: '#fff', minHeight: '100vh', overflowX: 'hidden' }}>
       <Helmet>
         <title>Pricing — Premium Legal Access | Justice Junction 24/7</title>
         <meta name="description" content="Transparent, affordable pricing for legal services, AI document generation, and premium legal support on Justice Junction 24/7." />
