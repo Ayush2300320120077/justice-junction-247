@@ -71,9 +71,13 @@ function TypingWord() {
   }, [display, deleting, idx])
 
   return (
-    <span style={{ color: '#F5C4B3', position: 'relative' }}>
+    <span style={{
+      background: 'linear-gradient(90deg, #C8A96E 0%, #E8C97A 60%, #D4A855 100%)',
+      WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+      backgroundClip: 'text', position: 'relative'
+    }}>
       {display}
-      <span style={{ animation: 'blink 1s step-end infinite', color: '#F5C4B3', marginLeft: 2 }}>|</span>
+      <span style={{ animation: 'blink 1s step-end infinite', WebkitTextFillColor: '#C8A96E', marginLeft: 2 }}>|</span>
     </span>
   )
 }
@@ -189,7 +193,7 @@ export default function Home() {
   const [statsRef, statsVisible] = useReveal(0.1)
 
   return (
-    <div style={{ fontFamily: 'var(--font-body)', overflowX: 'hidden', background: '#060103' }}>
+    <div style={{ fontFamily: 'var(--font-body)', overflowX: 'hidden', background: '#F8F5F0' }}>
       <Helmet>
         <title>Justice Junction 24/7 — Find Verified Lawyers in India | 24/7 Legal Help</title>
         <meta name="description" content="India's #1 price-transparent legal marketplace. 1,338+ Bar Council verified advocates. AI matching, encrypted video calls, 24/7 emergency access." />
@@ -205,7 +209,7 @@ export default function Home() {
       </Helmet>
 
       <style dangerouslySetInnerHTML={{ __html: `
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=Sora:wght@400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=Sora:wght@400;700;900&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap');
 
         /* ── Core Keyframes ── */
         @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
@@ -531,7 +535,7 @@ export default function Home() {
       `}} />
 
       {/* ══════════════════════════════════════════════════════
-          SECTION 1 — CINEMATIC HERO (Fixed: no overlaps, full-width BG)
+          SECTION 1 — CINEMATIC HERO — Light Editorial Aesthetic
       ══════════════════════════════════════════════════════ */}
       <section
         ref={heroRef}
@@ -539,149 +543,113 @@ export default function Home() {
         style={{
           minHeight: '100vh', position: 'relative', overflow: 'hidden',
           display: 'flex', flexDirection: 'column', justifyContent: 'center',
-          paddingTop: 80, background: '#060103'
+          paddingTop: 80, background: '#0F172A'
         }}
       >
-        {/* ── Layer 0: Slow Ken Burns BG Image ── */}
+        {/* ── Layer 0: Cinematic 4K Unsplash hero image (law firm architecture / marble) ── */}
         <div
           className="hero-bg-img"
           style={{
-            position: 'absolute',
-            inset: '-8%',
-            backgroundImage: 'url(/images/hero-wide-v2.jpg)',
+            position: 'absolute', inset: 0,
+            backgroundImage: 'url(https://images.unsplash.com/photo-1589829545856-d10d557cf95f?q=80&w=2070&auto=format&fit=crop)',
             backgroundSize: 'cover',
-            backgroundPosition: 'center center',
+            backgroundPosition: 'center 35%',
             zIndex: 0
           }}
         />
 
-        {/* ── Layer 1: Maroon-toned cinematic gradient — matches navbar #7B1D2E at top ── */}
+        {/* ── Layer 1: Deep editorial gradient — slate navy left, transparent right ── */}
         <div style={{
           position: 'absolute', inset: 0, zIndex: 1,
           background:
-            'linear-gradient(180deg,' +
-            'rgba(123,29,46,0.45) 0%,' +
-            'rgba(80,18,30,0.40) 30%,' +
-            'rgba(50,11,19,0.50) 65%,' +
-            'rgba(20,5,10,0.85) 100%)'
+            'linear-gradient(105deg,' +
+            'rgba(10,15,40,0.96) 0%,' +
+            'rgba(15,23,60,0.88) 28%,' +
+            'rgba(20,30,70,0.72) 52%,' +
+            'rgba(10,15,40,0.35) 75%,' +
+            'rgba(0,0,0,0.10) 100%)'
         }} />
 
-        {/* ── Layer 2: Warm burgundy glow emanating from left-center ── */}
+        {/* ── Layer 2: Warm gold sunlight spill — upper right corner ── */}
         <div style={{
           position: 'absolute', inset: 0, zIndex: 2, pointerEvents: 'none',
           background:
-            'radial-gradient(ellipse 65% 70% at 18% 58%,' +
-            'rgba(123,29,46,0.40) 0%,' +
-            'rgba(61,14,22,0.18) 45%,' +
-            'transparent 78%)'
+            'radial-gradient(ellipse 60% 75% at 85% -10%,' +
+            'rgba(200,169,110,0.22) 0%,' +
+            'rgba(200,169,110,0.08) 40%,' +
+            'transparent 70%)'
         }} />
 
-        {/* ── Layer 3: Gold-tinted top-right directional light (like a courtroom skylight) ── */}
+        {/* ── Layer 3: Subtle warm center vignette adds depth ── */}
         <div style={{
           position: 'absolute', inset: 0, zIndex: 2, pointerEvents: 'none',
           background:
-            'radial-gradient(ellipse 55% 80% at 80% -5%,' +
-            'rgba(232,182,120,0.13) 0%,' +
+            'radial-gradient(ellipse 80% 60% at 30% 85%,' +
+            'rgba(123,29,46,0.18) 0%,' +
             'transparent 65%)'
         }} />
 
-        {/* ── Layer 4: Animated CSS light rays (no separate image) ── */}
+        {/* ── Layer 4: Animated gold light ray (left, angled — like law office window) ── */}
         <div className="hero-ray-1" style={{
           position: 'absolute', zIndex: 3, pointerEvents: 'none',
-          top: '-20%', left: '55%', width: '18%', height: '130%',
-          background: 'linear-gradient(180deg, rgba(232,182,120,0.18) 0%, transparent 100%)',
-          transform: 'rotate(-15deg)', transformOrigin: 'top center',
-          filter: 'blur(28px)'
+          top: '-30%', left: '42%', width: '22%', height: '145%',
+          background: 'linear-gradient(180deg, rgba(200,169,110,0.14) 0%, transparent 70%)',
+          transform: 'rotate(-18deg)', transformOrigin: 'top center',
+          filter: 'blur(40px)'
         }} />
         <div className="hero-ray-2" style={{
           position: 'absolute', zIndex: 3, pointerEvents: 'none',
-          top: '-20%', left: '70%', width: '10%', height: '110%',
-          background: 'linear-gradient(180deg, rgba(245,196,179,0.12) 0%, transparent 100%)',
-          transform: 'rotate(10deg)', transformOrigin: 'top center',
-          filter: 'blur(18px)'
+          top: '-20%', left: '62%', width: '12%', height: '110%',
+          background: 'linear-gradient(180deg, rgba(220,190,130,0.10) 0%, transparent 70%)',
+          transform: 'rotate(8deg)', transformOrigin: 'top center',
+          filter: 'blur(24px)'
         }} />
 
-        {/* ── Layer 5: Cinematic scan-line ── */}
-        <div className="hero-scanline" style={{ zIndex: 4 }} />
+        {/* ── Layer 5: Subtle grid texture overlay (premium editorial feel) ── */}
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 2, pointerEvents: 'none', opacity: 0.018,
+          backgroundImage: 'linear-gradient(rgba(255,255,255,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.4) 1px, transparent 1px)',
+          backgroundSize: '80px 80px'
+        }} />
 
-        {/* ── Layer 6: Animated floating Scales of Justice (SVG — right side, low opacity) ── */}
-        <div className="hero-scales" style={{
-          display: 'none',
-          position: 'absolute', right: '5%', top: '50%',
-          width: 'clamp(260px,28vw,420px)', height: 'clamp(260px,28vw,420px)',
-          zIndex: 4, opacity: 0.10, pointerEvents: 'none',
-          transform: 'translateY(-50%)'
-        }}>
-          <svg viewBox="0 0 420 420" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '100%' }}>
-            {/* Pillar */}
-            <line x1="210" y1="390" x2="210" y2="65" stroke="#F5C4B3" strokeWidth="4" strokeLinecap="round"/>
-            <rect x="155" y="383" width="110" height="14" rx="7" stroke="#F5C4B3" strokeWidth="3" fill="none"/>
-            {/* Crown */}
-            <polygon points="210,38 220,62 200,62" stroke="#F5C4B3" strokeWidth="3" fill="none"/>
-            <circle cx="210" cy="32" r="7" stroke="#F5C4B3" strokeWidth="2.5" fill="none"/>
-            {/* Main beam */}
-            <path d="M55 130 Q210 110 365 130" stroke="#F5C4B3" strokeWidth="4" strokeLinecap="round" fill="none"/>
-            <circle cx="210" cy="118" r="9" stroke="#F5C4B3" strokeWidth="3" fill="none"/>
-            {/* Left chain */}
-            <line x1="55" y1="130" x2="30" y2="230" stroke="#F5C4B3" strokeWidth="2.5" strokeDasharray="6 4"/>
-            <line x1="55" y1="130" x2="80" y2="230" stroke="#F5C4B3" strokeWidth="2.5" strokeDasharray="6 4"/>
-            {/* Left pan */}
-            <path d="M18 230 Q55 258 92 230" stroke="#F5C4B3" strokeWidth="3" fill="none"/>
-            <line x1="18" y1="230" x2="92" y2="230" stroke="#F5C4B3" strokeWidth="2"/>
-            {/* Right chain */}
-            <line x1="365" y1="130" x2="340" y2="215" stroke="#F5C4B3" strokeWidth="2.5" strokeDasharray="6 4"/>
-            <line x1="365" y1="130" x2="390" y2="215" stroke="#F5C4B3" strokeWidth="2.5" strokeDasharray="6 4"/>
-            {/* Right pan (slightly tipped) */}
-            <path d="M328 222 Q365 248 402 222" stroke="#F5C4B3" strokeWidth="3" fill="none"/>
-            <line x1="328" y1="222" x2="402" y2="222" stroke="#F5C4B3" strokeWidth="2"/>
-            {/* Decorative column lines */}
-            <line x1="195" y1="150" x2="195" y2="360" stroke="#F5C4B3" strokeWidth="1" strokeDasharray="5 6" opacity="0.5"/>
-            <line x1="225" y1="150" x2="225" y2="360" stroke="#F5C4B3" strokeWidth="1" strokeDasharray="5 6" opacity="0.5"/>
-          </svg>
-        </div>
-
-        {/* ── Layer 7: Floating particles ── */}
+        {/* ── Layer 6: Floating particles (gold-tinted for warmth) ── */}
         {[
-          { left: '8%',  top: '70%', dur: '7s',   delay: '0s',    px: '20px', po: '0.7' },
-          { left: '18%', top: '78%', dur: '9.5s',  delay: '1.3s',  px: '-15px', po: '0.5' },
-          { left: '32%', top: '82%', dur: '6.5s',  delay: '0.6s',  px: '25px', po: '0.6' },
-          { left: '48%', top: '75%', dur: '8s',    delay: '2.1s',  px: '-10px', po: '0.4' },
-          { left: '63%', top: '80%', dur: '10s',   delay: '0.9s',  px: '30px', po: '0.5' },
-          { left: '76%', top: '72%', dur: '7.8s',  delay: '1.6s',  px: '-20px', po: '0.3' },
-          { left: '88%', top: '76%', dur: '9s',    delay: '3.2s',  px: '15px', po: '0.4' },
-          { left: '26%', top: '65%', dur: '11s',   delay: '2.8s',  px: '-25px', po: '0.3' },
+          { left: '8%',  top: '70%', dur: '7s',  delay: '0s',   px: '20px', po: '0.5' },
+          { left: '18%', top: '78%', dur: '9.5s', delay: '1.3s', px: '-15px', po: '0.35' },
+          { left: '32%', top: '82%', dur: '6.5s', delay: '0.6s', px: '25px', po: '0.4' },
+          { left: '48%', top: '75%', dur: '8s',   delay: '2.1s', px: '-10px', po: '0.3' },
         ].map((p, i) => (
           <div key={i} className="particle" style={{
             left: p.left, top: p.top, zIndex: 4,
-            '--dur': p.dur, '--delay': p.delay,
-            '--px': p.px, '--po': p.po
+            '--dur': p.dur, '--delay': p.delay, '--px': p.px, '--po': p.po,
+            background: 'rgba(200,169,110,0.5)'
           }} />
         ))}
 
-        {/* ── Layer 8: Bottom fade to cream ── */}
+        {/* ── Layer 7: Bottom fade ── */}
         <div style={{
           position: 'absolute', bottom: 0, left: 0, right: 0,
-          height: 220, zIndex: 5, pointerEvents: 'none',
-          background: 'linear-gradient(to bottom, transparent, #060103)'
+          height: 260, zIndex: 5, pointerEvents: 'none',
+          background: 'linear-gradient(to bottom, transparent, rgba(10,15,40,0.95))'
         }} />
 
         {/* ══ HERO CONTENT ══ */}
         <div className="container" style={{
           position: 'relative', zIndex: 6,
-          padding: '3rem 0 clamp(9rem, 16vh, 11rem)',
+          padding: '4rem 0 clamp(10rem, 18vh, 13rem)',
           maxWidth: 1280
         }}>
 
-          {/* Live badge */}
+          {/* ── Live badge ── */}
           <div className="hero-text-in" style={{
             display: 'inline-flex', alignItems: 'center', gap: 10,
-            background: 'rgba(245,196,179,0.07)',
-            border: '1px solid rgba(245,196,179,0.22)',
+            background: 'rgba(200,169,110,0.12)',
+            border: '1px solid rgba(200,169,110,0.35)',
             borderRadius: 40, padding: '.42rem 1.25rem',
-            marginBottom: '2.2rem',
-            backdropFilter: 'blur(16px)',
-            WebkitBackdropFilter: 'blur(16px)',
-            boxShadow: '0 4px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)'
+            marginBottom: '2rem',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            boxShadow: '0 4px 24px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.08)'
           }}>
             <div style={{ position: 'relative', width: 8, height: 8, flexShrink: 0 }}>
               <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#4ADE80' }} />
@@ -692,73 +660,75 @@ export default function Home() {
               }} />
             </div>
             <span style={{
-              fontSize: '.7rem', fontWeight: 800,
-              color: 'rgba(245,196,179,0.88)',
+              fontSize: '.68rem', fontWeight: 800,
+              color: 'rgba(220,195,140,0.95)',
               letterSpacing: '2.5px', textTransform: 'uppercase'
             }}>
               LIVE · India's #1 Legal Marketplace · 24/7 Emergency Access
             </span>
           </div>
 
-          {/* Main headline — maxWidth 640 keeps it clear of SVG on right */}
+          {/* ── Main headline ── */}
           <h1 className="hero-text-in" style={{
             fontFamily: "'Plus Jakarta Sans', sans-serif",
-            fontSize: 'clamp(2.4rem, 5.2vw, 4.8rem)',
-            fontWeight: 900, lineHeight: 1.08, letterSpacing: '-0.04em',
-            color: '#fff', marginBottom: '1.5rem',
-            maxWidth: 640
+            fontSize: 'clamp(2.6rem, 5.5vw, 5.2rem)',
+            fontWeight: 900, lineHeight: 1.06, letterSpacing: '-0.045em',
+            color: '#FFFFFF',
+            marginBottom: '1.2rem',
+            maxWidth: 660,
+            textShadow: '0 2px 40px rgba(0,0,0,0.5)'
           }}>
             Find Your <TypingWord />
             <br />
             <span style={{
-              fontStyle: 'italic', fontWeight: 600,
-              fontSize: '0.82em',
-              background: 'linear-gradient(90deg, rgba(255,255,255,0.72) 0%, rgba(245,196,179,0.88) 100%)',
-              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text'
+              fontFamily: "'Playfair Display', Georgia, serif",
+              fontStyle: 'italic', fontWeight: 700,
+              fontSize: '0.78em',
+              color: 'rgba(255,255,255,0.65)',
+              letterSpacing: '-0.01em'
             }}>
               Anytime. Anywhere in India.
             </span>
           </h1>
 
-          {/* Sub — constrained to 560px */}
+          {/* ── Subtitle ── */}
           <p className="hero-text-in" style={{
-            fontSize: 'clamp(.9rem, 1.35vw, 1.1rem)',
-            color: 'rgba(245,218,196,0.76)', maxWidth: 560, lineHeight: 1.88,
+            fontSize: 'clamp(.9rem, 1.3vw, 1.08rem)',
+            color: 'rgba(220,225,240,0.80)', maxWidth: 540, lineHeight: 1.9,
             marginBottom: '2.8rem', fontWeight: 400
           }}>
             India's first 100% price-transparent legal marketplace.{' '}
-            <strong style={{ color: '#F5C4B3', fontWeight: 700 }}>1,338+ Bar Council verified advocates</strong>{' '}
-            across <strong style={{ color: '#F5C4B3', fontWeight: 700 }}>100+ cities</strong>.
+            <strong style={{ color: '#C8A96E', fontWeight: 700 }}>1,338+ Bar Council verified advocates</strong>{' '}
+            across <strong style={{ color: '#C8A96E', fontWeight: 700 }}>100+ cities</strong>.
             Instant booking. Encrypted video calls. AI-powered matching.
           </p>
 
-          {/* Hero search bar - Crisp, Sharp, High-Contrast & Ultra-Usable */}
+          {/* ── Hero Search Bar — Glassmorphism ── */}
           <div className="hero-text-in hero-search-box" style={{
-            background: '#FFFFFF',
-            borderRadius: 16,
-            padding: '8px',
-            marginBottom: '2.5rem',
-            maxWidth: 840,
-            border: '1px solid rgba(255, 255, 255, 0.9)',
-            boxShadow: '0 24px 60px -12px rgba(0, 0, 0, 0.45), 0 4px 16px rgba(0, 0, 0, 0.1)'
+            background: 'rgba(255,255,255,0.96)',
+            borderRadius: 18,
+            padding: '7px',
+            marginBottom: '2.2rem',
+            maxWidth: 820,
+            border: '1px solid rgba(255,255,255,0.85)',
+            boxShadow: '0 32px 80px -16px rgba(0,0,0,0.5), 0 8px 24px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,1)'
           }}>
             <div className="hero-search-row" style={{ display: 'flex', alignItems: 'center', gap: 0 }}>
-              
+
               {/* Field 1: Legal Issue */}
               <div className="hero-search-field" style={{ flex: '1 1 240px', padding: '10px 18px', minWidth: 0 }}>
                 <label htmlFor="hero-issue-sel" style={{
-                  display: 'block', fontSize: '.64rem', fontWeight: 800,
+                  display: 'block', fontSize: '.6rem', fontWeight: 800,
                   color: 'var(--bur)', textTransform: 'uppercase',
-                  letterSpacing: '1.8px', marginBottom: 4
+                  letterSpacing: '2px', marginBottom: 4
                 }}>Legal Issue</label>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <Scale size={18} color="var(--bur)" style={{ flexShrink: 0, opacity: 0.9 }} />
+                  <Scale size={16} color="var(--bur)" style={{ flexShrink: 0 }} />
                   <select
                     id="hero-issue-sel"
                     style={{
-                      border: 'none', background: 'none', fontSize: '.95rem',
-                      fontWeight: 700, color: '#111827', outline: 'none',
+                      border: 'none', background: 'none', fontSize: '.92rem',
+                      fontWeight: 700, color: '#0F172A', outline: 'none',
                       cursor: 'pointer', width: '100%', padding: '2px 0'
                     }}
                     value={spec} onChange={e => setSpec(e.target.value)}
@@ -769,26 +739,25 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Crisp Divider */}
               <div className="hero-search-divider" style={{
-                width: 1, height: 42, background: '#E5E7EB',
+                width: 1, height: 40, background: '#E2E8F0',
                 flexShrink: 0, margin: '0 4px'
               }} />
 
-              {/* Field 2: City / Pincode */}
+              {/* Field 2: City */}
               <div className="hero-search-field" style={{ flex: '1 1 210px', padding: '10px 18px', minWidth: 0 }}>
                 <label htmlFor="hero-city-inp" style={{
-                  display: 'block', fontSize: '.64rem', fontWeight: 800,
+                  display: 'block', fontSize: '.6rem', fontWeight: 800,
                   color: 'var(--bur)', textTransform: 'uppercase',
-                  letterSpacing: '1.8px', marginBottom: 4
+                  letterSpacing: '2px', marginBottom: 4
                 }}>City / Pincode</label>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <MapPin size={18} color="var(--bur)" style={{ flexShrink: 0, opacity: 0.9 }} />
+                  <MapPin size={16} color="var(--bur)" style={{ flexShrink: 0 }} />
                   <input
                     id="hero-city-inp"
                     style={{
-                      border: 'none', background: 'none', fontSize: '.95rem',
-                      fontWeight: 700, color: '#111827', outline: 'none',
+                      border: 'none', background: 'none', fontSize: '.92rem',
+                      fontWeight: 700, color: '#0F172A', outline: 'none',
                       width: '100%', padding: '2px 0'
                     }}
                     placeholder="Delhi, 110001, Mumbai…"
@@ -798,34 +767,34 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Action Button */}
+              {/* Search Button */}
               <button
                 onClick={goSearch}
                 className="hero-search-btn cta-btn"
                 style={{
-                  background: 'linear-gradient(135deg, var(--bur) 0%, var(--bur-d) 100%)',
-                  color: '#FFFFFF', border: 'none', borderRadius: 12,
-                  padding: '0.95rem 2.2rem', fontWeight: 800, fontSize: '.95rem',
+                  background: 'linear-gradient(135deg, #7B1D2E 0%, #5C1522 100%)',
+                  color: '#FFFFFF', border: 'none', borderRadius: 13,
+                  padding: '1rem 2rem', fontWeight: 800, fontSize: '.9rem',
                   cursor: 'pointer', flexShrink: 0, margin: '2px',
-                  boxShadow: '0 6px 20px rgba(123, 29, 46, 0.4)',
+                  boxShadow: '0 8px 24px rgba(123,29,46,0.5)',
                   display: 'flex', alignItems: 'center', gap: 8, whiteSpace: 'nowrap'
                 }}
               >
-                Find My Lawyer <ArrowRight size={17} />
+                Find My Lawyer <ArrowRight size={16} />
               </button>
             </div>
           </div>
 
-          {/* CTAs */}
+          {/* ── CTA Buttons ── */}
           <div className="hero-text-in hero-dual-cta" style={{
-            display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: '2rem'
+            display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: '2.2rem'
           }}>
             <Link to="/search" style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
-              background: 'var(--bur)', color: '#fff',
-              fontWeight: 800, fontSize: '1rem',
+              background: 'linear-gradient(135deg, #7B1D2E 0%, #5C1522 100%)',
+              color: '#fff', fontWeight: 800, fontSize: '1rem',
               padding: '.95rem 2.2rem', borderRadius: 14, textDecoration: 'none',
-              boxShadow: '0 8px 28px rgba(123,29,46,0.45)',
+              boxShadow: '0 10px 32px rgba(123,29,46,0.55)',
               transition: 'all 0.25s ease'
             }} className="cta-btn">
               Browse Lawyers <ArrowRight size={16} />
@@ -834,9 +803,10 @@ export default function Home() {
               onClick={() => window.dispatchEvent(new CustomEvent('open-ai-chat'))}
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 8,
-                background: 'rgba(255,255,255,0.10)', color: '#fff',
-                border: '1.5px solid rgba(255,255,255,0.25)',
-                backdropFilter: 'blur(14px)',
+                background: 'rgba(255,255,255,0.10)',
+                color: '#fff',
+                border: '1.5px solid rgba(255,255,255,0.28)',
+                backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
                 fontWeight: 700, fontSize: '1rem',
                 padding: '.95rem 2rem', borderRadius: 14, cursor: 'pointer',
                 transition: 'all 0.25s ease'
@@ -845,9 +815,10 @@ export default function Home() {
             </button>
             <Link to="/join-as-lawyer" style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
-              background: 'rgba(245,196,179,0.12)', color: '#F5C4B3',
-              border: '1.5px solid rgba(245,196,179,0.25)',
-              backdropFilter: 'blur(14px)',
+              background: 'rgba(200,169,110,0.15)',
+              color: '#C8A96E',
+              border: '1.5px solid rgba(200,169,110,0.35)',
+              backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
               fontWeight: 700, fontSize: '1rem',
               padding: '.95rem 2rem', borderRadius: 14, textDecoration: 'none',
               transition: 'all 0.25s ease'
@@ -856,24 +827,67 @@ export default function Home() {
             </Link>
           </div>
 
-          {/* Trust pills */}
+          {/* ── Trust pills — glassmorphism ── */}
           <div className="hero-text-in" style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             {[
               { icon: <BadgeCheck size={13} color="#4ADE80" />, t: '1,338+ Verified Lawyers' },
-              { icon: <MapPin size={13} color="#F5C4B3" />, t: '100+ Cities' },
-              { icon: <Clock size={13} color="#60A5FA" />, t: '15 min Emergency Response' },
-              { icon: <Lock size={13} color="#A78BFA" />, t: 'Bank-Grade Encryption' },
+              { icon: <MapPin size={13} color="#C8A96E" />, t: '100+ Cities' },
+              { icon: <Clock size={13} color="#93C5FD" />, t: '15 min Emergency Response' },
+              { icon: <Lock size={13} color="#C4B5FD" />, t: 'Bank-Grade Encryption' },
               { icon: <Zap size={13} color="#FCD34D" />, t: 'AI-Powered Matching' },
               { icon: <IndianRupee size={13} color="#4ADE80" />, t: 'Zero Hidden Fees' },
             ].map((b, i) => (
               <div key={i} style={{
                 display: 'flex', alignItems: 'center', gap: 6,
-                background: 'rgba(255,255,255,0.06)',
-                border: '1px solid rgba(255,255,255,0.10)',
-                backdropFilter: 'blur(10px)', borderRadius: 30, padding: '.3rem .9rem'
+                background: 'rgba(255,255,255,0.08)',
+                border: '1px solid rgba(255,255,255,0.15)',
+                backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+                borderRadius: 30, padding: '.32rem .9rem'
               }}>
                 {b.icon}
-                <span style={{ fontSize: '.73rem', color: 'rgba(255,255,255,0.82)', fontWeight: 700 }}>{b.t}</span>
+                <span style={{ fontSize: '.72rem', color: 'rgba(255,255,255,0.88)', fontWeight: 700 }}>{b.t}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* ── Floating glassmorphism stat cards ── */}
+          <div className="hero-text-in" style={{
+            display: 'flex', gap: 16, flexWrap: 'wrap', marginTop: '3.5rem'
+          }}>
+            {[
+              { val: '1,338+', label: 'Bar Verified Advocates', icon: <BadgeCheck size={18} color="#C8A96E" /> },
+              { val: '10,000+', label: 'Cases Resolved', icon: <Scale size={18} color="#C8A96E" /> },
+              { val: '4.9 ★', label: 'Average Rating', icon: <Star size={18} color="#C8A96E" /> },
+              { val: '₹500+', label: 'Starting Consultation', icon: <IndianRupee size={18} color="#C8A96E" /> },
+            ].map((s, i) => (
+              <div key={i} style={{
+                display: 'flex', alignItems: 'center', gap: 14,
+                background: 'rgba(255,255,255,0.07)',
+                border: '1px solid rgba(255,255,255,0.14)',
+                backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+                borderRadius: 16, padding: '1rem 1.4rem',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.25)'
+              }}>
+                <div style={{
+                  width: 40, height: 40, borderRadius: 12,
+                  background: 'rgba(200,169,110,0.12)',
+                  border: '1px solid rgba(200,169,110,0.25)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  flexShrink: 0
+                }}>
+                  {s.icon}
+                </div>
+                <div>
+                  <div style={{
+                    fontFamily: "'Sora', sans-serif",
+                    fontSize: '1.25rem', fontWeight: 900,
+                    color: '#FFFFFF', lineHeight: 1, letterSpacing: '-0.03em'
+                  }}>{s.val}</div>
+                  <div style={{
+                    fontSize: '.68rem', color: 'rgba(220,225,240,0.6)',
+                    fontWeight: 600, marginTop: 3, textTransform: 'uppercase', letterSpacing: '1px'
+                  }}>{s.label}</div>
+                </div>
               </div>
             ))}
           </div>
@@ -886,29 +900,31 @@ export default function Home() {
           display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6
         }}>
           <span style={{
-            fontSize: '.62rem', color: 'rgba(245,196,179,0.4)',
+            fontSize: '.6rem', color: 'rgba(200,169,110,0.5)',
             fontWeight: 700, letterSpacing: '2.5px', textTransform: 'uppercase'
           }}>Discover More</span>
           <div style={{
-            width: 22, height: 36, border: '1.5px solid rgba(245,196,179,0.18)',
+            width: 22, height: 36, border: '1.5px solid rgba(200,169,110,0.25)',
             borderRadius: 12, display: 'flex', alignItems: 'flex-start',
             justifyContent: 'center', padding: 4
           }}>
             <div style={{
-              width: 3, height: 7, background: '#F5C4B3', borderRadius: 2,
-              animation: 'float 1.6s ease-in-out infinite'
+              width: 3, height: 7,
+              background: 'linear-gradient(to bottom, #C8A96E, rgba(200,169,110,0.3))',
+              borderRadius: 2, animation: 'float 1.6s ease-in-out infinite'
             }} />
           </div>
         </div>
       </section>
 
       {/* ══════════════════════════════════════════════════════
-          MARQUEE TRUST STRIP
+          MARQUEE TRUST STRIP — warm editorial gold on slate
       ══════════════════════════════════════════════════════ */}
       <div style={{
-        background: '#0E0306', padding: '.95rem 0', overflow: 'hidden',
-        borderTop: '1px solid rgba(245,196,179,0.08)',
-        borderBottom: '1px solid rgba(245,196,179,0.08)',
+        background: 'linear-gradient(90deg, #0F172A 0%, #1A2444 50%, #0F172A 100%)',
+        padding: '1rem 0', overflow: 'hidden',
+        borderTop: '1px solid rgba(200,169,110,0.15)',
+        borderBottom: '1px solid rgba(200,169,110,0.15)',
         display: 'flex', userSelect: 'none'
       }}>
         <div className="marquee-track" style={{
@@ -917,7 +933,8 @@ export default function Home() {
         }}>
           {[1, 2].map(track => (
             <div key={track} aria-hidden={track === 2} style={{
-              display: 'flex', gap: '3rem', paddingRight: '3rem', flexShrink: 0
+              display: 'flex', gap: '2.5rem', paddingRight: '2.5rem', flexShrink: 0,
+              alignItems: 'center'
             }}>
               {[
                 '⚖️ 1,338+ Verified Advocates',
@@ -934,9 +951,9 @@ export default function Home() {
                 '🏆 India\'s #1 Legal Platform',
               ].map((txt, i) => (
                 <span key={i} style={{
-                  fontSize: '.76rem', fontWeight: 700,
-                  color: 'rgba(245,196,179,0.65)',
-                  letterSpacing: '1.5px', textTransform: 'uppercase', flexShrink: 0
+                  fontSize: '.72rem', fontWeight: 700,
+                  color: 'rgba(200,169,110,0.75)',
+                  letterSpacing: '1.8px', textTransform: 'uppercase', flexShrink: 0
                 }}>
                   {txt}
                 </span>
@@ -947,28 +964,28 @@ export default function Home() {
       </div>
 
       {/* ══════════════════════════════════════════════════════
-          SECTION 2 — STATS WITH DRAMATIC BACKGROUND
+          SECTION 2 — STATS — Marble & Light Architecture
       ══════════════════════════════════════════════════════ */}
       <section style={{
         padding: '0', position: 'relative', overflow: 'hidden',
         minHeight: 420
       }}>
-        {/* Background image */}
+        {/* 4K Unsplash architecture background */}
         <div style={{
           position: 'absolute', inset: 0,
-          backgroundImage: 'url(/images/supreme-court.jpg)',
-          backgroundSize: 'cover', backgroundPosition: 'center 60%',
-          filter: 'brightness(0.25)',
+          backgroundImage: 'url(https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop)',
+          backgroundSize: 'cover', backgroundPosition: 'center 40%',
           zIndex: 0
         }} />
+        {/* Rich navy overlay preserving image detail */}
         <div style={{
           position: 'absolute', inset: 0, zIndex: 1,
-          background: 'linear-gradient(160deg, rgba(26,10,13,0.92) 0%, rgba(10,4,6,0.85) 100%)'
+          background: 'linear-gradient(135deg, rgba(10,15,40,0.94) 0%, rgba(15,23,60,0.88) 50%, rgba(10,15,40,0.82) 100%)'
         }} />
-        {/* Glowing vignette */}
+        {/* Gold accent vignette */}
         <div style={{
           position: 'absolute', inset: 0, zIndex: 1,
-          background: 'radial-gradient(ellipse at 50% 120%, rgba(123,29,46,0.25) 0%, transparent 65%)',
+          background: 'radial-gradient(ellipse at 50% 100%, rgba(200,169,110,0.12) 0%, transparent 60%)',
           pointerEvents: 'none'
         }} />
 
