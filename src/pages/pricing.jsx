@@ -383,7 +383,7 @@ export default function ClientPricing() {
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '0.3rem 0.8rem', background: 'rgba(255,255,255,0.1)', borderRadius: 50, fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1.5rem' }}>
               <Scale size={14} /> The Real Value
             </div>
-            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '2.5rem', fontWeight: 700, marginBottom: '1.5rem', lineHeight: 1.2 }}>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '2.5rem', fontWeight: 700, marginBottom: '1.5rem', lineHeight: 1.2, color: '#fff' }}>
               Stop paying traditional firm overheads.
             </h2>
             <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.05rem', lineHeight: 1.8, marginBottom: '2rem' }}>
