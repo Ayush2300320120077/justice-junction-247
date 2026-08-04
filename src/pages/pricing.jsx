@@ -233,7 +233,7 @@ export default function ClientPricing() {
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '0.4rem 1.2rem', background: 'rgba(201,148,58,0.15)', border: '1px solid rgba(201,148,58,0.3)', borderRadius: 50, color: 'var(--gold-l)', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '2rem', backdropFilter: 'blur(10px)' }}>
             <Zap size={14} fill="currentColor" /> Transparent Pricing
           </div>
-          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2.8rem, 6vw, 4.5rem)', fontWeight: 700, lineHeight: 1.1, marginBottom: '1.5rem', textShadow: '0 4px 20px rgba(0,0,0,0.8)' }}>
+          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2.8rem, 6vw, 4.5rem)', fontWeight: 700, lineHeight: 1.1, marginBottom: '1.5rem', textShadow: '0 4px 20px rgba(0,0,0,0.8)', color: '#fff' }}>
             Justice is priceless.<br />
             <span className="gradient-text">Access to it shouldn't be.</span>
           </h1>
@@ -339,7 +339,7 @@ export default function ClientPricing() {
       <section style={{ padding: '6rem 5vw', background: 'rgba(255,255,255,0.02)' }}>
         <div style={{ maxWidth: 900, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '2.5rem', fontWeight: 700, marginBottom: '1rem' }}>Compare Plans side-by-side</h2>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '2.5rem', fontWeight: 700, marginBottom: '1rem', color: '#fff' }}>Compare Plans side-by-side</h2>
             <p style={{ color: 'rgba(255,255,255,0.6)' }}>Find the perfect feature set for your legal requirements.</p>
           </div>
 
@@ -455,7 +455,7 @@ export default function ClientPricing() {
       <section style={{ padding: '6rem 5vw' }}>
         <div style={{ maxWidth: 720, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '2.5rem', fontWeight: 700, marginBottom: '1rem' }}>Frequently Asked Questions</h2>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '2.5rem', fontWeight: 700, marginBottom: '1rem', color: '#fff' }}>Frequently Asked Questions</h2>
             <p style={{ color: 'rgba(255,255,255,0.6)' }}>Everything you need to know about our billing and platform.</p>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -475,7 +475,7 @@ export default function ClientPricing() {
       ───────────────────────────────────────────────────────── */}
       <section style={{ padding: '6rem 5vw', background: 'linear-gradient(0deg, rgba(123, 29, 46, 0.4) 0%, transparent 100%)', textAlign: 'center', position: 'relative' }}>
         <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '1px', background: 'linear-gradient(90deg, transparent, var(--bur), transparent)' }} />
-        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 700, marginBottom: '1rem' }}>Ready for better legal access?</h2>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 700, marginBottom: '1rem', color: '#fff' }}>Ready for better legal access?</h2>
         <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.1rem', marginBottom: '2.5rem' }}>Join thousands of Indians managing their legal needs smarter.</p>
         <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
           <Link to="/register" style={{ padding: '1rem 2rem', background: '#fff', color: '#000', borderRadius: 50, fontWeight: 700, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 8, transition: 'transform 0.2s' }} onMouseOver={(e)=>e.currentTarget.style.transform='translateY(-2px)'} onMouseOut={(e)=>e.currentTarget.style.transform='translateY(0)'}>
