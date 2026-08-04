@@ -97,7 +97,7 @@ export default function About() {
   const [activeTimeline, setActiveTimeline] = useState(0)
 
   return (
-    <div style={{ background: 'var(--cream)', color: 'var(--txt)', fontFamily: 'var(--font-body)', overflowX: 'hidden' }}>
+    <div style={{ background: '#0F0508', color: 'rgba(255,255,255,0.85)', fontFamily: 'var(--font-body)', overflowX: 'hidden' }}>
       <Helmet>
         <title>About Justice Junction 24/7 | Founder Ayush Kumar | India's Legal Marketplace</title>
         <meta name="description" content="Justice Junction 24/7, founded by Ayush Kumar (Founder & CEO), is India's most trusted legal marketplace. 1,300+ Bar Council verified advocates, 100+ cities, AI-powered legal assistance available 24/7." />
@@ -248,27 +248,28 @@ export default function About() {
         backgroundImage: `url('https://images.unsplash.com/photo-1521791136364-798a7bc0d262?w=1920&q=80')`,
         backgroundSize: 'cover', backgroundPosition: 'center', backgroundAttachment: 'fixed'
       }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'rgba(253,246,238,0.96)' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(160deg, rgba(15,5,8,0.96) 0%, rgba(26,10,13,0.98) 100%)' }} />
         <div className="container" style={{ position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6rem', alignItems: 'center' }} className="mobile-stack">
             <div>
               <div style={{
-                display: 'inline-block', background: 'rgba(123,29,46,0.08)', color: 'var(--bur)',
+                display: 'inline-block', background: 'rgba(245,196,179,0.1)', color: '#F5C4B3',
                 fontWeight: 800, fontSize: '.72rem', letterSpacing: '2.5px',
-                textTransform: 'uppercase', padding: '.38rem .9rem', borderRadius: 6, marginBottom: '1.2rem'
+                textTransform: 'uppercase', padding: '.38rem .9rem', borderRadius: 6, marginBottom: '1.2rem',
+                border: '1px solid rgba(245,196,179,0.2)'
               }}>The Problem We Solve</div>
               <h2 style={{
                 fontFamily: "'Plus Jakarta Sans', sans-serif",
                 fontSize: 'clamp(1.9rem, 3.5vw, 2.8rem)', fontWeight: 900,
-                color: 'var(--txt)', lineHeight: 1.15, letterSpacing: '-0.03em', marginBottom: '1.5rem'
+                color: '#fff', lineHeight: 1.15, letterSpacing: '-0.03em', marginBottom: '1.5rem'
               }}>
                 Legal help in India was<br />
-                <span style={{ color: 'var(--bur)' }}>broken. We fixed it.</span>
+                <span style={{ color: '#F5C4B3' }}>broken. We fixed it.</span>
               </h2>
-              <p style={{ fontSize: '1.05rem', color: 'var(--txt-3)', lineHeight: 1.85, marginBottom: '1.5rem' }}>
+              <p style={{ fontSize: '1.05rem', color: 'rgba(255,255,255,0.7)', lineHeight: 1.85, marginBottom: '1.5rem' }}>
                 Before Justice Junction, finding a lawyer in India meant weeks of uncertain referrals, wildly inconsistent fees, and zero way to verify credentials. 78% of Indians facing legal issues don't know where to start.
               </p>
-              <p style={{ fontSize: '1.05rem', color: 'var(--txt-3)', lineHeight: 1.85, marginBottom: '2.5rem' }}>
+              <p style={{ fontSize: '1.05rem', color: 'rgba(255,255,255,0.7)', lineHeight: 1.85, marginBottom: '2.5rem' }}>
                 We built a technology platform that makes legal help as easy, transparent, and accessible as any other professional service — with verified credentials, upfront pricing, AI-powered issue classification, and 24/7 emergency access.
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -284,11 +285,11 @@ export default function About() {
                       background: 'rgba(239,68,68,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center',
                       fontSize: '.75rem', flexShrink: 0, marginTop: 2
                     }}>✕</div>
-                    <span style={{ fontSize: '.9rem', color: '#9B2D42', textDecoration: 'line-through', minWidth: 220 }}>{row.bad}</span>
+                    <span style={{ fontSize: '.9rem', color: '#F87171', textDecoration: 'line-through', minWidth: 220 }}>{row.bad}</span>
                     <div style={{ minWidth: 20, height: 20, borderRadius: '50%', background: 'rgba(34,197,94,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
                       <CheckCircle2 size={12} color="#16A34A" />
                     </div>
-                    <span style={{ fontSize: '.9rem', color: '#15803D', fontWeight: 700 }}>{row.good}</span>
+                    <span style={{ fontSize: '.9rem', color: '#4ADE80', fontWeight: 700 }}>{row.good}</span>
                   </div>
                 ))}
               </div>
@@ -321,12 +322,12 @@ export default function About() {
               }}>
                 <div style={{ display: 'flex', gap: 3, marginBottom: 8 }}>
                   {[1,2,3,4,5].map(n => <Star key={n} size={13} fill="#FCD34D" color="#FCD34D" />)}
-                  <span style={{ fontSize: '.78rem', fontWeight: 700, color: 'var(--txt-3)', marginLeft: 4 }}>5.0</span>
+                  <span style={{ fontSize: '.78rem', fontWeight: 700, color: 'var(--txt)', marginLeft: 4 }}>5.0</span>
                 </div>
-                <p style={{ fontSize: '.85rem', color: 'var(--txt-2)', lineHeight: 1.65, margin: 0, fontStyle: 'italic' }}>
+                <p style={{ fontSize: '.85rem', color: 'var(--txt)', lineHeight: 1.65, margin: 0, fontStyle: 'italic' }}>
                   "Got a criminal lawyer for my father within 20 minutes at midnight. Absolute lifesaver."
                 </p>
-                <div style={{ fontSize: '.72rem', color: 'var(--txt-3)', fontWeight: 700, marginTop: 8 }}>— Verified Client, Lucknow</div>
+                <div style={{ fontSize: '.72rem', color: 'var(--txt)', fontWeight: 700, marginTop: 8 }}>— Verified Client, Lucknow</div>
               </div>
             </div>
           </div>
@@ -338,7 +339,7 @@ export default function About() {
       ═══════════════════════════════════════════════════════════ */}
       <section id="founder" style={{
         padding: '8rem 0', position: 'relative', overflow: 'hidden',
-        background: '#fff'
+        background: 'transparent'
       }}>
         {/* Corner decoration */}
         <div style={{
@@ -355,23 +356,24 @@ export default function About() {
           <div style={{ textAlign: 'center', marginBottom: '4.5rem' }}>
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
-              background: 'rgba(123,29,46,0.07)', color: 'var(--bur)',
+              background: 'rgba(245,196,179,0.1)', color: '#F5C4B3',
               fontWeight: 800, fontSize: '.72rem', letterSpacing: '2.5px',
+              border: '1px solid rgba(245,196,179,0.2)',
               textTransform: 'uppercase', padding: '.38rem .9rem', borderRadius: 6, marginBottom: '1rem'
             }}><Award size={13} /> Leadership & Vision</div>
             <h2 style={{
               fontFamily: "'Plus Jakarta Sans', sans-serif",
               fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 900,
-              color: 'var(--txt)', letterSpacing: '-0.03em'
-            }}>Meet the <span style={{ color: 'var(--bur)' }}>Founder & CEO</span></h2>
+              color: '#fff', letterSpacing: '-0.03em'
+            }}>Meet the <span style={{ color: '#F5C4B3' }}>Founder & CEO</span></h2>
           </div>
 
           {/* Main founder card */}
           <div style={{
             display: 'grid', gridTemplateColumns: '340px 1fr',
-            background: '#fff', borderRadius: 32,
-            boxShadow: '0 30px 80px rgba(123,29,46,0.1)',
-            border: '1px solid var(--border)', overflow: 'hidden'
+            background: 'rgba(255,255,255,0.03)', borderRadius: 32,
+            boxShadow: '0 30px 80px rgba(0,0,0,0.5)',
+            border: '1px solid rgba(255,255,255,0.08)', overflow: 'hidden', backdropFilter: 'blur(20px)'
           }} className="mobile-stack">
             {/* Left — Burgundy portrait panel */}
             <div style={{
@@ -446,10 +448,10 @@ export default function About() {
             {/* Right — Story & impact */}
             <div style={{ padding: '3.5rem 3.5rem 3.5rem 3rem' }}>
               <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', marginBottom: '2rem' }}>
-                <Quote size={36} color="var(--bur)" style={{ opacity: 0.35, flexShrink: 0, marginTop: 6 }} />
+                <Quote size={36} color="#F5C4B3" style={{ opacity: 0.35, flexShrink: 0, marginTop: 6 }} />
                 <blockquote style={{
                   fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  fontSize: '1.15rem', color: 'var(--txt)',
+                  fontSize: '1.15rem', color: '#fff',
                   lineHeight: 1.85, fontStyle: 'italic', fontWeight: 600, margin: 0
                 }}>
                   "I started Justice Junction after watching my own family struggle to find a reliable lawyer during a property dispute in Ghaziabad. We spent weeks asking friends for referrals, received wildly inconsistent quotes, and had absolutely no way to verify anyone's credentials.
@@ -458,13 +460,13 @@ export default function About() {
                 </blockquote>
               </div>
 
-              <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: '2.5rem', padding: '1rem 1.2rem', background: 'var(--cream)', borderRadius: 12, border: '1px solid var(--border)' }}>
-                <div style={{ width: 40, height: 40, borderRadius: 10, background: 'var(--bur)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <span style={{ fontFamily: "'Plus Jakarta Sans'", fontSize: '1rem', fontWeight: 900, color: '#F5C4B3' }}>AK</span>
+              <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: '2.5rem', padding: '1rem 1.2rem', background: 'rgba(255,255,255,0.05)', borderRadius: 12, border: '1px solid rgba(255,255,255,0.1)' }}>
+                <div style={{ width: 40, height: 40, borderRadius: 10, background: '#F5C4B3', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <span style={{ fontFamily: "'Plus Jakarta Sans'", fontSize: '1rem', fontWeight: 900, color: '#1A0A0D' }}>AK</span>
                 </div>
                 <div>
-                  <div style={{ fontSize: '.9rem', fontWeight: 800, color: 'var(--txt)' }}>Ayush Kumar</div>
-                  <div style={{ fontSize: '.78rem', color: 'var(--bur)', fontWeight: 700 }}>Founder & CEO — Justice Junction 24/7</div>
+                  <div style={{ fontSize: '.9rem', fontWeight: 800, color: '#fff' }}>Ayush Kumar</div>
+                  <div style={{ fontSize: '.78rem', color: '#F5C4B3', fontWeight: 700 }}>Founder & CEO — Justice Junction 24/7</div>
                 </div>
               </div>
 
@@ -475,10 +477,10 @@ export default function About() {
                   { num: '1,338+', label: 'Advocates', sub: 'Verified on platform' },
                   { num: '100+', label: 'Cities', sub: 'Across India' },
                 ].map((m, i) => (
-                  <div key={i} style={{ background: 'var(--cream)', borderRadius: 14, padding: '1.2rem', textAlign: 'center', border: '1px solid var(--border)' }}>
-                    <div style={{ fontFamily: "'Sora', sans-serif", fontSize: '1.55rem', fontWeight: 900, color: 'var(--bur)', letterSpacing: '-0.03em' }}>{m.num}</div>
-                    <div style={{ fontSize: '.73rem', fontWeight: 800, color: 'var(--txt)', textTransform: 'uppercase', letterSpacing: '1px', marginTop: 4 }}>{m.label}</div>
-                    <div style={{ fontSize: '.68rem', color: 'var(--txt-3)', marginTop: 2 }}>{m.sub}</div>
+                  <div key={i} style={{ background: 'rgba(255,255,255,0.03)', borderRadius: 14, padding: '1.2rem', textAlign: 'center', border: '1px solid rgba(255,255,255,0.08)' }}>
+                    <div style={{ fontFamily: "'Sora', sans-serif", fontSize: '1.55rem', fontWeight: 900, color: '#F5C4B3', letterSpacing: '-0.03em' }}>{m.num}</div>
+                    <div style={{ fontSize: '.73rem', fontWeight: 800, color: '#fff', textTransform: 'uppercase', letterSpacing: '1px', marginTop: 4 }}>{m.label}</div>
+                    <div style={{ fontSize: '.68rem', color: 'rgba(255,255,255,0.5)', marginTop: 2 }}>{m.sub}</div>
                   </div>
                 ))}
               </div>
@@ -541,36 +543,36 @@ export default function About() {
       {/* ═══════════════════════════════════════════════════════════
           SECTION 6 — PLATFORM PILLARS (White, 8 tiles)
       ═══════════════════════════════════════════════════════════ */}
-      <section style={{ padding: '8rem 0', background: '#fff' }}>
+      <section style={{ padding: '8rem 0', background: 'transparent' }}>
         <div className="container">
           <div style={{ textAlign: 'center', marginBottom: '4.5rem' }}>
             <div style={{
-              display: 'inline-block', background: 'rgba(123,29,46,0.07)', color: 'var(--bur)',
-              fontWeight: 800, fontSize: '.72rem', letterSpacing: '2.5px',
+              display: 'inline-block', background: 'rgba(245,196,179,0.1)', color: '#F5C4B3',
+              fontWeight: 800, fontSize: '.72rem', letterSpacing: '2.5px', border: '1px solid rgba(245,196,179,0.2)',
               textTransform: 'uppercase', padding: '.38rem .9rem', borderRadius: 6, marginBottom: '1rem'
             }}>Our Platform</div>
-            <h2 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(2rem, 4vw, 2.8rem)', fontWeight: 900, color: 'var(--txt)', letterSpacing: '-0.03em' }}>
+            <h2 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(2rem, 4vw, 2.8rem)', fontWeight: 900, color: '#fff', letterSpacing: '-0.03em' }}>
               Built with every Indian in mind
             </h2>
-            <p style={{ color: 'var(--txt-3)', maxWidth: 560, margin: '1rem auto 0', lineHeight: 1.75 }}>
+            <p style={{ color: 'rgba(255,255,255,0.7)', maxWidth: 560, margin: '1rem auto 0', lineHeight: 1.75 }}>
               Eight core pillars that set Justice Junction apart from every other legal platform in India.
             </p>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(270px, 1fr))', gap: '1.5rem' }}>
             {PILLARS.map((p, i) => (
               <div key={i} style={{
-                background: 'var(--cream)', borderRadius: 20,
-                padding: '2rem 1.8rem', border: '1px solid var(--border)',
-                transition: 'transform 0.25s ease, box-shadow 0.25s ease'
+                background: 'rgba(255,255,255,0.03)', borderRadius: 20,
+                padding: '2rem 1.8rem', border: '1px solid rgba(255,255,255,0.08)',
+                transition: 'transform 0.25s ease, box-shadow 0.25s ease', backdropFilter: 'blur(10px)'
               }} className="card-hover">
                 <div style={{
                   width: 52, height: 52, borderRadius: 14,
-                  background: 'rgba(123,29,46,0.08)',
+                  background: 'rgba(245,196,179,0.1)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  color: 'var(--bur)', marginBottom: '1.2rem'
+                  color: '#F5C4B3', marginBottom: '1.2rem'
                 }}>{p.icon}</div>
-                <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '1.1rem', fontWeight: 800, color: 'var(--txt)', marginBottom: '.6rem' }}>{p.title}</h3>
-                <p style={{ fontSize: '.88rem', color: 'var(--txt-3)', lineHeight: 1.75, margin: 0 }}>{p.desc}</p>
+                <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '1.1rem', fontWeight: 800, color: '#fff', marginBottom: '.6rem' }}>{p.title}</h3>
+                <p style={{ fontSize: '.88rem', color: 'rgba(255,255,255,0.65)', lineHeight: 1.75, margin: 0 }}>{p.desc}</p>
               </div>
             ))}
           </div>
@@ -621,15 +623,15 @@ export default function About() {
       {/* ═══════════════════════════════════════════════════════════
           SECTION 8 — VISION 2026 + client testimonial
       ═══════════════════════════════════════════════════════════ */}
-      <section style={{ padding: '8rem 0', background: 'var(--cream)' }}>
+      <section style={{ padding: '8rem 0', background: 'transparent' }}>
         <div className="container">
           <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
             <div style={{
-              display: 'inline-block', background: 'rgba(123,29,46,0.07)', color: 'var(--bur)',
-              fontWeight: 800, fontSize: '.72rem', letterSpacing: '2.5px',
+              display: 'inline-block', background: 'rgba(245,196,179,0.1)', color: '#F5C4B3',
+              fontWeight: 800, fontSize: '.72rem', letterSpacing: '2.5px', border: '1px solid rgba(245,196,179,0.2)',
               textTransform: 'uppercase', padding: '.38rem .9rem', borderRadius: 6, marginBottom: '1rem'
             }}>Vision 2026</div>
-            <h2 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(2rem, 4vw, 2.8rem)', fontWeight: 900, color: 'var(--txt)', letterSpacing: '-0.03em' }}>
+            <h2 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(2rem, 4vw, 2.8rem)', fontWeight: 900, color: '#fff', letterSpacing: '-0.03em' }}>
               Where we're headed
             </h2>
           </div>
@@ -642,20 +644,20 @@ export default function About() {
               { icon: <Trophy size={26} />, num: '#1', label: 'Legal Marketplace', desc: 'In India by 2026' },
             ].map((v, i) => (
               <div key={i} style={{
-                background: '#fff', borderRadius: 20, padding: '2.2rem 1.5rem',
-                border: '1px solid var(--border)', textAlign: 'center',
-                boxShadow: 'var(--sh)'
+                background: 'rgba(255,255,255,0.03)', borderRadius: 20, padding: '2.2rem 1.5rem',
+                border: '1px solid rgba(255,255,255,0.08)', textAlign: 'center',
+                boxShadow: '0 20px 40px rgba(0,0,0,0.3)', backdropFilter: 'blur(10px)'
               }} className="card-hover">
-                <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'rgba(123,29,46,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--bur)', margin: '0 auto 1rem' }}>{v.icon}</div>
-                <div style={{ fontFamily: "'Sora', sans-serif", fontSize: '1.8rem', fontWeight: 900, color: 'var(--bur)', letterSpacing: '-0.03em', marginBottom: 4 }}>{v.num}</div>
-                <div style={{ fontWeight: 800, fontSize: '.9rem', color: 'var(--txt)', marginBottom: 4 }}>{v.label}</div>
-                <div style={{ fontSize: '.78rem', color: 'var(--txt-3)' }}>{v.desc}</div>
+                <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'rgba(245,196,179,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#F5C4B3', margin: '0 auto 1rem' }}>{v.icon}</div>
+                <div style={{ fontFamily: "'Sora', sans-serif", fontSize: '1.8rem', fontWeight: 900, color: '#F5C4B3', letterSpacing: '-0.03em', marginBottom: 4 }}>{v.num}</div>
+                <div style={{ fontWeight: 800, fontSize: '.9rem', color: '#fff', marginBottom: 4 }}>{v.label}</div>
+                <div style={{ fontSize: '.78rem', color: 'rgba(255,255,255,0.6)' }}>{v.desc}</div>
               </div>
             ))}
           </div>
 
           {/* Testimonials row */}
-          <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '1.5rem', fontWeight: 800, color: 'var(--txt)', textAlign: 'center', marginBottom: '2rem' }}>
+          <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '1.5rem', fontWeight: 800, color: '#fff', textAlign: 'center', marginBottom: '2rem' }}>
             What our clients say
           </h3>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
@@ -664,18 +666,18 @@ export default function About() {
               { text: '"Filed a consumer complaint against a builder with their help. The lawyer was verified, affordable, and won us a settlement in 6 weeks."', name: 'Priya Nair', city: 'Bangalore', stars: 5 },
               { text: '"After a cyber fraud incident, their cyber law specialist guided me through every step — FIR filing to full recovery. Incredibly reliable."', name: 'Karan Mehta', city: 'Mumbai', stars: 5 },
             ].map((t, i) => (
-              <div key={i} style={{ background: '#fff', borderRadius: 20, padding: '2rem', border: '1px solid var(--border)', boxShadow: 'var(--sh-sm)' }}>
+              <div key={i} style={{ background: 'rgba(255,255,255,0.03)', borderRadius: 20, padding: '2rem', border: '1px solid rgba(255,255,255,0.08)', boxShadow: '0 20px 40px rgba(0,0,0,0.3)', backdropFilter: 'blur(10px)' }}>
                 <div style={{ display: 'flex', gap: 3, marginBottom: '1rem' }}>
                   {Array.from({length: t.stars}).map((_, j) => <Star key={j} size={14} fill="#FCD34D" color="#FCD34D" />)}
                 </div>
-                <p style={{ fontSize: '.92rem', color: 'var(--txt-2)', lineHeight: 1.75, fontStyle: 'italic', marginBottom: '1.2rem' }}>{t.text}</p>
+                <p style={{ fontSize: '.92rem', color: 'rgba(255,255,255,0.85)', lineHeight: 1.75, fontStyle: 'italic', marginBottom: '1.2rem' }}>{t.text}</p>
                 <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-                  <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--bur)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#F5C4B3', fontWeight: 800, fontSize: '.85rem' }}>
+                  <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#F5C4B3', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#1A0A0D', fontWeight: 900, fontSize: '.85rem' }}>
                     {t.name[0]}
                   </div>
                   <div>
-                    <div style={{ fontWeight: 800, fontSize: '.85rem', color: 'var(--txt)' }}>{t.name}</div>
-                    <div style={{ fontSize: '.73rem', color: 'var(--txt-3)', display: 'flex', gap: 4, alignItems: 'center' }}>
+                    <div style={{ fontWeight: 800, fontSize: '.85rem', color: '#fff' }}>{t.name}</div>
+                    <div style={{ fontSize: '.73rem', color: 'rgba(255,255,255,0.5)', display: 'flex', gap: 4, alignItems: 'center' }}>
                       <MapPin size={11} /> {t.city} · Verified Client
                     </div>
                   </div>
