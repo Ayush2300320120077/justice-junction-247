@@ -216,11 +216,6 @@ export default function Home() {
         @keyframes countBand { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
 
         /* ── Hero Animations ── */
-        @keyframes heroKenBurns {
-          0%   { transform: scale(1.0) translate(0px, 0px); }
-          50%  { transform: scale(1.07) translate(-18px, -10px); }
-          100% { transform: scale(1.0) translate(0px, 0px); }
-        }
         @keyframes lightRay1 {
           0%,100% { opacity: 0.12; transform: rotate(-15deg) scaleY(1); }
           50%     { opacity: 0.22; transform: rotate(-15deg) scaleY(1.04); }
@@ -556,8 +551,7 @@ export default function Home() {
             backgroundImage: 'url(/images/hero-wide-v2.jpg)',
             backgroundSize: 'cover',
             backgroundPosition: 'center center',
-            zIndex: 0,
-            willChange: 'transform'
+            zIndex: 0
           }}
         />
 
