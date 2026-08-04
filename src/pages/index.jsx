@@ -71,9 +71,13 @@ function TypingWord() {
   }, [display, deleting, idx])
 
   return (
-    <span style={{ color: 'var(--bur)', position: 'relative' }}>
+    <span style={{
+      background: 'linear-gradient(90deg, #C8A96E 0%, #E8C97A 60%, #D4A855 100%)',
+      WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+      backgroundClip: 'text', position: 'relative'
+    }}>
       {display}
-      <span style={{ animation: 'blink 1s step-end infinite', color: 'var(--bur)', marginLeft: 2 }}>|</span>
+      <span style={{ animation: 'blink 1s step-end infinite', WebkitTextFillColor: '#C8A96E', marginLeft: 2 }}>|</span>
     </span>
   )
 }
@@ -105,18 +109,18 @@ function useReveal(threshold = 0.12) {
 const SPECS = ['Criminal Defence', 'Family Law', 'Property Law', 'Corporate Law', 'Consumer Rights', 'Labour Law', 'Cyber Law', 'Taxation']
 
 const AREAS = [
-  { emoji: '⚖️', name: 'Criminal Defence', desc: 'FIR, bail, Sessions Court, Anticipatory Bail', bgImg: '/images/hero-courtroom.jpg' },
-  { emoji: '👨‍👩‍👧', name: 'Family & Divorce', desc: 'Divorce, child custody, alimony, DV cases', bgImg: '/images/family-legal.jpg' },
-  { emoji: '🏠', name: 'Property & RERA', desc: 'Title disputes, registry, builder fraud', bgImg: '/images/law-books.jpg' },
-  { emoji: '🏢', name: 'Corporate Law', desc: 'Contracts, IP, compliance, M&A, startups', bgImg: '/images/ai-legal.jpg' },
-  { emoji: '🛒', name: 'Consumer Rights', desc: 'Consumer forum, e-commerce, RERA, refunds', bgImg: '/images/supreme-court.jpg' },
-  { emoji: '👷', name: 'Labour Law', desc: 'Wrongful termination, PF, ESIC, factory act', bgImg: '/images/hero-scales.jpg' },
-  { emoji: '💻', name: 'Cyber Law', desc: 'Online fraud, IT Act, cybercrime FIR, data breach', bgImg: '/images/ai-legal.jpg' },
-  { emoji: '💰', name: 'Taxation', desc: 'GST disputes, income tax notices, appeals', bgImg: '/images/law-books.jpg' },
-  { emoji: '📋', name: 'Bail & FIR', desc: 'Emergency same-day bail & FIR assistance', bgImg: '/images/hero-courtroom.jpg' },
-  { emoji: '💡', name: 'Intellectual Property', desc: 'Patents, trademarks, copyright, trade secrets', bgImg: '/images/law-books.jpg' },
-  { emoji: '🤝', name: 'Civil Disputes', desc: 'Recovery suits, injunctions, declaratory relief', bgImg: '/images/supreme-court.jpg' },
-  { emoji: '💍', name: 'Divorce', desc: 'Contested & mutual consent, maintenance', bgImg: '/images/family-legal.jpg' },
+  { emoji: '⚖️', name: 'Criminal Defence', desc: 'FIR, bail, Sessions Court, Anticipatory Bail', grad: 'linear-gradient(160deg,#3D0E16,#7B1D2E)', bgImg: '/images/hero-courtroom.jpg' },
+  { emoji: '👨‍👩‍👧', name: 'Family & Divorce', desc: 'Divorce, child custody, alimony, DV cases', grad: 'linear-gradient(160deg,#1A0A0D,#4A1A28)', bgImg: '/images/family-legal.jpg' },
+  { emoji: '🏠', name: 'Property & RERA', desc: 'Title disputes, registry, builder fraud', grad: 'linear-gradient(160deg,#2D1B0E,#6B3A1F)', bgImg: '/images/law-books.jpg' },
+  { emoji: '🏢', name: 'Corporate Law', desc: 'Contracts, IP, compliance, M&A, startups', grad: 'linear-gradient(160deg,#0D1B2A,#1E3A5F)', bgImg: '/images/ai-legal.jpg' },
+  { emoji: '🛒', name: 'Consumer Rights', desc: 'Consumer forum, e-commerce, RERA, refunds', grad: 'linear-gradient(160deg,#0A2E1A,#1A6B3A)', bgImg: '/images/supreme-court.jpg' },
+  { emoji: '👷', name: 'Labour Law', desc: 'Wrongful termination, PF, ESIC, factory act', grad: 'linear-gradient(160deg,#1E1A0A,#6B5A1A)', bgImg: '/images/hero-scales.jpg' },
+  { emoji: '💻', name: 'Cyber Law', desc: 'Online fraud, IT Act, cybercrime FIR, data breach', grad: 'linear-gradient(160deg,#0A0D2E,#1A246B)', bgImg: '/images/ai-legal.jpg' },
+  { emoji: '💰', name: 'Taxation', desc: 'GST disputes, income tax notices, appeals', grad: 'linear-gradient(160deg,#1A2E0A,#3A6B1A)', bgImg: '/images/law-books.jpg' },
+  { emoji: '📋', name: 'Bail & FIR', desc: 'Emergency same-day bail & FIR assistance', grad: 'linear-gradient(160deg,#3D0E16,#7B1D2E)', bgImg: '/images/hero-courtroom.jpg' },
+  { emoji: '💡', name: 'Intellectual Property', desc: 'Patents, trademarks, copyright, trade secrets', grad: 'linear-gradient(160deg,#2E1A0A,#6B3A1A)', bgImg: '/images/law-books.jpg' },
+  { emoji: '🤝', name: 'Civil Disputes', desc: 'Recovery suits, injunctions, declaratory relief', grad: 'linear-gradient(160deg,#0A1A2E,#1A3A6B)', bgImg: '/images/supreme-court.jpg' },
+  { emoji: '💍', name: 'Divorce', desc: 'Contested & mutual consent, maintenance', grad: 'linear-gradient(160deg,#1A0A0D,#4A1A28)', bgImg: '/images/family-legal.jpg' },
 ]
 
 const REVIEWS = [
@@ -144,7 +148,17 @@ export default function Home() {
   const navigate = useNavigate()
   const [reviewIdx, setReviewIdx] = useState(0)
   const [reviewPaused, setReviewPaused] = useState(false)
+  const carouselRef = useRef(null)
   const intervalRef = useRef(null)
+  const heroRef = useRef(null)
+  const [scrollY, setScrollY] = useState(0)
+
+  // Parallax scroll for hero
+  useEffect(() => {
+    const onScroll = () => setScrollY(window.scrollY)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   const goSearch = () => {
     const p = new URLSearchParams()
@@ -179,7 +193,7 @@ export default function Home() {
   const [statsRef, statsVisible] = useReveal(0.1)
 
   return (
-    <div style={{ fontFamily: 'var(--font-body)', overflowX: 'hidden', background: '#FDFBF7', color: '#1A1A1A' }}>
+    <div style={{ fontFamily: 'var(--font-body)', overflowX: 'hidden', background: '#F8F5F0' }}>
       <Helmet>
         <title>Justice Junction 24/7 — Find Verified Lawyers in India | 24/7 Legal Help</title>
         <meta name="description" content="India's #1 price-transparent legal marketplace. 1,338+ Bar Council verified advocates. AI matching, encrypted video calls, 24/7 emergency access." />
@@ -195,26 +209,50 @@ export default function Home() {
       </Helmet>
 
       <style dangerouslySetInnerHTML={{ __html: `
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Sora:wght@400;600;700;800;900&display=swap');
-
-        :root {
-          --bur: #7B1D2E;
-          --bur-dark: #5C1521;
-          --bur-light: #9B2D42;
-          --bg-light: #FDFBF7;
-          --bg-white: #FFFFFF;
-          --text-main: #1A1A1A;
-          --text-muted: #4A4A4A;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=Sora:wght@400;700;900&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap');
 
         /* ── Core Keyframes ── */
         @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
         @keyframes fadeUp { from{opacity:0;transform:translateY(36px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes fadeIn { from{opacity:0} to{opacity:1} }
         @keyframes pulseRing { 0%{transform:scale(1);opacity:0.7} 100%{transform:scale(2.2);opacity:0} }
         @keyframes marqueeFlow { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+        @keyframes countBand { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+        /* ── Hero Animations ── */
+        @keyframes lightRay1 {
+          0%,100% { opacity: 0.12; transform: rotate(-15deg) scaleY(1); }
+          50%     { opacity: 0.22; transform: rotate(-15deg) scaleY(1.04); }
+        }
+        @keyframes lightRay2 {
+          0%,100% { opacity: 0.08; transform: rotate(10deg) scaleY(1); }
+          50%     { opacity: 0.16; transform: rotate(10deg) scaleY(1.05); }
+        }
+        @keyframes floatScales {
+          0%,100% { transform: translateY(0px) rotate(-2deg); }
+          50%     { transform: translateY(-22px) rotate(2deg); }
+        }
+        @keyframes glowPulse {
+          0%,100% { opacity: 0.25; }
+          50%     { opacity: 0.5; }
+        }
+        @keyframes particleDrift {
+          0%   { transform: translateY(0) translateX(0); opacity: 0; }
+          15%  { opacity: var(--po, 0.7); }
+          85%  { opacity: calc(var(--po, 0.7) * 0.3); }
+          100% { transform: translateY(-160px) translateX(var(--px, 20px)); opacity: 0; }
+        }
+        @keyframes scanLine {
+          0%   { transform: translateY(-100%); }
+          100% { transform: translateY(100vh); }
+        }
+        @keyframes heroTextGlow {
+          0%,100% { text-shadow: 0 0 40px rgba(245,196,179,0); }
+          50%     { text-shadow: 0 0 40px rgba(245,196,179,0.18); }
+        }
 
         /* ── Staggered Hero Text ── */
-        .hero-text-in { animation: fadeUp 0.8s cubic-bezier(.16,1,.3,1) both; }
+        .hero-text-in { animation: fadeUp 1s cubic-bezier(.16,1,.3,1) both; }
         .hero-text-in:nth-child(1){animation-delay:0.1s}
         .hero-text-in:nth-child(2){animation-delay:0.25s}
         .hero-text-in:nth-child(3){animation-delay:0.40s}
@@ -223,427 +261,790 @@ export default function Home() {
         .hero-text-in:nth-child(6){animation-delay:0.85s}
 
         /* ── Practice Area Cards ── */
-        .area-card { 
-          transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; 
-          border: 1px solid rgba(123,29,46,0.1);
-          background: var(--bg-white);
-        }
-        .area-card:hover { 
-          transform: translateY(-8px); 
-          box-shadow: 0 20px 40px rgba(123,29,46,0.08); 
-          border-color: rgba(123,29,46,0.3);
-        }
-        .area-card-icon {
-          transition: transform 0.3s ease, background 0.3s ease;
-          background: rgba(123,29,46,0.05);
-        }
-        .area-card:hover .area-card-icon {
-          transform: scale(1.1);
-          background: rgba(123,29,46,0.1);
-        }
+        .area-card { transition: transform 0.4s cubic-bezier(.23,1,.32,1), box-shadow 0.4s ease; }
+        .area-card:hover { transform: translateY(-10px) scale(1.03) !important; box-shadow: 0 40px 70px rgba(0,0,0,0.55) !important; }
+        .area-card:hover .area-card-bg { transform: scale(1.18) !important; }
+        .area-card:hover .area-overlay { opacity: 1 !important; }
+        .area-card:hover .area-arrow { opacity: 1 !important; transform: translateX(5px) !important; }
+        .area-card-bg { transition: transform 0.6s ease; }
 
         /* ── Tool Cards ── */
-        .tool-card { 
-          transition: all 0.3s cubic-bezier(.23,1,.32,1); 
-          border: 1px solid rgba(0,0,0,0.05);
-          background: var(--bg-white);
-        }
-        .tool-card:hover { 
-          transform: translateY(-6px); 
-          box-shadow: 0 16px 32px rgba(123,29,46,0.08); 
-          border-color: var(--bur); 
-        }
+        .tool-card { transition: all 0.3s cubic-bezier(.23,1,.32,1); }
+        .tool-card:hover { transform: translateY(-7px) !important; box-shadow: 0 28px 56px rgba(123,29,46,0.18) !important; border-color: var(--bur) !important; }
 
         /* ── Why Cards ── */
-        .why-card { 
-          transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.3s ease; 
-          border: 1px solid rgba(0,0,0,0.05);
-          background: var(--bg-white);
-        }
-        .why-card:hover { 
-          border-color: rgba(123,29,46,0.2); 
-          box-shadow: 0 12px 30px rgba(123,29,46,0.06); 
-          transform: translateY(-4px);
-        }
+        .why-card { transition: box-shadow 0.3s ease, border-color 0.3s ease; }
+        .why-card:hover { border-color: rgba(123,29,46,0.3) !important; box-shadow: 0 12px 30px rgba(123,29,46,0.10) !important; }
         .why-card.revealed { animation: fadeUp 0.65s cubic-bezier(.16,1,.3,1) both; }
 
         /* ── Misc UI ── */
         .cta-btn { transition: all 0.25s ease; }
-        .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(123,29,46,0.25); }
+        .cta-btn:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(0,0,0,0.25) !important; }
         .review-dot { transition: all 0.3s ease; }
-        .review-dot.active { transform: scale(1.3); background: var(--bur) !important; }
-        .news-card { transition: all 0.28s ease; background: var(--bg-white); border: 1px solid rgba(0,0,0,0.05); }
-        .news-card:hover { border-color: rgba(123,29,46,0.3); transform: translateY(-3px); box-shadow: 0 12px 30px rgba(123,29,46,0.08); }
+        .review-dot.active { transform: scale(1.3); }
+        .news-card { transition: all 0.28s ease; }
+        .news-card:hover { border-color: rgba(123,29,46,0.35) !important; transform: translateY(-3px); box-shadow: 0 12px 30px rgba(123,29,46,0.10) !important; }
+        .step-icon-wrap { transition: all 0.35s ease; }
+        .step-icon-wrap:hover { transform: translateY(-4px) scale(1.08); box-shadow: 0 16px 36px rgba(123,29,46,0.18) !important; }
 
         /* ── Scrolling Marquee ── */
-        .marquee-track { animation: marqueeFlow 40s linear infinite; }
+        .marquee-track { animation: marqueeFlow 38s linear infinite; }
 
-        /* ── Responsive Container ── */
-        .container { padding-left: 1.5rem; padding-right: 1.5rem; max-width: 1280px; margin: 0 auto; width: 100%; }
-        @media (min-width: 640px)  { .container { padding-left: 2rem; padding-right: 2rem; } }
-        @media (min-width: 1024px) { .container { padding-left: 2.5rem; padding-right: 2.5rem; } }
-
-        /* ── Responsive Grid Classes ── */
-        .grid-areas { display: grid; grid-template-columns: 1fr; gap: 1rem; }
-        @media (min-width: 640px) { .grid-areas { grid-template-columns: repeat(2, 1fr); } }
-        @media (min-width: 1024px) { .grid-areas { grid-template-columns: repeat(4, 1fr); gap: 1.5rem; } }
-
-        .grid-tools { display: grid; grid-template-columns: 1fr; gap: 1rem; }
-        @media (min-width: 640px) { .grid-tools { grid-template-columns: repeat(2, 1fr); } }
-        @media (min-width: 1024px) { .grid-tools { grid-template-columns: repeat(4, 1fr); gap: 1.5rem; } }
-
-        .grid-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
-        @media (min-width: 768px) { .grid-stats { grid-template-columns: repeat(3, 1fr); } }
-        @media (min-width: 1024px) { .grid-stats { grid-template-columns: repeat(5, 1fr); } }
-
-        .grid-why { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
-        @media (min-width: 768px) { .grid-why { grid-template-columns: repeat(2, 1fr); } }
-
-        .grid-news { display: grid; grid-template-columns: 1fr; gap: 1rem; }
-        @media (min-width: 640px) { .grid-news { grid-template-columns: repeat(2, 1fr); } }
-        @media (min-width: 1024px) { .grid-news { grid-template-columns: repeat(4, 1fr); } }
-
-        /* Mobile tweaks */
-        @media (max-width: 640px) {
-          .hero-search-box { flex-direction: column !important; padding: 12px !important; border-radius: 16px !important; }
-          .hero-search-divider { display: none !important; }
-          .hero-title { font-size: 2.8rem !important; }
-          section { padding-top: 4rem !important; padding-bottom: 4rem !important; }
+        /* ── Glass effect ── */
+        .glass-card {
+          background: rgba(255,255,255,0.05);
+          backdrop-filter: blur(22px);
+          -webkit-backdrop-filter: blur(22px);
+          border: 1px solid rgba(255,255,255,0.10);
         }
 
-        /* Reduced motion */
+        /* ── Particles ── */
+        .particle {
+          position: absolute;
+          width: 4px; height: 4px;
+          border-radius: 50%;
+          background: rgba(245,196,179,0.65);
+          animation: particleDrift var(--dur,7s) var(--delay,0s) infinite ease-out;
+        }
+
+        /* ── Hero BG (static, no zoom) ── */
+        .hero-bg-img {
+          /* no animation — keeps image steady */
+        }
+
+        /* ── Light Rays ── */
+        .hero-ray-1 { animation: lightRay1 8s ease-in-out infinite; }
+        .hero-ray-2 { animation: lightRay2 11s ease-in-out infinite; }
+
+        /* ── Floating scales ── */
+        .hero-scales { animation: floatScales 9s ease-in-out infinite; }
+
+        /* ── Cinematic scan line ── */
+        .hero-scanline {
+          position: absolute; left: 0; right: 0; height: 2px;
+          background: linear-gradient(90deg, transparent, rgba(245,196,179,0.12), transparent);
+          animation: scanLine 8s linear infinite;
+          pointer-events: none; z-index: 4;
+        }
+
+        /* ── Step number watermark ── */
+        .step-num {
+          font-family: 'Sora',sans-serif; font-size: 5.5rem;
+          font-weight: 900; color: rgba(123,29,46,0.05);
+          position: absolute; top: -1.2rem; left: -0.5rem;
+          line-height: 1; pointer-events: none; user-select: none;
+        }
+
+        /* ════════════════════════════════════════
+           RESPONSIVE — mobile-first, full coverage
+           320px → 480px → 640px → 768px → 1024px → 1280px+
+        ════════════════════════════════════════ */
+
+        /* Base: container padding */
+        .container { padding-left: 1rem !important; padding-right: 1rem !important; }
+        @media (min-width: 640px)  { .container { padding-left: 1.5rem !important; padding-right: 1.5rem !important; } }
+        @media (min-width: 1024px) { .container { padding-left: 2rem !important; padding-right: 2rem !important; } }
+        @media (min-width: 1280px) { .container { padding-left: 3rem !important; padding-right: 3rem !important; } }
+
+        /* ── 320px (tiny phones) ── */
+        @media (max-width: 359px) {
+          .hero-section { padding-top: 70px !important; min-height: 100svh !important; }
+          .hero-dual-cta { flex-direction: column !important; }
+          .hero-dual-cta > * { width: 100% !important; justify-content: center !important; text-align: center !important; }
+          .hero-search-row { flex-direction: column !important; }
+          .hero-search-divider { display: none !important; }
+          .hero-scales { display: none !important; }
+          .stats-grid { grid-template-columns: 1fr 1fr !important; gap: 0.75rem !important; }
+          .stats-band-grid { grid-template-columns: 1fr 1fr !important; gap: 1rem !important; }
+          .step-grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
+          .area-grid { grid-template-columns: 1fr !important; }
+          .why-grid { grid-template-columns: 1fr !important; }
+          .tools-grid { grid-template-columns: 1fr !important; }
+          .news-grid { grid-template-columns: 1fr !important; }
+          .lawyer-split { grid-template-columns: 1fr !important; gap: 2rem !important; }
+          .final-cta-split { grid-template-columns: 1fr !important; }
+          .final-cta-lawyer { border-top: 1px solid rgba(255,255,255,0.08) !important; border-left: none !important; }
+        }
+
+        /* ── 360–480px (standard mobile) ── */
+        @media (max-width: 480px) {
+          .hero-section { min-height: 100svh !important; padding-top: 72px !important; }
+          .hero-dual-cta { flex-direction: column !important; gap: 10px !important; }
+          .hero-dual-cta > * { width: 100% !important; justify-content: center !important; }
+          .hero-search-row { flex-direction: column !important; gap: 0 !important; }
+          .hero-search-divider { display: none !important; }
+          .hero-scales { display: none !important; }
+          .hero-ray-1, .hero-ray-2 { display: none !important; }
+          .particle { display: none !important; }
+          .stats-grid { grid-template-columns: 1fr 1fr !important; gap: 0.75rem !important; }
+          .stats-band-grid { grid-template-columns: 1fr 1fr !important; gap: 1rem !important; }
+          .step-grid { grid-template-columns: 1fr !important; gap: 2.5rem !important; }
+          .step-num { display: none !important; }
+          .area-grid { grid-template-columns: 1fr !important; }
+          .why-grid { grid-template-columns: 1fr !important; gap: 0.9rem !important; }
+          .tools-grid { grid-template-columns: 1fr !important; }
+          .news-grid { grid-template-columns: 1fr !important; }
+          .lawyer-split { grid-template-columns: 1fr !important; gap: 2.5rem !important; }
+          .final-cta-split { grid-template-columns: 1fr !important; }
+          .final-cta-lawyer { border-top: 1px solid rgba(255,255,255,0.08) !important; border-left: none !important; }
+          .why-section-img { display: none !important; }
+        }
+
+        /* ── 481–640px (large mobile / small phablet) ── */
+        @media (min-width: 481px) and (max-width: 640px) {
+          .hero-section { min-height: 100svh !important; }
+          .hero-dual-cta { flex-direction: column !important; }
+          .hero-dual-cta > * { width: 100% !important; justify-content: center !important; }
+          .hero-search-row { flex-direction: column !important; }
+          .hero-search-divider { display: none !important; }
+          .hero-scales { width: 180px !important; height: 180px !important; opacity: 0.06 !important; }
+          .stats-grid { grid-template-columns: repeat(3,1fr) !important; gap: 0.75rem !important; }
+          .stats-band-grid { grid-template-columns: repeat(2,1fr) !important; }
+          .step-grid { grid-template-columns: 1fr 1fr !important; gap: 2rem !important; }
+          .area-grid { grid-template-columns: 1fr 1fr !important; gap: 0.75rem !important; }
+          .why-grid { grid-template-columns: 1fr !important; gap: 1rem !important; }
+          .tools-grid { grid-template-columns: 1fr !important; }
+          .news-grid { grid-template-columns: 1fr !important; }
+          .lawyer-split { grid-template-columns: 1fr !important; gap: 2.5rem !important; }
+          .final-cta-split { grid-template-columns: 1fr !important; }
+          .final-cta-lawyer { border-top: 1px solid rgba(255,255,255,0.08) !important; border-left: none !important; }
+        }
+
+        /* ── 641–768px (tablets portrait) ── */
+        @media (min-width: 641px) and (max-width: 768px) {
+          .hero-dual-cta { flex-wrap: wrap !important; }
+          .stats-grid { grid-template-columns: repeat(3,1fr) !important; }
+          .stats-band-grid { grid-template-columns: repeat(2,1fr) !important; }
+          .step-grid { grid-template-columns: 1fr 1fr !important; }
+          .area-grid { grid-template-columns: repeat(2,1fr) !important; }
+          .why-grid { grid-template-columns: 1fr 1fr !important; }
+          .tools-grid { grid-template-columns: 1fr 1fr !important; }
+          .news-grid { grid-template-columns: 1fr 1fr !important; }
+          .lawyer-split { grid-template-columns: 1fr !important; gap: 3rem !important; }
+          .final-cta-split { grid-template-columns: 1fr !important; }
+          .final-cta-lawyer { border-top: 1px solid rgba(255,255,255,0.08) !important; border-left: none !important; }
+          .why-section-img { display: none !important; }
+        }
+
+        /* ── 769–1024px (tablets landscape / small laptop) ── */
+        @media (min-width: 769px) and (max-width: 1024px) {
+          .stats-grid { grid-template-columns: repeat(3,1fr) !important; }
+          .stats-band-grid { grid-template-columns: repeat(2,1fr) !important; }
+          .step-grid { grid-template-columns: repeat(4,1fr) !important; }
+          .area-grid { grid-template-columns: repeat(3,1fr) !important; }
+          .why-grid { grid-template-columns: 1fr 1fr !important; }
+          .tools-grid { grid-template-columns: 1fr 1fr !important; }
+          .news-grid { grid-template-columns: 1fr 1fr !important; }
+          .lawyer-split { grid-template-columns: 1fr !important; gap: 3rem !important; }
+          .final-cta-split { grid-template-columns: 1fr !important; }
+          .final-cta-lawyer { border-top: 1px solid rgba(255,255,255,0.08) !important; border-left: none !important; }
+        }
+
+        /* ── 1025–1280px (laptop) ── */
+        @media (min-width: 1025px) and (max-width: 1280px) {
+          .stats-grid { grid-template-columns: repeat(5,1fr) !important; }
+          .area-grid { grid-template-columns: repeat(4,1fr) !important; }
+          .tools-grid { grid-template-columns: repeat(4,1fr) !important; }
+          .news-grid { grid-template-columns: repeat(4,1fr) !important; }
+          .lawyer-split { grid-template-columns: 1fr 380px !important; }
+        }
+
+        /* ── 1281px+ (desktop / large screens) ── */
+        @media (min-width: 1281px) {
+          .stats-grid { grid-template-columns: repeat(5,1fr) !important; }
+          .area-grid { grid-template-columns: repeat(auto-fill,minmax(210px,1fr)) !important; }
+          .tools-grid { grid-template-columns: repeat(4,1fr) !important; }
+          .news-grid { grid-template-columns: repeat(4,1fr) !important; }
+          .lawyer-split { grid-template-columns: 1fr 420px !important; }
+          .final-cta-split { grid-template-columns: 1fr 1fr !important; }
+        }
+
+        /* ── Section padding scale ── */
+        @media (max-width: 640px) {
+          section { padding-top: 4rem !important; padding-bottom: 4rem !important; }
+          .hero-section { padding-bottom: 0 !important; }
+          .marquee-band { padding: 0.75rem 0 !important; }
+        }
+        @media (min-width: 641px) and (max-width: 1024px) {
+          section { padding-top: 5rem !important; padding-bottom: 5rem !important; }
+        }
+
+        /* ── Hero search bar: stack neatly on mobile ── */
+        @media (max-width: 640px) {
+          .hero-search-box { border-radius: 14px !important; padding: 6px !important; }
+          .hero-search-row { flex-direction: column !important; gap: 0 !important; }
+          .hero-search-field { width: 100% !important; padding: 12px 14px !important; border-bottom: 1px solid #F3F4F6 !important; }
+          .hero-search-btn { width: 100% !important; margin: 8px 0 0 0 !important; justify-content: center !important; height: 48px !important; border-radius: 10px !important; }
+          .hero-search-divider { display: none !important; }
+        }
+
+        /* ── Trust pills: wrap + smaller on mobile ── */
+        @media (max-width: 480px) {
+          .trust-pills { gap: 6px !important; }
+          .trust-pill { padding: 0.24rem 0.7rem !important; font-size: 0.65rem !important; }
+        }
+
+        /* ── Step connector line: hide on mobile ── */
+        @media (max-width: 768px) {
+          .step-connector { display: none !important; }
+        }
+
+        /* ── Testimonial: full-width on mobile ── */
+        @media (max-width: 640px) {
+          .review-nav-btn { width: 36px !important; height: 36px !important; }
+          .review-text { font-size: 0.92rem !important; }
+        }
+
+        /* ── Why section: hide right background image on small screens ── */
+        @media (max-width: 1024px) {
+          .why-section-img { display: none !important; }
+        }
+
+        /* ── Lawyer earnings card: full width on tablet ── */
+        @media (max-width: 1024px) {
+          .lawyer-earnings-card { max-width: 460px !important; margin: 0 auto !important; }
+        }
+
+        /* ── Final CTA panels: equal height on mobile ── */
+        @media (max-width: 640px) {
+          .final-cta-panel { padding: 2.5rem 1.5rem !important; }
+        }
+
+        /* ── Stats numbers: don't overflow ── */
+        @media (max-width: 480px) {
+          .stat-num { font-size: clamp(1.8rem, 8vw, 2.5rem) !important; }
+        }
+
+        /* ── Marquee: slow down slightly on mobile ── */
+        @media (max-width: 640px) {
+          .marquee-track { animation-duration: 25s !important; }
+        }
+
+        /* ── max-height short screens (landscape phones) ── */
+        @media (max-height: 600px) and (max-width: 900px) {
+          .hero-section { min-height: auto !important; padding-top: 60px !important; padding-bottom: 2rem !important; }
+          .hero-scales { display: none !important; }
+        }
+
+        /* ── Reduced motion ── */
         @media (prefers-reduced-motion: reduce) {
           *, *::before, *::after { animation: none !important; transition-duration: 0.01ms !important; }
-          .hero-text-in, .why-card.revealed { opacity: 1 !important; transform: none !important; }
+          .hero-text-in { opacity: 1 !important; }
+          .why-card.revealed { opacity: 1 !important; }
         }
       `}} />
 
       {/* ══════════════════════════════════════════════════════
-          SECTION 1 — PREMIUM LIGHT HERO
+          SECTION 1 — CINEMATIC HERO — Light Editorial Aesthetic
       ══════════════════════════════════════════════════════ */}
-      <section style={{
-        minHeight: '92vh', position: 'relative', overflow: 'hidden',
-        display: 'flex', flexDirection: 'column', justifyContent: 'center',
-        paddingTop: 100, background: 'var(--bg-light)', borderBottom: '1px solid rgba(0,0,0,0.05)'
-      }}>
-        {/* Subtle background abstract shapes for depth */}
-        <div style={{ position: 'absolute', top: '-10%', right: '-5%', width: '50vw', height: '50vw', borderRadius: '50%', background: 'radial-gradient(circle, rgba(123,29,46,0.04) 0%, transparent 70%)', zIndex: 0 }} />
-        <div style={{ position: 'absolute', bottom: '-15%', left: '-10%', width: '40vw', height: '40vw', borderRadius: '50%', background: 'radial-gradient(circle, rgba(232,182,120,0.08) 0%, transparent 70%)', zIndex: 0 }} />
+      <section
+        ref={heroRef}
+        className="hero-section"
+        style={{
+          minHeight: '100vh', position: 'relative', overflow: 'hidden',
+          display: 'flex', flexDirection: 'column', justifyContent: 'center',
+          paddingTop: 80, background: '#0F172A'
+        }}
+      >
+        {/* ── Layer 0: Cinematic 4K Unsplash hero image (law firm architecture / marble) ── */}
+        <div
+          className="hero-bg-img"
+          style={{
+            position: 'absolute', inset: 0,
+            backgroundImage: 'url(https://images.unsplash.com/photo-1589829545856-d10d557cf95f?q=80&w=2070&auto=format&fit=crop)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center 35%',
+            zIndex: 0
+          }}
+        />
 
-        <div className="container" style={{ position: 'relative', zIndex: 2, maxWidth: 1280 }}>
-          
+        {/* ── Layer 1: Deep editorial gradient — slate navy left, transparent right ── */}
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 1,
+          background:
+            'linear-gradient(105deg,' +
+            'rgba(10,15,40,0.96) 0%,' +
+            'rgba(15,23,60,0.88) 28%,' +
+            'rgba(20,30,70,0.72) 52%,' +
+            'rgba(10,15,40,0.35) 75%,' +
+            'rgba(0,0,0,0.10) 100%)'
+        }} />
+
+        {/* ── Layer 2: Warm gold sunlight spill — upper right corner ── */}
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 2, pointerEvents: 'none',
+          background:
+            'radial-gradient(ellipse 60% 75% at 85% -10%,' +
+            'rgba(200,169,110,0.22) 0%,' +
+            'rgba(200,169,110,0.08) 40%,' +
+            'transparent 70%)'
+        }} />
+
+        {/* ── Layer 3: Subtle warm center vignette adds depth ── */}
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 2, pointerEvents: 'none',
+          background:
+            'radial-gradient(ellipse 80% 60% at 30% 85%,' +
+            'rgba(123,29,46,0.18) 0%,' +
+            'transparent 65%)'
+        }} />
+
+        {/* ── Layer 4: Animated gold light ray (left, angled — like law office window) ── */}
+        <div className="hero-ray-1" style={{
+          position: 'absolute', zIndex: 3, pointerEvents: 'none',
+          top: '-30%', left: '42%', width: '22%', height: '145%',
+          background: 'linear-gradient(180deg, rgba(200,169,110,0.14) 0%, transparent 70%)',
+          transform: 'rotate(-18deg)', transformOrigin: 'top center',
+          filter: 'blur(40px)'
+        }} />
+        <div className="hero-ray-2" style={{
+          position: 'absolute', zIndex: 3, pointerEvents: 'none',
+          top: '-20%', left: '62%', width: '12%', height: '110%',
+          background: 'linear-gradient(180deg, rgba(220,190,130,0.10) 0%, transparent 70%)',
+          transform: 'rotate(8deg)', transformOrigin: 'top center',
+          filter: 'blur(24px)'
+        }} />
+
+        {/* ── Layer 5: Subtle grid texture overlay (premium editorial feel) ── */}
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 2, pointerEvents: 'none', opacity: 0.018,
+          backgroundImage: 'linear-gradient(rgba(255,255,255,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.4) 1px, transparent 1px)',
+          backgroundSize: '80px 80px'
+        }} />
+
+        {/* ── Layer 6: Floating particles (gold-tinted for warmth) ── */}
+        {[
+          { left: '8%',  top: '70%', dur: '7s',  delay: '0s',   px: '20px', po: '0.5' },
+          { left: '18%', top: '78%', dur: '9.5s', delay: '1.3s', px: '-15px', po: '0.35' },
+          { left: '32%', top: '82%', dur: '6.5s', delay: '0.6s', px: '25px', po: '0.4' },
+          { left: '48%', top: '75%', dur: '8s',   delay: '2.1s', px: '-10px', po: '0.3' },
+        ].map((p, i) => (
+          <div key={i} className="particle" style={{
+            left: p.left, top: p.top, zIndex: 4,
+            '--dur': p.dur, '--delay': p.delay, '--px': p.px, '--po': p.po,
+            background: 'rgba(200,169,110,0.5)'
+          }} />
+        ))}
+
+        {/* ── Layer 7: Bottom fade ── */}
+        <div style={{
+          position: 'absolute', bottom: 0, left: 0, right: 0,
+          height: 260, zIndex: 5, pointerEvents: 'none',
+          background: 'linear-gradient(to bottom, transparent, rgba(10,15,40,0.95))'
+        }} />
+
+        {/* ══ HERO CONTENT ══ */}
+        <div className="container" style={{
+          position: 'relative', zIndex: 6,
+          padding: '4rem 0 clamp(10rem, 18vh, 13rem)',
+          maxWidth: 1280
+        }}>
+
+          {/* ── Live badge ── */}
           <div className="hero-text-in" style={{
-            display: 'inline-flex', alignItems: 'center', gap: 8,
-            background: 'var(--bg-white)',
-            border: '1px solid rgba(123,29,46,0.15)',
-            borderRadius: 40, padding: '6px 16px',
+            display: 'inline-flex', alignItems: 'center', gap: 10,
+            background: 'rgba(200,169,110,0.12)',
+            border: '1px solid rgba(200,169,110,0.35)',
+            borderRadius: 40, padding: '.42rem 1.25rem',
             marginBottom: '2rem',
-            boxShadow: '0 4px 12px rgba(123,29,46,0.05)'
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            boxShadow: '0 4px 24px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.08)'
           }}>
-            <div style={{ position: 'relative', width: 8, height: 8 }}>
-              <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#10B981' }} />
-              <div style={{ position: 'absolute', inset: -4, borderRadius: '50%', border: '1.5px solid #10B981', animation: 'pulseRing 2s ease-out infinite' }} />
+            <div style={{ position: 'relative', width: 8, height: 8, flexShrink: 0 }}>
+              <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#4ADE80' }} />
+              <div style={{
+                position: 'absolute', inset: -4, borderRadius: '50%',
+                border: '1.5px solid #4ADE80',
+                animation: 'pulseRing 2s ease-out infinite'
+              }} />
             </div>
-            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--bur)', letterSpacing: '1px', textTransform: 'uppercase' }}>
-              India's #1 Transparent Legal Platform
+            <span style={{
+              fontSize: '.68rem', fontWeight: 800,
+              color: 'rgba(220,195,140,0.95)',
+              letterSpacing: '2.5px', textTransform: 'uppercase'
+            }}>
+              LIVE · India's #1 Legal Marketplace · 24/7 Emergency Access
             </span>
           </div>
 
-          <h1 className="hero-text-in hero-title" style={{
+          {/* ── Main headline ── */}
+          <h1 className="hero-text-in" style={{
             fontFamily: "'Plus Jakarta Sans', sans-serif",
-            fontSize: 'clamp(3rem, 5vw, 4.5rem)',
-            fontWeight: 800, lineHeight: 1.1, letterSpacing: '-0.03em',
-            color: 'var(--text-main)', marginBottom: '1.5rem',
-            maxWidth: 700
+            fontSize: 'clamp(2.6rem, 5.5vw, 5.2rem)',
+            fontWeight: 900, lineHeight: 1.06, letterSpacing: '-0.045em',
+            color: '#FFFFFF',
+            marginBottom: '1.2rem',
+            maxWidth: 660,
+            textShadow: '0 2px 40px rgba(0,0,0,0.5)'
           }}>
             Find Your <TypingWord />
             <br />
-            <span style={{ color: 'var(--text-muted)', fontWeight: 600 }}>Anytime. Anywhere.</span>
+            <span style={{
+              fontFamily: "'Playfair Display', Georgia, serif",
+              fontStyle: 'italic', fontWeight: 700,
+              fontSize: '0.78em',
+              color: 'rgba(255,255,255,0.65)',
+              letterSpacing: '-0.01em'
+            }}>
+              Anytime. Anywhere in India.
+            </span>
           </h1>
 
+          {/* ── Subtitle ── */}
           <p className="hero-text-in" style={{
-            fontSize: '1.1rem', color: 'var(--text-muted)', maxWidth: 600, lineHeight: 1.6,
-            marginBottom: '3rem', fontWeight: 500
+            fontSize: 'clamp(.9rem, 1.3vw, 1.08rem)',
+            color: 'rgba(220,225,240,0.80)', maxWidth: 540, lineHeight: 1.9,
+            marginBottom: '2.8rem', fontWeight: 400
           }}>
-            Book top-rated, Bar Council verified advocates across India. 
-            <strong style={{ color: 'var(--text-main)' }}> 100% transparent pricing. </strong> 
-            No hidden fees. Encrypted video consultations within minutes.
+            India's first 100% price-transparent legal marketplace.{' '}
+            <strong style={{ color: '#C8A96E', fontWeight: 700 }}>1,338+ Bar Council verified advocates</strong>{' '}
+            across <strong style={{ color: '#C8A96E', fontWeight: 700 }}>100+ cities</strong>.
+            Instant booking. Encrypted video calls. AI-powered matching.
           </p>
 
-          {/* Clean, high-contrast Search Bar */}
+          {/* ── Hero Search Bar — Glassmorphism ── */}
           <div className="hero-text-in hero-search-box" style={{
-            background: 'var(--bg-white)',
-            borderRadius: 60,
-            padding: '8px 8px 8px 24px',
-            marginBottom: '3rem',
-            maxWidth: 800,
-            display: 'flex', alignItems: 'center', gap: 16,
-            border: '1px solid rgba(0,0,0,0.08)',
-            boxShadow: '0 16px 40px -12px rgba(123,29,46,0.12)'
+            background: 'rgba(255,255,255,0.96)',
+            borderRadius: 18,
+            padding: '7px',
+            marginBottom: '2.2rem',
+            maxWidth: 820,
+            border: '1px solid rgba(255,255,255,0.85)',
+            boxShadow: '0 32px 80px -16px rgba(0,0,0,0.5), 0 8px 24px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,1)'
           }}>
-            
-            <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 12 }}>
-              <Scale size={20} color="var(--bur)" />
-              <div style={{ width: '100%' }}>
-                <label style={{ display: 'block', fontSize: '0.65rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 2 }}>Legal Issue</label>
-                <select 
-                  value={spec} onChange={e => setSpec(e.target.value)}
-                  style={{ width: '100%', border: 'none', background: 'transparent', fontSize: '0.95rem', fontWeight: 600, color: 'var(--text-main)', outline: 'none', cursor: 'pointer' }}
-                >
-                  <option value="">What do you need help with?</option>
-                  {SPECS.map(s => <option key={s} value={s}>{s}</option>)}
-                </select>
+            <div className="hero-search-row" style={{ display: 'flex', alignItems: 'center', gap: 0 }}>
+
+              {/* Field 1: Legal Issue */}
+              <div className="hero-search-field" style={{ flex: '1 1 240px', padding: '10px 18px', minWidth: 0 }}>
+                <label htmlFor="hero-issue-sel" style={{
+                  display: 'block', fontSize: '.6rem', fontWeight: 800,
+                  color: 'var(--bur)', textTransform: 'uppercase',
+                  letterSpacing: '2px', marginBottom: 4
+                }}>Legal Issue</label>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <Scale size={16} color="var(--bur)" style={{ flexShrink: 0 }} />
+                  <select
+                    id="hero-issue-sel"
+                    style={{
+                      border: 'none', background: 'none', fontSize: '.92rem',
+                      fontWeight: 700, color: '#0F172A', outline: 'none',
+                      cursor: 'pointer', width: '100%', padding: '2px 0'
+                    }}
+                    value={spec} onChange={e => setSpec(e.target.value)}
+                  >
+                    <option value="">What do you need help with?</option>
+                    {SPECS.map(s => <option key={s} value={s}>{s}</option>)}
+                  </select>
+                </div>
               </div>
-            </div>
 
-            <div className="hero-search-divider" style={{ width: 1, height: 40, background: 'rgba(0,0,0,0.1)' }} />
+              <div className="hero-search-divider" style={{
+                width: 1, height: 40, background: '#E2E8F0',
+                flexShrink: 0, margin: '0 4px'
+              }} />
 
-            <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 12 }}>
-              <MapPin size={20} color="var(--bur)" />
-              <div style={{ width: '100%' }}>
-                <label style={{ display: 'block', fontSize: '0.65rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: 2 }}>Location</label>
-                <input 
-                  type="text" placeholder="Delhi, Mumbai, 110001..." 
-                  value={query} onChange={e => setQuery(e.target.value)}
-                  onKeyDown={e => e.key === 'Enter' && goSearch()}
-                  style={{ width: '100%', border: 'none', background: 'transparent', fontSize: '0.95rem', fontWeight: 600, color: 'var(--text-main)', outline: 'none' }}
-                />
+              {/* Field 2: City */}
+              <div className="hero-search-field" style={{ flex: '1 1 210px', padding: '10px 18px', minWidth: 0 }}>
+                <label htmlFor="hero-city-inp" style={{
+                  display: 'block', fontSize: '.6rem', fontWeight: 800,
+                  color: 'var(--bur)', textTransform: 'uppercase',
+                  letterSpacing: '2px', marginBottom: 4
+                }}>City / Pincode</label>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <MapPin size={16} color="var(--bur)" style={{ flexShrink: 0 }} />
+                  <input
+                    id="hero-city-inp"
+                    style={{
+                      border: 'none', background: 'none', fontSize: '.92rem',
+                      fontWeight: 700, color: '#0F172A', outline: 'none',
+                      width: '100%', padding: '2px 0'
+                    }}
+                    placeholder="Delhi, 110001, Mumbai…"
+                    value={query} onChange={e => setQuery(e.target.value)}
+                    onKeyDown={e => e.key === 'Enter' && goSearch()}
+                  />
+                </div>
               </div>
-            </div>
 
-            <button onClick={goSearch} className="cta-btn" style={{
-              background: 'var(--bur)', color: '#fff', border: 'none', borderRadius: 50,
-              padding: '0 32px', height: 56, fontSize: '1rem', fontWeight: 700, cursor: 'pointer',
-              display: 'flex', alignItems: 'center', gap: 8, whiteSpace: 'nowrap'
-            }}>
-              <Search size={18} /> Search
+              {/* Search Button */}
+              <button
+                onClick={goSearch}
+                className="hero-search-btn cta-btn"
+                style={{
+                  background: 'linear-gradient(135deg, #7B1D2E 0%, #5C1522 100%)',
+                  color: '#FFFFFF', border: 'none', borderRadius: 13,
+                  padding: '1rem 2rem', fontWeight: 800, fontSize: '.9rem',
+                  cursor: 'pointer', flexShrink: 0, margin: '2px',
+                  boxShadow: '0 8px 24px rgba(123,29,46,0.5)',
+                  display: 'flex', alignItems: 'center', gap: 8, whiteSpace: 'nowrap'
+                }}
+              >
+                Find My Lawyer <ArrowRight size={16} />
+              </button>
+            </div>
+          </div>
+
+          {/* ── CTA Buttons ── */}
+          <div className="hero-text-in hero-dual-cta" style={{
+            display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: '2.2rem'
+          }}>
+            <Link to="/search" style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              background: 'linear-gradient(135deg, #7B1D2E 0%, #5C1522 100%)',
+              color: '#fff', fontWeight: 800, fontSize: '1rem',
+              padding: '.95rem 2.2rem', borderRadius: 14, textDecoration: 'none',
+              boxShadow: '0 10px 32px rgba(123,29,46,0.55)',
+              transition: 'all 0.25s ease'
+            }} className="cta-btn">
+              Browse Lawyers <ArrowRight size={16} />
+            </Link>
+            <button
+              onClick={() => window.dispatchEvent(new CustomEvent('open-ai-chat'))}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 8,
+                background: 'rgba(255,255,255,0.10)',
+                color: '#fff',
+                border: '1.5px solid rgba(255,255,255,0.28)',
+                backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+                fontWeight: 700, fontSize: '1rem',
+                padding: '.95rem 2rem', borderRadius: 14, cursor: 'pointer',
+                transition: 'all 0.25s ease'
+              }} className="cta-btn">
+              <Bot size={16} /> Ask AI Legal Assistant
             </button>
-          </div>
-
-          <div className="hero-text-in" style={{ display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: -10 }}>
-              <img src="https://i.pravatar.cc/100?img=1" alt="User" style={{ width: 40, height: 40, borderRadius: '50%', border: '2px solid #fff', zIndex: 3, objectFit: 'cover' }} />
-              <img src="https://i.pravatar.cc/100?img=2" alt="User" style={{ width: 40, height: 40, borderRadius: '50%', border: '2px solid #fff', zIndex: 2, objectFit: 'cover', marginLeft: '-12px' }} />
-              <img src="https://i.pravatar.cc/100?img=3" alt="User" style={{ width: 40, height: 40, borderRadius: '50%', border: '2px solid #fff', zIndex: 1, objectFit: 'cover', marginLeft: '-12px' }} />
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <div style={{ display: 'flex', gap: 4, color: '#F59E0B' }}>
-                <Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" />
-              </div>
-              <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-muted)' }}>4.9/5 from 10,000+ clients</span>
-            </div>
-          </div>
-          
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════════════════
-          SECTION 2 — STATS BAND
-      ══════════════════════════════════════════════════════ */}
-      <section ref={statsRef} style={{ background: 'var(--bg-white)', padding: '4rem 0', borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
-        <div className="container">
-          <div className="grid-stats">
-            {[
-              { num: 1338, suf: '+', label: 'Verified Advocates', icon: ShieldCheck },
-              { num: 100, suf: '+', label: 'Cities Covered', icon: MapPin },
-              { num: 15, suf: 'M', label: 'Minutes to Consult', icon: Clock },
-              { num: 50, suf: 'K+', label: 'Cases Handled', icon: FileText },
-              { num: 100, suf: '%', label: 'Transparent Pricing', icon: IndianRupee },
-            ].map((s, i) => (
-              <div key={i} style={{ 
-                display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center',
-                padding: '1.5rem', background: 'var(--bg-light)', borderRadius: 16, border: '1px solid rgba(0,0,0,0.03)',
-                animation: statsVisible ? `fadeUp 0.5s ease forwards ${i * 0.1}s` : 'none', opacity: 0, transform: 'translateY(20px)'
-              }}>
-                <s.icon size={28} color="var(--bur)" style={{ marginBottom: 12, opacity: 0.9 }} />
-                <div style={{ fontSize: '2.2rem', fontWeight: 800, color: 'var(--text-main)', fontFamily: 'var(--font-number)', lineHeight: 1 }}>
-                  {statsVisible ? <Counter to={s.num} suffix={s.suf} /> : '0'}
-                </div>
-                <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-muted)', marginTop: 8 }}>{s.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════════════════
-          SECTION 3 — PRACTICE AREAS
-      ══════════════════════════════════════════════════════ */}
-      <section style={{ padding: '6rem 0', background: 'var(--bg-light)' }}>
-        <div className="container">
-          <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-            <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.8rem)', fontWeight: 800, color: 'var(--text-main)', marginBottom: 16 }}>Specialized Legal Expertise</h2>
-            <p style={{ fontSize: '1.1rem', color: 'var(--text-muted)', maxWidth: 600, margin: '0 auto' }}>Find experienced advocates tailored to your exact legal situation.</p>
-          </div>
-          
-          <div className="grid-areas">
-            {AREAS.map((a, i) => (
-              <Link to={`/search?specialization=${encodeURIComponent(a.name)}`} key={i} className="area-card" style={{
-                display: 'flex', flexDirection: 'column', padding: '2rem', borderRadius: 20, textDecoration: 'none'
-              }}>
-                <div className="area-card-icon" style={{ 
-                  width: 56, height: 56, borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '1.5rem', marginBottom: 20
-                }}>
-                  {a.emoji}
-                </div>
-                <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: 8 }}>{a.name}</h3>
-                <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', lineHeight: 1.5, marginBottom: '1.5rem', flex: 1 }}>{a.desc}</p>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--bur)', fontWeight: 600, fontSize: '0.85rem' }}>
-                  Find Lawyers <ArrowRight size={14} />
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════════════════
-          SECTION 4 — LEGAL TOOLS & AI
-      ══════════════════════════════════════════════════════ */}
-      <section style={{ padding: '6rem 0', background: 'var(--bg-white)', borderTop: '1px solid rgba(0,0,0,0.05)', borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
-        <div className="container">
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: '4rem' }}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'rgba(123,29,46,0.08)', color: 'var(--bur)', padding: '6px 12px', borderRadius: 20, fontSize: '0.8rem', fontWeight: 700, marginBottom: 16 }}>
-              <Zap size={14} fill="currentColor" /> SUPERCHARGE YOUR CASE
-            </div>
-            <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.8rem)', fontWeight: 800, color: 'var(--text-main)', marginBottom: 16 }}>Smart Legal Tools</h2>
-            <p style={{ fontSize: '1.1rem', color: 'var(--text-muted)', maxWidth: 600 }}>Empowering you with AI and automation before you even speak to a lawyer.</p>
-          </div>
-
-          <div className="grid-tools">
-            {[
-              { icon: Bot, title: 'AI Legal Assistant', desc: 'Ask complex legal queries and get instant, citations-backed answers 24/7.', link: '/ai-assistant', color: '#3B82F6', bg: 'rgba(59,130,246,0.1)' },
-              { icon: Scale, title: 'AI Case Classifier', desc: 'Not sure what kind of lawyer you need? Our AI analyzes your situation instantly.', link: '/ai-classifier', color: '#8B5CF6', bg: 'rgba(139,92,246,0.1)' },
-              { icon: FileText, title: 'Document Generator', desc: 'Draft NDAs, rental agreements, and notices instantly with our smart templates.', link: '/documents', color: '#10B981', bg: 'rgba(16,185,129,0.1)' },
-              { icon: BookOpen, title: 'Knowledge Hub', desc: 'Read comprehensive guides on your rights, court procedures, and legal terms.', link: '/knowledge-hub', color: '#F59E0B', bg: 'rgba(245,158,11,0.1)' }
-            ].map((t, i) => (
-              <Link key={i} to={t.link} className="tool-card" style={{
-                padding: '2rem', borderRadius: 24, textDecoration: 'none',
-                display: 'flex', flexDirection: 'column', alignItems: 'flex-start'
-              }}>
-                <div style={{ width: 60, height: 60, borderRadius: 16, background: t.bg, color: t.color, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
-                  <t.icon size={28} />
-                </div>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: 10 }}>{t.title}</h3>
-                <p style={{ fontSize: '0.95rem', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: 20, flex: 1 }}>{t.desc}</p>
-                <div style={{ color: t.color, fontWeight: 700, fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: 6 }}>
-                  Try Now <ArrowRight size={16} />
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════════════════
-          SECTION 5 — WHY CHOOSE US (Trust features)
-      ══════════════════════════════════════════════════════ */}
-      <section ref={whyRef} style={{ padding: '6rem 0', background: 'var(--bg-light)' }}>
-        <div className="container">
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: '4rem' }}>
-            <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.8rem)', fontWeight: 800, color: 'var(--text-main)', marginBottom: 16 }}>The Justice Junction Advantage</h2>
-            <p style={{ fontSize: '1.1rem', color: 'var(--text-muted)', maxWidth: 600 }}>We built this platform to fix everything that's broken about finding legal help in India.</p>
-          </div>
-
-          <div className="grid-why">
-            {[
-              { icon: IndianRupee, title: '100% Transparent Pricing', desc: 'No hidden retainer fees. Every lawyer lists their exact consultation and hearing fees upfront. You pay exactly what you see.' },
-              { icon: BadgeCheck, title: 'Bar Council Verified', desc: 'Every advocate undergoes strict KYC and Bar Council registration verification. We only list practicing, legitimate lawyers.' },
-              { icon: Video, title: 'Secure Virtual Consultations', desc: 'Consult top lawyers from any city via end-to-end encrypted video calls. Built-in document sharing and recording options.' },
-              { icon: Activity, title: 'Live Case Tracking Dashboard', desc: 'Once hired, track your case progress, upcoming hearings, and uploaded documents in your personal dashboard.' }
-            ].map((f, i) => (
-              <div key={i} className={`why-card ${whyVisible ? 'revealed' : ''}`} style={{
-                display: 'flex', gap: '1.5rem', padding: '2rem', borderRadius: 20, animationDelay: `${i * 0.15}s`
-              }}>
-                <div style={{ 
-                  width: 64, height: 64, borderRadius: 16, background: 'rgba(123,29,46,0.06)', color: 'var(--bur)', 
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 
-                }}>
-                  <f.icon size={30} />
-                </div>
-                <div>
-                  <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: 8 }}>{f.title}</h3>
-                  <p style={{ fontSize: '0.95rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>{f.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════════════════
-          SECTION 6 — TESTIMONIALS (Marquee & Carousel)
-      ══════════════════════════════════════════════════════ */}
-      <section style={{ padding: '6rem 0', background: 'var(--bg-white)', overflow: 'hidden' }}>
-        <div style={{ textAlign: 'center', marginBottom: '3rem', padding: '0 1.5rem' }}>
-          <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.8rem)', fontWeight: 800, color: 'var(--text-main)', marginBottom: 16 }}>Trusted by Thousands</h2>
-          <p style={{ fontSize: '1.1rem', color: 'var(--text-muted)' }}>Real stories from clients who found justice through our platform.</p>
-        </div>
-
-        {/* Marquee row */}
-        <div style={{ display: 'flex', width: '200%', transform: 'translate3d(0,0,0)' }} className="marquee-track"
-             onMouseEnter={() => setReviewPaused(true)} onMouseLeave={() => setReviewPaused(false)}>
-          {[...REVIEWS, ...REVIEWS].map((r, i) => (
-            <div key={i} style={{
-              width: '400px', flexShrink: 0, padding: '2rem', margin: '0 1rem',
-              background: 'var(--bg-light)', borderRadius: 20, border: '1px solid rgba(0,0,0,0.05)',
-              display: 'flex', flexDirection: 'column', gap: '1rem'
-            }}>
-              <div style={{ display: 'flex', gap: 4, color: '#F59E0B' }}>
-                {[...Array(r.stars)].map((_, j) => <Star key={j} size={16} fill="currentColor" />)}
-              </div>
-              <p style={{ fontSize: '1.05rem', color: 'var(--text-main)', fontStyle: 'italic', lineHeight: 1.6, flex: 1 }}>"{r.text}"</p>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: '1rem' }}>
-                <div style={{ width: 44, height: 44, borderRadius: '50%', background: 'var(--bur)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '1.1rem' }}>
-                  {r.init}
-                </div>
-                <div>
-                  <h4 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-main)' }}>{r.name}</h4>
-                  <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{r.role}, {r.city}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ══════════════════════════════════════════════════════
-          SECTION 7 — LEGAL NEWS
-      ══════════════════════════════════════════════════════ */}
-      <section ref={newsRef} style={{ padding: '6rem 0', background: 'var(--bg-light)' }}>
-        <div className="container">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '3rem', flexWrap: 'wrap', gap: '1rem' }}>
-            <div>
-              <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.8rem)', fontWeight: 800, color: 'var(--text-main)', marginBottom: 8 }}>Legal Updates</h2>
-              <p style={{ fontSize: '1.1rem', color: 'var(--text-muted)' }}>Stay informed with the latest legal rulings and news.</p>
-            </div>
-            <Link to="/knowledge-hub" className="cta-btn" style={{ 
-              display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 20px', 
-              background: 'transparent', border: '1px solid rgba(123,29,46,0.3)', color: 'var(--bur)', 
-              borderRadius: 8, fontWeight: 600, textDecoration: 'none' 
-            }}>
-              View All News <ArrowRight size={16} />
+            <Link to="/join-as-lawyer" style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              background: 'rgba(200,169,110,0.15)',
+              color: '#C8A96E',
+              border: '1.5px solid rgba(200,169,110,0.35)',
+              backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+              fontWeight: 700, fontSize: '1rem',
+              padding: '.95rem 2rem', borderRadius: 14, textDecoration: 'none',
+              transition: 'all 0.25s ease'
+            }} className="cta-btn">
+              Join as Lawyer <ChevronRight size={16} />
             </Link>
           </div>
 
-          <div className="grid-news">
-            {NEWS.map((n, i) => (
-              <div key={i} className="news-card" style={{
-                padding: '2rem', borderRadius: 20, display: 'flex', flexDirection: 'column'
+          {/* ── Trust pills — glassmorphism ── */}
+          <div className="hero-text-in" style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            {[
+              { icon: <BadgeCheck size={13} color="#4ADE80" />, t: '1,338+ Verified Lawyers' },
+              { icon: <MapPin size={13} color="#C8A96E" />, t: '100+ Cities' },
+              { icon: <Clock size={13} color="#93C5FD" />, t: '15 min Emergency Response' },
+              { icon: <Lock size={13} color="#C4B5FD" />, t: 'Bank-Grade Encryption' },
+              { icon: <Zap size={13} color="#FCD34D" />, t: 'AI-Powered Matching' },
+              { icon: <IndianRupee size={13} color="#4ADE80" />, t: 'Zero Hidden Fees' },
+            ].map((b, i) => (
+              <div key={i} style={{
+                display: 'flex', alignItems: 'center', gap: 6,
+                background: 'rgba(255,255,255,0.08)',
+                border: '1px solid rgba(255,255,255,0.15)',
+                backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+                borderRadius: 30, padding: '.32rem .9rem'
               }}>
-                <span style={{ 
-                  display: 'inline-block', padding: '4px 10px', background: 'rgba(123,29,46,0.08)', 
-                  color: 'var(--bur)', fontSize: '0.75rem', fontWeight: 700, borderRadius: 6, marginBottom: 16, width: 'fit-content' 
+                {b.icon}
+                <span style={{ fontSize: '.72rem', color: 'rgba(255,255,255,0.88)', fontWeight: 700 }}>{b.t}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* ── Floating glassmorphism stat cards ── */}
+          <div className="hero-text-in" style={{
+            display: 'flex', gap: 16, flexWrap: 'wrap', marginTop: '3.5rem'
+          }}>
+            {[
+              { val: '1,338+', label: 'Bar Verified Advocates', icon: <BadgeCheck size={18} color="#C8A96E" /> },
+              { val: '10,000+', label: 'Cases Resolved', icon: <Scale size={18} color="#C8A96E" /> },
+              { val: '4.9 ★', label: 'Average Rating', icon: <Star size={18} color="#C8A96E" /> },
+              { val: '₹500+', label: 'Starting Consultation', icon: <IndianRupee size={18} color="#C8A96E" /> },
+            ].map((s, i) => (
+              <div key={i} style={{
+                display: 'flex', alignItems: 'center', gap: 14,
+                background: 'rgba(255,255,255,0.07)',
+                border: '1px solid rgba(255,255,255,0.14)',
+                backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+                borderRadius: 16, padding: '1rem 1.4rem',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.25)'
+              }}>
+                <div style={{
+                  width: 40, height: 40, borderRadius: 12,
+                  background: 'rgba(200,169,110,0.12)',
+                  border: '1px solid rgba(200,169,110,0.25)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  flexShrink: 0
                 }}>
-                  {n.tag}
-                </span>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-main)', lineHeight: 1.5, marginBottom: 'auto' }}>
-                  {n.title}
-                </h3>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: 24, fontWeight: 500 }}>
-                  <Calendar size={14} /> {n.date}
+                  {s.icon}
                 </div>
+                <div>
+                  <div style={{
+                    fontFamily: "'Sora', sans-serif",
+                    fontSize: '1.25rem', fontWeight: 900,
+                    color: '#FFFFFF', lineHeight: 1, letterSpacing: '-0.03em'
+                  }}>{s.val}</div>
+                  <div style={{
+                    fontSize: '.68rem', color: 'rgba(220,225,240,0.6)',
+                    fontWeight: 600, marginTop: 3, textTransform: 'uppercase', letterSpacing: '1px'
+                  }}>{s.label}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Scroll indicator */}
+        <div style={{
+          position: 'absolute', bottom: '2.5rem', left: '50%',
+          transform: 'translateX(-50%)', zIndex: 5,
+          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6
+        }}>
+          <span style={{
+            fontSize: '.6rem', color: 'rgba(200,169,110,0.5)',
+            fontWeight: 700, letterSpacing: '2.5px', textTransform: 'uppercase'
+          }}>Discover More</span>
+          <div style={{
+            width: 22, height: 36, border: '1.5px solid rgba(200,169,110,0.25)',
+            borderRadius: 12, display: 'flex', alignItems: 'flex-start',
+            justifyContent: 'center', padding: 4
+          }}>
+            <div style={{
+              width: 3, height: 7,
+              background: 'linear-gradient(to bottom, #C8A96E, rgba(200,169,110,0.3))',
+              borderRadius: 2, animation: 'float 1.6s ease-in-out infinite'
+            }} />
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════
+          MARQUEE TRUST STRIP — warm editorial gold on slate
+      ══════════════════════════════════════════════════════ */}
+      <div style={{
+        background: 'linear-gradient(90deg, #0F172A 0%, #1A2444 50%, #0F172A 100%)',
+        padding: '1rem 0', overflow: 'hidden',
+        borderTop: '1px solid rgba(200,169,110,0.15)',
+        borderBottom: '1px solid rgba(200,169,110,0.15)',
+        display: 'flex', userSelect: 'none'
+      }}>
+        <div className="marquee-track" style={{
+          display: 'flex', whiteSpace: 'nowrap',
+          width: 'max-content', flexShrink: 0
+        }}>
+          {[1, 2].map(track => (
+            <div key={track} aria-hidden={track === 2} style={{
+              display: 'flex', gap: '2.5rem', paddingRight: '2.5rem', flexShrink: 0,
+              alignItems: 'center'
+            }}>
+              {[
+                '⚖️ 1,338+ Verified Advocates',
+                '🏛️ Bar Council Certified',
+                '🔒 End-to-End Encrypted',
+                '🤖 AI Legal Assistant',
+                '📍 100+ Cities',
+                '⏰ 24/7 Emergency Access',
+                '💰 Zero Hidden Fees',
+                '⭐ 4.9★ Client Rating',
+                '🇮🇳 Pan-India Network',
+                '📱 Instant Booking',
+                '🎓 Supreme Court Lawyers',
+                '🏆 India\'s #1 Legal Platform',
+              ].map((txt, i) => (
+                <span key={i} style={{
+                  fontSize: '.72rem', fontWeight: 700,
+                  color: 'rgba(200,169,110,0.75)',
+                  letterSpacing: '1.8px', textTransform: 'uppercase', flexShrink: 0
+                }}>
+                  {txt}
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ══════════════════════════════════════════════════════
+          SECTION 2 — STATS — Marble & Light Architecture
+      ══════════════════════════════════════════════════════ */}
+      <section style={{
+        padding: '0', position: 'relative', overflow: 'hidden',
+        minHeight: 420
+      }}>
+        {/* 4K Unsplash architecture background */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          backgroundImage: 'url(https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop)',
+          backgroundSize: 'cover', backgroundPosition: 'center 40%',
+          zIndex: 0
+        }} />
+        {/* Rich navy overlay preserving image detail */}
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 1,
+          background: 'linear-gradient(135deg, rgba(10,15,40,0.94) 0%, rgba(15,23,60,0.88) 50%, rgba(10,15,40,0.82) 100%)'
+        }} />
+        {/* Gold accent vignette */}
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 1,
+          background: 'radial-gradient(ellipse at 50% 100%, rgba(200,169,110,0.12) 0%, transparent 60%)',
+          pointerEvents: 'none'
+        }} />
+
+        <div className="container" ref={statsRef} style={{ position: 'relative', zIndex: 2, padding: '6rem 0' }}>
+          <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+            <div style={{
+              display: 'inline-block', background: 'rgba(245,196,179,0.08)',
+              border: '1px solid rgba(245,196,179,0.2)', color: '#F5C4B3',
+              fontWeight: 800, fontSize: '.7rem', letterSpacing: '3px',
+              textTransform: 'uppercase', padding: '.4rem 1.1rem', borderRadius: 6, marginBottom: '1.2rem'
+            }}>By The Numbers</div>
+            <h2 style={{
+              fontFamily: "'Plus Jakarta Sans',sans-serif",
+              fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', fontWeight: 900,
+              color: '#fff', letterSpacing: '-0.03em', marginBottom: '.6rem'
+            }}>
+              India's most trusted legal platform
+            </h2>
+            <p style={{ color: 'rgba(245,196,179,0.5)', fontSize: '1rem', maxWidth: 480, margin: '0 auto' }}>
+              Real numbers. Real impact. Real justice for everyday Indians.
+            </p>
+          </div>
+
+          <div className="stats-grid" style={{
+            display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)',
+            gap: '1.5rem', textAlign: 'center'
+          }}>
+            {[
+              { to: 1338, s: '+', label: 'Verified', sub: 'Advocates', icon: <UserCheck size={20} />, color: '#F5C4B3' },
+              { to: 100, s: '+', label: 'Cities', sub: 'Covered', icon: <MapPin size={20} />, color: '#E8A990' },
+              { to: 10000, s: '+', label: 'Citizens', sub: 'Helped', icon: <Users size={20} />, color: '#F5C4B3' },
+              { to: 98, s: '%', label: 'Client', sub: 'Satisfaction', icon: <Heart size={20} />, color: '#E8A990' },
+              { to: 15, s: 'min', label: 'Emergency', sub: 'Response Avg.', icon: <AlertCircle size={20} />, color: '#F5C4B3' },
+            ].map((st, i) => (
+              <div key={i} className="glass-card" style={{
+                padding: '2rem 1.2rem', borderRadius: 20,
+                position: 'relative', overflow: 'hidden',
+                animation: statsVisible ? `countBand 0.6s ${i * 0.1}s both` : 'none'
+              }}>
+                <div style={{
+                  display: 'flex', justifyContent: 'center', marginBottom: 12,
+                  color: st.color, opacity: 0.6
+                }}>{st.icon}</div>
+                <div style={{
+                  fontFamily: "'Sora',sans-serif",
+                  fontSize: 'clamp(2.2rem, 3.5vw, 3.2rem)',
+                  fontWeight: 900, color: st.color, lineHeight: 1,
+                  letterSpacing: '-0.05em', marginBottom: 8
+                }}>
+                  <Counter to={st.to} suffix={st.s} />
+                </div>
+                <div style={{
+                  fontSize: '.78rem', fontWeight: 800, color: '#fff',
+                  textTransform: 'uppercase', letterSpacing: '1.5px'
+                }}>{st.label}</div>
+                <div style={{
+                  fontSize: '.66rem', color: 'rgba(245,196,179,0.4)',
+                  marginTop: 4, fontWeight: 600
+                }}>{st.sub}</div>
               </div>
             ))}
           </div>
@@ -651,55 +1052,1112 @@ export default function Home() {
       </section>
 
       {/* ══════════════════════════════════════════════════════
-          SECTION 8 — FINAL CALL TO ACTION (DUAL)
+          SECTION 3 — HOW IT WORKS (cinematic)
       ══════════════════════════════════════════════════════ */}
-      <section style={{ padding: '6rem 0', background: 'var(--bg-white)', borderTop: '1px solid rgba(0,0,0,0.05)' }}>
-        <div className="container">
-          <div style={{ 
-            background: 'var(--bur)', borderRadius: 32, overflow: 'hidden', 
-            display: 'flex', flexWrap: 'wrap', position: 'relative'
+      <section style={{ padding: '8rem 0', position: 'relative', overflow: 'hidden' }}>
+        <div style={{
+          position: 'absolute', inset: 0,
+          backgroundImage: 'url(/images/bg-how-it-works.jpg)',
+          backgroundSize: 'cover', backgroundPosition: 'center',
+          filter: 'brightness(0.3)', zIndex: 0
+        }} />
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 1,
+          background: 'linear-gradient(180deg, #060103 0%, rgba(6,1,3,0.85) 50%, #060103 100%)'
+        }} />
+
+        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
+          <div style={{ textAlign: 'center', marginBottom: '5rem' }}>
+            <div style={{
+              display: 'inline-block', background: 'rgba(245,196,179,0.08)',
+              border: '1px solid rgba(245,196,179,0.2)', color: '#F5C4B3',
+              fontWeight: 800, fontSize: '.7rem', letterSpacing: '3px',
+              textTransform: 'uppercase', padding: '.4rem 1.1rem', borderRadius: 6, marginBottom: '1.2rem'
+            }}>How It Works</div>
+            <h2 style={{
+              fontFamily: "'Plus Jakarta Sans',sans-serif",
+              fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 900,
+              color: '#fff', letterSpacing: '-0.03em', marginBottom: '.6rem'
+            }}>
+              Justice, simplified.
+            </h2>
+            <p style={{ color: 'rgba(245,196,179,0.5)', fontSize: '1.1rem', maxWidth: 600, margin: '0 auto' }}>
+              Your journey from distress to resolution in three transparent steps.
+            </p>
+          </div>
+
+          <div className="step-grid" style={{
+            display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)',
+            gap: '2rem', position: 'relative'
           }}>
-            {/* Soft decorative background circles */}
-            <div style={{ position: 'absolute', top: '-20%', left: '-10%', width: 300, height: 300, borderRadius: '50%', background: 'rgba(255,255,255,0.05)', pointerEvents: 'none' }} />
-            <div style={{ position: 'absolute', bottom: '-20%', right: '-10%', width: 400, height: 400, borderRadius: '50%', background: 'rgba(0,0,0,0.1)', pointerEvents: 'none' }} />
+            {/* Connector line */}
+            <div style={{
+              position: 'absolute', top: 36, left: '12.5%', right: '12.5%',
+              height: 2,
+              background: 'linear-gradient(90deg, transparent, rgba(245,196,179,0.15) 20%, rgba(245,196,179,0.15) 80%, transparent)',
+              zIndex: 0
+            }} className="mobile-hide" />
 
-            {/* Client Side */}
-            <div style={{ flex: '1 1 400px', padding: '4rem', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', position: 'relative', zIndex: 1 }}>
-              <div style={{ background: 'rgba(255,255,255,0.15)', padding: '12px', borderRadius: 16, marginBottom: 24, color: '#fff' }}>
-                <Search size={32} />
+            {[
+              { n: '01', icon: <Search size={24} />, title: 'Search', desc: 'Enter your city and legal issue. Our AI instantly matches you with verified advocates — no spam.' },
+              { n: '02', icon: <BarChart2 size={24} />, title: 'Compare', desc: 'View full profiles with experience, published fees, ratings, and real availability. 100% transparent.' },
+              { n: '03', icon: <Calendar size={24} />, title: 'Book & Meet', desc: 'Pick your slot. Meet via encrypted video or in-person. Pay exactly what was shown.' },
+              { n: '04', icon: <Activity size={24} />, title: 'Track Progress', desc: 'Get live case updates from your lawyer on your dashboard. Always know where your case stands.' },
+            ].map((step, i) => (
+              <div key={i} style={{ textAlign: 'center', position: 'relative', zIndex: 1 }}>
+                <div className="step-num">{step.n}</div>
+                <div className="step-icon-wrap" style={{
+                  width: 72, height: 72, borderRadius: '50%',
+                  background: 'linear-gradient(135deg, rgba(245,196,179,0.15), rgba(245,196,179,0.05))',
+                  border: '1.5px solid rgba(245,196,179,0.2)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  margin: '0 auto 1.8rem', position: 'relative',
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
+                  transition: 'all 0.35s ease'
+                }}>
+                  <span style={{ position: 'absolute', top: -9, right: -9, width: 24, height: 24,
+                    borderRadius: '50%', background: '#F5C4B3', color: '#060103',
+                    fontSize: '.6rem', fontWeight: 900, fontFamily: "'Sora',sans-serif",
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
+                    border: '2px solid #060103', zIndex: 2, letterSpacing: '-0.02em'
+                  }}>{step.n}</span>
+                  <span style={{ color: '#F5C4B3' }}>{step.icon}</span>
+                </div>
+                <h3 style={{
+                  fontFamily: "'Plus Jakarta Sans',sans-serif",
+                  fontSize: '1.15rem', fontWeight: 900,
+                  color: '#fff', marginBottom: 10
+                }}>{step.title}</h3>
+                <p style={{ fontSize: '.88rem', color: 'rgba(249,238,228,0.6)', lineHeight: 1.78, margin: 0 }}>{step.desc}</p>
               </div>
-              <h2 style={{ fontSize: '2.4rem', fontWeight: 800, color: '#fff', marginBottom: 16, lineHeight: 1.1 }}>Need Legal Help?</h2>
-              <p style={{ fontSize: '1.1rem', color: 'rgba(255,255,255,0.8)', marginBottom: 32, lineHeight: 1.6 }}>Find the right advocate, compare transparent pricing, and book an instant secure consultation.</p>
-              <Link to="/search" className="cta-btn" style={{ 
-                background: '#fff', color: 'var(--bur)', padding: '16px 32px', borderRadius: 12, 
-                fontWeight: 700, fontSize: '1.1rem', display: 'inline-flex', alignItems: 'center', gap: 8, textDecoration: 'none' 
-              }}>
-                Find a Lawyer <ArrowRight size={18} />
-              </Link>
-            </div>
+            ))}
+          </div>
 
-            {/* Divider */}
-            <div style={{ width: 1, background: 'rgba(255,255,255,0.15)' }} />
-
-            {/* Lawyer Side */}
-            <div style={{ flex: '1 1 400px', padding: '4rem', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', position: 'relative', zIndex: 1 }}>
-              <div style={{ background: 'rgba(255,255,255,0.15)', padding: '12px', borderRadius: 16, marginBottom: 24, color: '#fff' }}>
-                <Gavel size={32} />
-              </div>
-              <h2 style={{ fontSize: '2.4rem', fontWeight: 800, color: '#fff', marginBottom: 16, lineHeight: 1.1 }}>Are You an Advocate?</h2>
-              <p style={{ fontSize: '1.1rem', color: 'rgba(255,255,255,0.8)', marginBottom: 32, lineHeight: 1.6 }}>Join India's fastest-growing legal network. Digitize your practice, gain verified clients, and guarantee payments.</p>
-              <Link to="/join-as-lawyer" className="cta-btn" style={{ 
-                background: 'transparent', color: '#fff', border: '2px solid rgba(255,255,255,0.4)', padding: '14px 32px', borderRadius: 12, 
-                fontWeight: 700, fontSize: '1.1rem', display: 'inline-flex', alignItems: 'center', gap: 8, textDecoration: 'none' 
-              }}>
-                Join the Network <ChevronRight size={18} />
-              </Link>
-            </div>
-
+          <div style={{ textAlign: 'center', marginTop: '4.5rem' }}>
+            <Link to="/search" style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              background: 'linear-gradient(135deg, #F5C4B3, #E8A990)',
+              color: '#060103', fontWeight: 800, fontSize: '1.05rem',
+              padding: '1.1rem 2.8rem', borderRadius: 16, textDecoration: 'none',
+              boxShadow: '0 12px 32px rgba(245,196,179,0.2)',
+              transition: 'all 0.25s ease'
+            }} className="cta-btn">
+              Start Now — It's Free <ArrowRight size={18} />
+            </Link>
           </div>
         </div>
       </section>
 
+      {/* ══════════════════════════════════════════════════════
+          SECTION 4 — PRACTICE AREAS (image cards)
+      ══════════════════════════════════════════════════════ */}
+      <section style={{ padding: '7rem 0', position: 'relative', overflow: 'hidden' }}>
+        <div style={{
+          position: 'absolute', inset: 0,
+          backgroundImage: 'url(/images/bg-practice-areas.jpg)',
+          backgroundSize: 'cover', backgroundPosition: 'center',
+          filter: 'brightness(0.2)', zIndex: 0
+        }} />
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 1,
+          background: 'linear-gradient(180deg, #060103 0%, rgba(6,1,3,0.75) 50%, #060103 100%)'
+        }} />
+        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
+          <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+            <div style={{
+              display: 'inline-block', background: 'rgba(245,196,179,0.08)',
+              border: '1px solid rgba(245,196,179,0.2)', color: '#F5C4B3',
+              fontWeight: 800, fontSize: '.7rem', letterSpacing: '3px',
+              textTransform: 'uppercase', padding: '.4rem 1.1rem', borderRadius: 6, marginBottom: '1.2rem'
+            }}>All Legal Matters</div>
+            <h2 style={{
+              fontFamily: "'Plus Jakarta Sans',sans-serif",
+              fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', fontWeight: 900,
+              color: '#fff', letterSpacing: '-0.03em', marginBottom: '.6rem'
+            }}>
+              Expertise that <span style={{ color: '#F5C4B3' }}>wins cases</span>.
+            </h2>
+            <p style={{ color: 'rgba(249,238,228,0.6)', fontSize: '1.05rem', maxWidth: 600, margin: '0 auto' }}>
+              We have specialized top-tier advocates for every legal domain.
+            </p>
+          </div>
+
+          <div className="area-grid" style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))',
+            gap: '1.1rem'
+          }}>
+            {AREAS.map((a, i) => (
+              <Link
+                key={i}
+                to={`/search?specialization=${encodeURIComponent(a.name)}`}
+                style={{ textDecoration: 'none' }}
+              >
+                <div className="area-card" style={{
+                  position: 'relative', height: 230, borderRadius: 20,
+                  overflow: 'hidden', cursor: 'pointer',
+                  boxShadow: '0 8px 28px rgba(0,0,0,0.22)'
+                }}>
+                  {/* Card background image */}
+                  <div
+                    className="area-card-bg"
+                    style={{
+                      position: 'absolute', inset: 0, zIndex: 0,
+                      backgroundImage: `url(${a.bgImg})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      transition: 'transform 0.55s ease'
+                    }}
+                  />
+                  {/* Dark gradient overlay */}
+                  <div style={{
+                    position: 'absolute', inset: 0, zIndex: 1,
+                    background: 'linear-gradient(180deg, rgba(6,1,3,0.30) 0%, rgba(6,1,3,0.88) 100%)'
+                  }} />
+                  {/* Hover color tint */}
+                  <div className="area-overlay" style={{
+                    position: 'absolute', inset: 0, zIndex: 2,
+                    background: a.grad.replace('linear-gradient', 'linear-gradient').replace(')', ', rgba(0,0,0,0))'),
+                    opacity: 0, transition: 'opacity 0.38s ease'
+                  }} />
+                  {/* Content */}
+                  <div style={{
+                    position: 'relative', zIndex: 3, height: '100%',
+                    padding: '1.5rem', display: 'flex',
+                    flexDirection: 'column', justifyContent: 'flex-end'
+                  }}>
+                    <div style={{
+                      fontSize: '2.1rem', marginBottom: 10,
+                      filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.5))'
+                    }}>{a.emoji}</div>
+                    <div style={{
+                      fontFamily: "'Plus Jakarta Sans',sans-serif",
+                      fontWeight: 800, color: '#fff', fontSize: '.98rem', marginBottom: 5
+                    }}>{a.name}</div>
+                    <div style={{ fontSize: '.74rem', color: 'rgba(255,255,255,0.65)', lineHeight: 1.5 }}>{a.desc}</div>
+                    <div className="area-arrow" style={{
+                      display: 'flex', alignItems: 'center', gap: 4,
+                      color: '#F5C4B3', fontSize: '.7rem',
+                      fontWeight: 800, marginTop: 12,
+                      textTransform: 'uppercase', letterSpacing: '1px',
+                      opacity: 0, transition: 'all 0.35s ease'
+                    }}>
+                      Find Advocate <ChevronRight size={11} />
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          <div style={{ textAlign: 'center', marginTop: '3rem' }}>
+            <Link to="/search" style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              border: '2px solid #F5C4B3', color: '#F5C4B3',
+              fontWeight: 800, fontSize: '.95rem',
+              padding: '.9rem 2.2rem', borderRadius: 14, textDecoration: 'none',
+              transition: 'all 0.25s ease'
+            }} className="cta-btn">
+              See All Specializations <ChevronRight size={16} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════
+          SECTION 5 — WHY JUSTICE JUNCTION (dark bg with law books image)
+      ══════════════════════════════════════════════════════ */}
+      <section style={{ padding: '0', position: 'relative', overflow: 'hidden', minHeight: 600 }}>
+        {/* Split layout — left text, right image */}
+        <div style={{
+          position: 'absolute', right: 0, top: 0, bottom: 0, width: '45%', zIndex: 0
+        }}>
+          <div style={{
+            position: 'absolute', inset: 0,
+            backgroundImage: 'url(/images/bg-why-us.jpg)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            filter: 'brightness(0.6)'
+          }} />
+          <div style={{
+            position: 'absolute', inset: 0,
+            background: 'linear-gradient(90deg, #060103 0%, rgba(6,1,3,0.6) 50%, transparent 100%)'
+          }} />
+        </div>
+
+        <div className="container" ref={whyRef} style={{ position: 'relative', zIndex: 1, padding: '8rem 0' }}>
+          <div style={{ maxWidth: 680 }}>
+            <div style={{
+              display: 'inline-block', background: 'rgba(245,196,179,0.08)',
+              border: '1px solid rgba(245,196,179,0.2)', color: '#F5C4B3',
+              fontWeight: 800, fontSize: '.7rem', letterSpacing: '3px',
+              textTransform: 'uppercase', padding: '.4rem 1.1rem', borderRadius: 6, marginBottom: '1.2rem'
+            }}>Why Choose Us</div>
+            <h2 style={{
+              fontFamily: "'Plus Jakarta Sans',sans-serif",
+              fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 900,
+              color: '#fff', letterSpacing: '-0.03em', lineHeight: 1.15,
+              marginBottom: '1.5rem'
+            }}>
+              We don't just find you a lawyer. We find the <span style={{ color: '#F5C4B3' }}>right</span> lawyer.
+            </h2>
+            <p style={{ fontSize: '1.1rem', color: 'rgba(249,238,228,0.7)', marginBottom: '2.5rem', lineHeight: 1.7 }}>
+              Unlike traditional directories, Justice Junction uses AI to match your specific case details with lawyers who have proven track records in exactly your type of legal matter.
+            </p>
+
+            <div className="why-grid" style={{
+              display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)',
+              gap: '1.2rem'
+            }}>
+              {[
+                { icon: <BadgeCheck size={20} />, title: 'Bar Council Verified', desc: 'Every advocate passes mandatory verification. No unverified lawyers. Ever.' },
+                { icon: <IndianRupee size={20} />, title: 'Zero Hidden Fees', desc: 'All fees published upfront. You pay only what you see. Zero commission.' },
+                { icon: <Video size={20} />, title: 'Encrypted Video Calls', desc: 'End-to-end encrypted. Your case stays 100% private.' },
+                { icon: <Activity size={20} />, title: 'Live Case Updates', desc: 'Your lawyer posts live progress to your dashboard. No more chasing calls.' },
+                { icon: <Globe size={20} />, title: 'Pan-India Network', desc: '1,338+ advocates in 100+ cities. Local expertise or remote consultation.' },
+                { icon: <Clock size={20} />, title: '24/7 Emergency Access', desc: 'Bail hearings don\'t wait. Emergency advocates respond in 15 minutes.' },
+                { icon: <Bot size={20} />, title: 'Free AI Legal Assistant', desc: 'Trained on Indian Bare Acts. Instant answers, any time of day.' },
+                { icon: <FileText size={20} />, title: 'Free Legal Documents', desc: 'RTI, notices, FIR drafts, contracts — India-specific templates, free.' },
+              ].map((f, i) => (
+                <div
+                  key={i}
+                  className={`why-card${whyVisible ? ' revealed' : ''}`}
+                  style={{
+                    background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)',
+                    borderRadius: 18, padding: '1.5rem',
+                    boxShadow: '0 4px 16px rgba(0,0,0,0.05)',
+                    opacity: whyVisible ? 1 : 0,
+                    animationDelay: whyVisible ? `${i * 0.07}s` : '0s',
+                    transition: 'border-color 0.3s ease, box-shadow 0.3s ease'
+                  }}
+                >
+                  <div style={{
+                    width: 44, height: 44, borderRadius: 12,
+                    background: 'rgba(123,29,46,0.07)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    color: 'var(--bur)', marginBottom: '1rem',
+                    border: '1.5px solid rgba(123,29,46,0.10)'
+                  }}>{f.icon}</div>
+                  <h3 style={{
+                    fontFamily: "'Plus Jakarta Sans',sans-serif",
+                    fontSize: '.95rem', fontWeight: 800, color: 'var(--txt)', marginBottom: 6
+                  }}>{f.title}</h3>
+                  <p style={{ fontSize: '.83rem', color: 'var(--txt-3)', lineHeight: 1.75, margin: 0 }}>{f.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════
+          SECTION 6 — AI LEGAL TOOLS SHOWCASE
+      ══════════════════════════════════════════════════════ */}
+      <section style={{ padding: '8rem 0', position: 'relative', overflow: 'hidden' }}>
+        <div style={{
+          position: 'absolute', inset: 0,
+          backgroundImage: 'url(/images/bg-tools.jpg)',
+          backgroundSize: 'cover', backgroundPosition: 'center',
+          filter: 'brightness(0.2)', opacity: 0.6, zIndex: 0
+        }} />
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 1,
+          background: 'linear-gradient(180deg, #060103 0%, rgba(6,1,3,0.7) 50%, #060103 100%)'
+        }} />
+        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
+          <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+            <div style={{
+              display: 'inline-block', background: 'rgba(245,196,179,0.08)',
+              border: '1px solid rgba(245,196,179,0.2)', color: '#F5C4B3',
+              fontWeight: 800, fontSize: '.7rem', letterSpacing: '3px',
+              textTransform: 'uppercase', padding: '.4rem 1.1rem', borderRadius: 6, marginBottom: '1.2rem'
+            }}>Legal Toolkit</div>
+            <h2 style={{
+              fontFamily: "'Plus Jakarta Sans',sans-serif",
+              fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 900,
+              color: '#fff', letterSpacing: '-0.03em', marginBottom: '.6rem'
+            }}>
+              More than a directory.{' '}
+              <span style={{ color: '#F5C4B3' }}>A complete legal platform.</span>
+            </h2>
+            <p style={{ color: 'rgba(249,238,228,0.7)', fontSize: '1.1rem', maxWidth: 650, margin: '0 auto', lineHeight: 1.7 }}>
+              Tools built for everyday Indians navigating the legal system — free to access.
+            </p>
+          </div>
+
+          <div className="tools-grid" style={{
+            display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)',
+            gap: '1.5rem'
+          }}>
+            {[
+              {
+                icon: <FileText size={28} />,
+                title: 'Document Generator',
+                desc: 'RTI applications, demand notices, FIR drafts, contracts — India-specific templates, completely free.',
+                link: '/document-generator',
+                action: null,
+                cta: 'Generate Free',
+                accent: 'var(--bur)',
+                bg: 'rgba(123,29,46,0.06)'
+              },
+              {
+                icon: <BookOpen size={28} />,
+                title: 'Knowledge Hub',
+                desc: 'Plain-language guides on your rights under Indian law — bail, property, consumer, divorce and more.',
+                link: '/knowledge-hub',
+                action: null,
+                cta: 'Read Guides',
+                accent: '#1A3A6B',
+                bg: 'rgba(26,58,107,0.06)'
+              },
+              {
+                icon: <Bot size={28} />,
+                title: 'AI Legal Assistant',
+                desc: 'Trained on Indian Bare Acts. Ask about your rights, get instant answers, and find the right specialist.',
+                link: null,
+                action: () => window.dispatchEvent(new CustomEvent('open-ai-chat')),
+                cta: 'Ask for Free',
+                accent: '#6B2D6B',
+                bg: 'rgba(107,45,107,0.06)'
+              },
+              {
+                icon: <Award size={28} />,
+                title: 'Subscription Plans',
+                desc: 'Premium plans for advocates to grow their practice with featured listings, analytics & priority placement.',
+                link: '/subscriptions',
+                action: null,
+                cta: 'View Plans',
+                accent: '#1A6B3A',
+                bg: 'rgba(26,107,58,0.06)'
+              }
+            ].map((tool, i) => (
+              <div
+                key={i}
+                className="tool-card"
+                onClick={tool.action || undefined}
+                style={{
+                  background: 'rgba(255,255,255,0.05)',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  borderRadius: 22, padding: '2.2rem',
+                  transition: 'all 0.3s cubic-bezier(.23,1,.32,1)',
+                  cursor: tool.action ? 'pointer' : 'default',
+                  display: 'flex', flexDirection: 'column', gap: 0,
+                  boxShadow: '0 10px 40px rgba(0,0,0,0.2)'
+                }}
+              >
+                <div style={{
+                  width: 62, height: 62, borderRadius: 18,
+                  background: 'rgba(245,196,179,0.1)', color: '#F5C4B3',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  marginBottom: '1.3rem',
+                  boxShadow: '0 4px 16px rgba(0,0,0,0.15)'
+                }}>
+                  {tool.icon}
+                </div>
+                <h3 style={{
+                  fontFamily: "'Plus Jakarta Sans',sans-serif",
+                  fontSize: '1.25rem', fontWeight: 800,
+                  color: '#fff', marginBottom: '.65rem'
+                }}>{tool.title}</h3>
+                <p style={{
+                  fontSize: '.88rem', color: 'rgba(249,238,228,0.7)',
+                  lineHeight: 1.78, flex: 1, marginBottom: '1.5rem'
+                }}>{tool.desc}</p>
+                {tool.link ? (
+                  <Link to={tool.link} style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 6,
+                    color: '#F5C4B3', fontWeight: 700, fontSize: '.85rem',
+                    textDecoration: 'none', transition: 'gap 0.2s ease'
+                  }}>
+                    {tool.cta} <ArrowRight size={14} />
+                  </Link>
+                ) : (
+                  <button onClick={tool.action} style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 6,
+                    color: '#F5C4B3', fontWeight: 700, fontSize: '.85rem',
+                    background: 'none', border: 'none', cursor: 'pointer',
+                    padding: 0, transition: 'gap 0.2s ease'
+                  }}>
+                    {tool.cta} <ArrowRight size={14} />
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════
+          SECTION 7 — TESTIMONIALS (dark cinematic)
+      ══════════════════════════════════════════════════════ */}
+      <section style={{ padding: '0', position: 'relative', overflow: 'hidden', minHeight: 600 }}>
+        {/* BG Image */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          backgroundImage: 'url(/images/city-night.jpg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          filter: 'brightness(0.2)',
+          zIndex: 0
+        }} />
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 1,
+          background: 'linear-gradient(160deg, rgba(6,1,3,0.96) 0%, rgba(26,10,13,0.92) 100%)'
+        }} />
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 1,
+          background: 'radial-gradient(ellipse at 50% 100%, rgba(123,29,46,0.20) 0%, transparent 60%)',
+          pointerEvents: 'none'
+        }} />
+
+        <div className="container" style={{ position: 'relative', zIndex: 2, padding: '8rem 0' }}>
+          <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: 3, marginBottom: '1rem' }}>
+              {[1,2,3,4,5].map(n => <Star key={n} size={18} fill="#FCD34D" color="#FCD34D" />)}
+              <span style={{
+                fontFamily: "'Sora',sans-serif", fontSize: '1rem',
+                fontWeight: 700, color: '#FCD34D', marginLeft: 8, alignSelf: 'center'
+              }}>4.9 / 5.0</span>
+            </div>
+            <div style={{
+              display: 'inline-block', background: 'rgba(245,196,179,0.08)',
+              border: '1px solid rgba(245,196,179,0.2)', color: '#F5C4B3',
+              fontWeight: 800, fontSize: '.7rem', letterSpacing: '3px',
+              textTransform: 'uppercase', padding: '.4rem 1.1rem', borderRadius: 6, marginBottom: '1.2rem'
+            }}>Real Client Stories</div>
+            <h2 style={{
+              fontFamily: "'Plus Jakarta Sans',sans-serif",
+              fontSize: 'clamp(1.9rem, 3.5vw, 2.8rem)', fontWeight: 900,
+              color: '#fff', letterSpacing: '-0.03em'
+            }}>
+              Trusted by <span style={{ color: '#F5C4B3' }}>thousands</span> across India.
+            </h2>
+          </div>
+
+          <div
+            ref={carouselRef}
+            tabIndex={0}
+            onKeyDown={handleCarouselKey}
+            onMouseEnter={() => setReviewPaused(true)}
+            onMouseLeave={() => setReviewPaused(false)}
+            onFocus={() => setReviewPaused(true)}
+            onBlur={() => setReviewPaused(false)}
+            style={{ position: 'relative', outline: 'none', borderRadius: 28 }}
+            aria-label="Client testimonials carousel. Use left and right arrow keys to navigate."
+            aria-live="polite"
+          >
+            <div style={{
+              background: 'rgba(255,255,255,0.05)',
+              backdropFilter: 'blur(20px)',
+              border: '1px solid rgba(255,255,255,0.10)',
+              borderRadius: 28,
+              padding: 'clamp(2.5rem, 5vw, 4rem)',
+              maxWidth: 860, margin: '0 auto',
+              position: 'relative', overflow: 'hidden',
+              boxShadow: '0 40px 80px rgba(0,0,0,0.4)'
+            }}>
+              {/* Quote mark */}
+              <div style={{
+                position: 'absolute', top: 16, right: 28,
+                fontFamily: "'Georgia',serif",
+                fontSize: '9rem', color: 'rgba(245,196,179,0.06)',
+                lineHeight: 1, pointerEvents: 'none', userSelect: 'none'
+              }}>"</div>
+
+              {/* Stars */}
+              <div style={{ display: 'flex', gap: 4, marginBottom: '1.5rem' }}>
+                {[1,2,3,4,5].map(n => <Star key={n} size={16} fill="#FCD34D" color="#FCD34D" />)}
+              </div>
+
+              {/* Quote */}
+              <p style={{
+                fontSize: 'clamp(1rem, 1.6vw, 1.2rem)', color: 'rgba(249,238,228,0.88)',
+                lineHeight: 1.88, fontStyle: 'italic',
+                marginBottom: '2.5rem', position: 'relative', zIndex: 1,
+                minHeight: '5rem'
+              }}>
+                "{REVIEWS[reviewIdx].text}"
+              </p>
+
+              {/* Author */}
+              <div style={{ display: 'flex', gap: 14, alignItems: 'center' }}>
+                <div style={{
+                  width: 54, height: 54, borderRadius: '50%', flexShrink: 0,
+                  background: 'linear-gradient(135deg, var(--bur), var(--bur-d))',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  color: '#F5C4B3', fontWeight: 900, fontSize: '.95rem',
+                  fontFamily: "'Sora',sans-serif",
+                  border: '2px solid rgba(245,196,179,0.2)'
+                }}>{REVIEWS[reviewIdx].init}</div>
+                <div>
+                  <div style={{ fontWeight: 800, fontSize: '1rem', color: '#fff' }}>
+                    {REVIEWS[reviewIdx].name}
+                  </div>
+                  <div style={{
+                    fontSize: '.76rem', color: 'rgba(245,196,179,0.55)',
+                    display: 'flex', gap: 6, alignItems: 'center', marginTop: 3
+                  }}>
+                    <MapPin size={11} /> {REVIEWS[reviewIdx].city} · {REVIEWS[reviewIdx].role} · Verified Client
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Nav */}
+            <div style={{
+              display: 'flex', justifyContent: 'center',
+              gap: 14, marginTop: '2.5rem', alignItems: 'center'
+            }}>
+              <button
+                onClick={() => setReviewIdx(i => (i - 1 + REVIEWS.length) % REVIEWS.length)}
+                aria-label="Previous testimonial"
+                style={{
+                  width: 44, height: 44, borderRadius: '50%',
+                  border: '1.5px solid rgba(245,196,179,0.2)',
+                  background: 'rgba(255,255,255,0.06)', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  color: 'rgba(245,196,179,0.6)', backdropFilter: 'blur(8px)',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                <ChevronLeft size={18} />
+              </button>
+
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                {REVIEWS.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setReviewIdx(i)}
+                    aria-label={`Go to testimonial ${i + 1}`}
+                    className={`review-dot${i === reviewIdx ? ' active' : ''}`}
+                    style={{
+                      width: i === reviewIdx ? 26 : 8, height: 8,
+                      borderRadius: 4,
+                      background: i === reviewIdx ? '#F5C4B3' : 'rgba(245,196,179,0.2)',
+                      border: 'none', cursor: 'pointer', padding: 0
+                    }}
+                  />
+                ))}
+              </div>
+
+              <button
+                onClick={() => setReviewIdx(i => (i + 1) % REVIEWS.length)}
+                aria-label="Next testimonial"
+                style={{
+                  width: 44, height: 44, borderRadius: '50%',
+                  border: '1.5px solid rgba(245,196,179,0.2)',
+                  background: 'rgba(255,255,255,0.06)', cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  color: 'rgba(245,196,179,0.6)', backdropFilter: 'blur(8px)',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                <ChevronRight size={18} />
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════
+          SECTION 8 — LEGAL NEWS & UPDATES
+      ══════════════════════════════════════════════════════ */}
+      <section style={{ padding: '8rem 0', background: '#060103' }}>
+        <div className="container" ref={newsRef}>
+          <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+            <div style={{
+              display: 'inline-block', background: 'rgba(245,196,179,0.08)',
+              border: '1px solid rgba(245,196,179,0.2)', color: '#F5C4B3',
+              fontWeight: 800, fontSize: '.7rem', letterSpacing: '3px',
+              textTransform: 'uppercase', padding: '.4rem 1.1rem', borderRadius: 6, marginBottom: '1.2rem'
+            }}>Legal Updates</div>
+            <h2 style={{
+              fontFamily: "'Plus Jakarta Sans',sans-serif",
+              fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 900,
+              color: '#fff', letterSpacing: '-0.03em', marginBottom: '.6rem'
+            }}>
+              Stay informed with <span style={{ color: '#F5C4B3' }}>Indian law updates</span>
+            </h2>
+            <p style={{ color: 'rgba(249,238,228,0.7)', fontSize: '1.1rem', maxWidth: 600, margin: '0 auto', lineHeight: 1.7 }}>
+              Landmark judgments, new legislation, and legal developments that affect everyday Indians.
+            </p>
+          </div>
+
+          <div className="news-grid" style={{
+            display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)',
+            gap: '1.2rem'
+          }}>
+            {NEWS.map((item, i) => (
+              <Link
+                key={i}
+                to="/knowledge-hub"
+                className="news-card"
+                style={{
+                  textDecoration: 'none', display: 'block',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  borderRadius: 18, padding: '1.8rem',
+                  background: 'rgba(255,255,255,0.03)',
+                  animation: newsVisible ? `fadeUp 0.6s ${i * 0.1}s both` : 'none',
+                  opacity: newsVisible ? 1 : 0
+                }}
+              >
+                <div style={{
+                  display: 'inline-block',
+                  background: 'rgba(245,196,179,0.1)',
+                  color: '#F5C4B3', fontWeight: 700,
+                  fontSize: '.68rem', letterSpacing: '1.5px',
+                  textTransform: 'uppercase', padding: '.28rem .75rem',
+                  borderRadius: 30, marginBottom: '1rem'
+                }}>{item.tag}</div>
+                <h3 style={{
+                  fontFamily: "'Plus Jakarta Sans',sans-serif",
+                  fontSize: '.95rem', fontWeight: 800,
+                  color: '#fff', lineHeight: 1.55, marginBottom: '1rem'
+                }}>{item.title}</h3>
+                <div style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between'
+                }}>
+                  <span style={{ fontSize: '.72rem', color: 'rgba(249,238,228,0.5)', fontWeight: 600 }}>{item.date}</span>
+                  <ChevronRight size={14} color="#F5C4B3" />
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          <div style={{ textAlign: 'center', marginTop: '3rem' }}>
+            <Link to="/knowledge-hub" style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              border: '2px solid #F5C4B3', color: '#F5C4B3',
+              fontWeight: 800, fontSize: '.95rem',
+              padding: '.9rem 2.2rem', borderRadius: 14, textDecoration: 'none',
+              transition: 'all 0.25s ease'
+            }} className="cta-btn">
+              Browse All Legal Guides <ArrowRight size={16} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════
+          SECTION 9 — FOR LAWYERS (dramatic split)
+      ══════════════════════════════════════════════════════ */}
+      <section style={{ padding: '0', position: 'relative', overflow: 'hidden', minHeight: 600 }}>
+        {/* BG */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          backgroundImage: 'url(/images/hero-scales.jpg)',
+          backgroundSize: 'cover', backgroundPosition: 'center',
+          filter: 'brightness(0.18)',
+          zIndex: 0
+        }} />
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 1,
+          background: 'linear-gradient(135deg, rgba(6,1,3,0.97) 0%, rgba(26,10,13,0.85) 100%)'
+        }} />
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 1,
+          background: 'radial-gradient(ellipse 80% 80% at -10% 50%, rgba(123,29,46,0.30) 0%, transparent 65%)',
+          pointerEvents: 'none'
+        }} />
+
+        <div className="container" style={{ position: 'relative', zIndex: 2, padding: '8rem 0' }}>
+          <div className="lawyer-split" style={{
+            display: 'grid', gridTemplateColumns: '1fr 420px',
+            gap: '5rem', alignItems: 'center'
+          }}>
+            <div>
+              <div style={{
+                display: 'inline-block', background: 'rgba(245,196,179,0.08)',
+                border: '1px solid rgba(245,196,179,0.2)', color: '#F5C4B3',
+                fontWeight: 800, fontSize: '.7rem', letterSpacing: '3px',
+                textTransform: 'uppercase', padding: '.4rem 1.1rem', borderRadius: 6, marginBottom: '1.3rem'
+              }}>For Legal Professionals</div>
+              <h2 style={{
+                fontFamily: "'Plus Jakarta Sans',sans-serif",
+                fontSize: 'clamp(2rem, 3.5vw, 3.2rem)', fontWeight: 900,
+                color: '#fff', lineHeight: 1.1, letterSpacing: '-0.035em',
+                marginBottom: '1.2rem'
+              }}>
+                Are You a Lawyer?<br />
+                <span style={{ color: '#F5C4B3' }}>Grow Your Practice.</span>
+              </h2>
+              <p style={{ fontSize: '1.05rem', color: 'rgba(245,224,200,0.65)', lineHeight: 1.85, marginBottom: '2.5rem', maxWidth: 500 }}>
+                Join 1,338+ verified advocates on Justice Junction. Set your own fees, get quality client bookings 24/7, and manage your entire practice from one powerful dashboard.
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: '2.8rem' }}>
+                {[
+                  'Free profile listing — zero upfront cost',
+                  'You set your own consultation fee',
+                  'Receive verified client bookings 24/7',
+                  'Razorpay-secured payouts within 48 hours',
+                  'Bar Council verified badge on your profile',
+                  'Real-time dashboard for all case tracking'
+                ].map((b, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <div style={{
+                      width: 24, height: 24, borderRadius: '50%',
+                      background: 'rgba(245,196,179,0.12)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0
+                    }}>
+                      <CheckCircle2 size={14} color="#F5C4B3" />
+                    </div>
+                    <span style={{ fontSize: '.92rem', color: 'rgba(245,224,200,0.75)', fontWeight: 600 }}>{b}</span>
+                  </div>
+                ))}
+              </div>
+              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                <Link to="/join-as-lawyer" style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 8,
+                  background: 'var(--bur)', color: '#fff', fontWeight: 800, fontSize: '1rem',
+                  padding: '1.1rem 2.2rem', borderRadius: 14, textDecoration: 'none',
+                  boxShadow: '0 12px 32px rgba(123,29,46,0.45)'
+                }} className="cta-btn">
+                  Join as Advocate — Free <ArrowRight size={16} />
+                </Link>
+                <Link to="/lawyer-plans" style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 8,
+                  border: '1.5px solid rgba(245,196,179,0.3)', color: '#F5C4B3',
+                  fontWeight: 700, fontSize: '1rem',
+                  padding: '1.1rem 2rem', borderRadius: 14, textDecoration: 'none',
+                  background: 'rgba(245,196,179,0.06)',
+                  backdropFilter: 'blur(8px)'
+                }} className="cta-btn">
+                  View Plans
+                </Link>
+              </div>
+            </div>
+
+            {/* Earnings card */}
+            <div style={{
+              background: 'rgba(255,255,255,0.04)',
+              backdropFilter: 'blur(24px)',
+              border: '1px solid rgba(245,196,179,0.15)',
+              borderRadius: 28, padding: '3rem 2.5rem', color: '#fff',
+              boxShadow: '0 40px 80px rgba(0,0,0,0.5)',
+              position: 'relative', overflow: 'hidden'
+            }}>
+              <div style={{
+                position: 'absolute', inset: 0, opacity: 0.03,
+                backgroundImage: 'repeating-linear-gradient(45deg,#fff 0,#fff 1px,transparent 0,transparent 50%)',
+                backgroundSize: '20px 20px', pointerEvents: 'none'
+              }} />
+              <div style={{ position: 'relative', zIndex: 1 }}>
+                <div style={{
+                  fontSize: '.68rem', fontWeight: 800, color: 'rgba(245,196,179,0.6)',
+                  textTransform: 'uppercase', letterSpacing: '2.5px', marginBottom: 10
+                }}>Pro Plan — Avg. Monthly Earnings</div>
+                <div style={{
+                  fontFamily: "'Sora',sans-serif",
+                  fontSize: 'clamp(2rem, 3vw, 2.8rem)',
+                  fontWeight: 900, color: '#fff',
+                  letterSpacing: '-0.04em', marginBottom: 5
+                }}>₹45K – ₹75K</div>
+                <div style={{ fontSize: '.76rem', color: 'rgba(245,196,179,0.45)', marginBottom: '2.2rem' }}>
+                  Based on 15–30 consultations at ₹2,500 avg
+                </div>
+                <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '1.8rem' }}>
+                  <div style={{
+                    display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)',
+                    gap: '1rem', textAlign: 'center', marginBottom: '2rem'
+                  }}>
+                    {[['48h', 'Verification'], ['₹0', 'Upfront Cost'], ['Free', 'Registration']].map(([v, l], i) => (
+                      <div key={i}>
+                        <div style={{
+                          fontFamily: "'Sora',sans-serif", fontSize: '1.6rem',
+                          fontWeight: 900, color: '#F5C4B3', letterSpacing: '-0.03em'
+                        }}>{v}</div>
+                        <div style={{
+                          fontSize: '.66rem', color: 'rgba(245,196,179,0.45)',
+                          fontWeight: 700, marginTop: 5, textTransform: 'uppercase', letterSpacing: '1px'
+                        }}>{l}</div>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{
+                    background: 'rgba(123,29,46,0.35)',
+                    border: '1px solid rgba(245,196,179,0.15)',
+                    borderRadius: 12, padding: '1rem',
+                    marginBottom: '1rem'
+                  }}>
+                    {[
+                      { label: 'This Month Bookings', val: '12 clients' },
+                      { label: 'Avg. Rating', val: '4.9 ★' },
+                      { label: 'Response Rate', val: '97%' },
+                    ].map((stat, i) => (
+                      <div key={i} style={{
+                        display: 'flex', justifyContent: 'space-between',
+                        alignItems: 'center', padding: '.5rem 0',
+                        borderBottom: i < 2 ? '1px solid rgba(255,255,255,0.05)' : 'none'
+                      }}>
+                        <span style={{ fontSize: '.78rem', color: 'rgba(245,196,179,0.5)', fontWeight: 600 }}>{stat.label}</span>
+                        <span style={{ fontSize: '.78rem', color: '#F5C4B3', fontWeight: 800 }}>{stat.val}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <Link to="/join-as-lawyer" style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                    background: 'var(--bur)', border: 'none',
+                    color: '#fff', fontWeight: 800, fontSize: '.92rem',
+                    padding: '1rem', borderRadius: 12, textDecoration: 'none',
+                    boxShadow: '0 8px 24px rgba(123,29,46,0.4)'
+                  }}>
+                    Apply Now — Takes 2 Minutes <ChevronRight size={16} />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════
+          SECTION 10 — LIVE STATS BAND
+      ══════════════════════════════════════════════════════ */}
+      <section style={{
+        padding: '5rem 0',
+        background: 'var(--bur)',
+        position: 'relative', overflow: 'hidden'
+      }}>
+        <div style={{
+          position: 'absolute', inset: 0, opacity: 0.05,
+          backgroundImage: 'repeating-linear-gradient(45deg,#fff 0,#fff 1px,transparent 0,transparent 50%)',
+          backgroundSize: '24px 24px', pointerEvents: 'none'
+        }} />
+        <div style={{
+          position: 'absolute', top: '50%', left: '50%',
+          transform: 'translate(-50%,-50%)',
+          width: 900, height: 900,
+          background: 'radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 65%)',
+          borderRadius: '50%', pointerEvents: 'none'
+        }} />
+        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+          <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+            <div style={{
+              display: 'inline-block', background: 'rgba(255,255,255,0.12)',
+              border: '1px solid rgba(255,255,255,0.2)', color: '#fff',
+              fontWeight: 800, fontSize: '.7rem', letterSpacing: '3px',
+              textTransform: 'uppercase', padding: '.4rem 1.1rem', borderRadius: 6, marginBottom: '1rem'
+            }}>Live Impact</div>
+            <h2 style={{
+              fontFamily: "'Plus Jakarta Sans',sans-serif",
+              fontSize: 'clamp(1.6rem, 3vw, 2.2rem)',
+              fontWeight: 900, color: '#fff', letterSpacing: '-0.03em'
+            }}>
+              Real people. Real results.
+            </h2>
+          </div>
+
+          <div className="stats-band-grid" style={{
+            display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)',
+            gap: '2rem', textAlign: 'center'
+          }}>
+            {[
+              { to: 1338, s: '+', label: 'Lawyers Onboarded' },
+              { to: 10000, s: '+', label: 'Cases Resolved' },
+              { to: 100, s: '+', label: 'Cities Covered' },
+              { to: 4.9, s: '★', label: 'Average Rating', fixed: true },
+            ].map((st, i) => (
+              <div key={i} style={{ padding: '1rem' }}>
+                <div style={{
+                  fontFamily: "'Sora',sans-serif",
+                  fontSize: 'clamp(2.2rem, 3.5vw, 3.2rem)',
+                  fontWeight: 900, color: '#fff', lineHeight: 1,
+                  letterSpacing: '-0.05em', marginBottom: 8
+                }}>
+                  {st.fixed ? <span>4.9{st.s}</span> : <Counter to={st.to} suffix={st.s} />}
+                </div>
+                <div style={{
+                  fontSize: '.82rem', fontWeight: 700, color: 'rgba(255,255,255,0.7)',
+                  textTransform: 'uppercase', letterSpacing: '1.5px'
+                }}>{st.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════
+          SECTION 11 — FINAL CTA (dual, dark)
+      ══════════════════════════════════════════════════════ */}
+      <section style={{
+        padding: '7rem 0', position: 'relative', overflow: 'hidden',
+        background: '#060103'
+      }}>
+        {/* BG */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          backgroundImage: 'url(/images/hero-scales.jpg)',
+          backgroundSize: 'cover', backgroundPosition: 'center',
+          opacity: 0.08, zIndex: 0
+        }} />
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 1,
+          background: 'radial-gradient(ellipse at 50% 0%, rgba(123,29,46,0.18) 0%, transparent 60%)',
+          pointerEvents: 'none'
+        }} />
+
+        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
+          <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+            <div style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              background: 'rgba(245,196,179,0.08)', border: '1px solid rgba(245,196,179,0.2)',
+              borderRadius: 30, padding: '.42rem 1.2rem', marginBottom: '1.8rem'
+            }}>
+              <Scale size={13} color="#F5C4B3" />
+              <span style={{
+                fontSize: '.7rem', fontWeight: 800, color: '#F5C4B3',
+                textTransform: 'uppercase', letterSpacing: '2.5px'
+              }}>Justice for Every Indian</span>
+            </div>
+            <h2 style={{
+              fontFamily: "'Plus Jakarta Sans',sans-serif",
+              fontSize: 'clamp(2rem, 4.5vw, 3.8rem)',
+              fontWeight: 900, color: '#fff',
+              letterSpacing: '-0.04em', lineHeight: 1.1,
+              marginBottom: '1rem'
+            }}>
+              Ready to resolve your{' '}
+              <span style={{ color: '#F5C4B3' }}>legal matters?</span>
+            </h2>
+            <p style={{
+              fontSize: '1.05rem', color: 'rgba(245,224,200,0.5)',
+              maxWidth: 500, margin: '0 auto', lineHeight: 1.8
+            }}>
+              Free to sign up. No hidden fees. Legal help in under 15 minutes.
+            </p>
+          </div>
+
+          <div className="final-cta-split" style={{
+            display: 'grid', gridTemplateColumns: '1fr 1fr',
+            maxWidth: 940, margin: '0 auto',
+            border: '1px solid rgba(245,196,179,0.10)',
+            borderRadius: 30, overflow: 'hidden',
+            boxShadow: '0 40px 80px rgba(0,0,0,0.4)'
+          }}>
+            {/* Client CTA */}
+            <div style={{
+              padding: '3.5rem 3rem',
+              background: 'linear-gradient(160deg, var(--bur) 0%, var(--bur-d) 100%)',
+              textAlign: 'center', position: 'relative', overflow: 'hidden'
+            }}>
+              <div style={{
+                position: 'absolute', inset: 0,
+                backgroundImage: 'url(/images/hero-courtroom.jpg)',
+                backgroundSize: 'cover',
+                opacity: 0.08, mixBlendMode: 'luminosity'
+              }} />
+              <div style={{ position: 'relative', zIndex: 1 }}>
+                <div style={{
+                  width: 64, height: 64, borderRadius: 20,
+                  background: 'rgba(255,255,255,0.12)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  margin: '0 auto 1.8rem', color: '#F5C4B3'
+                }}>
+                  <Search size={28} />
+                </div>
+                <div style={{
+                  fontSize: '.68rem', fontWeight: 800, color: 'rgba(245,196,179,0.7)',
+                  textTransform: 'uppercase', letterSpacing: '2.5px', marginBottom: 14
+                }}>For Clients</div>
+                <h3 style={{
+                  fontFamily: "'Plus Jakarta Sans',sans-serif",
+                  fontSize: '1.6rem', fontWeight: 900, color: '#fff',
+                  marginBottom: '1.1rem', lineHeight: 1.2
+                }}>Find Your Lawyer Today</h3>
+                <p style={{
+                  fontSize: '.92rem', color: 'rgba(255,255,255,0.65)',
+                  lineHeight: 1.78, marginBottom: '2.2rem'
+                }}>
+                  Search 1,338+ verified advocates by city and specialty. Free to browse. Book in minutes.
+                </p>
+                <Link to="/search" style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 8,
+                  background: '#fff', color: 'var(--bur)',
+                  fontWeight: 800, fontSize: '1.02rem',
+                  padding: '1.1rem 2.2rem', borderRadius: 14, textDecoration: 'none',
+                  boxShadow: '0 10px 30px rgba(0,0,0,0.18)',
+                  transition: 'all 0.25s ease'
+                }} className="cta-btn">
+                  Find a Lawyer <ArrowRight size={16} />
+                </Link>
+              </div>
+            </div>
+
+            {/* Lawyer CTA */}
+            <div className="final-cta-lawyer" style={{
+              padding: '3.5rem 3rem',
+              background: 'linear-gradient(160deg, #1A0A0D 0%, #2D1018 100%)',
+              borderLeft: '1px solid rgba(245,196,179,0.10)',
+              textAlign: 'center', position: 'relative', overflow: 'hidden'
+            }}>
+              <div style={{
+                position: 'absolute', inset: 0,
+                backgroundImage: 'url(/images/lawyer-hero.jpg)',
+                backgroundSize: 'cover',
+                opacity: 0.08, mixBlendMode: 'luminosity'
+              }} />
+              <div style={{ position: 'relative', zIndex: 1 }}>
+                <div style={{
+                  width: 64, height: 64, borderRadius: 20,
+                  background: 'rgba(245,196,179,0.08)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  margin: '0 auto 1.8rem', color: '#F5C4B3'
+                }}>
+                  <Gavel size={28} />
+                </div>
+                <div style={{
+                  fontSize: '.68rem', fontWeight: 800, color: 'rgba(245,196,179,0.45)',
+                  textTransform: 'uppercase', letterSpacing: '2.5px', marginBottom: 14
+                }}>For Lawyers</div>
+                <h3 style={{
+                  fontFamily: "'Plus Jakarta Sans',sans-serif",
+                  fontSize: '1.6rem', fontWeight: 900, color: '#fff',
+                  marginBottom: '1.1rem', lineHeight: 1.2
+                }}>Grow Your Practice</h3>
+                <p style={{
+                  fontSize: '.92rem', color: 'rgba(255,255,255,0.45)',
+                  lineHeight: 1.78, marginBottom: '2.2rem'
+                }}>
+                  List free. Set your fees. Receive 24/7 verified bookings and manage cases with ease.
+                </p>
+                <Link to="/join-as-lawyer" style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 8,
+                  background: 'rgba(245,196,179,0.12)',
+                  border: '1.5px solid rgba(245,196,179,0.3)',
+                  backdropFilter: 'blur(12px)',
+                  color: '#F5C4B3', fontWeight: 800, fontSize: '1.02rem',
+                  padding: '1.1rem 2.2rem', borderRadius: 14, textDecoration: 'none',
+                  transition: 'all 0.25s ease'
+                }} className="cta-btn">
+                  Join as Lawyer <ChevronRight size={16} />
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom trust strip */}
+          <div style={{
+            display: 'flex', gap: 28, justifyContent: 'center',
+            flexWrap: 'wrap', marginTop: '3.5rem'
+          }}>
+            {[
+              { icon: <BadgeCheck size={14} color="#4ADE80" />, t: 'Bar Council Verified' },
+              { icon: <Lock size={14} color="#A78BFA" />, t: 'Bank-Grade Encryption' },
+              { icon: <Clock size={14} color="#60A5FA" />, t: '24/7 Available' },
+              { icon: <Phone size={14} color="#F5C4B3" />, t: 'Emergency Line Active' },
+              { icon: <IndianRupee size={14} color="#4ADE80" />, t: 'Zero Hidden Fees' },
+            ].map((b, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+                {b.icon}
+                <span style={{ fontSize: '.76rem', color: 'rgba(255,255,255,0.32)', fontWeight: 700 }}>
+                  {b.t}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   )
 }

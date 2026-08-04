@@ -40,8 +40,8 @@ export default function Navbar() {
       {/* Main nav */}
       <nav style={{...s.nav,...(scrolled?s.navScrolled:{})}} className="mobile-px-4">
         <div style={s.inner}>
-          <Link to="/" style={{textDecoration:'none', flexShrink: 0}}>
-            <Logo color="#7B1D2E" subColor="#1A1A1A" />
+          <Link to="/" style={{textDecoration:'none', flexShrink: 0, filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.6))'}}>
+            <Logo color="#fff" subColor="#F5E6D3" />
           </Link>
 
           <ul style={s.links} className="hide-mobile">
@@ -166,20 +166,20 @@ export default function Navbar() {
 }
 
 const s = {
-  emergency:{position:'fixed',top:0,left:0,right:0,zIndex:9999,background:'#7B1D2E',padding:'.35rem 0',display:'flex',alignItems:'center',justifyContent:'center',gap:8},
+  emergency:{position:'fixed',top:0,left:0,right:0,zIndex:9999,background:'#5C1521',padding:'.35rem 0',display:'flex',alignItems:'center',justifyContent:'center',gap:8},
   eDot:{width:7,height:7,background:'#4ADE80',borderRadius:'50%',animation:'pulseDot 2s infinite',display:'inline-block'},
   nav:{position:'fixed',top:28,left:0,right:0,zIndex:9998,background:'transparent',borderBottom:'1px solid transparent',transition:'all 0.4s ease'},
-  navScrolled:{top: 0, boxShadow:'0 10px 30px rgba(0,0,0,0.05)', background: 'rgba(255, 255, 255, 0.95)', backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)', borderBottom:'1px solid rgba(0,0,0,0.05)'},
+  navScrolled:{top: 0, boxShadow:'0 10px 30px rgba(0,0,0,0.5)', background: 'rgba(26, 10, 13, 0.9)', backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)', borderBottom:'1px solid rgba(255,255,255,0.08)'},
   inner:{display:'flex',alignItems:'center',justifyContent:'space-between',height:72},
   links:{display:'flex',alignItems:'center',gap:'0.5rem',listStyle:'none'},
-  link:{fontSize:'.9rem',fontWeight:600,color:'#1A1A1A',textDecoration:'none',padding:'.5rem 1rem',borderRadius:'50px',transition:'all 0.3s ease', outline: 'none'},
-  linkActive:{color:'#7B1D2E',background:'rgba(123,29,46,0.08)'},
+  link:{fontSize:'.9rem',fontWeight:600,color:'rgba(255,255,255,0.9)',textDecoration:'none',padding:'.5rem 1rem',borderRadius:'50px',transition:'all 0.3s ease', textShadow: '0 2px 8px rgba(0,0,0,0.8)', outline: 'none'},
+  linkActive:{color:'#fff',background:'rgba(255,255,255,0.1)'},
   actions:{display:'flex',gap:12,alignItems:'center'},
-  iconBtn:{width:40,height:40,borderRadius:'50%',background:'rgba(0,0,0,0.04)',border:'1px solid rgba(0,0,0,0.08)',display:'flex',alignItems:'center',justifyContent:'center',position:'relative',textDecoration:'none',cursor:'pointer',transition:'all 0.3s ease', backdropFilter:'blur(4px)', outline: 'none', color:'#1A1A1A'},
-  badge:{position:'absolute',top:-2,right:-2,width:18,height:18,background:'#7B1D2E',color:'#fff',borderRadius:'50%',fontSize:'.65rem',fontWeight:800,display:'flex',alignItems:'center',justifyContent:'center',border: '2px solid #fff'},
-  userChip:{display:'flex',alignItems:'center',gap:8,padding:'.4rem .8rem',background:'rgba(0,0,0,0.04)',borderRadius:50,border:'1px solid rgba(0,0,0,0.08)'},
+  iconBtn:{width:40,height:40,borderRadius:'50%',background:'rgba(0,0,0,0.2)',border:'1px solid rgba(255,255,255,0.2)',display:'flex',alignItems:'center',justifyContent:'center',position:'relative',textDecoration:'none',cursor:'pointer',transition:'all 0.3s ease', backdropFilter:'blur(4px)', outline: 'none'},
+  badge:{position:'absolute',top:-2,right:-2,width:18,height:18,background:'#8B1A2A',color:'#fff',borderRadius:'50%',fontSize:'.65rem',fontWeight:800,display:'flex',alignItems:'center',justifyContent:'center',border: '2px solid rgba(255,255,255,0.2)'},
+  userChip:{display:'flex',alignItems:'center',gap:8,padding:'.4rem .8rem',background:'rgba(255,255,255,0.1)',borderRadius:50,border:'1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)'},
   userAv:{width:28,height:28,borderRadius:'50%',background:'#7B1D2E',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'.8rem',fontWeight:700},
-  burger:{width:40,height:40,background:'rgba(0,0,0,0.04)',border:'1px solid rgba(0,0,0,0.08)',borderRadius:12,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',transition: 'all 0.2s', color: '#1A1A1A', fontSize: '1.2rem'},
-  mobileMenu:{position:'fixed',top:100,left:0,right:0,bottom:0,zIndex:199,background:'rgba(253,251,247,0.98)',padding:'1.5rem 0',display:'flex',flexDirection:'column',transition:'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)', overflowY: 'auto'},
-  mLink:{padding:'1rem',borderRadius:16,fontSize:'1.05rem',fontWeight:700,color:'#1A1A1A',textDecoration:'none',display:'flex',gap:15,alignItems:'center', background: '#fff', border: '1px solid rgba(0,0,0,0.08)', transition: 'all 0.2s'},
+  burger:{width:40,height:40,background:'rgba(255,255,255,0.15)',border:'1px solid rgba(255,255,255,0.25)',borderRadius:12,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',transition: 'all 0.2s', color: '#fff', fontSize: '1.2rem'},
+  mobileMenu:{position:'fixed',top:100,left:0,right:0,bottom:0,zIndex:199,background:'rgba(253,248,244,0.98)',padding:'1.5rem 0',display:'flex',flexDirection:'column',transition:'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)', overflowY: 'auto'},
+  mLink:{padding:'1rem',borderRadius:16,fontSize:'1.05rem',fontWeight:700,color:'#1A0A0D',textDecoration:'none',display:'flex',gap:15,alignItems:'center', background: '#fff', border: '1px solid #EDD5BE', transition: 'all 0.2s'},
 }
