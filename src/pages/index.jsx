@@ -553,7 +553,7 @@ export default function Home() {
           style={{
             position: 'absolute',
             inset: '-8%',
-            backgroundImage: 'url(/images/hero-wide.jpg)',
+            backgroundImage: 'url(/images/hero-wide-v2.jpg)',
             backgroundSize: 'cover',
             backgroundPosition: 'center center',
             zIndex: 0,
@@ -566,10 +566,10 @@ export default function Home() {
           position: 'absolute', inset: 0, zIndex: 1,
           background:
             'linear-gradient(180deg,' +
-            'rgba(123,29,46,0.92) 0%,' +
-            'rgba(80,18,30,0.78) 30%,' +
-            'rgba(50,11,19,0.82) 65%,' +
-            'rgba(20,5,10,0.96) 100%)'
+            'rgba(123,29,46,0.45) 0%,' +
+            'rgba(80,18,30,0.40) 30%,' +
+            'rgba(50,11,19,0.50) 65%,' +
+            'rgba(20,5,10,0.85) 100%)'
         }} />
 
         {/* ── Layer 2: Warm burgundy glow emanating from left-center ── */}
@@ -612,6 +612,7 @@ export default function Home() {
 
         {/* ── Layer 6: Animated floating Scales of Justice (SVG — right side, low opacity) ── */}
         <div className="hero-scales" style={{
+          display: 'none',
           position: 'absolute', right: '5%', top: '50%',
           width: 'clamp(260px,28vw,420px)', height: 'clamp(260px,28vw,420px)',
           zIndex: 4, opacity: 0.10, pointerEvents: 'none',

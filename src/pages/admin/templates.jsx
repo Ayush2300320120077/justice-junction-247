@@ -20,7 +20,7 @@ export default function AdminTemplates() {
 
   const deleteTemplate = async (id) => {
     if (!confirm('Delete this template?')) return
-    await fetch(`/api/documents/templates/${id}`, { credentials: 'include', method: 'DELETE', credentials: 'include' })
+    await fetch(`/api/documents/templates/${id}`, { method: 'DELETE', credentials: 'include' })
     setTemplates(ts => ts.filter(t => t._id !== id))
   }
 
