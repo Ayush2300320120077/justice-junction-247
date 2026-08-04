@@ -189,7 +189,7 @@ export default function Home() {
   const [statsRef, statsVisible] = useReveal(0.1)
 
   return (
-    <div style={{ fontFamily: 'var(--font-body)', overflowX: 'hidden', background: 'var(--cream)' }}>
+    <div style={{ fontFamily: 'var(--font-body)', overflowX: 'hidden', background: '#060103' }}>
       <Helmet>
         <title>Justice Junction 24/7 — Find Verified Lawyers in India | 24/7 Legal Help</title>
         <meta name="description" content="India's #1 price-transparent legal marketplace. 1,338+ Bar Council verified advocates. AI matching, encrypted video calls, 24/7 emergency access." />
@@ -662,7 +662,7 @@ export default function Home() {
         <div style={{
           position: 'absolute', bottom: 0, left: 0, right: 0,
           height: 220, zIndex: 5, pointerEvents: 'none',
-          background: 'linear-gradient(to bottom, transparent, var(--cream))'
+          background: 'linear-gradient(to bottom, transparent, #060103)'
         }} />
 
         {/* ══ HERO CONTENT ══ */}
@@ -947,7 +947,7 @@ export default function Home() {
       </div>
 
       {/* ══════════════════════════════════════════════════════
-          SECTION 2 — STATS WITH WARM LIGHT BACKGROUND
+          SECTION 2 — STATS WITH DRAMATIC BACKGROUND
       ══════════════════════════════════════════════════════ */}
       <section style={{
         padding: '0', position: 'relative', overflow: 'hidden',
@@ -956,37 +956,38 @@ export default function Home() {
         {/* Background image */}
         <div style={{
           position: 'absolute', inset: 0,
-          backgroundImage: 'url(/images/stats-light.jpg)',
-          backgroundSize: 'cover', backgroundPosition: 'center',
+          backgroundImage: 'url(/images/supreme-court.jpg)',
+          backgroundSize: 'cover', backgroundPosition: 'center 60%',
+          filter: 'brightness(0.25)',
           zIndex: 0
         }} />
         <div style={{
           position: 'absolute', inset: 0, zIndex: 1,
-          background: 'linear-gradient(160deg, rgba(255,255,255,0.92) 0%, rgba(249,240,235,0.88) 100%)'
+          background: 'linear-gradient(160deg, rgba(26,10,13,0.92) 0%, rgba(10,4,6,0.85) 100%)'
         }} />
         {/* Glowing vignette */}
         <div style={{
           position: 'absolute', inset: 0, zIndex: 1,
-          background: 'radial-gradient(ellipse at 50% 120%, rgba(123,29,46,0.06) 0%, transparent 65%)',
+          background: 'radial-gradient(ellipse at 50% 120%, rgba(123,29,46,0.25) 0%, transparent 65%)',
           pointerEvents: 'none'
         }} />
 
         <div className="container" ref={statsRef} style={{ position: 'relative', zIndex: 2, padding: '6rem 0' }}>
           <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
             <div style={{
-              display: 'inline-block', background: 'rgba(123,29,46,0.07)',
-              color: 'var(--bur)', fontWeight: 800, fontSize: '.7rem',
-              letterSpacing: '3px', textTransform: 'uppercase',
-              padding: '.4rem 1.1rem', borderRadius: 6, marginBottom: '1.2rem'
+              display: 'inline-block', background: 'rgba(245,196,179,0.08)',
+              border: '1px solid rgba(245,196,179,0.2)', color: '#F5C4B3',
+              fontWeight: 800, fontSize: '.7rem', letterSpacing: '3px',
+              textTransform: 'uppercase', padding: '.4rem 1.1rem', borderRadius: 6, marginBottom: '1.2rem'
             }}>By The Numbers</div>
             <h2 style={{
               fontFamily: "'Plus Jakarta Sans',sans-serif",
               fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', fontWeight: 900,
-              color: '#111827', letterSpacing: '-0.03em', marginBottom: '.6rem'
+              color: '#fff', letterSpacing: '-0.03em', marginBottom: '.6rem'
             }}>
               India's most trusted legal platform
             </h2>
-            <p style={{ color: 'var(--txt-3)', fontSize: '1rem', maxWidth: 480, margin: '0 auto' }}>
+            <p style={{ color: 'rgba(245,196,179,0.5)', fontSize: '1rem', maxWidth: 480, margin: '0 auto' }}>
               Real numbers. Real impact. Real justice for everyday Indians.
             </p>
           </div>
@@ -996,25 +997,20 @@ export default function Home() {
             gap: '1.5rem', textAlign: 'center'
           }}>
             {[
-              { to: 1338, s: '+', label: 'Verified', sub: 'Advocates', icon: <UserCheck size={20} />, color: 'var(--bur)' },
-              { to: 100, s: '+', label: 'Cities', sub: 'Covered', icon: <MapPin size={20} />, color: '#B35A4B' },
-              { to: 10000, s: '+', label: 'Citizens', sub: 'Helped', icon: <Users size={20} />, color: 'var(--bur)' },
-              { to: 98, s: '%', label: 'Client', sub: 'Satisfaction', icon: <Heart size={20} />, color: '#B35A4B' },
-              { to: 15, s: 'min', label: 'Emergency', sub: 'Response Avg.', icon: <AlertCircle size={20} />, color: 'var(--bur)' },
+              { to: 1338, s: '+', label: 'Verified', sub: 'Advocates', icon: <UserCheck size={20} />, color: '#F5C4B3' },
+              { to: 100, s: '+', label: 'Cities', sub: 'Covered', icon: <MapPin size={20} />, color: '#E8A990' },
+              { to: 10000, s: '+', label: 'Citizens', sub: 'Helped', icon: <Users size={20} />, color: '#F5C4B3' },
+              { to: 98, s: '%', label: 'Client', sub: 'Satisfaction', icon: <Heart size={20} />, color: '#E8A990' },
+              { to: 15, s: 'min', label: 'Emergency', sub: 'Response Avg.', icon: <AlertCircle size={20} />, color: '#F5C4B3' },
             ].map((st, i) => (
-              <div key={i} className="glass-card-light" style={{
-                background: 'rgba(255,255,255,0.7)',
-                backdropFilter: 'blur(16px)',
-                WebkitBackdropFilter: 'blur(16px)',
-                border: '1px solid rgba(255,255,255,0.9)',
-                boxShadow: '0 12px 36px rgba(123,29,46,0.06)',
+              <div key={i} className="glass-card" style={{
                 padding: '2rem 1.2rem', borderRadius: 20,
                 position: 'relative', overflow: 'hidden',
                 animation: statsVisible ? `countBand 0.6s ${i * 0.1}s both` : 'none'
               }}>
                 <div style={{
                   display: 'flex', justifyContent: 'center', marginBottom: 12,
-                  color: st.color, opacity: 0.8
+                  color: st.color, opacity: 0.6
                 }}>{st.icon}</div>
                 <div style={{
                   fontFamily: "'Sora',sans-serif",
@@ -1025,11 +1021,11 @@ export default function Home() {
                   <Counter to={st.to} suffix={st.s} />
                 </div>
                 <div style={{
-                  fontSize: '.78rem', fontWeight: 800, color: '#111827',
+                  fontSize: '.78rem', fontWeight: 800, color: '#fff',
                   textTransform: 'uppercase', letterSpacing: '1.5px'
                 }}>{st.label}</div>
                 <div style={{
-                  fontSize: '.66rem', color: 'var(--txt-3)',
+                  fontSize: '.66rem', color: 'rgba(245,196,179,0.4)',
                   marginTop: 4, fontWeight: 600
                 }}>{st.sub}</div>
               </div>
@@ -1042,36 +1038,34 @@ export default function Home() {
           SECTION 3 — HOW IT WORKS (cinematic)
       ══════════════════════════════════════════════════════ */}
       <section style={{ padding: '8rem 0', position: 'relative', overflow: 'hidden' }}>
-        {/* Cinematic background */}
         <div style={{
-          position: 'absolute', inset: 0, zIndex: 0,
+          position: 'absolute', inset: 0,
           backgroundImage: 'url(/images/bg-how-it-works.jpg)',
-          backgroundSize: 'cover', backgroundPosition: 'center'
+          backgroundSize: 'cover', backgroundPosition: 'center',
+          filter: 'brightness(0.3)', zIndex: 0
         }} />
-        {/* Soft glass overlay for text readability */}
         <div style={{
           position: 'absolute', inset: 0, zIndex: 1,
-          background: 'linear-gradient(to bottom, rgba(255,255,255,0.92), rgba(255,255,255,0.97))',
-          backdropFilter: 'blur(4px)'
+          background: 'linear-gradient(180deg, #060103 0%, rgba(6,1,3,0.85) 50%, #060103 100%)'
         }} />
 
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
           <div style={{ textAlign: 'center', marginBottom: '5rem' }}>
             <div style={{
-              display: 'inline-block', background: 'rgba(123,29,46,0.07)',
-              color: 'var(--bur)', fontWeight: 800, fontSize: '.7rem',
-              letterSpacing: '3px', textTransform: 'uppercase',
-              padding: '.4rem 1rem', borderRadius: 6, marginBottom: '1rem'
+              display: 'inline-block', background: 'rgba(245,196,179,0.08)',
+              border: '1px solid rgba(245,196,179,0.2)', color: '#F5C4B3',
+              fontWeight: 800, fontSize: '.7rem', letterSpacing: '3px',
+              textTransform: 'uppercase', padding: '.4rem 1.1rem', borderRadius: 6, marginBottom: '1.2rem'
             }}>How It Works</div>
             <h2 style={{
               fontFamily: "'Plus Jakarta Sans',sans-serif",
-              fontSize: 'clamp(1.9rem, 3.5vw, 2.9rem)', fontWeight: 900,
-              color: 'var(--txt)', letterSpacing: '-0.03em', marginBottom: '.7rem'
+              fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 900,
+              color: '#fff', letterSpacing: '-0.03em', marginBottom: '.6rem'
             }}>
-              Legal help in <span style={{ color: 'var(--bur)' }}>4 simple steps.</span>
+              Justice, simplified.
             </h2>
-            <p style={{ color: 'var(--txt-3)', fontSize: '1rem', maxWidth: 500, margin: '0 auto', lineHeight: 1.7 }}>
-              We've removed every barrier between you and the right lawyer.
+            <p style={{ color: 'rgba(245,196,179,0.5)', fontSize: '1.1rem', maxWidth: 600, margin: '0 auto' }}>
+              Your journey from distress to resolution in three transparent steps.
             </p>
           </div>
 
@@ -1083,7 +1077,7 @@ export default function Home() {
             <div style={{
               position: 'absolute', top: 36, left: '12.5%', right: '12.5%',
               height: 2,
-              background: 'linear-gradient(90deg, transparent, rgba(123,29,46,0.15) 20%, rgba(123,29,46,0.15) 80%, transparent)',
+              background: 'linear-gradient(90deg, transparent, rgba(245,196,179,0.15) 20%, rgba(245,196,179,0.15) 80%, transparent)',
               zIndex: 0
             }} className="mobile-hide" />
 
@@ -1097,28 +1091,28 @@ export default function Home() {
                 <div className="step-num">{step.n}</div>
                 <div className="step-icon-wrap" style={{
                   width: 72, height: 72, borderRadius: '50%',
-                  background: 'linear-gradient(135deg, rgba(123,29,46,0.09), rgba(61,14,22,0.05))',
-                  border: '1.5px solid rgba(123,29,46,0.12)',
+                  background: 'linear-gradient(135deg, rgba(245,196,179,0.15), rgba(245,196,179,0.05))',
+                  border: '1.5px solid rgba(245,196,179,0.2)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   margin: '0 auto 1.8rem', position: 'relative',
-                  boxShadow: '0 8px 24px rgba(123,29,46,0.08)',
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
                   transition: 'all 0.35s ease'
                 }}>
                   <span style={{ position: 'absolute', top: -9, right: -9, width: 24, height: 24,
-                    borderRadius: '50%', background: 'var(--bur)', color: '#fff',
+                    borderRadius: '50%', background: '#F5C4B3', color: '#060103',
                     fontSize: '.6rem', fontWeight: 900, fontFamily: "'Sora',sans-serif",
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    boxShadow: '0 2px 8px rgba(123,29,46,0.4)',
-                    border: '2px solid #fff', zIndex: 2, letterSpacing: '-0.02em'
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
+                    border: '2px solid #060103', zIndex: 2, letterSpacing: '-0.02em'
                   }}>{step.n}</span>
-                  <span style={{ color: 'var(--bur)' }}>{step.icon}</span>
+                  <span style={{ color: '#F5C4B3' }}>{step.icon}</span>
                 </div>
                 <h3 style={{
                   fontFamily: "'Plus Jakarta Sans',sans-serif",
                   fontSize: '1.15rem', fontWeight: 900,
-                  color: 'var(--txt)', marginBottom: 10
+                  color: '#fff', marginBottom: 10
                 }}>{step.title}</h3>
-                <p style={{ fontSize: '.88rem', color: 'var(--txt-3)', lineHeight: 1.78, margin: 0 }}>{step.desc}</p>
+                <p style={{ fontSize: '.88rem', color: 'rgba(249,238,228,0.6)', lineHeight: 1.78, margin: 0 }}>{step.desc}</p>
               </div>
             ))}
           </div>
@@ -1126,10 +1120,10 @@ export default function Home() {
           <div style={{ textAlign: 'center', marginTop: '4.5rem' }}>
             <Link to="/search" style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
-              background: 'linear-gradient(135deg, var(--bur), var(--bur-d))',
-              color: '#fff', fontWeight: 800, fontSize: '1.05rem',
+              background: 'linear-gradient(135deg, #F5C4B3, #E8A990)',
+              color: '#060103', fontWeight: 800, fontSize: '1.05rem',
               padding: '1.1rem 2.8rem', borderRadius: 16, textDecoration: 'none',
-              boxShadow: '0 12px 32px rgba(123,29,46,0.35)',
+              boxShadow: '0 12px 32px rgba(245,196,179,0.2)',
               transition: 'all 0.25s ease'
             }} className="cta-btn">
               Start Now — It's Free <ArrowRight size={18} />
@@ -1142,33 +1136,33 @@ export default function Home() {
           SECTION 4 — PRACTICE AREAS (image cards)
       ══════════════════════════════════════════════════════ */}
       <section style={{ padding: '7rem 0', position: 'relative', overflow: 'hidden' }}>
-        {/* Cinematic background */}
         <div style={{
-          position: 'absolute', inset: 0, zIndex: 0,
+          position: 'absolute', inset: 0,
           backgroundImage: 'url(/images/bg-practice-areas.jpg)',
-          backgroundSize: 'cover', backgroundPosition: 'center'
+          backgroundSize: 'cover', backgroundPosition: 'center',
+          filter: 'brightness(0.2)', zIndex: 0
         }} />
         <div style={{
           position: 'absolute', inset: 0, zIndex: 1,
-          background: 'linear-gradient(180deg, rgba(250,246,240,1) 0%, rgba(250,246,240,0.82) 50%, rgba(250,246,240,1) 100%)'
+          background: 'linear-gradient(180deg, #060103 0%, rgba(6,1,3,0.75) 50%, #060103 100%)'
         }} />
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
           <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
             <div style={{
-              display: 'inline-block', background: 'rgba(123,29,46,0.07)',
-              color: 'var(--bur)', fontWeight: 800, fontSize: '.7rem',
-              letterSpacing: '3px', textTransform: 'uppercase',
-              padding: '.4rem 1rem', borderRadius: 6, marginBottom: '1rem'
+              display: 'inline-block', background: 'rgba(245,196,179,0.08)',
+              border: '1px solid rgba(245,196,179,0.2)', color: '#F5C4B3',
+              fontWeight: 800, fontSize: '.7rem', letterSpacing: '3px',
+              textTransform: 'uppercase', padding: '.4rem 1.1rem', borderRadius: 6, marginBottom: '1.2rem'
             }}>All Legal Matters</div>
             <h2 style={{
               fontFamily: "'Plus Jakarta Sans',sans-serif",
-              fontSize: 'clamp(1.9rem, 3.5vw, 2.9rem)', fontWeight: 900,
-              color: 'var(--txt)', letterSpacing: '-0.03em', marginBottom: '.7rem'
+              fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', fontWeight: 900,
+              color: '#fff', letterSpacing: '-0.03em', marginBottom: '.6rem'
             }}>
-              We cover every area of Indian law
+              Expertise that <span style={{ color: '#F5C4B3' }}>wins cases</span>.
             </h2>
-            <p style={{ color: 'var(--txt-3)', fontSize: '1rem', maxWidth: 520, margin: '0 auto', lineHeight: 1.7 }}>
-              Find a Bar Council verified specialist for your exact legal situation — in under 60 seconds.
+            <p style={{ color: 'rgba(249,238,228,0.6)', fontSize: '1.05rem', maxWidth: 600, margin: '0 auto' }}>
+              We have specialized top-tier advocates for every legal domain.
             </p>
           </div>
 
@@ -1199,10 +1193,10 @@ export default function Home() {
                       transition: 'transform 0.55s ease'
                     }}
                   />
-                  {/* Warm gradient overlay */}
+                  {/* Dark gradient overlay */}
                   <div style={{
                     position: 'absolute', inset: 0, zIndex: 1,
-                    background: 'linear-gradient(180deg, rgba(123,29,46,0.15) 0%, rgba(80,18,30,0.85) 100%)'
+                    background: 'linear-gradient(180deg, rgba(6,1,3,0.30) 0%, rgba(6,1,3,0.88) 100%)'
                   }} />
                   {/* Hover color tint */}
                   <div className="area-overlay" style={{
@@ -1243,7 +1237,7 @@ export default function Home() {
           <div style={{ textAlign: 'center', marginTop: '3rem' }}>
             <Link to="/search" style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
-              border: '2px solid var(--bur)', color: 'var(--bur)',
+              border: '2px solid #F5C4B3', color: '#F5C4B3',
               fontWeight: 800, fontSize: '.95rem',
               padding: '.9rem 2.2rem', borderRadius: 14, textDecoration: 'none',
               transition: 'all 0.25s ease'
@@ -1255,39 +1249,44 @@ export default function Home() {
       </section>
 
       {/* ══════════════════════════════════════════════════════
-          SECTION 5 — WHY JUSTICE JUNCTION
+          SECTION 5 — WHY JUSTICE JUNCTION (dark bg with law books image)
       ══════════════════════════════════════════════════════ */}
       <section style={{ padding: '0', position: 'relative', overflow: 'hidden', minHeight: 600 }}>
-        {/* Cinematic full-width background */}
+        {/* Split layout — left text, right image */}
         <div style={{
-          position: 'absolute', inset: 0, zIndex: 0,
-          backgroundImage: 'url(/images/bg-why-us.jpg)',
-          backgroundSize: 'cover', backgroundPosition: 'center'
-        }} />
-        {/* Gradient overlay to ensure text is readable on the left */}
-        <div style={{
-          position: 'absolute', inset: 0, zIndex: 1,
-          background: 'linear-gradient(90deg, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0.85) 55%, rgba(255,255,255,0.3) 100%)'
-        }} />
+          position: 'absolute', right: 0, top: 0, bottom: 0, width: '45%', zIndex: 0
+        }}>
+          <div style={{
+            position: 'absolute', inset: 0,
+            backgroundImage: 'url(/images/bg-why-us.jpg)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            filter: 'brightness(0.6)'
+          }} />
+          <div style={{
+            position: 'absolute', inset: 0,
+            background: 'linear-gradient(90deg, #060103 0%, rgba(6,1,3,0.6) 50%, transparent 100%)'
+          }} />
+        </div>
 
         <div className="container" ref={whyRef} style={{ position: 'relative', zIndex: 1, padding: '8rem 0' }}>
           <div style={{ maxWidth: 680 }}>
             <div style={{
-              display: 'inline-block', background: 'rgba(123,29,46,0.07)',
-              color: 'var(--bur)', fontWeight: 800, fontSize: '.7rem',
-              letterSpacing: '3px', textTransform: 'uppercase',
-              padding: '.4rem 1rem', borderRadius: 6, marginBottom: '1.2rem'
-            }}>Why Justice Junction</div>
+              display: 'inline-block', background: 'rgba(245,196,179,0.08)',
+              border: '1px solid rgba(245,196,179,0.2)', color: '#F5C4B3',
+              fontWeight: 800, fontSize: '.7rem', letterSpacing: '3px',
+              textTransform: 'uppercase', padding: '.4rem 1.1rem', borderRadius: 6, marginBottom: '1.2rem'
+            }}>Why Choose Us</div>
             <h2 style={{
               fontFamily: "'Plus Jakarta Sans',sans-serif",
-              fontSize: 'clamp(1.9rem, 3.5vw, 2.9rem)', fontWeight: 900,
-              color: 'var(--txt)', letterSpacing: '-0.03em', marginBottom: '1rem'
+              fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 900,
+              color: '#fff', letterSpacing: '-0.03em', lineHeight: 1.15,
+              marginBottom: '1.5rem'
             }}>
-              Built differently.{' '}
-              <span style={{ color: 'var(--bur)' }}>For India.</span>
+              We don't just find you a lawyer. We find the <span style={{ color: '#F5C4B3' }}>right</span> lawyer.
             </h2>
-            <p style={{ color: 'var(--txt-3)', fontSize: '1rem', lineHeight: 1.8, marginBottom: '3rem', maxWidth: 560 }}>
-              We set out to solve a fundamental problem: most Indians can't access quality legal help. Too expensive, too opaque, too intimidating. We changed that.
+            <p style={{ fontSize: '1.1rem', color: 'rgba(249,238,228,0.7)', marginBottom: '2.5rem', lineHeight: 1.7 }}>
+              Unlike traditional directories, Justice Junction uses AI to match your specific case details with lawyers who have proven track records in exactly your type of legal matter.
             </p>
 
             <div className="why-grid" style={{
@@ -1308,7 +1307,7 @@ export default function Home() {
                   key={i}
                   className={`why-card${whyVisible ? ' revealed' : ''}`}
                   style={{
-                    background: '#fff', border: '1.5px solid var(--border)',
+                    background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)',
                     borderRadius: 18, padding: '1.5rem',
                     boxShadow: '0 4px 16px rgba(0,0,0,0.05)',
                     opacity: whyVisible ? 1 : 0,
@@ -1340,33 +1339,32 @@ export default function Home() {
       ══════════════════════════════════════════════════════ */}
       <section style={{ padding: '8rem 0', position: 'relative', overflow: 'hidden' }}>
         <div style={{
-          position: 'absolute', inset: 0, zIndex: 0,
+          position: 'absolute', inset: 0,
           backgroundImage: 'url(/images/bg-tools.jpg)',
-          backgroundSize: 'cover', backgroundPosition: 'center'
+          backgroundSize: 'cover', backgroundPosition: 'center',
+          filter: 'brightness(0.2)', opacity: 0.6, zIndex: 0
         }} />
         <div style={{
           position: 'absolute', inset: 0, zIndex: 1,
-          background: 'rgba(255,255,255,0.85)',
-          backdropFilter: 'blur(8px)',
-          WebkitBackdropFilter: 'blur(8px)'
+          background: 'linear-gradient(180deg, #060103 0%, rgba(6,1,3,0.7) 50%, #060103 100%)'
         }} />
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
           <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
             <div style={{
-              display: 'inline-block', background: 'rgba(123,29,46,0.07)',
-              color: 'var(--bur)', fontWeight: 800, fontSize: '.7rem',
-              letterSpacing: '3px', textTransform: 'uppercase',
-              padding: '.4rem 1rem', borderRadius: 6, marginBottom: '1rem'
+              display: 'inline-block', background: 'rgba(245,196,179,0.08)',
+              border: '1px solid rgba(245,196,179,0.2)', color: '#F5C4B3',
+              fontWeight: 800, fontSize: '.7rem', letterSpacing: '3px',
+              textTransform: 'uppercase', padding: '.4rem 1.1rem', borderRadius: 6, marginBottom: '1.2rem'
             }}>Legal Toolkit</div>
             <h2 style={{
               fontFamily: "'Plus Jakarta Sans',sans-serif",
-              fontSize: 'clamp(1.9rem, 3.5vw, 2.9rem)', fontWeight: 900,
-              color: 'var(--txt)', letterSpacing: '-0.03em', marginBottom: '.7rem'
+              fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 900,
+              color: '#fff', letterSpacing: '-0.03em', marginBottom: '.6rem'
             }}>
               More than a directory.{' '}
-              <span style={{ color: 'var(--bur)' }}>A complete legal platform.</span>
+              <span style={{ color: '#F5C4B3' }}>A complete legal platform.</span>
             </h2>
-            <p style={{ color: 'var(--txt-3)', fontSize: '1rem', maxWidth: 520, margin: '0 auto', lineHeight: 1.7 }}>
+            <p style={{ color: 'rgba(249,238,228,0.7)', fontSize: '1.1rem', maxWidth: 650, margin: '0 auto', lineHeight: 1.7 }}>
               Tools built for everyday Indians navigating the legal system — free to access.
             </p>
           </div>
@@ -1422,37 +1420,37 @@ export default function Home() {
                 className="tool-card"
                 onClick={tool.action || undefined}
                 style={{
-                  background: '#fff',
-                  border: '1.5px solid var(--border)',
+                  background: 'rgba(255,255,255,0.05)',
+                  border: '1px solid rgba(255,255,255,0.1)',
                   borderRadius: 22, padding: '2.2rem',
                   transition: 'all 0.3s cubic-bezier(.23,1,.32,1)',
                   cursor: tool.action ? 'pointer' : 'default',
                   display: 'flex', flexDirection: 'column', gap: 0,
-                  boxShadow: '0 4px 20px rgba(0,0,0,0.05)'
+                  boxShadow: '0 10px 40px rgba(0,0,0,0.2)'
                 }}
               >
                 <div style={{
                   width: 62, height: 62, borderRadius: 18,
-                  background: tool.bg,
+                  background: 'rgba(245,196,179,0.1)', color: '#F5C4B3',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  color: tool.accent, marginBottom: '1.3rem',
-                  border: `1.5px solid ${tool.accent}25`
+                  marginBottom: '1.3rem',
+                  boxShadow: '0 4px 16px rgba(0,0,0,0.15)'
                 }}>
                   {tool.icon}
                 </div>
                 <h3 style={{
                   fontFamily: "'Plus Jakarta Sans',sans-serif",
-                  fontSize: '1.1rem', fontWeight: 800,
-                  color: 'var(--txt)', marginBottom: '.65rem'
+                  fontSize: '1.25rem', fontWeight: 800,
+                  color: '#fff', marginBottom: '.65rem'
                 }}>{tool.title}</h3>
                 <p style={{
-                  fontSize: '.88rem', color: 'var(--txt-3)',
+                  fontSize: '.88rem', color: 'rgba(249,238,228,0.7)',
                   lineHeight: 1.78, flex: 1, marginBottom: '1.5rem'
                 }}>{tool.desc}</p>
                 {tool.link ? (
                   <Link to={tool.link} style={{
                     display: 'inline-flex', alignItems: 'center', gap: 6,
-                    color: tool.accent, fontWeight: 700, fontSize: '.85rem',
+                    color: '#F5C4B3', fontWeight: 700, fontSize: '.85rem',
                     textDecoration: 'none', transition: 'gap 0.2s ease'
                   }}>
                     {tool.cta} <ArrowRight size={14} />
@@ -1460,7 +1458,7 @@ export default function Home() {
                 ) : (
                   <button onClick={tool.action} style={{
                     display: 'inline-flex', alignItems: 'center', gap: 6,
-                    color: tool.accent, fontWeight: 700, fontSize: '.85rem',
+                    color: '#F5C4B3', fontWeight: 700, fontSize: '.85rem',
                     background: 'none', border: 'none', cursor: 'pointer',
                     padding: 0, transition: 'gap 0.2s ease'
                   }}>
@@ -1474,24 +1472,25 @@ export default function Home() {
       </section>
 
       {/* ══════════════════════════════════════════════════════
-          SECTION 7 — TESTIMONIALS (warm light)
+          SECTION 7 — TESTIMONIALS (dark cinematic)
       ══════════════════════════════════════════════════════ */}
       <section style={{ padding: '0', position: 'relative', overflow: 'hidden', minHeight: 600 }}>
         {/* BG Image */}
         <div style={{
           position: 'absolute', inset: 0,
-          backgroundImage: 'url(/images/testimonials-light.jpg)',
+          backgroundImage: 'url(/images/city-night.jpg)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
+          filter: 'brightness(0.2)',
           zIndex: 0
         }} />
         <div style={{
           position: 'absolute', inset: 0, zIndex: 1,
-          background: 'linear-gradient(160deg, rgba(255,255,255,0.85) 0%, rgba(249,240,235,0.95) 100%)'
+          background: 'linear-gradient(160deg, rgba(6,1,3,0.96) 0%, rgba(26,10,13,0.92) 100%)'
         }} />
         <div style={{
           position: 'absolute', inset: 0, zIndex: 1,
-          background: 'radial-gradient(ellipse at 50% 100%, rgba(123,29,46,0.06) 0%, transparent 60%)',
+          background: 'radial-gradient(ellipse at 50% 100%, rgba(123,29,46,0.20) 0%, transparent 60%)',
           pointerEvents: 'none'
         }} />
 
@@ -1505,17 +1504,17 @@ export default function Home() {
               }}>4.9 / 5.0</span>
             </div>
             <div style={{
-              display: 'inline-block', background: 'rgba(123,29,46,0.07)',
-              color: 'var(--bur)', fontWeight: 800, fontSize: '.7rem',
-              letterSpacing: '3px', textTransform: 'uppercase',
-              padding: '.4rem 1.1rem', borderRadius: 6, marginBottom: '1.2rem'
+              display: 'inline-block', background: 'rgba(245,196,179,0.08)',
+              border: '1px solid rgba(245,196,179,0.2)', color: '#F5C4B3',
+              fontWeight: 800, fontSize: '.7rem', letterSpacing: '3px',
+              textTransform: 'uppercase', padding: '.4rem 1.1rem', borderRadius: 6, marginBottom: '1.2rem'
             }}>Real Client Stories</div>
             <h2 style={{
               fontFamily: "'Plus Jakarta Sans',sans-serif",
               fontSize: 'clamp(1.9rem, 3.5vw, 2.8rem)', fontWeight: 900,
-              color: '#111827', letterSpacing: '-0.03em'
+              color: '#fff', letterSpacing: '-0.03em'
             }}>
-              Trusted by <span style={{ color: 'var(--bur)' }}>thousands</span> across India.
+              Trusted by <span style={{ color: '#F5C4B3' }}>thousands</span> across India.
             </h2>
           </div>
 
@@ -1532,21 +1531,20 @@ export default function Home() {
             aria-live="polite"
           >
             <div style={{
-              background: 'rgba(255,255,255,0.9)',
+              background: 'rgba(255,255,255,0.05)',
               backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
-              border: '1px solid rgba(0,0,0,0.05)',
+              border: '1px solid rgba(255,255,255,0.10)',
               borderRadius: 28,
               padding: 'clamp(2.5rem, 5vw, 4rem)',
               maxWidth: 860, margin: '0 auto',
               position: 'relative', overflow: 'hidden',
-              boxShadow: '0 10px 40px rgba(0,0,0,0.04)'
+              boxShadow: '0 40px 80px rgba(0,0,0,0.4)'
             }}>
               {/* Quote mark */}
               <div style={{
                 position: 'absolute', top: 16, right: 28,
                 fontFamily: "'Georgia',serif",
-                fontSize: '9rem', color: 'rgba(0,0,0,0.03)',
+                fontSize: '9rem', color: 'rgba(245,196,179,0.06)',
                 lineHeight: 1, pointerEvents: 'none', userSelect: 'none'
               }}>"</div>
 
@@ -1557,7 +1555,7 @@ export default function Home() {
 
               {/* Quote */}
               <p style={{
-                fontSize: 'clamp(1rem, 1.6vw, 1.2rem)', color: '#374151',
+                fontSize: 'clamp(1rem, 1.6vw, 1.2rem)', color: 'rgba(249,238,228,0.88)',
                 lineHeight: 1.88, fontStyle: 'italic',
                 marginBottom: '2.5rem', position: 'relative', zIndex: 1,
                 minHeight: '5rem'
@@ -1571,16 +1569,16 @@ export default function Home() {
                   width: 54, height: 54, borderRadius: '50%', flexShrink: 0,
                   background: 'linear-gradient(135deg, var(--bur), var(--bur-d))',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  color: '#fff', fontWeight: 900, fontSize: '.95rem',
+                  color: '#F5C4B3', fontWeight: 900, fontSize: '.95rem',
                   fontFamily: "'Sora',sans-serif",
-                  border: '2px solid rgba(123,29,46,0.1)'
+                  border: '2px solid rgba(245,196,179,0.2)'
                 }}>{REVIEWS[reviewIdx].init}</div>
                 <div>
-                  <div style={{ fontWeight: 800, fontSize: '1rem', color: '#111827' }}>
+                  <div style={{ fontWeight: 800, fontSize: '1rem', color: '#fff' }}>
                     {REVIEWS[reviewIdx].name}
                   </div>
                   <div style={{
-                    fontSize: '.76rem', color: 'var(--txt-3)',
+                    fontSize: '.76rem', color: 'rgba(245,196,179,0.55)',
                     display: 'flex', gap: 6, alignItems: 'center', marginTop: 3
                   }}>
                     <MapPin size={11} /> {REVIEWS[reviewIdx].city} · {REVIEWS[reviewIdx].role} · Verified Client
@@ -1599,11 +1597,10 @@ export default function Home() {
                 aria-label="Previous testimonial"
                 style={{
                   width: 44, height: 44, borderRadius: '50%',
-                  border: '1px solid rgba(123,29,46,0.15)',
-                  background: '#fff', cursor: 'pointer',
+                  border: '1.5px solid rgba(245,196,179,0.2)',
+                  background: 'rgba(255,255,255,0.06)', cursor: 'pointer',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  color: 'var(--bur)',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+                  color: 'rgba(245,196,179,0.6)', backdropFilter: 'blur(8px)',
                   transition: 'all 0.2s ease'
                 }}
               >
@@ -1632,11 +1629,10 @@ export default function Home() {
                 aria-label="Next testimonial"
                 style={{
                   width: 44, height: 44, borderRadius: '50%',
-                  border: '1px solid rgba(123,29,46,0.15)',
-                  background: '#fff', cursor: 'pointer',
+                  border: '1.5px solid rgba(245,196,179,0.2)',
+                  background: 'rgba(255,255,255,0.06)', cursor: 'pointer',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  color: 'var(--bur)',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+                  color: 'rgba(245,196,179,0.6)', backdropFilter: 'blur(8px)',
                   transition: 'all 0.2s ease'
                 }}
               >
@@ -1650,23 +1646,23 @@ export default function Home() {
       {/* ══════════════════════════════════════════════════════
           SECTION 8 — LEGAL NEWS & UPDATES
       ══════════════════════════════════════════════════════ */}
-      <section style={{ padding: '8rem 0', background: '#fff' }}>
+      <section style={{ padding: '8rem 0', background: '#060103' }}>
         <div className="container" ref={newsRef}>
           <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
             <div style={{
-              display: 'inline-block', background: 'rgba(123,29,46,0.07)',
-              color: 'var(--bur)', fontWeight: 800, fontSize: '.7rem',
-              letterSpacing: '3px', textTransform: 'uppercase',
-              padding: '.4rem 1rem', borderRadius: 6, marginBottom: '1rem'
+              display: 'inline-block', background: 'rgba(245,196,179,0.08)',
+              border: '1px solid rgba(245,196,179,0.2)', color: '#F5C4B3',
+              fontWeight: 800, fontSize: '.7rem', letterSpacing: '3px',
+              textTransform: 'uppercase', padding: '.4rem 1.1rem', borderRadius: 6, marginBottom: '1.2rem'
             }}>Legal Updates</div>
             <h2 style={{
               fontFamily: "'Plus Jakarta Sans',sans-serif",
-              fontSize: 'clamp(1.9rem, 3.5vw, 2.9rem)', fontWeight: 900,
-              color: 'var(--txt)', letterSpacing: '-0.03em', marginBottom: '.7rem'
+              fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 900,
+              color: '#fff', letterSpacing: '-0.03em', marginBottom: '.6rem'
             }}>
-              Stay informed with <span style={{ color: 'var(--bur)' }}>Indian law updates</span>
+              Stay informed with <span style={{ color: '#F5C4B3' }}>Indian law updates</span>
             </h2>
-            <p style={{ color: 'var(--txt-3)', fontSize: '1rem', maxWidth: 500, margin: '0 auto', lineHeight: 1.7 }}>
+            <p style={{ color: 'rgba(249,238,228,0.7)', fontSize: '1.1rem', maxWidth: 600, margin: '0 auto', lineHeight: 1.7 }}>
               Landmark judgments, new legislation, and legal developments that affect everyday Indians.
             </p>
           </div>
@@ -1682,17 +1678,17 @@ export default function Home() {
                 className="news-card"
                 style={{
                   textDecoration: 'none', display: 'block',
-                  border: '1.5px solid var(--border)',
+                  border: '1px solid rgba(255,255,255,0.08)',
                   borderRadius: 18, padding: '1.8rem',
-                  background: 'var(--cream)',
+                  background: 'rgba(255,255,255,0.03)',
                   animation: newsVisible ? `fadeUp 0.6s ${i * 0.1}s both` : 'none',
                   opacity: newsVisible ? 1 : 0
                 }}
               >
                 <div style={{
                   display: 'inline-block',
-                  background: 'rgba(123,29,46,0.08)',
-                  color: 'var(--bur)', fontWeight: 700,
+                  background: 'rgba(245,196,179,0.1)',
+                  color: '#F5C4B3', fontWeight: 700,
                   fontSize: '.68rem', letterSpacing: '1.5px',
                   textTransform: 'uppercase', padding: '.28rem .75rem',
                   borderRadius: 30, marginBottom: '1rem'
@@ -1700,13 +1696,13 @@ export default function Home() {
                 <h3 style={{
                   fontFamily: "'Plus Jakarta Sans',sans-serif",
                   fontSize: '.95rem', fontWeight: 800,
-                  color: 'var(--txt)', lineHeight: 1.55, marginBottom: '1rem'
+                  color: '#fff', lineHeight: 1.55, marginBottom: '1rem'
                 }}>{item.title}</h3>
                 <div style={{
                   display: 'flex', alignItems: 'center', justifyContent: 'space-between'
                 }}>
-                  <span style={{ fontSize: '.72rem', color: 'var(--txt-3)', fontWeight: 600 }}>{item.date}</span>
-                  <ChevronRight size={14} color="var(--bur)" />
+                  <span style={{ fontSize: '.72rem', color: 'rgba(249,238,228,0.5)', fontWeight: 600 }}>{item.date}</span>
+                  <ChevronRight size={14} color="#F5C4B3" />
                 </div>
               </Link>
             ))}
@@ -1715,7 +1711,7 @@ export default function Home() {
           <div style={{ textAlign: 'center', marginTop: '3rem' }}>
             <Link to="/knowledge-hub" style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
-              border: '2px solid var(--bur)', color: 'var(--bur)',
+              border: '2px solid #F5C4B3', color: '#F5C4B3',
               fontWeight: 800, fontSize: '.95rem',
               padding: '.9rem 2.2rem', borderRadius: 14, textDecoration: 'none',
               transition: 'all 0.25s ease'
