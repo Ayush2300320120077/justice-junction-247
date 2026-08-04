@@ -168,8 +168,8 @@ export default function Navbar() {
 const s = {
   emergency:{position:'fixed',top:0,left:0,right:0,zIndex:9999,background:'#5C1521',padding:'.35rem 0',display:'flex',alignItems:'center',justifyContent:'center',gap:8},
   eDot:{width:7,height:7,background:'#4ADE80',borderRadius:'50%',animation:'pulseDot 2s infinite',display:'inline-block'},
-  nav:{position:'fixed',top:28,left:0,right:0,zIndex:9998,background:'transparent',borderBottom:'1px solid transparent',transition:'all 0.4s ease'},
-  navScrolled:{top: 0, boxShadow:'0 10px 30px rgba(0,0,0,0.5)', background: 'rgba(26, 10, 13, 0.85)', backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)', borderBottom:'1px solid rgba(255,255,255,0.08)'},
+  nav:{position:'fixed',top:28,left:0,right:0,zIndex:9998,background:'linear-gradient(to bottom, rgba(15,5,8,0.7) 0%, transparent 100%)',borderBottom:'1px solid transparent',transition:'all 0.4s ease'},
+  navScrolled:{top: 0, boxShadow:'0 10px 30px rgba(0,0,0,0.5)', background: 'rgba(26, 10, 13, 0.9)', backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)', borderBottom:'1px solid rgba(255,255,255,0.08)'},
   inner:{display:'flex',alignItems:'center',justifyContent:'space-between',height:72},
   links:{display:'flex',alignItems:'center',gap:'0.5rem',listStyle:'none'},
   link:{fontSize:'.9rem',fontWeight:600,color:'rgba(255,255,255,0.7)',textDecoration:'none',padding:'.5rem 1rem',borderRadius:'50px',transition:'all 0.3s ease'},
