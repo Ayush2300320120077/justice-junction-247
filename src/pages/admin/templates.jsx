@@ -12,7 +12,7 @@ export default function AdminTemplates() {
 
   useEffect(() => {
     if (!isLoggedIn || user?.role !== 'admin') { navigate('/admin/login'); return }
-    fetch('/api/documents/templates', { headers: { Authorization: `Bearer ${localStorage.getItem('jj_token')}` } })
+    fetch('/api/documents/templates', { credentials: 'include' })
       .then(r => r.json())
       .then(data => { setTemplates(data.templates || []); setLoading(false) })
       .catch(() => setLoading(false))
@@ -20,7 +20,7 @@ export default function AdminTemplates() {
 
   const deleteTemplate = async (id) => {
     if (!confirm('Delete this template?')) return
-    await fetch(`/api/documents/templates/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${localStorage.getItem('jj_token')}` } })
+    await fetch(`/api/documents/templates/${id}`, { credentials: 'include', method: 'DELETE', credentials: 'include' })
     setTemplates(ts => ts.filter(t => t._id !== id))
   }
 

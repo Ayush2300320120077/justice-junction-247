@@ -5,7 +5,8 @@ const reviewSchema = new mongoose.Schema({
   lawyerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Lawyer', required: true },
   bookingId: { type: mongoose.Schema.Types.ObjectId, ref: 'Booking' },
   rating: { type: Number, required: true, min: 1, max: 5 },
-  comment: String
+  comment: String,
+  status: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' }
 }, { timestamps: true })
 
 reviewSchema.index({ lawyerId: 1 })

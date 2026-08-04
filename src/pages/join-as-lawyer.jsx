@@ -463,7 +463,7 @@ export default function JoinAsLawyer() {
     if (Object.keys(errs).length) { setErrors(errs); return }
     setSubmitting(true)
     try {
-      const res = await fetch('/api/lawyer-application', {
+      const res = await fetch('/api/lawyer-application', { credentials: 'include',
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)

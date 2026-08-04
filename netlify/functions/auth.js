@@ -22,9 +22,10 @@ const router = express.Router();
 router.post('/register', async (req, res) => {
   try {
     await connectDB();
-    const { name, email, password, role, phone, city, state,
+    const { name, email, password, phone, city, state,
             specializations, experience, barRegistrationNumber,
             consultationFee, bio } = req.body;
+    const role = (req.body.role === 'lawyer') ? 'lawyer' : 'client';
 
     const exists = await User.findOne({ email });
     if (exists) return res.status(400).json({ error: 'Email already registered' });

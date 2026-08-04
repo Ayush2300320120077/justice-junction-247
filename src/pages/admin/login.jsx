@@ -2,8 +2,10 @@ import { useNavigate, useLocation, useSearchParams, useParams } from 'react-rout
 import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
 import { Eye, EyeOff, ShieldAlert, ShieldCheck } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 
 export default function AdminLogin() {
+  const { user, login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -13,17 +15,10 @@ export default function AdminLogin() {
 
   // Redirect if already logged in as admin
   useEffect(() => {
-    const token = localStorage.getItem('jj_admin_token') || localStorage.getItem('jj_token');
-    const userStr = localStorage.getItem('jj_admin_user') || localStorage.getItem('jj_user');
-    if (token && userStr) {
-      try {
-        const u = JSON.parse(userStr);
-        if (u.role === 'admin') {
-          navigate('/admin/dashboard');
-        }
-      } catch(e){}
+    if (user && user.role === 'admin') {
+      navigate('/admin/dashboard');
     }
-  }, [navigate]);
+  }, [user, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,7 +26,7 @@ export default function AdminLogin() {
     setLoading(true);
 
     try {
-      const res = await fetch('/api/admin/login', {
+      const res = await fetch('/api/admin/login', { credentials: 'include',
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: email.trim(), password })
@@ -43,10 +38,7 @@ export default function AdminLogin() {
         throw new Error(data.error || 'Admin authentication failed');
       }
 
-      localStorage.setItem('jj_admin_token', data.token);
-      localStorage.setItem('jj_token', data.token);
-      localStorage.setItem('jj_admin_user', JSON.stringify(data.admin));
-      localStorage.setItem('jj_user', JSON.stringify(data.admin));
+      login(data.user);
       navigate('/admin/dashboard');
 
     } catch (err) {

@@ -28,7 +28,7 @@ export default function MyCases() {
   const fetchCases = async () => {
     setLoading(true)
     try {
-      const res = await fetch('/api/my-cases', { headers:{ Authorization:`Bearer ${token}` } })
+      const res = await fetch('/api/my-cases', { credentials: 'include' })
       const data = await res.json()
       setCases(data.cases || [])
     } catch { showToast('Failed to load cases', 'error') }
@@ -40,9 +40,9 @@ export default function MyCases() {
     if (!form.title.trim()) { showToast('Case title is required', 'error'); return }
     setSubmitting(true)
     try {
-      const res = await fetch('/api/my-cases', {
+      const res = await fetch('/api/my-cases', { credentials: 'include',
         method: editingId ? 'PUT' : 'POST',
-        headers:{ 'Content-Type':'application/json', Authorization:`Bearer ${token}` },
+        headers:{ 'Content-Type':'application/json' },
         body: JSON.stringify(editingId ? { id:editingId, ...form } : form)
       })
       const data = await res.json()
@@ -58,7 +58,7 @@ export default function MyCases() {
   const handleDelete = async id => {
     if (!confirm('Delete this case?')) return
     try {
-      await fetch(`/api/my-cases?id=${id}`, { method:'DELETE', headers:{ Authorization:`Bearer ${token}` } })
+      await fetch(`/api/my-cases?id=${id}`, { credentials: 'include', method:'DELETE', credentials: 'include' })
       showToast('Case deleted', 'success')
       setCases(prev => prev.filter(c => c._id !== id))
     } catch { showToast('Failed to delete', 'error') }

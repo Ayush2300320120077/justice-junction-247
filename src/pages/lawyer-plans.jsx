@@ -49,9 +49,9 @@ export default function LawyerPlans() {
     if (user?.role !== 'lawyer') { showToast('Only lawyers can subscribe to plans', 'error'); return }
     setLoading(planId)
     try {
-      const res = await fetch('/api/payments/subscribe', {
+      const res = await fetch('/api/payments/subscribe', { credentials: 'include',
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('jj_token')}` },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ plan: planId })
       })
       const data = await res.json()
@@ -74,9 +74,9 @@ export default function LawyerPlans() {
           theme: { color: '#7B1D2E' },
           handler: async (response) => {
             try {
-              const verify = await fetch('/api/payments/verify-subscription', {
+              const verify = await fetch('/api/payments/verify-subscription', { credentials: 'include',
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('jj_token')}` },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ ...response, plan: planId })
               })
               const vData = await verify.json()

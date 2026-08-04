@@ -15,7 +15,15 @@ const userSchema = new mongoose.Schema({
   isVerified: { type: Boolean, default: false },
   rejectionReason: { type: String, default: '' },
   isSeedData: { type: Boolean, default: false },
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
+  // Auth hardening fields
+  loginAttempts: { type: Number, required: true, default: 0 },
+  lockUntil: { type: Date },
+  refreshTokens: [{ type: String }],
+  emailVerificationToken: { type: String },
+  emailVerificationExpires: { type: Date },
+  resetPasswordToken: { type: String },
+  resetPasswordExpires: { type: Date }
 });
 
 userSchema.pre('save', async function(next) {

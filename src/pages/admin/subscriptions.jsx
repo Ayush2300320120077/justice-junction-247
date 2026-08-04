@@ -16,7 +16,7 @@ export default function AdminSubscriptions() {
   const fetchSubs = async () => {
     try {
       const res = await fetch('/api/admin/subscriptions', {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('jj_admin_token')}` }
+        credentials: 'include'
       });
       if (res.ok) setSubs(await res.json());
     } catch (err) {
@@ -30,10 +30,10 @@ export default function AdminSubscriptions() {
     if (action === 'cancel' && !window.confirm('Are you sure you want to cancel this subscription? The lawyer will lose access to premium features immediately.')) return;
     
     try {
-      const res = await fetch(`/api/admin/subscriptions/${id}`, {
+      const res = await fetch(`/api/admin/subscriptions/${id}`, { credentials: 'include',
         method: 'PUT',
         headers: { 
-          'Authorization': `Bearer ${localStorage.getItem('jj_admin_token')}`,
+          
           'Content-Type': 'application/json' 
         },
         body: JSON.stringify({ action, plan })

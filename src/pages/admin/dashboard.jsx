@@ -2,6 +2,7 @@ import { useNavigate, useLocation, useSearchParams, useParams } from 'react-rout
 import { useState, useEffect } from 'react';
 import AdminLayout from '../../components/admin/AdminLayout';
 import AdminRoute from '../../components/admin/AdminRoute';
+import { useAuth } from '../../context/AuthContext';
 import { LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { 
   Users, Scale, CreditCard, DollarSign, TrendingUp, TrendingDown, 
@@ -13,6 +14,7 @@ import { useToast } from '../../context/ToastContext';
 export default function AdminDashboard() {
   const navigate = useNavigate(); const location = useLocation(); const [searchParams] = useSearchParams(); const params = useParams();;
   const { showToast } = useToast();
+  const { user: adminUser } = useAuth();
 
   const currentTab = searchParams.get('tab') || 'overview';
 
@@ -42,16 +44,6 @@ export default function AdminDashboard() {
   const [rejectionReason, setRejectionReason] = useState('');
   const [actionInProgress, setActionInProgress] = useState(false);
 
-  // Current admin user info
-  const [adminUser, setAdminUser] = useState(null);
-
-  useEffect(() => {
-    const userStr = localStorage.getItem('jj_admin_user');
-    if (userStr) {
-      try { setAdminUser(JSON.parse(userStr)); } catch (e) {}
-    }
-  }, []);
-
   // Fetch overview stats
   useEffect(() => {
     if (currentTab === 'overview') {
@@ -66,9 +58,8 @@ export default function AdminDashboard() {
   const fetchStats = async () => {
     setStatsLoading(true);
     try {
-      const token = localStorage.getItem('jj_admin_token');
       const res = await fetch('/api/admin/stats', {
-        headers: { 'Authorization': `Bearer ${token}` }
+        credentials: 'include'
       });
       if (res.ok) {
         setStats(await res.json());
@@ -83,9 +74,8 @@ export default function AdminDashboard() {
   const fetchUsers = async (page = 1) => {
     setUsersLoading(true);
     try {
-      const token = localStorage.getItem('jj_admin_token');
       const res = await fetch(`/api/admin/users?page=${page}&limit=20`, {
-        headers: { 'Authorization': `Bearer ${token}` }
+        credentials: 'include'
       });
       if (res.ok) {
         const data = await res.json();
@@ -105,9 +95,8 @@ export default function AdminDashboard() {
   const fetchPendingVerifications = async () => {
     setQueueLoading(true);
     try {
-      const token = localStorage.getItem('jj_admin_token');
       const res = await fetch('/api/admin/pending-verifications', {
-        headers: { 'Authorization': `Bearer ${token}` }
+        credentials: 'include'
       });
       if (res.ok) {
         const data = await res.json();
@@ -138,45 +127,44 @@ export default function AdminDashboard() {
   const executeModalAction = async () => {
     if (!modalData) return;
     setActionInProgress(true);
-    const token = localStorage.getItem('jj_admin_token');
     const { actionType, targetId, targetName } = modalData;
 
     try {
       let res;
       if (actionType === 'promote') {
-        res = await fetch('/api/admin/promote', {
+        res = await fetch('/api/admin/promote', { credentials: 'include',
           method: 'POST',
-          headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+          headers: {  'Content-Type': 'application/json' },
           body: JSON.stringify({ userId: targetId })
         });
       } else if (actionType === 'demote') {
-        res = await fetch('/api/admin/demote', {
+        res = await fetch('/api/admin/demote', { credentials: 'include',
           method: 'POST',
-          headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+          headers: {  'Content-Type': 'application/json' },
           body: JSON.stringify({ userId: targetId })
         });
       } else if (actionType === 'verify-lawyer-approve') {
-        res = await fetch('/api/admin/verify-lawyer', {
+        res = await fetch('/api/admin/verify-lawyer', { credentials: 'include',
           method: 'POST',
-          headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+          headers: {  'Content-Type': 'application/json' },
           body: JSON.stringify({ lawyerId: targetId, approved: true })
         });
       } else if (actionType === 'verify-lawyer-reject') {
-        res = await fetch('/api/admin/verify-lawyer', {
+        res = await fetch('/api/admin/verify-lawyer', { credentials: 'include',
           method: 'POST',
-          headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+          headers: {  'Content-Type': 'application/json' },
           body: JSON.stringify({ lawyerId: targetId, approved: false, reason: rejectionReason })
         });
       } else if (actionType === 'verify-client-approve') {
-        res = await fetch('/api/admin/verify-client', {
+        res = await fetch('/api/admin/verify-client', { credentials: 'include',
           method: 'POST',
-          headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+          headers: {  'Content-Type': 'application/json' },
           body: JSON.stringify({ clientId: targetId, approved: true })
         });
       } else if (actionType === 'verify-client-reject') {
-        res = await fetch('/api/admin/verify-client', {
+        res = await fetch('/api/admin/verify-client', { credentials: 'include',
           method: 'POST',
-          headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+          headers: {  'Content-Type': 'application/json' },
           body: JSON.stringify({ clientId: targetId, approved: false, reason: rejectionReason })
         });
       }

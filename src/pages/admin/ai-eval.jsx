@@ -39,9 +39,8 @@ export default function AdminAiEval() {
   const fetchStats = async () => {
     setStatsLoading(true);
     try {
-      const token = localStorage.getItem('jj_admin_token');
       const res = await fetch('/api/admin/ai-stats', {
-        headers: { Authorization: `Bearer ${token}` }
+        credentials: 'include'
       });
       if (res.ok) {
         const data = await res.json();
@@ -57,7 +56,6 @@ export default function AdminAiEval() {
   const fetchLogs = async (p = 1) => {
     setLogsLoading(true);
     try {
-      const token = localStorage.getItem('jj_admin_token');
       const params = new URLSearchParams({
         page: p,
         limit: 15,
@@ -67,7 +65,7 @@ export default function AdminAiEval() {
       });
 
       const res = await fetch(`/api/admin/ai-logs?${params.toString()}`, {
-        headers: { Authorization: `Bearer ${token}` }
+        credentials: 'include'
       });
 
       if (res.ok) {
@@ -97,14 +95,12 @@ export default function AdminAiEval() {
   const handleSaveAnnotation = async (logId) => {
     setSavingId(logId);
     try {
-      const token = localStorage.getItem('jj_admin_token');
       const data = annotations[logId] || {};
 
-      const res = await fetch(`/api/admin/ai-logs/${logId}/annotate`, {
+      const res = await fetch(`/api/admin/ai-logs/${logId}/annotate`, { credentials: 'include',
         method: 'PATCH',
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           reviewerRating: data.reviewerRating ? Number(data.reviewerRating) : undefined,
@@ -127,7 +123,6 @@ export default function AdminAiEval() {
   };
 
   const handleExportCSV = () => {
-    const token = localStorage.getItem('jj_admin_token');
     const params = new URLSearchParams({
       module: moduleFilter,
       ragFailed: ragFailedFilter,

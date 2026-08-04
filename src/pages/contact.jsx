@@ -32,7 +32,7 @@ export default function Contact() {
     // 1. Save to database via API
     let dbSaved = false
     try {
-      const res = await fetch('/api/contact', {
+      const res = await fetch('/api/contact', { credentials: 'include',
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(submitData),

@@ -1,6 +1,7 @@
 import { useNavigate, useLocation, useSearchParams, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
+import { useAuth } from '../../context/AuthContext';
 import { 
   LayoutDashboard, Scale, Users, CreditCard, 
   Inbox, FileText, AlertTriangle, BarChart3, 
@@ -24,17 +25,16 @@ const ADMIN_NAV = [
 
 
 export default function AdminLayout({ children, title = 'Dashboard' }) {
-  const navigate = useNavigate(); const location = useLocation(); const [searchParams] = useSearchParams(); const params = useParams();;
-  const [adminUser, setAdminUser] = useState(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const params = useParams();
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [time, setTime] = useState('');
+  const { user: adminUser } = useAuth();
 
   useEffect(() => {
-    const userStr = localStorage.getItem('jj_admin_user');
-    if (userStr) {
-      try { setAdminUser(JSON.parse(userStr)); } catch(e){}
-    }
-    
     // Real-time clock update
     const timer = setInterval(() => {
       setTime(new Date().toLocaleTimeString('en-IN', { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', second: '2-digit' }));
@@ -42,9 +42,10 @@ export default function AdminLayout({ children, title = 'Dashboard' }) {
     return () => clearInterval(timer);
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem('jj_admin_token');
-    localStorage.removeItem('jj_admin_user');
+  const { logout } = useAuth();
+  
+  const handleLogout = async () => {
+    await logout();
     navigate('/admin/login');
   };
 

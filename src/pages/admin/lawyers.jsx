@@ -28,9 +28,8 @@ export default function AdminLawyers() {
 
   const fetchLawyers = async () => {
     try {
-      const token = localStorage.getItem('jj_admin_token') || localStorage.getItem('jj_token') || '';
       const res = await fetch('/api/admin/lawyers', {
-        headers: { 'Authorization': `Bearer ${token}` }
+        credentials: 'include'
       });
       if (res.ok) {
         const data = await res.json();
@@ -52,14 +51,13 @@ export default function AdminLawyers() {
     if (action === 'delete' && !window.confirm('Are you sure you want to permanently delete this lawyer?')) return;
     
     try {
-      const token = localStorage.getItem('jj_admin_token') || localStorage.getItem('jj_token') || '';
       const method = action === 'delete' ? 'DELETE' : 'PUT';
       const body = action === 'delete' ? null : JSON.stringify({ action, payload, isVerified: action === 'verify', isBlocked: action === 'suspend' });
       
-      const res = await fetch(`/api/admin/lawyers/${id}`, {
+      const res = await fetch(`/api/admin/lawyers/${id}`, { credentials: 'include',
         method,
         headers: { 
-          'Authorization': `Bearer ${token}`,
+          
           'Content-Type': 'application/json' 
         },
         body

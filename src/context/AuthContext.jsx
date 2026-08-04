@@ -1,32 +1,39 @@
 import { createContext, useContext, useState, useEffect } from 'react'
-import { getUser, getToken, setAuth, clearAuth } from '../api'
+import { API } from '../api'
 
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
-  const [token, setToken] = useState(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    setUser(getUser())
-    setToken(getToken())
+    API.me()
+      .then(data => {
+        setUser(data.user)
+      })
+      .catch(() => {
+        setUser(null)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
   }, [])
 
-  const login = (tok, usr) => {
-    setAuth(tok, usr)
-    setToken(tok)
+  const login = (usr) => {
     setUser(usr)
   }
 
-  const logout = () => {
-    clearAuth()
-    setToken(null)
+  const logout = async () => {
+    try {
+      await API.logout()
+    } catch(e) {}
     setUser(null)
   }
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, isLoggedIn: !!token }}>
-      {children}
+    <AuthContext.Provider value={{ user, login, logout, isLoggedIn: !!user, loading }}>
+      {!loading && children}
     </AuthContext.Provider>
   )
 }

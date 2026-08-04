@@ -216,7 +216,7 @@ export default function KnowledgeHub() {
     e.preventDefault()
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(subEmail)) { showToast('Please enter a valid email address.', 'error'); return }
     try {
-      await fetch('/api/subscribe', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: subEmail }) })
+      await fetch('/api/subscribe', { credentials: 'include', method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: subEmail }) })
     } catch (_) { }
     setSubscribed(true)
     if (typeof window !== 'undefined') localStorage.setItem('jj_newsletter_email', subEmail)

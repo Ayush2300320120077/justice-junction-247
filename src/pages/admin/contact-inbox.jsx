@@ -19,7 +19,7 @@ export default function AdminContactInbox() {
   const fetchMessages = async () => {
     try {
       const res = await fetch('/api/admin/contacts', {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('jj_admin_token')}` }
+        credentials: 'include'
       });
       if (res.ok) setMessages(await res.json());
     } catch (err) {
@@ -36,10 +36,10 @@ export default function AdminContactInbox() {
       const method = action === 'delete' ? 'DELETE' : 'PUT';
       const body = action === 'delete' ? null : JSON.stringify({ action, payload });
       
-      const res = await fetch(`/api/admin/contacts/${id}`, {
+      const res = await fetch(`/api/admin/contacts/${id}`, { credentials: 'include',
         method,
         headers: { 
-          'Authorization': `Bearer ${localStorage.getItem('jj_admin_token')}`,
+          
           'Content-Type': 'application/json' 
         },
         body

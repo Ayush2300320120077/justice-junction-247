@@ -1,23 +1,11 @@
 const BASE = '/api'
 
-export const getToken = () => typeof window !== 'undefined' ? localStorage.getItem('jj_token') : null
-export const getUser  = () => typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('jj_user') || 'null') : null
-export const setAuth  = (token, user) => {
-  localStorage.setItem('jj_token', token)
-  localStorage.setItem('jj_user', JSON.stringify(user))
-}
-export const clearAuth = () => {
-  localStorage.removeItem('jj_token')
-  localStorage.removeItem('jj_user')
-}
-
 async function request(path, options = {}) {
-  const token = getToken()
-  const res = await fetch(BASE + path, {
+  const res = await fetch(BASE + path, { credentials: 'include',
     ...options,
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...(options.headers || {})
     },
     body: options.body ? JSON.stringify(options.body) : undefined
@@ -31,6 +19,7 @@ export const API = {
   // Auth
   register:      (body)       => request('/auth/register', { method: 'POST', body }),
   login:         (body)       => request('/auth/login',    { method: 'POST', body }),
+  logout:        ()           => request('/auth/logout',   { method: 'POST' }),
   me:            ()           => request('/auth/me'),
 
   // Lawyers

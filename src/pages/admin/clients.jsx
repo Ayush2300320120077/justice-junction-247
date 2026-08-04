@@ -26,9 +26,8 @@ export default function AdminClients() {
 
   const fetchClients = async () => {
     try {
-      const token = localStorage.getItem('jj_admin_token') || localStorage.getItem('jj_token') || '';
       const res = await fetch('/api/admin/clients', {
-        headers: { 'Authorization': `Bearer ${token}` }
+        credentials: 'include'
       });
       if (res.ok) {
         const data = await res.json();
@@ -50,14 +49,13 @@ export default function AdminClients() {
     if (action === 'delete' && !window.confirm('Are you sure you want to permanently delete this client?')) return;
     
     try {
-      const token = localStorage.getItem('jj_admin_token') || localStorage.getItem('jj_token') || '';
       const method = action === 'delete' ? 'DELETE' : 'PUT';
       const body = action === 'delete' ? null : JSON.stringify({ action, isBlocked: action === 'suspend' });
       
-      const res = await fetch(`/api/admin/clients/${id}`, {
+      const res = await fetch(`/api/admin/clients/${id}`, { credentials: 'include',
         method,
         headers: { 
-          'Authorization': `Bearer ${token}`,
+          
           'Content-Type': 'application/json' 
         },
         body

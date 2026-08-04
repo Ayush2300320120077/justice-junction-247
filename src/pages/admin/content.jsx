@@ -20,7 +20,7 @@ export default function AdminContent() {
   const fetchContent = async () => {
     try {
       const res = await fetch('/api/admin/content', {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('jj_admin_token')}` }
+        credentials: 'include'
       });
       if (res.ok) {
         const json = await res.json();
@@ -56,10 +56,10 @@ export default function AdminContent() {
         
       const body = editingItem ? formData : { type: activeTab, payload: formData };
 
-      const res = await fetch(url, {
+      const res = await fetch(url, { credentials: 'include',
         method,
         headers: { 
-          'Authorization': `Bearer ${localStorage.getItem('jj_admin_token')}`,
+          
           'Content-Type': 'application/json' 
         },
         body: JSON.stringify(body)
@@ -77,9 +77,9 @@ export default function AdminContent() {
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this item permanently?')) return;
     try {
-      const res = await fetch(`/api/admin/content/${activeTab}/${id}`, {
+      const res = await fetch(`/api/admin/content/${activeTab}/${id}`, { credentials: 'include',
         method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('jj_admin_token')}` }
+        credentials: 'include'
       });
       if (res.ok) fetchContent();
     } catch (err) {

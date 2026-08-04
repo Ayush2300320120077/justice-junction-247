@@ -22,7 +22,7 @@ export default function AdminSettings() {
   const fetchSettings = async () => {
     try {
       const res = await fetch('/api/admin/settings', {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('jj_admin_token')}` }
+        credentials: 'include'
       });
       if (res.ok) setSettings(await res.json());
     } catch (err) {
@@ -37,10 +37,10 @@ export default function AdminSettings() {
     setSaving(true);
     setSuccessMsg('');
     try {
-      const res = await fetch('/api/admin/settings', {
+      const res = await fetch('/api/admin/settings', { credentials: 'include',
         method: 'PUT',
         headers: { 
-          'Authorization': `Bearer ${localStorage.getItem('jj_admin_token')}`,
+          
           'Content-Type': 'application/json' 
         },
         body: JSON.stringify(settings)

@@ -21,9 +21,9 @@ export default function Subscriptions() {
     if (!isLoggedIn) { navigate('/login'); return }
     try {
       const token = localStorage.getItem('jj_token')
-      const res = await fetch('/api/subscriptions/subscribe', {
+      const res = await fetch('/api/subscriptions/subscribe', { credentials: 'include',
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ planId: plan._id })
       })
       const data = await res.json()
@@ -37,9 +37,9 @@ export default function Subscriptions() {
           description: `${plan.name} Plan`,
           order_id: data.orderId,
           handler: async (response) => {
-            const verifyRes = await fetch('/api/subscriptions/verify', {
+            const verifyRes = await fetch('/api/subscriptions/verify', { credentials: 'include',
               method: 'POST',
-              headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+              headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ ...response, planId: plan._id })
             })
             const verifyData = await verifyRes.json()

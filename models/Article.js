@@ -8,6 +8,7 @@ const articleSchema = new mongoose.Schema({
   authorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   coverImageUrl: String,
   isPublished: { type: Boolean, default: false },
+  publishedAt: Date,
   views: { type: Number, default: 0 },
   description: String,
   tags: [String]

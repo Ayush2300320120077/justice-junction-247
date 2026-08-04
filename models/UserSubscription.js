@@ -13,5 +13,6 @@ const userSubscriptionSchema = new mongoose.Schema({
 
 userSubscriptionSchema.index({ userId: 1 })
 userSubscriptionSchema.index({ status: 1 })
+userSubscriptionSchema.index({ userId: 1, status: 1 }) // Fast active-subscription lookups
 
 module.exports = mongoose.model('UserSubscription', userSubscriptionSchema)

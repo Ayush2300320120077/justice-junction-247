@@ -223,9 +223,9 @@ function LawyerDash() {
     setSubmittingOutcome(true)
     try {
       const token = localStorage.getItem('jj_token')
-      const res = await fetch('/api/ai/log-outcome', {
+      const res = await fetch('/api/ai/log-outcome', { credentials: 'include',
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           caseType:    outcomeForm.caseType,
           outcome:     outcomeForm.outcome,

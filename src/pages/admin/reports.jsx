@@ -19,7 +19,7 @@ export default function AdminReports() {
   const fetchReports = async () => {
     try {
       const res = await fetch('/api/admin/reports', {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('jj_admin_token')}` }
+        credentials: 'include'
       });
       if (res.ok) setReports(await res.json());
     } catch (err) {
@@ -34,10 +34,10 @@ export default function AdminReports() {
       const body = { status };
       if (resolution !== null) body.adminResolution = resolution;
 
-      const res = await fetch(`/api/admin/reports/${id}`, {
+      const res = await fetch(`/api/admin/reports/${id}`, { credentials: 'include',
         method: 'PUT',
         headers: { 
-          'Authorization': `Bearer ${localStorage.getItem('jj_admin_token')}`,
+          
           'Content-Type': 'application/json' 
         },
         body: JSON.stringify(body)

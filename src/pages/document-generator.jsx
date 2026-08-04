@@ -793,7 +793,7 @@ export default function DocumentGenerator() {
       setFlaggedSections([])
       
       try {
-        const response = await fetch('/api/ai/generate-document', {
+        const response = await fetch('/api/ai/generate-document', { credentials: 'include',
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
