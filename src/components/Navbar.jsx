@@ -60,8 +60,8 @@ export default function Navbar() {
 
           <div style={{display:'flex', alignItems:'center', gap:'0.75rem', flexShrink: 0}}>
             <div style={s.actions} className="hide-mobile">
-              <Link to="/favorites" style={s.iconBtn} title="Saved Lawyers">
-                <span style={{display:'flex',color:'#8B1A2A'}}><Heart size={18}/></span>
+              <Link to="/favorites" style={s.iconBtn} title="Saved Lawyers" onMouseOver={(e)=>e.currentTarget.style.background='rgba(255,255,255,0.2)'} onMouseOut={(e)=>e.currentTarget.style.background='rgba(255,255,255,0.1)'}>
+                <span style={{display:'flex',color:'#fff'}}><Heart size={18}/></span>
                 {favCount > 0 && <span style={s.badge}>{favCount}</span>}
               </Link>
 
@@ -80,15 +80,15 @@ export default function Navbar() {
                 </>
               ) : (
                 <>
-                  <Link to="/login" className="btn btn-sm" style={{border:'1.5px solid #fff',color:'#fff',background:'transparent',borderRadius:6}}>Login</Link>
-                  <Link to="/register" className="btn btn-sm" style={{background:'#fff',color:'#8B1A2A',border:'none',fontWeight:700,borderRadius:6}}>Register Free</Link>
+                  <Link to="/login" className="btn btn-sm" style={{border:'1px solid rgba(255,255,255,0.2)',color:'#fff',background:'transparent',borderRadius:50,padding:'0.5rem 1.2rem',transition:'all 0.2s'}} onMouseOver={(e)=>e.currentTarget.style.background='rgba(255,255,255,0.1)'} onMouseOut={(e)=>e.currentTarget.style.background='transparent'}>Login</Link>
+                  <Link to="/register" className="btn btn-sm" style={{background:'var(--gold)',color:'#000',border:'none',fontWeight:700,borderRadius:50,padding:'0.5rem 1.2rem',transition:'all 0.2s',boxShadow:'0 4px 14px rgba(201,148,58,0.3)'}} onMouseOver={(e)=>e.currentTarget.style.transform='translateY(-1px)'} onMouseOut={(e)=>e.currentTarget.style.transform='none'}>Register Free</Link>
                 </>
               )}
             </div>
 
             <div className="show-mobile-flex" style={{alignItems:'center', gap:'0.5rem'}}>
               <Link to="/favorites" style={{...s.iconBtn, width:36, height:36}} title="Saved Lawyers">
-                <span style={{display:'flex',color:'#8B1A2A'}}><Heart size={16}/></span>
+                <span style={{display:'flex',color:'#fff'}}><Heart size={16}/></span>
                 {favCount > 0 && <span style={{...s.badge, width:16, height:16, fontSize:'.6rem', top:-4, right:-4}}>{favCount}</span>}
               </Link>
               <button style={s.burger} onClick={() => setMobileOpen(o => !o)} aria-label="Toggle Navigation Menu">
@@ -168,16 +168,16 @@ export default function Navbar() {
 const s = {
   emergency:{position:'fixed',top:0,left:0,right:0,zIndex:9999,background:'#5C1521',padding:'.35rem 0',display:'flex',alignItems:'center',justifyContent:'center',gap:8},
   eDot:{width:7,height:7,background:'#4ADE80',borderRadius:'50%',animation:'pulseDot 2s infinite',display:'inline-block'},
-  nav:{position:'fixed',top:28,left:0,right:0,zIndex:9998,background:'#7B1D2E',borderBottom:'1px solid rgba(255,255,255,.12)',transition:'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'},
-  navScrolled:{top: 0, boxShadow:'0 4px 20px rgba(139,26,42,0.3)', background: '#7B1D2E'},
+  nav:{position:'fixed',top:28,left:0,right:0,zIndex:9998,background:'rgba(26, 10, 13, 0.4)',backdropFilter:'blur(20px)',WebkitBackdropFilter:'blur(20px)',borderBottom:'1px solid rgba(255,255,255,0.08)',transition:'all 0.4s ease'},
+  navScrolled:{top: 0, boxShadow:'0 10px 30px rgba(0,0,0,0.5)', background: 'rgba(15, 5, 8, 0.85)'},
   inner:{display:'flex',alignItems:'center',justifyContent:'space-between',height:72},
-  links:{display:'flex',alignItems:'center',gap:'2rem',listStyle:'none'},
-  link:{fontSize:'.9rem',fontWeight:700,color:'#F5E6D3',textDecoration:'none',padding:'.5rem 0',borderBottom:'2.5px solid transparent',transition:'all 0.2s'},
-  linkActive:{color:'#fff',borderBottomColor:'#fff'},
-  actions:{display:'flex',gap:10,alignItems:'center'},
-  iconBtn:{width:40,height:40,borderRadius:'50%',border:'1px solid #EDD5BE',background:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'1.1rem',position:'relative',textDecoration:'none',cursor:'pointer',transition:'all 0.2s'},
-  badge:{position:'absolute',top:-2,right:-2,width:18,height:18,background:'#8B1A2A',color:'#fff',borderRadius:'50%',fontSize:'.65rem',fontWeight:800,display:'flex',alignItems:'center',justifyContent:'center',border: '2px solid #fff'},
-  userChip:{display:'flex',alignItems:'center',gap:8,padding:'.4rem .8rem',background:'#fff',borderRadius:50,border:'1px solid #E8C9A8', boxShadow: 'var(--sh-sm)'},
+  links:{display:'flex',alignItems:'center',gap:'0.5rem',listStyle:'none'},
+  link:{fontSize:'.9rem',fontWeight:600,color:'rgba(255,255,255,0.7)',textDecoration:'none',padding:'.5rem 1rem',borderRadius:'50px',transition:'all 0.3s ease'},
+  linkActive:{color:'#fff',background:'rgba(255,255,255,0.1)'},
+  actions:{display:'flex',gap:12,alignItems:'center'},
+  iconBtn:{width:40,height:40,borderRadius:'50%',background:'rgba(255,255,255,0.05)',border:'1px solid rgba(255,255,255,0.1)',display:'flex',alignItems:'center',justifyContent:'center',position:'relative',textDecoration:'none',cursor:'pointer',transition:'all 0.3s ease'},
+  badge:{position:'absolute',top:-2,right:-2,width:18,height:18,background:'#8B1A2A',color:'#fff',borderRadius:'50%',fontSize:'.65rem',fontWeight:800,display:'flex',alignItems:'center',justifyContent:'center',border: '2px solid rgba(255,255,255,0.2)'},
+  userChip:{display:'flex',alignItems:'center',gap:8,padding:'.4rem .8rem',background:'rgba(255,255,255,0.1)',borderRadius:50,border:'1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)'},
   userAv:{width:28,height:28,borderRadius:'50%',background:'#7B1D2E',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'.8rem',fontWeight:700},
   burger:{width:40,height:40,background:'rgba(255,255,255,0.15)',border:'1px solid rgba(255,255,255,0.25)',borderRadius:12,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',transition: 'all 0.2s', color: '#fff', fontSize: '1.2rem'},
   mobileMenu:{position:'fixed',top:100,left:0,right:0,bottom:0,zIndex:199,background:'rgba(253,248,244,0.98)',padding:'1.5rem 0',display:'flex',flexDirection:'column',transition:'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)', overflowY: 'auto'},
