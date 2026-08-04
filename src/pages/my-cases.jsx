@@ -58,7 +58,7 @@ export default function MyCases() {
   const handleDelete = async id => {
     if (!confirm('Delete this case?')) return
     try {
-      await fetch(`/api/my-cases?id=${id}`, { credentials: 'include', method:'DELETE', credentials: 'include' })
+      await fetch(`/api/my-cases/${id}`, { credentials: 'include', method: 'DELETE' })
       showToast('Case deleted', 'success')
       setCases(prev => prev.filter(c => c._id !== id))
     } catch { showToast('Failed to delete', 'error') }

@@ -17,21 +17,13 @@ const validate = (req, res, next) => {
   next();
 };
 
-const app = express();
-app.use(express.json());
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-  if (req.method === 'OPTIONS') return res.sendStatus(200);
-  next();
-});
+// ── No manual CORS headers here — handled globally in server.js ──
 
 const router = express.Router();
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // Limit each IP to 5 requests per window
+  max: 10, // 10 requests per window (was 5 — too aggressive for login UX)
   message: { error: 'Too many requests from this IP, please try again after 15 minutes' },
   standardHeaders: true,
   legacyHeaders: false,
@@ -47,10 +39,13 @@ const setAuthCookies = (res, accessToken, refreshToken) => {
   res.cookie('refreshToken', refreshToken, { ...cookieOptions, maxAge: 7 * 24 * 60 * 60 * 1000 }); // 7 days
 };
 
+// Prevent refreshTokens array growing unboundedly — keep max 5
+const MAX_REFRESH_TOKENS = 5;
+
 router.post('/register', authLimiter, [
   body('name').trim().notEmpty().withMessage('Name is required').isLength({ max: 100 }).withMessage('Name must be under 100 characters'),
   body('email').isEmail().withMessage('Valid email is required').normalizeEmail(),
-  body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long'),
+  body('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters long'),
   validate
 ], async (req, res) => {
   try {
@@ -95,7 +90,6 @@ router.post('/register', authLimiter, [
         experience: exp, experienceLevel: level,
         consultationFee: parseFloat(consultationFee) || 0,
         bio: bio || '',
-        // New fields
         dateOfBirth: dateOfBirth || undefined,
         gender: gender || undefined,
         photo: photo || '',
@@ -120,7 +114,9 @@ router.post('/register', authLimiter, [
       process.env.JWT_SECRET, { expiresIn: '15m' }
     );
     const refreshToken = crypto.randomBytes(40).toString('hex');
-    user.refreshTokens.push(refreshToken);
+
+    // Cap tokens array — keep only the most recent MAX_REFRESH_TOKENS
+    user.refreshTokens = [...user.refreshTokens.slice(-(MAX_REFRESH_TOKENS - 1)), refreshToken];
     await user.save();
 
     setAuthCookies(res, accessToken, refreshToken);
@@ -129,7 +125,10 @@ router.post('/register', authLimiter, [
       user: { id: user._id, name, email, role },
       message: 'Registration successful. Please verify your email.'
     });
-  } catch (err) { res.status(500).json({ error: err.message }); }
+  } catch (err) {
+    console.error('Register error:', err.message);
+    res.status(500).json({ error: 'Registration failed. Please try again.' });
+  }
 });
 
 router.post('/login', authLimiter, [
@@ -168,7 +167,9 @@ router.post('/login', authLimiter, [
       process.env.JWT_SECRET, { expiresIn: '15m' }
     );
     const refreshToken = crypto.randomBytes(40).toString('hex');
-    user.refreshTokens.push(refreshToken);
+
+    // Cap tokens array
+    user.refreshTokens = [...user.refreshTokens.slice(-(MAX_REFRESH_TOKENS - 1)), refreshToken];
     await user.save();
 
     setAuthCookies(res, accessToken, refreshToken);
@@ -176,7 +177,10 @@ router.post('/login', authLimiter, [
     res.json({ 
       user: { id: user._id, name: user.name, email: user.email, role: user.role } 
     });
-  } catch (err) { res.status(500).json({ error: err.message }); }
+  } catch (err) {
+    console.error('Login error:', err.message);
+    res.status(500).json({ error: 'Login failed. Please try again.' });
+  }
 });
 
 router.post('/refresh', async (req, res) => {
@@ -193,6 +197,7 @@ router.post('/refresh', async (req, res) => {
       return res.status(401).json({ error: 'Invalid refresh token' });
     }
     
+    // Rotate: remove used token
     user.refreshTokens = user.refreshTokens.filter(t => t !== refreshToken);
     
     const newAccessToken = jwt.sign(
@@ -201,13 +206,17 @@ router.post('/refresh', async (req, res) => {
     );
     const newRefreshToken = crypto.randomBytes(40).toString('hex');
     
-    user.refreshTokens.push(newRefreshToken);
+    // Cap tokens array
+    user.refreshTokens = [...user.refreshTokens.slice(-(MAX_REFRESH_TOKENS - 1)), newRefreshToken];
     await user.save();
     
     setAuthCookies(res, newAccessToken, newRefreshToken);
     
     res.json({ success: true });
-  } catch (err) { res.status(500).json({ error: err.message }); }
+  } catch (err) {
+    console.error('Refresh error:', err.message);
+    res.status(500).json({ error: 'Token refresh failed.' });
+  }
 });
 
 router.post('/logout', async (req, res) => {
@@ -224,9 +233,13 @@ router.post('/logout', async (req, res) => {
     res.clearCookie('accessToken');
     res.clearCookie('refreshToken');
     res.json({ message: 'Logged out successfully' });
-  } catch (err) { res.status(500).json({ error: err.message }); }
+  } catch (err) {
+    console.error('Logout error:', err.message);
+    res.status(500).json({ error: 'Logout failed.' });
+  }
 });
 
+// BUG 2 FIX: resetToken is NEVER returned in the response — only sent via email
 router.post('/forgot-password', authLimiter, [
   body('email').isEmail().withMessage('Valid email is required').normalizeEmail(),
   validate
@@ -235,22 +248,32 @@ router.post('/forgot-password', authLimiter, [
     await connectDB();
     const { email } = req.body;
     const user = await User.findOne({ email });
+
+    // Always return the same response to prevent user enumeration
+    const safeMsg = 'If that email is registered, a password reset link has been sent.';
     if (!user) {
-      return res.json({ message: 'If that email is registered, a reset link has been sent.' });
+      return res.json({ message: safeMsg });
     }
     
     const resetToken = crypto.randomBytes(32).toString('hex');
     user.resetPasswordToken = resetToken;
-    user.resetPasswordExpires = Date.now() + 15 * 60 * 1000;
+    user.resetPasswordExpires = Date.now() + 15 * 60 * 1000; // 15 minutes
     await user.save();
     
-    res.json({ message: 'If that email is registered, a reset link has been sent.', resetToken });
-  } catch (err) { res.status(500).json({ error: err.message }); }
+    // TODO: Send email with resetToken via nodemailer
+    // The token must only travel via the registered email address — never in the HTTP response
+    // Example: sendResetEmail(user.email, `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`)
+    
+    res.json({ message: safeMsg });
+  } catch (err) {
+    console.error('Forgot password error:', err.message);
+    res.status(500).json({ error: 'Request failed. Please try again.' });
+  }
 });
 
 router.post('/reset-password', authLimiter, [
   body('token').notEmpty().withMessage('Valid token is required'),
-  body('newPassword').isLength({ min: 6 }).withMessage('New password must be at least 6 characters long'),
+  body('newPassword').isLength({ min: 8 }).withMessage('New password must be at least 8 characters long'),
   validate
 ], async (req, res) => {
   try {
@@ -269,12 +292,15 @@ router.post('/reset-password', authLimiter, [
     user.password = newPassword;
     user.resetPasswordToken = undefined;
     user.resetPasswordExpires = undefined;
-    user.refreshTokens = [];
+    user.refreshTokens = []; // Invalidate all sessions on password reset
     
     await user.save();
     
-    res.json({ message: 'Password reset successful' });
-  } catch (err) { res.status(500).json({ error: err.message }); }
+    res.json({ message: 'Password reset successful. Please log in with your new password.' });
+  } catch (err) {
+    console.error('Reset password error:', err.message);
+    res.status(500).json({ error: 'Password reset failed. Please try again.' });
+  }
 });
 
 router.post('/verify-email', [
@@ -300,16 +326,23 @@ router.post('/verify-email', [
     await user.save();
     
     res.json({ message: 'Email verified successfully' });
-  } catch (err) { res.status(500).json({ error: err.message }); }
+  } catch (err) {
+    console.error('Email verification error:', err.message);
+    res.status(500).json({ error: 'Verification failed. Please try again.' });
+  }
 });
 
 router.get('/me', requireAuth, async (req, res) => {
   try {
     await connectDB();
-    const user = await User.findById(req.user.id).select('-password');
+    const user = await User.findById(req.user.id).select('-password -refreshTokens -resetPasswordToken -emailVerificationToken');
+    if (!user) return res.status(404).json({ error: 'User not found' });
     res.json({ user });
-  } catch (err) { res.status(401).json({ error: 'Invalid token' }); }
+  } catch (err) {
+    res.status(401).json({ error: 'Invalid token' });
+  }
 });
 
+const app = express();
 app.use('/api/auth', router);
 module.exports = app;

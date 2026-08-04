@@ -3,6 +3,8 @@ import { Routes, Route, useLocation } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import AdminRoute from './components/admin/AdminRoute'
+import PrivateRoute from './components/PrivateRoute'
+import ErrorBoundary from './components/ErrorBoundary'
 
 // Lazy load all pages
 const Home            = lazy(() => import('./pages/index'))
@@ -92,7 +94,8 @@ export default function App() {
       {!isAdminRoute && <Navbar />}
 
       <div className="page-reveal">
-        <Suspense fallback={<LoadingSpinner />}>
+        <ErrorBoundary>
+          <Suspense fallback={<LoadingSpinner />}>
           <Routes>
             {/* Public routes */}
             <Route path="/" element={<Home />} />
@@ -117,10 +120,10 @@ export default function App() {
             <Route path="/terms" element={<Terms />} />
             <Route path="/privacy-policy" element={<Privacy />} />
 
-            {/* Authenticated routes */}
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/my-cases" element={<MyCases />} />
-            <Route path="/favorites" element={<Favorites />} />
+            {/* Authenticated routes — require login */}
+            <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+            <Route path="/my-cases" element={<PrivateRoute><MyCases /></PrivateRoute>} />
+            <Route path="/favorites" element={<PrivateRoute><Favorites /></PrivateRoute>} />
 
             {/* Admin routes */}
             <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
@@ -142,6 +145,7 @@ export default function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
+        </ErrorBoundary>
       </div>
 
       {!isAdminRoute && <Footer />}

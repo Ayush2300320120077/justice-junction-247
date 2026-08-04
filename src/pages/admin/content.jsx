@@ -56,11 +56,11 @@ export default function AdminContent() {
         
       const body = editingItem ? formData : { type: activeTab, payload: formData };
 
-      const res = await fetch(url, { credentials: 'include',
+      const res = await fetch(url, {
+        credentials: 'include',
         method,
-        headers: { 
-          
-          'Content-Type': 'application/json' 
+        headers: {
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(body)
       });
@@ -77,9 +77,9 @@ export default function AdminContent() {
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this item permanently?')) return;
     try {
-      const res = await fetch(`/api/admin/content/${activeTab}/${id}`, { credentials: 'include',
-        method: 'DELETE',
-        credentials: 'include'
+      const res = await fetch(`/api/admin/content/${activeTab}/${id}`, {
+        credentials: 'include',
+        method: 'DELETE'
       });
       if (res.ok) fetchContent();
     } catch (err) {
