@@ -1041,20 +1041,21 @@ export default function Home() {
       {/* ══════════════════════════════════════════════════════
           SECTION 3 — HOW IT WORKS (cinematic)
       ══════════════════════════════════════════════════════ */}
-      <section style={{ padding: '8rem 0', background: '#fff', position: 'relative', overflow: 'hidden' }}>
-        {/* Background decorative */}
+      <section style={{ padding: '8rem 0', position: 'relative', overflow: 'hidden' }}>
+        {/* Cinematic background */}
         <div style={{
-          position: 'absolute', top: '-15%', right: '-8%', width: 700, height: 700,
-          background: 'radial-gradient(circle, rgba(123,29,46,0.04) 0%, transparent 65%)',
-          borderRadius: '50%', pointerEvents: 'none'
+          position: 'absolute', inset: 0, zIndex: 0,
+          backgroundImage: 'url(/images/bg-how-it-works.jpg)',
+          backgroundSize: 'cover', backgroundPosition: 'center'
         }} />
+        {/* Soft glass overlay for text readability */}
         <div style={{
-          position: 'absolute', bottom: '-10%', left: '-5%', width: 500, height: 500,
-          background: 'radial-gradient(circle, rgba(123,29,46,0.03) 0%, transparent 65%)',
-          borderRadius: '50%', pointerEvents: 'none'
+          position: 'absolute', inset: 0, zIndex: 1,
+          background: 'linear-gradient(to bottom, rgba(255,255,255,0.92), rgba(255,255,255,0.97))',
+          backdropFilter: 'blur(4px)'
         }} />
 
-        <div className="container">
+        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
           <div style={{ textAlign: 'center', marginBottom: '5rem' }}>
             <div style={{
               display: 'inline-block', background: 'rgba(123,29,46,0.07)',
@@ -1140,8 +1141,18 @@ export default function Home() {
       {/* ══════════════════════════════════════════════════════
           SECTION 4 — PRACTICE AREAS (image cards)
       ══════════════════════════════════════════════════════ */}
-      <section style={{ padding: '7rem 0', background: 'var(--cream)' }}>
-        <div className="container">
+      <section style={{ padding: '7rem 0', position: 'relative', overflow: 'hidden' }}>
+        {/* Cinematic background */}
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 0,
+          backgroundImage: 'url(/images/bg-practice-areas.jpg)',
+          backgroundSize: 'cover', backgroundPosition: 'center'
+        }} />
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 1,
+          background: 'linear-gradient(180deg, rgba(250,246,240,1) 0%, rgba(250,246,240,0.82) 50%, rgba(250,246,240,1) 100%)'
+        }} />
+        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
           <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
             <div style={{
               display: 'inline-block', background: 'rgba(123,29,46,0.07)',
@@ -1244,24 +1255,20 @@ export default function Home() {
       </section>
 
       {/* ══════════════════════════════════════════════════════
-          SECTION 5 — WHY JUSTICE JUNCTION (dark bg with law books image)
+          SECTION 5 — WHY JUSTICE JUNCTION
       ══════════════════════════════════════════════════════ */}
       <section style={{ padding: '0', position: 'relative', overflow: 'hidden', minHeight: 600 }}>
-        {/* Split layout — left text, right image */}
+        {/* Cinematic full-width background */}
         <div style={{
-          position: 'absolute', right: 0, top: 0, bottom: 0, width: '45%', zIndex: 0
-        }}>
-          <div style={{
-            position: 'absolute', inset: 0,
-            backgroundImage: 'url(/images/law-books.jpg)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center'
-          }} />
-          <div style={{
-            position: 'absolute', inset: 0,
-            background: 'linear-gradient(90deg, var(--cream) 0%, rgba(249,238,228,0.1) 50%, transparent 100%)'
-          }} />
-        </div>
+          position: 'absolute', inset: 0, zIndex: 0,
+          backgroundImage: 'url(/images/bg-why-us.jpg)',
+          backgroundSize: 'cover', backgroundPosition: 'center'
+        }} />
+        {/* Gradient overlay to ensure text is readable on the left */}
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 1,
+          background: 'linear-gradient(90deg, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0.85) 55%, rgba(255,255,255,0.3) 100%)'
+        }} />
 
         <div className="container" ref={whyRef} style={{ position: 'relative', zIndex: 1, padding: '8rem 0' }}>
           <div style={{ maxWidth: 680 }}>
@@ -1331,14 +1338,19 @@ export default function Home() {
       {/* ══════════════════════════════════════════════════════
           SECTION 6 — AI LEGAL TOOLS SHOWCASE
       ══════════════════════════════════════════════════════ */}
-      <section style={{ padding: '8rem 0', background: '#fff', position: 'relative', overflow: 'hidden' }}>
+      <section style={{ padding: '8rem 0', position: 'relative', overflow: 'hidden' }}>
         <div style={{
-          position: 'absolute', inset: 0,
-          backgroundImage: 'url(/images/ai-legal.jpg)',
-          backgroundSize: 'cover', backgroundPosition: 'center',
-          opacity: 0.04, zIndex: 0
+          position: 'absolute', inset: 0, zIndex: 0,
+          backgroundImage: 'url(/images/bg-tools.jpg)',
+          backgroundSize: 'cover', backgroundPosition: 'center'
         }} />
-        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 1,
+          background: 'rgba(255,255,255,0.85)',
+          backdropFilter: 'blur(8px)',
+          WebkitBackdropFilter: 'blur(8px)'
+        }} />
+        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
           <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
             <div style={{
               display: 'inline-block', background: 'rgba(123,29,46,0.07)',
