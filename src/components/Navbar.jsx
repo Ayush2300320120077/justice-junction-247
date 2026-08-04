@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { Scale, Heart, Home, Search, Shield, LayoutDashboard, Briefcase, Info, LogOut, BookOpen, FileText } from 'lucide-react'
+import { Scale, Heart, Home, Search, Shield, LayoutDashboard, Briefcase, Info, LogOut, BookOpen, FileText, IndianRupee } from 'lucide-react'
 import Logo from './Logo'
 
 export default function Navbar() {
@@ -51,6 +51,7 @@ export default function Navbar() {
               ['/knowledge-hub','Knowledge Hub'],
               ['/document-generator','Legal Tools'],
               ['/join-as-lawyer','For Lawyers'],
+              ['/pricing','Pricing'],
               ['/about','About Us']
             ].map(([p,l])=>(
               <li key={p}><Link to={p} style={{...s.link,...(isActive(p)?s.linkActive:{})}}>{l}</Link></li>
@@ -118,6 +119,7 @@ export default function Navbar() {
               ['/knowledge-hub', <BookOpen size={18}/>, 'Knowledge Hub'],
               ['/document-generator', <FileText size={18}/>, 'Legal Tools'],
               ['/join-as-lawyer', <Briefcase size={18}/>, 'For Lawyers'],
+              ['/pricing', <IndianRupee size={18}/>, 'Pricing'],
               ['/about', <Info size={18}/>, 'About Us'],
               ...(isLoggedIn ? [
                 user?.role === 'admin' ? ['/admin', <Shield size={18}/>, 'Admin Panel'] : ['/dashboard', <LayoutDashboard size={18}/>, 'Dashboard'],

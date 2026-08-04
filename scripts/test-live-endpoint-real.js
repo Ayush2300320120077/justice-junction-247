@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
-const connectDB = require('./middleware/db');
-const aiSubApp = require('./api/ai');
+const connectDB = require('../middleware/db');
+const aiSubApp = require('../api/ai');
 
 async function testLiveEndpoint() {
   await connectDB();

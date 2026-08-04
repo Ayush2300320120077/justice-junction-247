@@ -104,7 +104,7 @@ export default function LawyerPlans() {
         <meta name="description" content="Subscription plans for lawyers on Justice Junction 24/7. Grow your practice with featured listings and priority placement." />
       </Helmet>
       {/* Header */}
-      <section style={{padding:'5rem 5vw',background:`linear-gradient(rgba(42, 22, 32, 0.85), rgba(123, 29, 46, 0.9)), url('/justice-bg.png')`, backgroundSize:'cover', backgroundPosition:'center', backgroundAttachment:'fixed', textAlign:'center', position:'relative', overflow:'hidden', boxShadow:'inset 0 -20px 40px rgba(0,0,0,0.2)'}}>
+      <section style={{padding:'5rem 5vw',background:`linear-gradient(rgba(42, 22, 32, 0.85), rgba(123, 29, 46, 0.9)), url('/justice-bg.webp')`, backgroundSize:'cover', backgroundPosition:'center', backgroundAttachment:'fixed', textAlign:'center', position:'relative', overflow:'hidden', boxShadow:'inset 0 -20px 40px rgba(0,0,0,0.2)'}}>
         <div style={{position:'absolute',inset:0,background:'radial-gradient(ellipse at 50% 0%,rgba(201,148,58,.15),transparent 70%)',pointerEvents:'none'}}/>
         <div style={{position:'relative'}}>
           <div style={{display:'inline-flex',alignItems:'center',gap:6,background:'rgba(255,255,255,.12)',border:'1px solid rgba(255,255,255,.2)',borderRadius:50,padding:'.3rem 1rem',fontSize:'.7rem',fontWeight:800,color:'rgba(255,255,255,.85)',textTransform:'uppercase',letterSpacing:'.12em',marginBottom:'1.5rem',backdropFilter:'blur(4px)'}}>For Advocates</div>

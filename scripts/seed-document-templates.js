@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
-const DocumentTemplate = require('./models/DocumentTemplate');
+const DocumentTemplate = require('../models/DocumentTemplate');
 
 const templatesToSeed = [
   {

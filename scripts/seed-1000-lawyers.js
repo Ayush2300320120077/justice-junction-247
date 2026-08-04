@@ -1,7 +1,7 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
-const User = require('./models/User');
-const Lawyer = require('./models/Lawyer');
+const User = require('../models/User');
+const Lawyer = require('../models/Lawyer');
 
 const FIRST_NAMES = [
   'Aarav', 'Vihaan', 'Aditya', 'Sai', 'Arjun', 'Siddharth', 'Rohan', 'Rahul', 'Amit', 'Vikram',

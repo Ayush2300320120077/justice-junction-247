@@ -1,8 +1,8 @@
 require('dotenv').config();
-const { runCorpusIngestion } = require('./backend/ai/corpus/embed');
-const { retrieveContext } = require('./backend/ai/retrieve');
-const connectDB = require('./middleware/db');
-const AiInteractionLog = require('./models/AiInteractionLog');
+const { runCorpusIngestion } = require('../backend/ai/corpus/embed');
+const { retrieveContext } = require('../backend/ai/retrieve');
+const connectDB = require('../middleware/db');
+const AiInteractionLog = require('../models/AiInteractionLog');
 
 async function testRAGPipeline() {
   console.log('====================================================');

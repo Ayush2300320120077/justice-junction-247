@@ -1,8 +1,8 @@
 require('dotenv').config();
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const connectDB = require('./middleware/db');
-const adminSubApp = require('./api/admin');
+const connectDB = require('../middleware/db');
+const adminSubApp = require('../api/admin');
 
 async function testAdminAiEval() {
   await connectDB();

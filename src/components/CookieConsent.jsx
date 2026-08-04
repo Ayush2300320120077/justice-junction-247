@@ -3,6 +3,13 @@ import { useState, useEffect } from 'react'
 
 export default function CookieConsent() {
   const [show, setShow] = useState(false)
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 640)
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 640)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   useEffect(() => {
     const accepted = localStorage.getItem('jj_cookie_accepted')
@@ -21,7 +28,7 @@ export default function CookieConsent() {
   if (!show) return null
 
   return (
-    <div style={s.overlay}>
+    <div style={{ ...s.overlay, bottom: isMobile ? 180 : 40 }}>
       <div style={s.banner} className="cookie-consent-animate">
         <div style={s.text}>
           We use cookies to improve your experience. By continuing, you agree to our{' '}
@@ -42,7 +49,7 @@ export default function CookieConsent() {
 
 const s = {
   overlay: {
-    position: 'fixed', bottom: 40, left: 0, right: 0,
+    position: 'fixed', left: 0, right: 0,
     zIndex: 9998, display: 'flex', justifyContent: 'center',
     padding: '0 1rem', pointerEvents: 'none',
   },

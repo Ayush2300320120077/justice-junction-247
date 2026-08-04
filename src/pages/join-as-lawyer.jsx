@@ -525,8 +525,7 @@ export default function JoinAsLawyer() {
         <img
           className="jl-hero-img-fallback"
           src="/images/hero-lawyers-poster.jpg"
-          alt=""
-          aria-hidden="true"
+          alt="Legal professional in a courtroom"
           loading="eager"
         />
 

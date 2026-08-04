@@ -1,6 +1,6 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
-const Lawyer = require('./models/Lawyer');
+const Lawyer = require('../models/Lawyer');
 
 async function migrate() {
   try {

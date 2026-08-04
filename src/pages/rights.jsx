@@ -603,7 +603,7 @@ export default function Rights() {
 
 const s = {
   hero: { padding:'6rem 0', position:'relative', overflow:'hidden', color:'#fff', background:'var(--bur)' },
-  heroBg: { position:'absolute', inset:0, background:`linear-gradient(rgba(123,29,46,0.92),rgba(123,29,46,0.97)),url('/justice-bg.png')`, backgroundSize:'cover', zIndex:1 },
+  heroBg: { position:'absolute', inset:0, background:`linear-gradient(rgba(123,29,46,0.92),rgba(123,29,46,0.97)),url('/justice-bg.webp')`, backgroundSize:'cover', zIndex:1 },
   h1: { fontFamily:"'Playfair Display',serif", fontSize:'clamp(2.5rem,5vw,3.8rem)', fontWeight:800, marginBottom:'1.2rem' },
   heroSub: { fontSize:'1.1rem', color:'rgba(255,255,255,.85)', maxWidth:600, margin:'0 auto' },
   catChip: { padding:'.5rem 1.1rem', borderRadius:'50px', background:'#fff', border:'1.5px solid var(--border)', fontSize:'.82rem', fontWeight:700, color:'var(--txt-2)', textDecoration:'none', transition:'all .2s' },

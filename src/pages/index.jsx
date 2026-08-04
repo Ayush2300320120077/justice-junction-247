@@ -325,7 +325,7 @@ export default function Home() {
           position: absolute; left: 0; right: 0; height: 2px;
           background: linear-gradient(90deg, transparent, rgba(245,196,179,0.12), transparent);
           animation: scanLine 8s linear infinite;
-          pointer-events: none; zIndex: 4;
+          pointer-events: none; z-index: 4;
         }
 
         /* ── Step number watermark ── */

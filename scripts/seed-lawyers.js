@@ -22,8 +22,8 @@
 'use strict';
 require('dotenv').config();
 const mongoose = require('mongoose');
-const User = require('./models/User');
-const Lawyer = require('./models/Lawyer');
+const User = require('../models/User');
+const Lawyer = require('../models/Lawyer');
 
 // ─── Real Indian Bar Council state codes (per BCI records) ────────────────────
 const BAR_STATE_CODES = {

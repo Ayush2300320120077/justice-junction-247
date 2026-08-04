@@ -1,7 +1,7 @@
 require('dotenv').config()
 const mongoose = require('mongoose')
-const User = require('./models/User')
-const Lawyer = require('./models/Lawyer')
+const User = require('../models/User')
+const Lawyer = require('../models/Lawyer')
 
 const MONGODB_URI = process.env.MONGODB_URI
 

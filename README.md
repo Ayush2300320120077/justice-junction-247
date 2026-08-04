@@ -1,5 +1,5 @@
 # ⚖ Justice Junction 24/7 — Startup Edition
-### Complete Full-Stack Legal Platform | React + Node + MongoDB + Razorpay + Netlify
+### Complete Full-Stack Legal Platform | React + Node + MongoDB + Razorpay + Vercel
 
 ---
 
@@ -43,7 +43,7 @@ Lawyers pay extra to appear at top of search results.
 | Database    | MongoDB Atlas (Free tier to start)|
 | Auth        | JWT (JSON Web Tokens)             |
 | Payments    | Razorpay (India's #1 gateway)     |
-| Hosting     | Netlify (Free tier available)     |
+| Hosting     | Vercel (Free tier available)      |
 | Video Calls | Jitsi Meet (free, no setup)       |
 
 ---
@@ -74,12 +74,7 @@ jj-startup/
 │   ├── api.js                ← All API calls
 │   └── App.jsx               ← Routes
 │
-├── netlify/functions/         ← Backend (Serverless)
-│   ├── auth.js               ← Register, Login
-│   ├── lawyers.js            ← Search, List, Seed
-│   ├── bookings.js           ← Create & manage bookings
-│   ├── cases.js              ← Real-time case updates
-│   └── payments.js           ← Razorpay integration
+├── api/                       ← Backend (Express)
 │
 ├── models/                    ← MongoDB Schemas
 │   ├── User.js
@@ -87,7 +82,7 @@ jj-startup/
 │   ├── Booking.js            ← With payment fields
 │   └── CaseUpdate.js
 │
-├── netlify.toml              ← Build & redirect config
+├── vercel.json               ← Build & redirect config
 ├── vite.config.js
 ├── package.json
 └── .env.example              ← Copy this to .env
@@ -117,7 +112,6 @@ jj-startup/
 
 ```bash
 npm install
-npm install -g netlify-cli
 ```
 
 ---
@@ -159,7 +153,7 @@ VITE_API_BASE=/api
 ### STEP 6 — Run Locally
 
 ```bash
-netlify dev
+npm run dev
 ```
 
 Open → **http://localhost:8888** 🎉
@@ -188,7 +182,7 @@ fetch('/api/lawyers/seed/demo',{method:'POST'}).then(r=>r.json()).then(console.l
 
 ---
 
-### STEP 8 — Deploy to Netlify
+### STEP 8 — Deploy to Vercel
 
 **8.1 — Push to GitHub:**
 ```bash
@@ -200,28 +194,8 @@ git remote add origin https://github.com/YOUR_USERNAME/justice-junction.git
 git push -u origin main
 ```
 
-**8.2 — Connect to Netlify:**
-1. Go to → https://app.netlify.com
-2. **Add new site → Import from GitHub**
-3. Select your repository
-4. Build settings (auto-detected from netlify.toml):
-   - Build command: `npm run build`
-   - Publish directory: `dist`
-   - Functions directory: `netlify/functions`
-5. Click **Deploy site**
-
-**8.3 — Add Environment Variables on Netlify:**
-Site Settings → Environment variables → Add these:
-
-| Variable              | Value                    |
-|-----------------------|--------------------------|
-| `MONGODB_URI`         | your mongodb connection  |
-| `JWT_SECRET`          | your jwt secret          |
-| `RAZORPAY_KEY_ID`     | rzp_live_... (or test)   |
-| `RAZORPAY_KEY_SECRET` | your razorpay secret     |
-| `NODE_ENV`            | production               |
-
-6. **Deploys → Trigger deploy → Deploy site**
+**8.2 — Deploy:**
+Deploy your repository using the Vercel dashboard and add the environment variables.
 
 ---
 
@@ -231,7 +205,7 @@ Site Settings → Environment variables → Add these:
 2. Complete KYC verification (PAN + Bank account)
 3. Switch from Test to **Live mode**
 4. Generate **Live API Keys**
-5. Update `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` in Netlify env vars
+5. Update `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` in Vercel env vars
 6. Redeploy → You are now accepting real money! 💰
 
 ---
@@ -284,8 +258,7 @@ To build an admin panel, add these routes:
 | MongoDB error | Atlas → Network Access → Add `0.0.0.0/0` |
 | No lawyers showing | Run seed command in browser console |
 | Payment not working | Check Razorpay keys in `.env` |
-| netlify not found | `npm install -g netlify-cli` |
-| Build fails on Netlify | Check environment variables are all set |
+| Build fails on Vercel | Check environment variables are all set |
 | White screen | Check browser console for errors |
 
 ---
@@ -294,9 +267,9 @@ To build an admin panel, add these routes:
 
 ```bash
 npm install          # Install all dependencies
-netlify dev          # Run locally (port 8888)
+npm run dev          # Run locally
 npm run build        # Build for production
-netlify deploy --prod # Deploy to Netlify
+vercel --prod        # Deploy to Vercel
 git add . && git commit -m "update" && git push  # Auto-deploy
 ```
 

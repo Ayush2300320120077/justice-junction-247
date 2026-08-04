@@ -1,7 +1,7 @@
 require('dotenv').config();
-const { retrieveContext } = require('./backend/ai/retrieve');
-const connectDB = require('./middleware/db');
-const AiInteractionLog = require('./models/AiInteractionLog');
+const { retrieveContext } = require('../backend/ai/retrieve');
+const connectDB = require('../middleware/db');
+const AiInteractionLog = require('../models/AiInteractionLog');
 
 async function testRAGChat() {
   console.log('--- Testing RAG Chat Integration ---');
