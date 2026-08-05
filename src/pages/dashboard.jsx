@@ -125,13 +125,12 @@ function ClientDash() {
           gap: 8px;
           margin-bottom: 2.5rem;
           flex-wrap: wrap;
-          background: rgba(255, 255, 255, 0.05);
+          background: #FDF6EE;
           padding: 0.5rem;
           border-radius: 50px;
           width: fit-content;
-          backdrop-filter: blur(15px);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+          border: 1px solid rgba(123, 29, 46, 0.1);
+          box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
         }
         .dash-tab-btn {
           display: flex;
@@ -144,18 +143,18 @@ function ClientDash() {
           font-weight: 800;
           cursor: pointer;
           background: transparent;
-          color: #E5D0E3;
+          color: #5A3A42;
           font-family: inherit;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          transition: all 0.3s ease;
         }
         .dash-tab-btn.active {
-          background: var(--gold);
-          color: #1A0A0D;
-          box-shadow: 0 8px 25px rgba(201,148,58,0.3);
+          background: #7B1D2E;
+          color: #fff;
+          box-shadow: 0 4px 15px rgba(123, 29, 46, 0.2);
         }
         .dash-tab-btn:not(.active):hover {
-          background: rgba(255,255,255,0.1);
-          color: #fff;
+          background: rgba(123, 29, 46, 0.05);
+          color: #7B1D2E;
         }
         .form-input-premium {
           width: 100%;
@@ -224,8 +223,7 @@ function ClientDash() {
           ['tracker',<Briefcase size={18}/>,'Case Tracker'],
           ['cases',<FileText size={18}/>,'My Cases'],
           ['documents',<FileText size={18}/>,'Documents'],
-          ['updates',<Activity size={18}/>,'Case Updates'],
-          ['settings',<User size={18}/>,'Settings']
+          ['updates',<Activity size={18}/>,'Case Updates']
         ].map(([id,icon,label]) => (
           <button key={id} onClick={() => setTab(id)} className={`dash-tab-btn ${tab === id ? 'active' : ''}`}>
             {icon}{label}
@@ -499,13 +497,12 @@ function LawyerDash() {
           gap: 8px;
           margin-bottom: 2.5rem;
           flex-wrap: wrap;
-          background: rgba(255, 255, 255, 0.05);
+          background: #FDF6EE;
           padding: 0.5rem;
           border-radius: 50px;
           width: fit-content;
-          backdrop-filter: blur(15px);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+          border: 1px solid rgba(123, 29, 46, 0.1);
+          box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
         }
         .dash-tab-btn {
           display: flex;
@@ -518,47 +515,45 @@ function LawyerDash() {
           font-weight: 800;
           cursor: pointer;
           background: transparent;
-          color: #E5D0E3;
+          color: #5A3A42;
           font-family: inherit;
           transition: all 0.3s ease;
         }
         .dash-tab-btn.active {
-          background: #C9943A;
-          color: #1A0A0D;
-          box-shadow: 0 8px 25px rgba(201,148,58,0.3);
+          background: #7B1D2E;
+          color: #fff;
+          box-shadow: 0 4px 15px rgba(123, 29, 46, 0.2);
         }
         .dash-tab-btn:not(.active):hover {
-          background: rgba(255, 255, 255, 0.1);
-          color: #fff;
+          background: rgba(123, 29, 46, 0.05);
+          color: #7B1D2E;
         }
         .stat-card-premium {
-          background: rgba(255, 255, 255, 0.05);
-          backdrop-filter: blur(20px);
-          border: 1px solid rgba(255, 255, 255, 0.1);
+          background: #FDF6EE;
+          border: 1px solid rgba(123, 29, 46, 0.05);
           border-radius: 24px;
           padding: 2.2rem;
           transition: all 0.3s ease;
         }
         .stat-card-premium:hover {
           transform: translateY(-5px);
-          box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-          border-color: rgba(255, 255, 255, 0.2);
+          box-shadow: 0 15px 35px rgba(123, 29, 46, 0.08);
+          border-color: rgba(123, 29, 46, 0.15);
         }
         .case-card-premium {
           display: flex;
           gap: 24px;
           align-items: center;
           padding: 1.8rem;
-          background: rgba(255, 255, 255, 0.03);
-          backdrop-filter: blur(10px);
+          background: #fff;
           border-radius: 20px;
-          border: 1px solid rgba(255, 255, 255, 0.08);
+          border: 1px solid rgba(123, 29, 46, 0.1);
           margin-bottom: 1.2rem;
           transition: all 0.3s ease;
         }
         .case-card-premium:hover {
-          box-shadow: 0 12px 30px rgba(0,0,0,0.3);
-          border-color: rgba(255, 255, 255, 0.15);
+          box-shadow: 0 12px 30px rgba(123, 29, 46, 0.08);
+          border-color: rgba(123, 29, 46, 0.2);
           transform: scale(1.01);
         }
         .form-input-premium {
