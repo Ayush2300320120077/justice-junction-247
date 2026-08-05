@@ -653,14 +653,21 @@ export default function Dashboard() {
   const handleLogout = () => { logout(); navigate('/') }
 
   return (
-    <div className="page-reveal" style={{ paddingTop: 95, background: '#F8F9FA', minHeight: '100vh', paddingBottom: '5rem' }}>
+    <div className="page-reveal" style={{ 
+      paddingTop: 95, 
+      background: 'url(https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=2000&auto=format&fit=crop) center/cover no-repeat fixed', 
+      minHeight: '100vh', 
+      paddingBottom: '5rem',
+      position: 'relative'
+    }}>
+      <div style={{ position: 'absolute', inset: 0, background: 'rgba(253,246,238,0.85)', backdropFilter: 'blur(20px)', zIndex: 0 }} />
       <Helmet>
         <title>My Dashboard — Justice Junction 24/7</title>
       </Helmet>
       
       {/* Absolute background blobs for glassmorphism effect */}
-      <div style={{position: 'absolute', top: 200, left: 100, width: 400, height: 400, background: 'radial-gradient(circle, rgba(201,148,58,0.1) 0%, rgba(201,148,58,0) 70%)', zIndex: 0, pointerEvents: 'none'}} />
-      <div style={{position: 'absolute', top: 500, right: 100, width: 500, height: 500, background: 'radial-gradient(circle, rgba(123,29,46,0.08) 0%, rgba(123,29,46,0) 70%)', zIndex: 0, pointerEvents: 'none'}} />
+      <div style={{position: 'absolute', top: 200, left: 100, width: 400, height: 400, background: 'radial-gradient(circle, rgba(201,148,58,0.15) 0%, rgba(201,148,58,0) 70%)', zIndex: 0, pointerEvents: 'none'}} />
+      <div style={{position: 'absolute', top: 500, right: 100, width: 500, height: 500, background: 'radial-gradient(circle, rgba(123,29,46,0.12) 0%, rgba(123,29,46,0) 70%)', zIndex: 0, pointerEvents: 'none'}} />
       
       <div className="container" style={{ maxWidth: 1400, position: 'relative', zIndex: 1 }}>
         
@@ -743,7 +750,7 @@ const s = {
   main: { minWidth: 0 },
   hTitle: { fontFamily:"'Playfair Display',serif", fontSize:'2.4rem', fontWeight:800, lineHeight: 1.2, color: 'var(--text)' },
   statsRow: { display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))', gap:'1.5rem', marginBottom:'3rem' },
-  statNum: { fontFamily:"Sora, sans-serif", fontSize:'3rem', fontWeight:800, background: 'linear-gradient(135deg, var(--bur), #5C1521)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', lineHeight:1 },
+  statNum: { fontFamily:"Sora, sans-serif", fontSize:'clamp(1.8rem, 2.5vw, 2.8rem)', fontWeight:800, background: 'linear-gradient(135deg, var(--bur), #5C1521)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', lineHeight:1, overflowWrap: 'break-word', wordWrap: 'break-word', hyphens: 'auto' },
   statLabel: { fontSize:'0.85rem', color:'#475569', marginTop:12, fontWeight:800, textTransform: 'uppercase', letterSpacing: '1px' },
   
   section: { background:'rgba(255, 255, 255, 0.8)', backdropFilter:'blur(20px)', border:'1px solid rgba(255, 255, 255, 0.9)', borderRadius:'36px', padding:'3.5rem', boxShadow:'0 20px 60px rgba(0,0,0,0.03)' },
