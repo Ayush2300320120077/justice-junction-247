@@ -23,6 +23,8 @@ function ClientDash() {
   const [bookings, setBookings] = useState([])
   const [updates, setUpdates]   = useState([])
   const [trackerCases, setTrackerCases] = useState([])
+  const [cases, setCases]       = useState([])
+  const [docs, setDocs]         = useState([])
   const [tab, setTab]           = useState('bookings')
   const [loading, setLoading]   = useState(true)
   const [showAddCase, setShowAddCase] = useState(false)
@@ -220,7 +222,6 @@ function ClientDash() {
         {[
           ['bookings',<ClipboardList size={18}/>,'My Bookings'],
           ['tracker',<Briefcase size={18}/>,'Case Tracker'],
-          ['updates',<Activity size={18}/>,'Case Updates']
           ['cases',<FileText size={18}/>,'My Cases'],
           ['documents',<FileText size={18}/>,'Documents'],
           ['updates',<Activity size={18}/>,'Case Updates'],
