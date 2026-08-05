@@ -741,13 +741,13 @@ export default function Dashboard() {
   return (
     <div className="page-reveal" style={{ 
       paddingTop: 100, 
-      backgroundColor: '#050203', 
+      background: 'url(/dashboard-bg.jpg) center/cover no-repeat fixed', 
       minHeight: '100vh', 
       paddingBottom: '6rem',
       position: 'relative'
     }}>
-      {/* Deep cinematic background */}
-      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at top right, rgba(201,148,58,0.08), transparent 40%), radial-gradient(circle at bottom left, rgba(123, 29, 46, 0.15), transparent 50%)', zIndex: 0 }} />
+      {/* Deep cinematic background overlay to ensure text readability */}
+      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(5,2,3,0.8) 0%, rgba(20,5,10,0.6) 100%)', zIndex: 0 }} />
       <Helmet>
         <title>My Dashboard — Justice Junction 24/7</title>
       </Helmet>
