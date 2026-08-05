@@ -1,244 +1,4 @@
-export const KNOWLEDGE_ARTICLES = [
-  // CITIZENS RIGHTS
-  {
-    id: 'rti', title: 'Right to Information (RTI) Act, 2005', category: 'Citizens Rights',
-    emoji: '📋', readTime: '12 min', difficulty: 'Beginner',
-    desc: 'The RTI Act empowers every Indian citizen to request information from any public authority. You can ask for documents, records, memos, emails, opinions, data, and samples held by the government.',
-    keyPoints: ['File RTI online at rtionline.gov.in', 'Pay ₹10 application fee (BPL card holders exempt)', 'Response within 30 days (48 hrs for life/liberty matters)', "First Appeal to PIO's superior within 30 days", 'Second Appeal to CIC/SIC within 90 days'],
-    govLink: 'https://rtionline.gov.in', govSource: 'rtionline.gov.in',
-    content: `
-      <div style="font-family: inherit;">
-        <h2 style="color: #7B1D2E; margin-top: 1.5rem; margin-bottom: 1rem; font-size: 1.5rem;">The Ultimate Guide to the RTI Act, 2005</h2>
-        <p style="margin-bottom: 1rem;">The Right to Information (RTI) Act 2005 is a landmark legislation that revolutionized transparency and accountability in the Indian government. It gives every citizen the fundamental right to demand information from public authorities, non-governmental organizations substantially funded by the government, and even private bodies if the information can be accessed by a government authority under any other law.</p>
-        
-        <h3 style="color: #7B1D2E; margin-top: 1.5rem; margin-bottom: 0.8rem; font-size: 1.25rem;">1. What Exactly Can You Ask For?</h3>
-        <ul style="list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem;">
-          <li><strong>Documents & Records:</strong> Copies of government orders, notifications, policies, and internal memos.</li>
-          <li><strong>Physical Inspection:</strong> You can ask to physically inspect government records, documents, or public works (like a newly constructed road).</li>
-          <li><strong>Samples:</strong> You can take certified samples of material used in public works to check for corruption.</li>
-          <li><strong>Personal Status:</strong> Status of your passport application, FIR, pension, or tax refund.</li>
-        </ul>
 
-        <h3 style="color: #7B1D2E; margin-top: 1.5rem; margin-bottom: 0.8rem; font-size: 1.25rem;">2. What Can Be Denied? (Section 8 & 9 Exclusions)</h3>
-        <p style="margin-bottom: 1rem;">Not all information is public. Authorities can deny information under Section 8 if it:</p>
-        <ul style="list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem;">
-          <li>Affects the sovereignty, integrity, or security of India.</li>
-          <li>Is expressly forbidden to be published by any court.</li>
-          <li>Causes a breach of privilege of Parliament.</li>
-          <li>Involves commercial confidence, trade secrets, or intellectual property (unless public interest outweighs the harm).</li>
-          <li>Information received in confidence from a foreign government.</li>
-          <li><strong>Personal Information (Crucial Update):</strong> See recent amendments below.</li>
-        </ul>
-
-        <h3 style="color: #7B1D2E; margin-top: 1.5rem; margin-bottom: 0.8rem; font-size: 1.25rem;">🚨 Recent Amendments (DPDP Act 2023)</h3>
-        <div style="background-color: #FDF6EE; padding: 1rem; border-left: 4px solid #D97706; margin-bottom: 1rem;">
-          <strong>Digital Personal Data Protection Act, 2023:</strong> The DPDP Act has severely amended Section 8(1)(j) of the RTI Act. Previously, you could ask for personal information of public officials (like their educational degrees or asset declarations) if it served a larger public interest. Now, the public interest override has been completely removed. Public authorities can absolutely deny any request that asks for "personal information" of a third party. Therefore, always frame your questions to seek objective, systemic data rather than targeting specific individuals.
-        </div>
-
-        <h3 style="color: #7B1D2E; margin-top: 1.5rem; margin-bottom: 0.8rem; font-size: 1.25rem;">3. Step-by-Step Filing Procedure</h3>
-        <ol style="list-style-type: decimal; margin-left: 1.5rem; margin-bottom: 1rem;">
-          <li><strong>Identify the Authority:</strong> Determine which department holds the information. Address it to the Central/State Public Information Officer (CPIO/SPIO).</li>
-          <li><strong>Draft the Application:</strong> Keep questions specific and numbered. Do not ask "Why" questions (e.g., "Why was my road not built?"). Ask "What" or "How" questions (e.g., "Provide the copy of the contract for the road").</li>
-          <li><strong>Pay the Fee:</strong> A nominal fee of ₹10 is required. Below Poverty Line (BPL) applicants are exempt. Online filing accepts UPI/Netbanking. Offline filing requires a Postal Order or Demand Draft.</li>
-          <li><strong>Submit:</strong> Apply online at <a href="https://rtionline.gov.in" target="_blank" style="color: #3B82F6;">rtionline.gov.in</a> for Central Ministries, or through respective state portals.</li>
-        </ol>
-
-        <h3 style="color: #7B1D2E; margin-top: 1.5rem; margin-bottom: 0.8rem; font-size: 1.25rem;">4. The Appeals Process (When Ignored or Denied)</h3>
-        <p style="margin-bottom: 1rem;">If you don't get a reply in 30 days, or the reply is misleading/incomplete:</p>
-        <ul style="list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem;">
-          <li><strong>First Appeal (Section 19(1)):</strong> File this to the First Appellate Authority (a senior officer in the same department) within 30 days of the deadline. No extra fee is required.</li>
-          <li><strong>Second Appeal (Section 19(3)):</strong> If the First Appeal fails, file a Second Appeal to the Central Information Commission (CIC) or State Information Commission (SIC) within 90 days.</li>
-        </ul>
-        
-        <p style="margin-bottom: 1rem;"><strong>Penalties (Section 20):</strong> The CIC/SIC can penalize the PIO ₹250 per day (up to a maximum of ₹25,000) for unreasonable delays, malafide denial, or destruction of information. They can also recommend disciplinary action against the officer.</p>
-      </div>
-    `
-  },
-  {
-    id: 'arrest', title: 'Your Rights During Arrest', category: 'Citizens Rights',
-    emoji: '⚖️', readTime: '15 min', difficulty: 'Intermediate',
-    desc: 'Article 22 of the Indian Constitution and the BNSS 2023 protect citizens during arrest. You have the right to know the reason for arrest, to be produced before a magistrate within 24 hours, and to legal representation.',
-    keyPoints: ['Right to know grounds of arrest (Art. 22)', 'Produced before magistrate within 24 hours', 'Right to inform a friend/relative of arrest', 'Right to consult a lawyer of your choice', 'Women can only be arrested by female officers (sunset to sunrise exempt)'],
-    govLink: 'https://nalsa.gov.in', govSource: 'nalsa.gov.in',
-    content: `
-      <div style="font-family: inherit;">
-        <h2 style="color: #7B1D2E; margin-top: 1.5rem; margin-bottom: 1rem; font-size: 1.5rem;">Constitutional & Statutory Rights During Arrest</h2>
-        <p style="margin-bottom: 1rem;">Arrest deprives a person of their fundamental right to liberty. Therefore, the Indian Constitution (Articles 20, 21, and 22) and the newly enacted Bharatiya Nagarik Suraksha Sanhita (BNSS), 2024 ensure strict safeguards against arbitrary police action.</p>
-
-        <h3 style="color: #7B1D2E; margin-top: 1.5rem; margin-bottom: 0.8rem; font-size: 1.25rem;">1. The D.K. Basu Guidelines (Now Codified in BNSS)</h3>
-        <p style="margin-bottom: 1rem;">Following the landmark Supreme Court judgment in <em>D.K. Basu vs State of West Bengal</em>, these guidelines are now legally binding:</p>
-        <ul style="list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem;">
-          <li><strong>Clear Identification:</strong> The arresting officer must wear a clear, visible, and accurate name tag with their designation.</li>
-          <li><strong>Arrest Memo:</strong> An arrest memo MUST be prepared at the time of arrest. It must detail the time and date, be attested by at least one witness (preferably a family member or local respectable person), and countersigned by the person arrested.</li>
-          <li><strong>Right to Inform:</strong> The police must notify a friend, relative, or well-wisher about the arrest and the location of detention immediately.</li>
-          <li><strong>Medical Examination:</strong> The arrestee has the right to be medically examined by a trained doctor upon request to record any pre-existing injuries, preventing claims of police brutality. They must be examined every 48 hours during detention.</li>
-          <li><strong>Police Control Room Notification:</strong> Details of the arrest must be sent to the district police control room within 12 hours.</li>
-        </ul>
-
-        <h3 style="color: #7B1D2E; margin-top: 1.5rem; margin-bottom: 0.8rem; font-size: 1.25rem;">🚨 Recent Amendments in BNSS 2024</h3>
-        <div style="background-color: #FDF6EE; padding: 1rem; border-left: 4px solid #16A34A; margin-bottom: 1rem;">
-          <strong>Audio-Video Recording:</strong> Section 105 of the BNSS mandates audio-video recording of the entire search and seizure process, including the preparation of the list of seized items. This aims to stop the planting of evidence.<br><br>
-          <strong>Handcuffing Rules:</strong> BNSS clearly states that handcuffs can only be used for habitual, repeat offenders, or those accused of severe crimes (terrorism, rape, murder, acid attack). Economic offenders or ordinary citizens cannot be routinely handcuffed.<br><br>
-          <strong>Extended Police Custody:</strong> While the maximum police custody remains 15 days, BNSS allows the police to seek this 15-day custody in blocks distributed over the first 40 or 60 days of the total detention period, rather than strictly within the first 15 days as was the rule under CrPC.
-        </div>
-
-        <h3 style="color: #7B1D2E; margin-top: 1.5rem; margin-bottom: 0.8rem; font-size: 1.25rem;">2. Special Protections for Women</h3>
-        <ul style="list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem;">
-          <li>A woman cannot be arrested after sunset and before sunrise except in exceptional circumstances.</li>
-          <li>If an exceptional arrest is needed at night, the female officer must obtain prior written permission from a Judicial Magistrate First Class.</li>
-          <li>The arrest must ONLY be made by a female police officer.</li>
-          <li>Physical search of a woman must only be conducted by another woman with strict regard to decency.</li>
-        </ul>
-
-        <h3 style="color: #7B1D2E; margin-top: 1.5rem; margin-bottom: 0.8rem; font-size: 1.25rem;">3. Right Against Self-Incrimination (Article 20)</h3>
-        <p style="margin-bottom: 1rem;">You cannot be compelled to be a witness against yourself. You have the right to remain silent during police interrogation. Furthermore, under the Bharatiya Sakshya Adhiniyam (BSA) 2024, confessions made to a police officer while in custody are generally inadmissible in court unless they lead to the discovery of a new physical fact (Section 23 BSA).</p>
-      </div>
-    `
-  },
-  {
-    id: 'legal-aid', title: 'Free Legal Aid — Who Qualifies & How to Apply', category: 'Citizens Rights',
-    emoji: '🏛️', readTime: '10 min', difficulty: 'Beginner',
-    desc: 'NALSA (National Legal Services Authority) provides free legal services to eligible citizens. Understand Section 12 of the Legal Services Authorities Act to claim free legal representation.',
-    keyPoints: ['Women & children are eligible regardless of income', 'SC/ST members entitled to free legal aid', 'Victims of disaster, violence, or human trafficking', 'Call NALSA Helpline: 15100 (toll-free)'],
-    govLink: 'https://nalsa.gov.in', govSource: 'nalsa.gov.in',
-    content: `
-      <div style="font-family: inherit;">
-        <h2 style="color: #7B1D2E; margin-top: 1.5rem; margin-bottom: 1rem; font-size: 1.5rem;">Access to Justice: Navigating Free Legal Aid in India</h2>
-        <p style="margin-bottom: 1rem;">Article 39A of the Constitution directs the State to provide free legal aid to ensure that justice is not denied to any citizen by reason of economic or other disabilities. The Legal Services Authorities Act, 1987 operationalizes this through NALSA, SLSAs, and DLSAs.</p>
-        
-        <h3 style="color: #7B1D2E; margin-top: 1.5rem; margin-bottom: 0.8rem; font-size: 1.25rem;">1. Who is Statutorily Entitled? (Section 12)</h3>
-        <p style="margin-bottom: 1rem;">You do not need to prove poverty if you fall under specific categories. The following persons are entitled to absolutely free legal aid:</p>
-        <ul style="list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem;">
-          <li><strong>Women and Children:</strong> Regardless of their financial income, they can claim free lawyers for divorce, domestic violence, custody, or criminal cases.</li>
-          <li><strong>SC/ST Members:</strong> Members of Scheduled Castes and Scheduled Tribes.</li>
-          <li><strong>Victims of Trafficking:</strong> Including victims of human trafficking or begar (forced labour).</li>
-          <li><strong>Industrial Workmen:</strong> For disputes relating to employment and labour laws.</li>
-          <li><strong>Victims of Mass Disaster:</strong> Including ethnic violence, caste atrocities, floods, drought, earthquake, or industrial disasters.</li>
-          <li><strong>Disabled Persons:</strong> Persons with disabilities as defined under the RPwD Act.</li>
-          <li><strong>Persons in Custody:</strong> Inmates in protective homes, juvenile homes, psychiatric hospitals, or prisons.</li>
-          <li><strong>Low-Income Individuals:</strong> Persons whose annual income is less than the limit prescribed by the State Government. (This varies: in Delhi it is ₹3 Lakhs, in many other states it is ₹1 Lakh to ₹1.5 Lakhs).</li>
-        </ul>
-
-        <h3 style="color: #7B1D2E; margin-top: 1.5rem; margin-bottom: 0.8rem; font-size: 1.25rem;">2. What Does "Free Legal Aid" Actually Cover?</h3>
-        <ul style="list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem;">
-          <li>Payment of court fees, process fees, and all other charges payable in connection with any legal proceeding.</li>
-          <li>Providing services of lawyers in legal proceedings (the lawyer's fees are paid directly by the government).</li>
-          <li>Obtaining and supplying certified copies of orders and other documents in legal proceedings.</li>
-          <li>Preparation of appeal papers, including printing and translation of documents.</li>
-        </ul>
-
-        <h3 style="color: #7B1D2E; margin-top: 1.5rem; margin-bottom: 0.8rem; font-size: 1.25rem;">3. How to Apply for Aid</h3>
-        <ol style="list-style-type: decimal; margin-left: 1.5rem; margin-bottom: 1rem;">
-          <li><strong>Online Application:</strong> Go to the NALSA portal (<a href="https://nalsa.gov.in" target="_blank" style="color:#3B82F6">nalsa.gov.in</a>) and click on "Apply for Legal Aid". You can upload your documents directly.</li>
-          <li><strong>In Person:</strong> Visit the Front Office of the District Legal Services Authority (DLSA), which is usually located in the premises of the District Court. Every High Court also has an HCLSC for appellate matters.</li>
-          <li><strong>National Helpline:</strong> Call the Toll-Free number <strong>15100</strong> or <strong>1516</strong> to get directed to your nearest legal aid clinic.</li>
-        </ol>
-
-        <div style="background-color: #FDF6EE; padding: 1rem; border-left: 4px solid #7B1D2E; margin-bottom: 1rem;">
-          <strong>Pro Tip:</strong> If the lawyer assigned to you by the Legal Services Authority demands money, you should immediately report them to the Secretary of the DLSA. They can be removed from the panel and face disciplinary action.
-        </div>
-      </div>
-    `
-  },
-  {
-    id: 'grievance', title: 'Government Grievance Portals — File Complaints', category: 'Citizens Rights',
-    emoji: '📢', readTime: '8 min', difficulty: 'Beginner',
-    desc: 'India has a robust network of online grievance portals. CPGRAMS allows citizens to file complaints against any central government department.',
-    keyPoints: ['CPGRAMS: pgportal.gov.in', 'Railway complaints: railmadad.indianrailways.gov.in', 'Maximum resolution time is 30 days'],
-    govLink: 'https://pgportal.gov.in', govSource: 'pgportal.gov.in',
-    content: `
-      <div style="font-family: inherit;">
-        <h2 style="color: #7B1D2E; margin-top: 1.5rem; margin-bottom: 1rem; font-size: 1.5rem;">Navigating Government Grievance Redressal Mechanisms</h2>
-        <p style="margin-bottom: 1rem;">Before approaching the courts via expensive writ petitions, citizens should exhaust the highly effective online grievance portals set up by the government. These portals escalate issues automatically if not resolved.</p>
-        
-        <h3 style="color: #7B1D2E; margin-top: 1.5rem; margin-bottom: 0.8rem; font-size: 1.25rem;">1. CPGRAMS (pgportal.gov.in)</h3>
-        <p style="margin-bottom: 1rem;">The Centralized Public Grievance Redress and Monitoring System is the master portal monitored directly by the Department of Administrative Reforms and Public Grievances and the PMO.</p>
-        <ul style="list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem;">
-          <li><strong>What it covers:</strong> PF withdrawal delays, passport issues, banking harassment by nationalized banks, postal delays, pension issues, and railway grievances.</li>
-          <li><strong>Timelines:</strong> Departments are mandated to resolve complaints within 30 days.</li>
-          <li><strong>Appeals:</strong> If the resolution provided is unsatisfactory (e.g., closing the ticket with a generic response), you can file an appeal online within the portal to a higher Nodal Officer.</li>
-        </ul>
-
-        <h3 style="color: #7B1D2E; margin-top: 1.5rem; margin-bottom: 0.8rem; font-size: 1.25rem;">2. RBI Ombudsman (cms.rbi.org.in)</h3>
-        <p style="margin-bottom: 1rem;">The integrated RBI Ombudsman scheme is a quasi-judicial authority for banking complaints.</p>
-        <ul style="list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem;">
-          <li><strong>Prerequisite:</strong> You must first complain to your bank. If they don't reply within 30 days or reject your complaint, you can approach the Ombudsman.</li>
-          <li><strong>Scope:</strong> Covers banks, NBFCs, and digital payment systems (PhonePe, GPay). Useful for failed transactions, UPI fraud recovery, credit card harassment, and unfair charges.</li>
-          <li><strong>Power:</strong> The Ombudsman can order the bank to refund money and pay up to ₹20 Lakhs in compensation (and ₹1 Lakh for mental agony).</li>
-        </ul>
-
-        <h3 style="color: #7B1D2E; margin-top: 1.5rem; margin-bottom: 0.8rem; font-size: 1.25rem;">3. Other Specialized Portals</h3>
-        <ul style="list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem;">
-          <li><strong>RailMadad App:</strong> For immediate assistance during train journeys (cleanliness, security, AC failure).</li>
-          <li><strong>National Consumer Helpline (NCH - 1915):</strong> For pre-litigation consumer disputes against e-commerce companies and brands.</li>
-          <li><strong>SEBI SCORES:</strong> For complaints against stock brokers, mutual funds, and listed companies regarding shares and dividends.</li>
-        </ul>
-      </div>
-    `
-  },
-  {
-    id: 'passport', title: 'Passport & Visa — Rights & Procedures', category: 'Citizens Rights',
-    emoji: '✈️', readTime: '9 min', difficulty: 'Intermediate',
-    desc: 'Every Indian citizen has the right to a passport. Under the Passports Act, 1967, the government can only refuse a passport on limited grounds.',
-    keyPoints: ['Apply online at passportindia.gov.in', 'Normal passport: 30 days, Tatkal: 7 days', 'Police verification logic changed'],
-    govLink: 'https://passportindia.gov.in', govSource: 'passportindia.gov.in',
-    content: `
-      <div style="font-family: inherit;">
-        <h2 style="color: #7B1D2E; margin-top: 1.5rem; margin-bottom: 1rem; font-size: 1.5rem;">Passport Rights and Procedures in India</h2>
-        <p style="margin-bottom: 1rem;">Under the Passports Act, 1967, and reinforced by the Supreme Court in the landmark <em>Maneka Gandhi v. Union of India</em> case, the right to travel abroad is considered a fundamental right under Article 21 (Right to Life and Personal Liberty). A passport cannot be impounded or denied arbitrarily.</p>
-        
-        <h3 style="color: #7B1D2E; margin-top: 1.5rem; margin-bottom: 0.8rem; font-size: 1.25rem;">1. Grounds for Refusal (Section 6(2))</h3>
-        <p style="margin-bottom: 1rem;">The Passport Authority can only deny your application if:</p>
-        <ul style="list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem;">
-          <li>You are not a citizen of India.</li>
-          <li>You have pending criminal proceedings in an Indian criminal court (unless you get an NOC from that specific court).</li>
-          <li>You were convicted of an offence involving moral turpitude with a sentence of more than 2 years, within the last 5 years.</li>
-          <li>Your travel is deemed detrimental to the security, sovereignty, or friendly relations of India with a foreign country.</li>
-        </ul>
-
-        <h3 style="color: #7B1D2E; margin-top: 1.5rem; margin-bottom: 0.8rem; font-size: 1.25rem;">🚨 Handling Criminal Cases & FIRs</h3>
-        <div style="background-color: #FDF6EE; padding: 1rem; border-left: 4px solid #DC2626; margin-bottom: 1rem;">
-          <strong>Important Clarification:</strong> Merely having an FIR registered against you does NOT mean your passport will be denied. The Passports Act explicitly states "proceedings in respect of an offence alleged to have been committed by the applicant are pending before a criminal court". An FIR is just a police investigation. Until a charge sheet is filed and the Magistrate takes cognizance, proceedings are not "pending before a court". 
-        </div>
-
-        <h3 style="color: #7B1D2E; margin-top: 1.5rem; margin-bottom: 0.8rem; font-size: 1.25rem;">2. Remedies for Denial or Delay</h3>
-        <ul style="list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem;">
-          <li><strong>Right to Know:</strong> Under Section 8, the authority MUST give you the reasons for refusal/impounding in writing, unless it is against national security.</li>
-          <li><strong>Appeal:</strong> You can file an appeal to the Chief Passport Officer (Ministry of External Affairs) within 30 days of receiving the refusal order.</li>
-          <li><strong>Writ Petition:</strong> If the passport office sits on your file for months without assigning a reason, you can file a Writ of Mandamus in the High Court compelling them to process it.</li>
-        </ul>
-      </div>
-    `
-  },
-  {
-    id: 'disability', title: 'Rights of Persons with Disabilities', category: 'Citizens Rights',
-    emoji: '♿', readTime: '10 min', difficulty: 'Beginner',
-    desc: 'The Rights of Persons with Disabilities Act, 2016 recognizes 21 disabilities and guarantees rights to education, employment, accessibility.',
-    keyPoints: ['4% reservation in government jobs for PwD', 'Free education up to 18 years for disabled children', 'Get a UDID card online'],
-    govLink: 'https://disabilityaffairs.gov.in', govSource: 'disabilityaffairs.gov.in',
-    content: `
-      <div style="font-family: inherit;">
-        <h2 style="color: #7B1D2E; margin-top: 1.5rem; margin-bottom: 1rem; font-size: 1.5rem;">Rights of Persons with Disabilities (RPwD) Act, 2016</h2>
-        <p style="margin-bottom: 1rem;">The RPwD Act modernized India's disability laws in line with the UN Convention. It shifted the perspective from a medical/charity model to a human rights model, expanding recognized disabilities from 7 to 21.</p>
-        
-        <h3 style="color: #7B1D2E; margin-top: 1.5rem; margin-bottom: 0.8rem; font-size: 1.25rem;">1. The 21 Recognized Disabilities</h3>
-        <p style="margin-bottom: 1rem;">Apart from locomotor, visual, and hearing impairments, the new act recognizes conditions like Autism Spectrum Disorder, Specific Learning Disabilities (Dyslexia), Multiple Sclerosis, Parkinson's disease, Thalassemia, Hemophilia, Sickle Cell disease, and Acid Attack victimhood.</p>
-
-        <h3 style="color: #7B1D2E; margin-top: 1.5rem; margin-bottom: 0.8rem; font-size: 1.25rem;">2. Core Rights and Reservations</h3>
-        <ul style="list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem;">
-          <li><strong>Employment (Section 34):</strong> Guaranteed 4% reservation in government establishments for persons with benchmark disabilities (at least 40% disability).</li>
-          <li><strong>Education (Section 31):</strong> Right to free education for children with benchmark disabilities between 6 to 18 years in neighborhood schools or special schools. 5% reservation in higher education institutions.</li>
-          <li><strong>Accessibility (Section 40-46):</strong> Mandates barrier-free access in all public buildings, transport systems (buses, trains, airports), and information technologies (websites must be screen-reader friendly).</li>
-          <li><strong>Protection from Abuse:</strong> Severe penalties for publicly insulting, abusing, or assaulting a person with a disability.</li>
-        </ul>
-
-        <h3 style="color: #7B1D2E; margin-top: 1.5rem; margin-bottom: 0.8rem; font-size: 1.25rem;">3. The UDID Card</h3>
-        <div style="background-color: #FDF6EE; padding: 1rem; border-left: 4px solid #3B82F6; margin-bottom: 1rem;">
-          <strong>Universal ID for Persons with Disabilities:</strong> Instead of carrying multiple state-issued paper certificates, citizens should apply for the UDID card at <strong>swavlambancard.gov.in</strong>. It is a smart card valid pan-India to avail railway concessions, income tax benefits (Section 80U / 80DD), and government schemes.
-        </div>
-      </div>
-    `
-  },
 
   // CRIMINAL LAW
   {
@@ -317,7 +77,7 @@ export const KNOWLEDGE_ARTICLES = [
   {
     id: 'bnss', title: 'New Criminal Laws 2024 (BNS/BNSS/BSA)', category: 'Criminal Law',
     emoji: '📚', readTime: '15 min', difficulty: 'Advanced',
-    desc: 'From July 1, 2024, three new criminal laws replaced IPC, CrPC, and the Indian Evidence Act. Understand the major shifts in India\'s penal code.',
+    desc: 'From July 1, 2024, three new criminal laws replaced IPC, CrPC, and the Indian Evidence Act. Understand the major shifts in India's penal code.',
     keyPoints: ['IPC replaced by BNS', 'CrPC replaced by BNSS', 'Evidence Act replaced by BSA', 'Sedition replaced with "Acts endangering sovereignty"', 'Community service introduced'],
     govLink: 'https://legislative.gov.in', govSource: 'legislative.gov.in',
     content: `
@@ -614,7 +374,7 @@ export const KNOWLEDGE_ARTICLES = [
   {
     id: 'cyber', title: 'Cyber Crime — How to Report & Recover', category: 'Digital Law',
     emoji: '💻', readTime: '11 min', difficulty: 'Beginner',
-    desc: 'The IT Act 2000 and BNS 2024 deal with cyber offences. India\'s National Cyber Crime Reporting Portal at cybercrime.gov.in allows you to report online fraud, harassment, and hacking 24/7.',
+    desc: 'The IT Act 2000 and BNS 2024 deal with cyber offences. India's National Cyber Crime Reporting Portal at cybercrime.gov.in allows you to report online fraud, harassment, and hacking 24/7.',
     keyPoints: ['Report financial fraud to 1930 within 24 hours', 'Deepfake regulations under IT Rules', 'Section 66C IT Act for identity theft'],
     govLink: 'https://cybercrime.gov.in', govSource: 'cybercrime.gov.in',
     content: `
@@ -681,7 +441,7 @@ export const KNOWLEDGE_ARTICLES = [
   {
     id: 'labour', title: 'Employee Rights at the Workplace', category: 'Labour Law',
     emoji: '👷', readTime: '12 min', difficulty: 'Intermediate',
-    desc: 'India\'s Four Labour Codes consolidate central labour laws. Employees have legally enforceable rights regarding wages, PF, maternity, and termination.',
+    desc: 'India's Four Labour Codes consolidate central labour laws. Employees have legally enforceable rights regarding wages, PF, maternity, and termination.',
     keyPoints: ['Minimum wage varies by state', 'PF deduction mandatory for salary ≤ ₹15,000', 'Maternity leave: 26 weeks paid'],
     govLink: 'https://labour.gov.in', govSource: 'labour.gov.in',
     content: `
@@ -768,7 +528,7 @@ export const KNOWLEDGE_ARTICLES = [
   {
     id: 'gst', title: 'GST — Rights & Compliance for Consumers', category: 'Tax & Finance',
     emoji: '🧾', readTime: '8 min', difficulty: 'Intermediate',
-    desc: 'Goods and Services Tax unifies India\'s indirect tax system. As a consumer, you have a right to a proper GST invoice.',
+    desc: 'Goods and Services Tax unifies India's indirect tax system. As a consumer, you have a right to a proper GST invoice.',
     keyPoints: ['Demand GST invoice for every purchase', 'File anti-profiteering complaint at naa.gov.in', 'MRP is inclusive of GST'],
     govLink: 'https://gst.gov.in', govSource: 'gst.gov.in',
     content: `
@@ -792,3 +552,21 @@ export const KNOWLEDGE_ARTICLES = [
     `
   }
 ];
+
+// Combine the two arrays and export
+const fs = require('fs');
+const path = require('path');
+const file = path.join(__dirname, '..', 'src', 'data', 'knowledgeHubData.js');
+let current = fs.readFileSync(file, 'utf8');
+
+// The file currently exports the first half. We want to remove the closing bracket and semicolon,
+// inject our new objects, and close it again.
+current = current.trim().replace(/];$/, '');
+current += ',
+' + contentToAppend + '
+];
+';
+
+fs.writeFileSync(file, current);
+console.log('Appended the rest of the articles successfully.');
+

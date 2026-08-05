@@ -1,4 +1,7 @@
-export const KNOWLEDGE_ARTICLES = [
+const fs = require('fs');
+const path = require('path');
+
+const articles = [
   // CITIZENS RIGHTS
   {
     id: 'rti', title: 'Right to Information (RTI) Act, 2005', category: 'Citizens Rights',
@@ -792,3 +795,8 @@ export const KNOWLEDGE_ARTICLES = [
     `
   }
 ];
+
+const fileContent = \`export const KNOWLEDGE_ARTICLES = \${JSON.stringify(articles, null, 2)};\n\`;
+
+fs.writeFileSync(path.join(__dirname, '..', 'src', 'data', 'knowledgeHubData.js'), fileContent);
+console.log('Successfully expanded knowledgeHubData.js with rich content.');
