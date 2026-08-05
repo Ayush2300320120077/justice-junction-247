@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { ArrowLeft, Calendar, Eye, Tag } from 'lucide-react'
+import { KNOWLEDGE_ARTICLES } from '../../data/knowledgeHubData'
 
 export default function KnowledgeArticle() {
   const { slug } = useParams()
@@ -12,6 +13,16 @@ export default function KnowledgeArticle() {
 
   useEffect(() => {
     if (!slug) return
+    
+    // 1. Check local static data first (covers all the built-in articles)
+    const staticArticle = KNOWLEDGE_ARTICLES.find(a => a.id === slug)
+    if (staticArticle) {
+      setArticle(staticArticle)
+      setLoading(false)
+      return
+    }
+
+    // 2. Fallback to API (for dynamically added articles)
     fetch(`/api/articles/${slug}`)
       .then(r => {
         if (!r.ok) throw new Error('Article not found')
