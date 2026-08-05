@@ -653,81 +653,83 @@ export default function Dashboard() {
   const handleLogout = () => { logout(); navigate('/') }
 
   return (
+  return (
     <div className="page-reveal" style={{ 
-      paddingTop: 95, 
-      background: 'url(https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=2000&auto=format&fit=crop) center/cover no-repeat fixed', 
+      paddingTop: 100, 
+      background: 'linear-gradient(145deg, #FAF7F2 0%, #FFFDFB 50%, #FDF7F5 100%)', 
       minHeight: '100vh', 
-      paddingBottom: '5rem',
+      paddingBottom: '6rem',
       position: 'relative'
     }}>
-      <div style={{ position: 'absolute', inset: 0, background: 'rgba(253,246,238,0.85)', backdropFilter: 'blur(20px)', zIndex: 0 }} />
       <Helmet>
         <title>My Dashboard — Justice Junction 24/7</title>
       </Helmet>
       
-      {/* Absolute background blobs for glassmorphism effect */}
-      <div style={{position: 'absolute', top: 200, left: 100, width: 400, height: 400, background: 'radial-gradient(circle, rgba(201,148,58,0.15) 0%, rgba(201,148,58,0) 70%)', zIndex: 0, pointerEvents: 'none'}} />
-      <div style={{position: 'absolute', top: 500, right: 100, width: 500, height: 500, background: 'radial-gradient(circle, rgba(123,29,46,0.12) 0%, rgba(123,29,46,0) 70%)', zIndex: 0, pointerEvents: 'none'}} />
+      {/* Soft Ambient Background Elements */}
+      <div style={{position: 'absolute', top: 0, left: 0, right: 0, height: '40vh', background: 'linear-gradient(180deg, rgba(201,148,58,0.03) 0%, transparent 100%)', pointerEvents: 'none'}} />
+      <div style={{position: 'absolute', top: 100, left: '10%', width: 600, height: 600, background: 'radial-gradient(circle, rgba(245,196,179,0.15) 0%, transparent 70%)', zIndex: 0, pointerEvents: 'none'}} />
+      <div style={{position: 'absolute', top: 300, right: '5%', width: 700, height: 700, background: 'radial-gradient(circle, rgba(123,29,46,0.04) 0%, transparent 70%)', zIndex: 0, pointerEvents: 'none'}} />
       
-      <div className="container" style={{ maxWidth: 1400, position: 'relative', zIndex: 1 }}>
+      <div className="container" style={{ maxWidth: 1360, position: 'relative', zIndex: 1 }}>
         
-        {/* Personalized Welcome Banner */}
-        <div className="parallax" style={{ 
-          borderRadius: 32, 
-          padding: '4rem 3.5rem', 
-          marginBottom: '3rem', 
-          color: '#fff', 
+        {/* Soothing Welcome Banner */}
+        <div style={{ 
+          borderRadius: 36, 
+          padding: '4.5rem 4rem', 
+          marginBottom: '3.5rem', 
+          color: 'var(--text)', 
           position: 'relative', 
           overflow: 'hidden', 
           display: 'flex', 
           justifyContent: 'space-between', 
           alignItems: 'center',
-          boxShadow: '0 20px 50px rgba(0,0,0,0.1)',
-          background: 'url(https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=2000&auto=format&fit=crop) center/cover no-repeat'
+          background: 'rgba(255, 255, 255, 0.7)',
+          backdropFilter: 'blur(20px)',
+          border: '1px solid rgba(255,255,255,1)',
+          boxShadow: '0 25px 60px rgba(0,0,0,0.02)'
         }}>
-          {/* Dark overlay for text readability */}
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(26,10,13,0.95) 0%, rgba(123,29,46,0.85) 100%)', zIndex: 1 }} />
+          {/* Subtle inner gradient */}
+          <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at top right, rgba(201,148,58,0.06), transparent 50%), radial-gradient(circle at bottom left, rgba(123,29,46,0.03), transparent 50%)', zIndex: 0 }} />
           
           <div style={{ position: 'relative', zIndex: 2 }}>
-            <div style={{ display: 'inline-block', background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)', color: 'var(--gold)', border: '1px solid rgba(255,255,255,0.2)', padding: '0.4rem 1rem', borderRadius: 50, fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: '1.5rem' }}>
-              Active Session
+            <div style={{ display: 'inline-block', background: '#fff', color: 'var(--bur)', border: '1px solid rgba(123,29,46,0.1)', padding: '0.4rem 1.2rem', borderRadius: 50, fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: '1.5rem', boxShadow: '0 4px 15px rgba(0,0,0,0.03)' }}>
+              Session Active
             </div>
-            <h1 style={{ fontSize: '3.5rem', color: '#fff', fontFamily: "'Playfair Display', serif", fontWeight: 800, marginBottom: 12, textShadow: '0 4px 15px rgba(0,0,0,0.2)', lineHeight: 1.1 }}>
-              Welcome back, {user?.name?.split(' ')[0]}.
+            <h1 style={{ fontSize: '3.6rem', color: '#1A0A0D', fontFamily: "'Playfair Display', serif", fontWeight: 700, marginBottom: 16, lineHeight: 1.1, letterSpacing: '-0.02em' }}>
+              Welcome, {user?.name?.split(' ')[0]}.
             </h1>
-            <p style={{ fontSize: '1.15rem', color: '#F5E6D3', opacity: 0.9, maxWidth: 600, lineHeight: 1.6, fontWeight: 500 }}>
-              {user?.role === 'lawyer' ? 'Your legal practice is flourishing. Check your client bookings and log case updates below.' : "Your legal matters are securely managed. Access your case tracker, appointments, and lawyer updates seamlessly."}
+            <p style={{ fontSize: '1.15rem', color: '#5A3A42', maxWidth: 650, lineHeight: 1.7, fontWeight: 500 }}>
+              {user?.role === 'lawyer' ? 'Your legal practice is flourishing. Manage your clients and log case updates securely.' : "Find peace of mind. Your legal matters are organized securely. Access your case tracker and updates below."}
             </p>
           </div>
-          <div className="hide-mobile" style={{ textAlign: 'right', position: 'relative', zIndex: 2, background: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(15px)', padding: '2rem', borderRadius: 24, border: '1px solid rgba(255,255,255,0.15)' }}>
-            <div style={{ fontSize: '3rem', fontWeight: 800, fontFamily: 'Sora, sans-serif', textShadow: '0 2px 8px rgba(0,0,0,0.3)', lineHeight: 1 }}>
+          
+          <div className="hide-mobile" style={{ textAlign: 'right', position: 'relative', zIndex: 2, background: 'rgba(255,255,255,0.9)', padding: '2rem 2.5rem', borderRadius: 28, border: '1px solid rgba(0,0,0,0.03)', boxShadow: '0 10px 30px rgba(0,0,0,0.02)' }}>
+            <div style={{ fontSize: '2.8rem', fontWeight: 700, fontFamily: 'Sora, sans-serif', color: '#1A0A0D', lineHeight: 1, letterSpacing: '-0.03em' }}>
               {new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
             </div>
-            <div style={{ fontSize: '.85rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: 2, color: 'var(--gold)', marginTop: 8 }}>
-              System Operational
+            <div style={{ fontSize: '.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 2, color: '#C9943A', marginTop: 12 }}>
+              Everything Operational
             </div>
           </div>
         </div>
-
         <div className="grid-dashboard" style={s.wrap}>
           {/* Sidebar */}
           <div style={s.sidebar}>
             <div style={s.sbUser}>
               <div style={s.sbAvatar}>{initials(user?.name)}</div>
-              <div style={{ fontWeight: 800, fontSize: '1.2rem', marginBottom: 6, color: 'var(--text)' }}>{user?.name}</div>
+              <div style={{ fontWeight: 800, fontSize: '1.25rem', marginBottom: 6, color: '#1A0A0D', letterSpacing: '-0.01em' }}>{user?.name}</div>
               <div style={s.sbRoleBadge}>
                 {user?.role === 'lawyer' ? <><Scale size={14} /> Advocate</> : <><User size={14} /> Client</>}
               </div>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-              <Link to="/dashboard" style={{ ...s.sbLink, ...(location.pathname === '/dashboard' ? s.sbLinkActive : {}) }}><LayoutDashboard size={20} /> Dashboard</Link>
-              <Link to="/search" style={s.sbLink}><Search size={20} /> Browse Lawyers</Link>
-              <Link to="/knowledge-hub" style={s.sbLink}><FileText size={20} /> Knowledge Hub</Link>
-              <div style={{ margin: '2rem 0', height: 1, background: 'rgba(0,0,0,0.05)' }} />
-              <button onClick={handleLogout} style={{ ...s.sbLink, background: 'rgba(220,38,38,0.05)', color: '#DC2626', border: 'none', cursor: 'pointer', textAlign: 'left', fontWeight: 800 }}><LogOut size={20} /> Logout Account</button>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+              <Link to="/dashboard" style={{ ...s.sbLink, ...(location.pathname === '/dashboard' ? s.sbLinkActive : {}) }}><LayoutDashboard size={18} /> Dashboard</Link>
+              <Link to="/search" style={s.sbLink}><Search size={18} /> Browse Lawyers</Link>
+              <Link to="/knowledge-hub" style={s.sbLink}><FileText size={18} /> Knowledge Hub</Link>
+              <div style={{ margin: '1.5rem 0', height: 1, background: 'rgba(0,0,0,0.04)' }} />
+              <button onClick={handleLogout} style={{ ...s.sbLink, color: '#DC2626', border: 'none', cursor: 'pointer', textAlign: 'left', fontWeight: 700 }}><LogOut size={18} /> Logout</button>
             </div>
           </div>
-
           {/* Main Content */}
           <div style={s.main}>
             {user?.role === 'lawyer' ? <LawyerDash /> : <ClientDash />}
@@ -740,23 +742,23 @@ export default function Dashboard() {
 
 const s = {
   wrap: { display:'grid', gridTemplateColumns:'280px 1fr', gap:'2.5rem' },
-  sidebar: { background:'rgba(255, 255, 255, 0.7)', backdropFilter:'blur(20px)', border:'1px solid rgba(255, 255, 255, 0.9)', borderRadius:'32px', padding:'3rem 2rem', height:'fit-content', position:'sticky', top:120, boxShadow:'0 20px 50px rgba(0,0,0,0.03)' },
-  sbUser: { textAlign:'center', paddingBottom:'2.5rem', borderBottom:'1px solid rgba(0,0,0,0.06)', marginBottom:'2rem' },
-  sbAvatar: { width:88, height:88, borderRadius:'28px', background:'linear-gradient(135deg, var(--bur), #5C1521)', color:'#fff', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:"'Playfair Display',serif", fontSize:'2.2rem', fontWeight:800, margin:'0 auto 1.5rem', boxShadow: '0 12px 25px rgba(123, 29, 46, 0.25)' },
-  sbRoleBadge: { fontSize:'0.75rem', color:'var(--bur)', textTransform:'uppercase', letterSpacing:'1px', fontWeight:800, display:'flex', justifyContent:'center', alignItems:'center', gap:6, background: 'rgba(123, 29, 46, 0.08)', padding: '.4rem 1rem', borderRadius: 50, width: 'fit-content', margin: '0 auto' },
-  sbLink: { display:'flex', alignItems:'center', gap:14, padding:'1.1rem 1.4rem', borderRadius:'20px', fontSize:'0.95rem', fontWeight:700, color:'#475569', textDecoration:'none', transition:'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)' },
-  sbLinkActive: { background:'linear-gradient(135deg, var(--bur), #5C1521)', color:'#fff', boxShadow:'0 10px 25px rgba(123,29,46,0.3)' },
+  sidebar: { background:'rgba(255, 255, 255, 0.75)', backdropFilter:'blur(20px)', border:'1px solid rgba(255, 255, 255, 1)', borderRadius:'32px', padding:'3rem 2rem', height:'fit-content', position:'sticky', top:120, boxShadow:'0 25px 60px rgba(0,0,0,0.02)' },
+  sbUser: { textAlign:'center', paddingBottom:'2.5rem', borderBottom:'1px solid rgba(0,0,0,0.04)', marginBottom:'2rem' },
+  sbAvatar: { width:96, height:96, borderRadius:'32px', background:'linear-gradient(145deg, #FAF7F2, #FFFDFB)', color:'var(--bur)', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:"'Playfair Display',serif", fontSize:'2.5rem', fontWeight:600, margin:'0 auto 1.5rem', boxShadow: '0 12px 25px rgba(0, 0, 0, 0.04)', border: '1px solid rgba(0,0,0,0.03)' },
+  sbRoleBadge: { fontSize:'0.75rem', color:'var(--bur)', textTransform:'uppercase', letterSpacing:'1.5px', fontWeight:700, display:'flex', justifyContent:'center', alignItems:'center', gap:6, background: 'rgba(255,255,255,0.8)', border: '1px solid rgba(123, 29, 46, 0.1)', padding: '.4rem 1rem', borderRadius: 50, width: 'fit-content', margin: '0 auto', boxShadow: '0 4px 12px rgba(0,0,0,0.02)' },
+  sbLink: { display:'flex', alignItems:'center', gap:14, padding:'1rem 1.4rem', borderRadius:'20px', fontSize:'0.92rem', fontWeight:600, color:'#5A3A42', textDecoration:'none', transition:'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)' },
+  sbLinkActive: { background:'#fff', color:'var(--bur)', boxShadow:'0 10px 30px rgba(0,0,0,0.03)', border: '1px solid rgba(0,0,0,0.02)', fontWeight: 700 },
   
   main: { minWidth: 0 },
-  hTitle: { fontFamily:"'Playfair Display',serif", fontSize:'2.4rem', fontWeight:800, lineHeight: 1.2, color: 'var(--text)' },
+  hTitle: { fontFamily:"'Playfair Display',serif", fontSize:'2.2rem', fontWeight:700, lineHeight: 1.2, color: '#1A0A0D', letterSpacing: '-0.02em' },
   statsRow: { display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))', gap:'1.5rem', marginBottom:'3rem' },
-  statNum: { fontFamily:"Sora, sans-serif", fontSize:'clamp(1.8rem, 2.5vw, 2.8rem)', fontWeight:800, background: 'linear-gradient(135deg, var(--bur), #5C1521)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', lineHeight:1, overflowWrap: 'break-word', wordWrap: 'break-word', hyphens: 'auto' },
-  statLabel: { fontSize:'0.85rem', color:'#475569', marginTop:12, fontWeight:800, textTransform: 'uppercase', letterSpacing: '1px' },
+  statNum: { fontFamily:"Sora, sans-serif", fontSize:'clamp(1.8rem, 2.5vw, 2.8rem)', fontWeight:700, color: '#1A0A0D', lineHeight:1, overflowWrap: 'break-word', wordWrap: 'break-word', hyphens: 'auto', letterSpacing: '-0.03em' },
+  statLabel: { fontSize:'0.8rem', color:'#5A3A42', marginTop:12, fontWeight:700, textTransform: 'uppercase', letterSpacing: '1.2px' },
   
-  section: { background:'rgba(255, 255, 255, 0.8)', backdropFilter:'blur(20px)', border:'1px solid rgba(255, 255, 255, 0.9)', borderRadius:'36px', padding:'3.5rem', boxShadow:'0 20px 60px rgba(0,0,0,0.03)' },
-  biIcon: { width:60, height:60, borderRadius:20, background:'linear-gradient(135deg, rgba(123,29,46,0.05), rgba(123,29,46,0.12))', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, border: '1px solid rgba(123,29,46,0.1)' },
-  addForm: { background:'rgba(255,255,255,0.7)', padding:'3rem', borderRadius:28, marginBottom:'2.5rem', border:'1px solid rgba(0,0,0,0.05)', boxShadow: '0 15px 40px rgba(0,0,0,0.03)' },
+  section: { background:'rgba(255, 255, 255, 0.75)', backdropFilter:'blur(20px)', border:'1px solid rgba(255, 255, 255, 1)', borderRadius:'36px', padding:'3.5rem', boxShadow:'0 25px 60px rgba(0,0,0,0.02)' },
+  biIcon: { width:56, height:56, borderRadius:20, background:'#fff', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, border: '1px solid rgba(0,0,0,0.03)', boxShadow: '0 10px 25px rgba(0,0,0,0.03)' },
+  addForm: { background:'rgba(255,255,255,0.85)', padding:'3rem', borderRadius:28, marginBottom:'2.5rem', border:'1px solid rgba(255,255,255,1)', boxShadow: '0 15px 40px rgba(0,0,0,0.02)' },
   formGrid: { display:'grid', gridTemplateColumns:'1fr 1fr', gap:'1.8rem' },
   
-  empty: { textAlign:'center', padding:'6rem 2rem', color:'#475569', display: 'flex', flexDirection: 'column', alignItems: 'center', background: 'rgba(255,255,255,0.5)', borderRadius: 28, border: '2px dashed rgba(0,0,0,0.08)' }
+  empty: { textAlign:'center', padding:'6rem 2rem', color:'#5A3A42', display: 'flex', flexDirection: 'column', alignItems: 'center', background: 'rgba(255,255,255,0.4)', borderRadius: 28, border: '1px dashed rgba(0,0,0,0.08)' }
 }
