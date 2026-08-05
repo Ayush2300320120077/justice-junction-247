@@ -110,6 +110,7 @@ export default function AIAssistantChat() {
         role: 'assistant',
         text: data.reply || 'I am unable to respond right now. Please consult a verified lawyer on JusticeJunction.',
         category: data.category || null,
+        isMock: data.isMock,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       }])
     } catch {
@@ -339,6 +340,11 @@ export default function AIAssistantChat() {
                     wordBreak: 'break-word',
                   }}>
                     {m.text}
+                    {m.isMock && (
+                      <div style={{ marginTop: 8, fontSize: '0.7rem', color: '#BE123C', fontWeight: 600, background: '#FFE4E6', padding: '4px 8px', borderRadius: 4, display: 'inline-block' }}>
+                        Demo Template Response
+                      </div>
+                    )}
                     <div style={{
                       fontSize: '0.65rem',
                       marginTop: 6,

@@ -714,6 +714,7 @@ export default function DocumentGenerator() {
   const [generatedDraftText, setGeneratedDraftText] = useState('')
   const [flaggedSections, setFlaggedSections] = useState([])
   const [activeTab, setActiveTab] = useState('edit')
+  const [isMock, setIsMock] = useState(false)
 
   const activeTemplate = TEMPLATES.find(t => t.id === expandedTemplate)
 
@@ -734,6 +735,7 @@ export default function DocumentGenerator() {
       setFlaggedSections([])
       setIsGenerating(false)
       setActiveTab('edit')
+      setIsMock(false)
     }
   }
 
@@ -791,6 +793,7 @@ export default function DocumentGenerator() {
       setIsGenerating(true)
       setGeneratedDraftText('')
       setFlaggedSections([])
+      setIsMock(false)
       
       try {
         const response = await fetch('/api/ai/generate-document', { credentials: 'include',
@@ -809,6 +812,7 @@ export default function DocumentGenerator() {
         
         setGeneratedDraftText(data.draftText)
         setFlaggedSections(data.flaggedSections || [])
+        setIsMock(data.isMock || false)
         setGeneratedId(template.id)
       } catch (err) {
         console.error(err)
@@ -1006,6 +1010,26 @@ export default function DocumentGenerator() {
                 {generatedDraftText && aiMode ? (
                   // Result Screen for AI Generation
                   <div>
+                    {isMock && (
+                      <div style={{
+                        background: '#FFF1F2',
+                        border: '1px solid #FECDD3',
+                        borderRadius: '12px',
+                        padding: '1rem',
+                        marginBottom: '1rem',
+                        display: 'flex',
+                        gap: 12,
+                        alignItems: 'flex-start'
+                      }}>
+                        <span style={{ fontSize: '1.2rem', flexShrink: 0 }}>⚠️</span>
+                        <div>
+                          <h4 style={{ fontWeight: 700, color: '#BE123C', margin: 0, fontSize: '0.95rem' }}>Demo Template Response</h4>
+                          <p style={{ color: '#E11D48', fontSize: '0.85rem', margin: '4px 0 0 0', lineHeight: 1.5 }}>
+                            AI generation is currently in demo mode. This is a pre-written template, not an AI-generated draft.
+                          </p>
+                        </div>
+                      </div>
+                    )}
                     {/* Persistent Warning Banner */}
                     <div style={{
                       background: '#FFFBEB',

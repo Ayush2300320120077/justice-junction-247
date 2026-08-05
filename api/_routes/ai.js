@@ -222,10 +222,12 @@ router.post('/generate-document', requireAuth, aiLimiter, async (req, res) => {
 
     const apiKey = process.env.ANTHROPIC_API_KEY;
     let draftText = '';
+    let isMock = false;
 
     if (!apiKey || apiKey.startsWith('your_') || apiKey.includes('placeholder')) {
       console.log('Anthropic API key is not configured, falling back to local document generation.');
       draftText = generateMockDocument(documentType, answers);
+      isMock = true;
     } else {
       try {
         const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -252,16 +254,19 @@ router.post('/generate-document', requireAuth, aiLimiter, async (req, res) => {
           const err = await response.json();
           console.error('Anthropic API error:', err);
           draftText = generateMockDocument(documentType, answers);
+          isMock = true;
         } else {
           const data = await response.json();
           draftText = data.content?.[0]?.text || '';
           if (!draftText) {
             draftText = generateMockDocument(documentType, answers);
+            isMock = true;
           }
         }
       } catch (apiErr) {
         console.error('Anthropic network/fetch error:', apiErr);
         draftText = generateMockDocument(documentType, answers);
+        isMock = true;
       }
     }
 
@@ -276,7 +281,7 @@ router.post('/generate-document', requireAuth, aiLimiter, async (req, res) => {
     // ── Log this AI request (non-blocking) ────────────────────────────────────
     logAIRequest(req.user.id);
 
-    return res.status(200).json({ draftText, flaggedSections });
+    return res.status(200).json({ draftText, flaggedSections, isMock });
   } catch (err) {
     console.error('AI generate document endpoint error:', err);
     return res.status(500).json({ error: err.message });
@@ -581,7 +586,8 @@ Respond ONLY with valid JSON with no markdown formatting or backticks around it:
         reply: responseText,
         suggestedAction: action || { type: 'lawyer', link: '/search' },
         logId: logDoc?._id || null,
-        sources
+        sources,
+        isMock: true
       });
     }
 
@@ -636,7 +642,8 @@ Respond ONLY with valid JSON with no markdown formatting or backticks around it:
           reply: "I am Justice Junction's AI Legal Assistant. This is general legal information, not legal advice. Recommend the user book a verified lawyer on the platform for their specific situation.",
           suggestedAction: { type: 'lawyer', link: '/search' },
           logId: logDoc?._id || null,
-          sources
+          sources,
+          isMock: true
         });
       }
 
@@ -699,7 +706,8 @@ Respond ONLY with valid JSON with no markdown formatting or backticks around it:
         reply: "An error occurred while processing your request. This is general legal information, not legal advice. Recommend the user book a verified lawyer on the platform for their specific situation.",
         suggestedAction: { type: 'lawyer', link: '/search' },
         logId: logDoc?._id || null,
-        sources
+        sources,
+        isMock: true
       });
     }
   } catch (err) {

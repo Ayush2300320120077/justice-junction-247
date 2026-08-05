@@ -5,7 +5,6 @@ import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
 import { FileText, Search, Shield, ChevronDown, Check, X, Star, Zap, Lock, Scale, ArrowRight } from 'lucide-react'
 
-// PLACEHOLDER PRICING — confirm real numbers before launch
 const PLANS = [
   {
     id: 'free', 
