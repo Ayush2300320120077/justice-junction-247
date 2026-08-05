@@ -3,7 +3,7 @@ const express = require('express');
 const connectDB = require('../../middleware/db');
 const authMiddleware = require('../../middleware/auth');
 const Article = require('../../models/Article');
-const sanitizeHtml = require('sanitize-html');
+const xss = require('xss');
 
 // ── HTML sanitisation config (used on every admin write) ────────────────────
 // Allowlist note: there is currently no rich-text editor UI in the admin panel
@@ -13,21 +13,20 @@ const sanitizeHtml = require('sanitize-html');
 // etc.) is ever wired up, re-evaluate this list against its actual output.
 // Strips unconditionally: <script>, <style>, <iframe>, <form>, <input>,
 // <object>, <embed>, all event-handler attributes, and javascript: URIs.
-const SANITIZE_OPTS = {
-  allowedTags: [
-    'p', 'br', 'strong', 'em', 'u',
-    'h1', 'h2', 'h3', 'h4',
-    'ul', 'ol', 'li',
-    'a', 'blockquote', 'img',
-  ],
-  allowedAttributes: {
-    '*': ['href', 'src', 'alt', 'title', 'target']
-  }
+const xssOptions = {
+  whiteList: {
+    p: [], br: [], strong: [], em: [], u: [],
+    h1: [], h2: [], h3: [], h4: [],
+    ul: [], ol: [], li: [],
+    a: ['href', 'target', 'title'], blockquote: [], img: ['src', 'alt', 'title']
+  },
+  stripIgnoreTag: true,
+  stripIgnoreTagBody: ['script', 'style']
 };
 
 function sanitizeContent(raw) {
   if (!raw || typeof raw !== 'string') return raw;
-  return sanitizeHtml(raw, SANITIZE_OPTS);
+  return xss(raw, xssOptions);
 }
 
 const app = express();
