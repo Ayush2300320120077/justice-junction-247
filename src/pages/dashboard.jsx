@@ -200,7 +200,7 @@ function ClientDash() {
           align-items: center;
           justify-content: center;
           font-size: 1rem;
-          color: #1A0A0D;
+          color: #fff;
           font-weight: 800;
           box-shadow: 0 4px 15px rgba(0,0,0,0.3);
           position: relative;
@@ -244,9 +244,9 @@ function ClientDash() {
             <div key={b._id} className="case-card-premium">
               <div style={s.biIcon}><Scale size={24} color="#7B1D2E" /></div>
               <div style={{flex:1}}>
-                <div style={{fontWeight:800,fontSize:'1.1rem', color:'#1A0A0D', marginBottom:4}}>{b.lawyerName}</div>
-                <div style={{fontSize:'0.85rem',color:'#5A3A42', fontWeight:600}}>{b.caseType} &nbsp;&bull;&nbsp; {fmt(b.scheduledDate)} at {b.scheduledTime}</div>
-                <div style={{fontSize:'0.85rem',color:'#5A3A42', fontWeight:600, marginTop:4}}>Case # {b.caseNumber} &nbsp;&bull;&nbsp; Fee: ₹{(b.fee||0).toLocaleString()}</div>
+                <div style={{fontWeight:800,fontSize:'1.1rem', color:'#fff', marginBottom:4}}>{b.lawyerName}</div>
+                <div style={{fontSize:'0.85rem',color:'#A09B9C', fontWeight:600}}>{b.caseType} &nbsp;&bull;&nbsp; {fmt(b.scheduledDate)} at {b.scheduledTime}</div>
+                <div style={{fontSize:'0.85rem',color:'#A09B9C', fontWeight:600, marginTop:4}}>Case # {b.caseNumber} &nbsp;&bull;&nbsp; Fee: ₹{(b.fee||0).toLocaleString()}</div>
                 {b.meetingLink && <a href={b.meetingLink} target="_blank" rel="noreferrer" style={{fontSize:'0.85rem',color:'#fff',fontWeight:800,marginTop:16,display:'inline-flex',alignItems:'center',gap:8, background:'#7B1D2E', padding:'.7rem 1.4rem', borderRadius: 12, textDecoration:'none', boxShadow:'0 6px 20px rgba(123, 29, 46, 0.25)'}}><Video size={16}/> Join Video Consultation</a>}
               </div>
               <StatusBadge status={b.status} />
@@ -287,8 +287,8 @@ function ClientDash() {
                 <div key={c.id} className="case-card-premium">
                   <div style={s.biIcon}><Briefcase size={24} color="#7B1D2E" /></div>
                   <div style={{flex:1}}>
-                    <div style={{fontWeight:800, fontSize:'1.1rem', marginBottom:4, color:'#1A0A0D'}}>{c.caseNumber}</div>
-                    <div style={{fontSize:'.85rem', color:'#5A3A42', fontWeight:600}}>{c.courtName} &nbsp;&bull;&nbsp; {c.lawyerName || 'Advocate not specified'}</div>
+                    <div style={{fontWeight:800, fontSize:'1.1rem', marginBottom:4, color:'#fff'}}>{c.caseNumber}</div>
+                    <div style={{fontSize:'.85rem', color:'#A09B9C', fontWeight:600}}>{c.courtName} &nbsp;&bull;&nbsp; {c.lawyerName || 'Advocate not specified'}</div>
                     {c.nextHearing && <div style={{fontSize:'.85rem', color:'#7B1D2E', fontWeight:800, marginTop:8, display:'inline-flex', alignItems:'center', gap:6, background: 'rgba(123, 29, 46, 0.05)', padding: '0.4rem 0.8rem', borderRadius: 8}}><Calendar size={14}/> Next Hearing: {fmt(c.nextHearing)}</div>}
                     <div style={{display:'flex', gap:10, marginTop:16}}>
                       <button className="btn btn-outline" onClick={() => showToast('Simulating document upload...')}>
@@ -320,9 +320,9 @@ function ClientDash() {
             <div key={c._id} className="case-card-premium">
               <div style={s.biIcon}><Scale size={24} color="#7B1D2E" /></div>
               <div style={{flex: 1}}>
-                <div style={{fontWeight:800, fontSize:'1.1rem', color:'#1A0A0D', marginBottom:4}}>{c.caseType}</div>
-                <div style={{fontSize:'0.85rem', color:'#5A3A42', fontWeight:600}}>Lawyer: {c.lawyerName}</div>
-                <div style={{fontSize:'0.85rem', color:'#5A3A42', fontWeight:600, marginTop:4}}>Case # {c.caseNumber} &nbsp;&bull;&nbsp; {fmt(c.scheduledDate)}</div>
+                <div style={{fontWeight:800, fontSize:'1.1rem', color:'#fff', marginBottom:4}}>{c.caseType}</div>
+                <div style={{fontSize:'0.85rem', color:'#A09B9C', fontWeight:600}}>Lawyer: {c.lawyerName}</div>
+                <div style={{fontSize:'0.85rem', color:'#A09B9C', fontWeight:600, marginTop:4}}>Case # {c.caseNumber} &nbsp;&bull;&nbsp; {fmt(c.scheduledDate)}</div>
                 
                 {c.meetingLink && (
                   <a href={c.meetingLink} target="_blank" rel="noreferrer" style={{fontSize:'0.85rem', color:'#fff', fontWeight:800, marginTop:16, display:'inline-flex', alignItems:'center', gap:8, background:'#7B1D2E', padding:'.7rem 1.4rem', borderRadius: 12, textDecoration:'none', boxShadow:'0 6px 20px rgba(123, 29, 46, 0.25)'}}>
@@ -331,10 +331,10 @@ function ClientDash() {
                 )}
                 
                 {c.updates?.length > 0 && (
-                  <div style={{marginTop: 16, background: '#FDF6EE', padding: '16px', borderRadius: 12, border: '1px solid rgba(123, 29, 46, 0.05)'}}>
+                  <div style={{marginTop: 16, background: 'rgba(0, 0, 0, 0.3)', padding: '16px', borderRadius: 12, border: '1px solid rgba(123, 29, 46, 0.05)'}}>
                     <div style={{fontSize:'.75rem', textTransform:'uppercase', fontWeight:800, color:'#C9943A', marginBottom:8}}>Latest Update</div>
-                    <div style={{fontWeight:700, fontSize:'.9rem', color:'#1A0A0D'}}>{c.updates[c.updates.length-1].title}</div>
-                    <div style={{fontSize:'.85rem', color:'#5A3A42', marginTop:4}}>{c.updates[c.updates.length-1].description}</div>
+                    <div style={{fontWeight:700, fontSize:'.9rem', color:'#fff'}}>{c.updates[c.updates.length-1].title}</div>
+                    <div style={{fontSize:'.85rem', color:'#A09B9C', marginTop:4}}>{c.updates[c.updates.length-1].description}</div>
                   </div>
                 )}
               </div>
@@ -364,8 +364,8 @@ function ClientDash() {
             <div key={d._id} className="case-card-premium">
               <div style={s.biIcon}><FileText size={24} color="#7B1D2E" /></div>
               <div style={{flex: 1}}>
-                <div style={{fontWeight:800, fontSize:'1.1rem', color:'#1A0A0D', marginBottom:4}}>{d.title}</div>
-                <div style={{fontSize:'0.85rem', color:'#5A3A42', fontWeight:600}}>Created {fmt(d.createdAt)}</div>
+                <div style={{fontWeight:800, fontSize:'1.1rem', color:'#fff', marginBottom:4}}>{d.title}</div>
+                <div style={{fontSize:'0.85rem', color:'#A09B9C', fontWeight:600}}>Created {fmt(d.createdAt)}</div>
               </div>
               <div style={{display:'flex', gap:12}}>
                 <button className="btn btn-outline" style={{padding: '0.6rem 1.2rem'}} onClick={() => window.open(d.fileUrl, '_blank')}><Download size={16}/> Download</button>
@@ -390,8 +390,8 @@ function ClientDash() {
                   </div>
                   <div style={{flex:1}}>
                     <div style={{fontWeight:800,fontSize:'1.1rem', color: '#fff', marginBottom: 6}}>{u.title}</div>
-                    <div style={{fontSize:'0.95rem',color:'#5A3A42', lineHeight:1.6}}>{u.description}</div>
-                    <div style={{fontSize:'0.8rem',color:'#5A3A42',marginTop:12, fontWeight:700, textTransform: 'uppercase', letterSpacing: '0.5px'}}>
+                    <div style={{fontSize:'0.95rem',color:'#A09B9C', lineHeight:1.6}}>{u.description}</div>
+                    <div style={{fontSize:'0.8rem',color:'#A09B9C',marginTop:12, fontWeight:700, textTransform: 'uppercase', letterSpacing: '0.5px'}}>
                       Case #{u.caseNumber} &nbsp;&bull;&nbsp; {fmt(u.createdAt)} &nbsp;&bull;&nbsp; Stage: {u.stage}
                     </div>
                   </div>
@@ -405,7 +405,7 @@ function ClientDash() {
       {tab === 'settings' && (
         <div style={s.section} className="dash-section-responsive">
           <h3 style={{...s.hTitle, marginBottom:'1.5rem'}}>Account Settings</h3>
-          <div style={{background:'#FDF6EE', border:'1px solid rgba(123, 29, 46, 0.05)', borderRadius:24, padding:'3rem', boxShadow: '0 10px 30px rgba(123, 29, 46, 0.05)'}}>
+          <div style={{background:'rgba(0, 0, 0, 0.3)', border:'1px solid rgba(255, 255, 255, 0.08)', borderRadius:24, padding:'3rem', boxShadow: '0 10px 30px rgba(123, 29, 46, 0.05)'}}>
             <div className="form-group" style={{marginBottom: '1.5rem'}}>
               <label style={{color: '#A09B9C'}}>Full Name</label>
               <input className="form-input-premium" type="text" value={user?.name||''} readOnly style={{opacity: 0.8}} />
@@ -561,19 +561,19 @@ function LawyerDash() {
         .form-input-premium {
           width: 100%;
           padding: 1rem 1.2rem;
-          border: 1.5px solid rgba(123, 29, 46, 0.1);
+          border: 1.5px solid rgba(255,255,255,0.1);
           border-radius: 16px;
           font-size: 0.95rem;
           font-family: inherit;
-          background: #FDF6EE;
-          color: #1A0A0D;
+          background: rgba(255,255,255,0.05);
+          color: #fff;
           transition: all 0.2s ease;
         }
         .form-input-premium:focus {
-          border-color: #7B1D2E;
-          box-shadow: 0 0 0 4px rgba(123, 29, 46, 0.1);
+          border-color: #E5B05C;
+          box-shadow: 0 0 0 4px rgba(201,148,58,0.15);
           outline: none;
-          background: #fff;
+          background: rgba(255,255,255,0.1);
         }
       `}</style>
       <div style={s.statsRow}>
@@ -603,10 +603,10 @@ function LawyerDash() {
             <div key={b._id} className="case-card-premium">
               <div style={s.biIcon}><User size={24} color="#7B1D2E" /></div>
               <div style={{flex:1}}>
-                <div style={{fontWeight:800,fontSize:'1.1rem', color:'#1A0A0D', marginBottom:4}}>{b.clientName}</div>
-                <div style={{fontSize:'0.85rem',color:'#5A3A42', fontWeight:600}}>{b.caseType} &nbsp;&bull;&nbsp; {fmt(b.scheduledDate)} at {b.scheduledTime}</div>
-                <div style={{fontSize:'0.85rem',color:'#5A3A42', fontWeight:600, marginTop:4}}>Case # {b.caseNumber} &nbsp;&bull;&nbsp; ₹{(b.fee||0).toLocaleString()}</div>
-                {b.description && <div style={{fontSize:'0.9rem',color:'#5A3A42', marginTop:12,fontStyle:'italic', background:'#FDF6EE', padding: '12px 16px', borderRadius: 12, borderLeft: '4px solid #7B1D2E'}}>"{b.description.slice(0,120)}{b.description.length>120?'...':''}"</div>}
+                <div style={{fontWeight:800,fontSize:'1.1rem', color:'#fff', marginBottom:4}}>{b.clientName}</div>
+                <div style={{fontSize:'0.85rem',color:'#A09B9C', fontWeight:600}}>{b.caseType} &nbsp;&bull;&nbsp; {fmt(b.scheduledDate)} at {b.scheduledTime}</div>
+                <div style={{fontSize:'0.85rem',color:'#A09B9C', fontWeight:600, marginTop:4}}>Case # {b.caseNumber} &nbsp;&bull;&nbsp; ₹{(b.fee||0).toLocaleString()}</div>
+                {b.description && <div style={{fontSize:'0.9rem',color:'#A09B9C', marginTop:12,fontStyle:'italic', background:'rgba(0, 0, 0, 0.3)', padding: '12px 16px', borderRadius: 12, borderLeft: '4px solid #E5B05C'}}>"{b.description.slice(0,120)}{b.description.length>120?'...':''}"</div>}
                 {b.meetingLink && <a href={b.meetingLink} target="_blank" rel="noreferrer" style={{fontSize:'0.85rem',color:'#fff',fontWeight:800,marginTop:16,display:'inline-flex',alignItems:'center',gap:8, background:'#7B1D2E', padding:'.7rem 1.4rem', borderRadius: 12, textDecoration:'none', boxShadow:'0 6px 20px rgba(123, 29, 46, 0.25)'}}><Video size={16}/>Join Video Call</a>}
               </div>
               <div style={{display:'flex',flexDirection:'column',gap:12,alignItems:'flex-end'}}>
@@ -622,7 +622,7 @@ function LawyerDash() {
       {tab === 'post' && (
         <div style={s.section} className="dash-section-responsive">
           <h3 style={{...s.hTitle, marginBottom:'2rem'}}>Post Case Update</h3>
-          <div style={{background:'#FDF6EE', border:'1px solid rgba(123, 29, 46, 0.05)', borderRadius:24, padding:'3rem', boxShadow: '0 10px 30px rgba(123, 29, 46, 0.05)'}}>
+          <div style={{background:'rgba(0, 0, 0, 0.3)', border:'1px solid rgba(255, 255, 255, 0.08)', borderRadius:24, padding:'3rem', boxShadow: '0 10px 30px rgba(123, 29, 46, 0.05)'}}>
             <div className="form-group">
               <label style={{color: '#A09B9C'}}>Select Booking / Case</label>
               <select className="form-input-premium" value={upForm.bookingId} onChange={e => setUpForm(f=>({...f,bookingId:e.target.value}))}>
@@ -661,8 +661,8 @@ function LawyerDash() {
       {tab === 'outcome' && (
         <div style={s.section} className="dash-section-responsive">
           <h3 style={{...s.hTitle, marginBottom:'0.5rem'}}>Log Closed Case Outcome</h3>
-          <p style={{color:'#5A3A42', fontSize:'.95rem',marginBottom:'2rem', fontWeight:600}}>Record outcomes of closed cases to help build platform-wide statistics for clients.</p>
-          <div style={{background:'#FDF6EE', border:'1px solid rgba(123, 29, 46, 0.05)', borderRadius:24, padding:'3rem', boxShadow: '0 10px 30px rgba(123, 29, 46, 0.05)'}}>
+          <p style={{color:'#A09B9C', fontSize:'.95rem',marginBottom:'2rem', fontWeight:600}}>Record outcomes of closed cases to help build platform-wide statistics for clients.</p>
+          <div style={{background:'rgba(0, 0, 0, 0.3)', border:'1px solid rgba(255, 255, 255, 0.08)', borderRadius:24, padding:'3rem', boxShadow: '0 10px 30px rgba(123, 29, 46, 0.05)'}}>
 
             <div className="form-group">
               <label style={{color: '#A09B9C'}}>Case Type / Practice Area</label>
@@ -677,7 +677,7 @@ function LawyerDash() {
               <div style={{display:'flex',gap:16,flexWrap:'wrap',marginTop:8}}>
                 {[['won','Won',<CheckCircle size={18}/>,'#22C55E','#F0FDF4'],['lost','Lost',<XCircle size={18}/>,'#EF4444','#FEF2F2'],['settled','Settled',<MinusCircle size={18}/>,'#F59E0B','#FFFBEB']].map(
                   ([val,label,icon,color,bg])=>(
-                    <label key={val} style={{display:'flex',alignItems:'center',gap:10,padding:'.8rem 1.6rem',borderRadius:50,border:`2px solid ${outcomeForm.outcome===val?color:'rgba(123, 29, 46, 0.1)'}`,background:outcomeForm.outcome===val?bg:'#fff',cursor:'pointer',fontWeight:800,fontSize:'.95rem',color:outcomeForm.outcome===val?color:'#5A3A42',transition:'all .2s', boxShadow: outcomeForm.outcome===val?'0 4px 15px rgba(0,0,0,0.05)':'none'}}>
+                    <label key={val} style={{display:'flex',alignItems:'center',gap:10,padding:'.8rem 1.6rem',borderRadius:50,border:`2px solid ${outcomeForm.outcome===val?color:'rgba(123, 29, 46, 0.1)'}`,background:outcomeForm.outcome===val?bg:'rgba(0, 0, 0, 0.5)',cursor:'pointer',fontWeight:800,fontSize:'.95rem',color:outcomeForm.outcome===val?color:'#A09B9C',transition:'all .2s', boxShadow: outcomeForm.outcome===val?'0 4px 15px rgba(0,0,0,0.05)':'none'}}>
                       <input type="radio" name="outcome" value={val} checked={outcomeForm.outcome===val} onChange={()=>setOutcomeForm(f=>({...f,outcome:val}))} style={{display:'none'}}/>
                       {icon}{label}
                     </label>
@@ -707,13 +707,13 @@ function LawyerDash() {
       {tab === 'profile' && (
         <div style={s.section} className="dash-section-responsive">
           <h3 style={{...s.hTitle, marginBottom:'1rem'}}>Practice Settings</h3>
-          <p style={{color:'#5A3A42', fontSize:'.95rem', marginBottom:'2.5rem', fontWeight:600}}>Update your specialization, fee, and availability status.</p>
-          <div style={{background:'#FDF6EE', border:'1px solid rgba(123, 29, 46, 0.05)', borderRadius:24, padding:'4rem 2rem', textAlign:'center', boxShadow:'0 10px 30px rgba(123, 29, 46, 0.05)'}}>
+          <p style={{color:'#A09B9C', fontSize:'.95rem', marginBottom:'2.5rem', fontWeight:600}}>Update your specialization, fee, and availability status.</p>
+          <div style={{background:'rgba(0, 0, 0, 0.3)', border:'1px solid rgba(255, 255, 255, 0.08)', borderRadius:24, padding:'4rem 2rem', textAlign:'center', boxShadow:'0 10px 30px rgba(123, 29, 46, 0.05)'}}>
             <div style={{width: 80, height: 80, borderRadius: '24px', background: 'rgba(123, 29, 46, 0.05)', border: '1px solid rgba(123, 29, 46, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem'}}>
               <User size={40} color="#7B1D2E" />
             </div>
-            <h4 style={{marginBottom:12, fontSize:'1.5rem', fontWeight:800, color:'#1A0A0D'}}>Profile Management</h4>
-            <p style={{fontSize:'1rem', color:'#5A3A42', marginBottom:'2rem', maxWidth: 400, margin: '0 auto 2rem', lineHeight: 1.6}}>Manage your public profile information, bar registration details, and practice areas.</p>
+            <h4 style={{marginBottom:12, fontSize:'1.5rem', fontWeight:800, color:'#fff'}}>Profile Management</h4>
+            <p style={{fontSize:'1rem', color:'#A09B9C', marginBottom:'2rem', maxWidth: 400, margin: '0 auto 2rem', lineHeight: 1.6}}>Manage your public profile information, bar registration details, and practice areas.</p>
             <button className="btn btn-outline" style={{padding: '0.8rem 1.6rem'}} onClick={() => showToast('Profile editor coming soon...')}>Edit Practice Details</button>
           </div>
         </div>
