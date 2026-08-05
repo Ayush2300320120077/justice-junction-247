@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const { ChromaClient } = require('chromadb');
 
 const LOCAL_STORE_DIR = path.join(__dirname, 'corpus', 'data');
 const LOCAL_STORE_FILE = path.join(LOCAL_STORE_DIR, 'vector_store.json');
@@ -26,9 +25,6 @@ function cosineSimilarity(vecA, vecB) {
 
 class VectorStore {
   constructor() {
-    this.chromaUrl = process.env.VECTOR_DB_URL || 'http://localhost:8000';
-    this.chromaClient = null;
-    this.collectionName = 'justice_junction_legal_rag';
     this.useChroma = false;
     this.localStore = [];
     this.initLocalStore();
@@ -63,20 +59,7 @@ class VectorStore {
     }
   }
 
-  async connectChroma() {
-    if (this.chromaClient) return true;
-    try {
-      const client = new ChromaClient({ path: this.chromaUrl });
-      await client.heartbeat();
-      this.chromaClient = client;
-      this.useChroma = true;
-      return true;
-    } catch (err) {
-      // Chroma DB server not running locally; fallback to local JSON vector store silently
-      this.useChroma = false;
-      return false;
-    }
-  }
+
 
   /**
    * Upserts vectors into the vector store.
@@ -84,32 +67,6 @@ class VectorStore {
    */
   async upsert(items) {
     if (!Array.isArray(items) || items.length === 0) return { success: true, count: 0 };
-
-    const isChromaAvailable = await this.connectChroma();
-
-    if (isChromaAvailable && this.chromaClient) {
-      try {
-        const collection = await this.chromaClient.getOrCreateCollection({
-          name: this.collectionName
-        });
-
-        const ids = items.map(it => it.id);
-        const embeddings = items.map(it => it.embedding);
-        const metadatas = items.map(it => it.metadata);
-        const documents = items.map(it => it.text);
-
-        await collection.upsert({
-          ids,
-          embeddings,
-          metadatas,
-          documents
-        });
-
-        return { success: true, count: items.length, backend: 'chromadb' };
-      } catch (err) {
-        console.warn('VectorStore: ChromaDB upsert failed, falling back to local file store:', err.message);
-      }
-    }
 
     // Local JSON Vector Store Fallback
     for (const item of items) {
@@ -133,39 +90,6 @@ class VectorStore {
    * @returns {Promise<Array<{ sourceId: string, text: string, metadata: object, score: number }>>}
    */
   async search(queryEmbedding, topK = 5, filter = null) {
-    const isChromaAvailable = await this.connectChroma();
-
-    if (isChromaAvailable && this.chromaClient) {
-      try {
-        const collection = await this.chromaClient.getOrCreateCollection({
-          name: this.collectionName
-        });
-
-        const queryResult = await collection.query({
-          queryEmbeddings: [queryEmbedding],
-          nResults: topK,
-          where: filter || undefined
-        });
-
-        const results = [];
-        if (queryResult && queryResult.ids?.[0]) {
-          for (let i = 0; i < queryResult.ids[0].length; i++) {
-            results.push({
-              sourceId: queryResult.ids[0][i],
-              text: queryResult.documents[0][i],
-              metadata: queryResult.metadatas[0][i],
-              // Convert Chroma distance to similarity score
-              score: queryResult.distances?.[0]?.[i] !== undefined 
-                ? Number((1 - queryResult.distances[0][i]).toFixed(4)) 
-                : 1.0
-            });
-          }
-        }
-        return results;
-      } catch (err) {
-        console.warn('VectorStore: ChromaDB query failed, falling back to local store:', err.message);
-      }
-    }
 
     // Local File Vector Store Cosine Similarity Search
     let candidates = this.localStore;
