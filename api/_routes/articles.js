@@ -3,7 +3,7 @@ const express = require('express');
 const connectDB = require('../../middleware/db');
 const authMiddleware = require('../../middleware/auth');
 const Article = require('../../models/Article');
-const DOMPurify = require('isomorphic-dompurify');
+const sanitizeHtml = require('sanitize-html');
 
 // ── HTML sanitisation config (used on every admin write) ────────────────────
 // Allowlist note: there is currently no rich-text editor UI in the admin panel
@@ -14,18 +14,20 @@ const DOMPurify = require('isomorphic-dompurify');
 // Strips unconditionally: <script>, <style>, <iframe>, <form>, <input>,
 // <object>, <embed>, all event-handler attributes, and javascript: URIs.
 const SANITIZE_OPTS = {
-  ALLOWED_TAGS: [
+  allowedTags: [
     'p', 'br', 'strong', 'em', 'u',
     'h1', 'h2', 'h3', 'h4',
     'ul', 'ol', 'li',
     'a', 'blockquote', 'img',
   ],
-  ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'target'],
+  allowedAttributes: {
+    '*': ['href', 'src', 'alt', 'title', 'target']
+  }
 };
 
 function sanitizeContent(raw) {
   if (!raw || typeof raw !== 'string') return raw;
-  return DOMPurify.sanitize(raw, SANITIZE_OPTS);
+  return sanitizeHtml(raw, SANITIZE_OPTS);
 }
 
 const app = express();
