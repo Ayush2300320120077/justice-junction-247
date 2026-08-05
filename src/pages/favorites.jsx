@@ -37,7 +37,7 @@ export default function Favorites() {
       <Helmet>
         <title>Saved Lawyers — Justice Junction 24/7</title>
       </Helmet>
-      <div className="container" style={{paddingTop: '3rem'}}>
+      <div className="container" style={{paddingTop: '8rem', paddingBottom: '5rem'}}>
         <div style={{marginBottom: '2rem'}}>
           <h1 style={{fontFamily: "'Playfair Display', serif", fontSize: '2.5rem', fontWeight: 800}}>Your Saved Lawyers</h1>
           <p style={{color: 'var(--txt-3)'}}>Advocates you've shortlisted for future consultation.</p>
