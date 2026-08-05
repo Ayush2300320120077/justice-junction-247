@@ -46,7 +46,7 @@ export default function Book() {
   if (!isLoggedIn) return null
 
   return (
-    <div className="page-wrap" style={{background: 'var(--cream-2)', padding: '4rem 1rem'}}>
+    <div className="page-wrap" style={{background: 'linear-gradient(135deg, rgba(13, 7, 9, 0.95) 0%, rgba(61, 14, 22, 0.9) 100%)', minHeight: '100vh', padding: '7rem 1rem 4rem 1rem'}}>
       <Helmet><title>Book Consultation — {lawyerName}</title></Helmet>
       <div className="container" style={{maxWidth: 1000}}>
         <div style={{display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '2.5rem'}}>
