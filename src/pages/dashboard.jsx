@@ -774,7 +774,7 @@ export default function Dashboard() {
               Session Active
             </div>
             <h1 style={{ fontSize: '3.6rem', color: '#1A0A0D', fontFamily: "'Playfair Display', serif", fontWeight: 700, marginBottom: 16, lineHeight: 1.1, letterSpacing: '-0.02em' }}>
-              Welcome, {user?.name?.split(' ')[0]}.
+              Welcome, {user?.name ? user.name.split(' ')[0] : 'User'}.
             </h1>
             <p style={{ fontSize: '1.15rem', color: '#5A3A42', maxWidth: 650, lineHeight: 1.7, fontWeight: 500 }}>
               {user?.role === 'lawyer' ? 'Your legal practice is flourishing. Manage your clients and log case updates securely.' : "Find peace of mind. Your legal matters are organized securely. Access your case tracker and updates below."}
