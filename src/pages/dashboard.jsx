@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { API } from '../api'
 import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
-import { ClipboardList, Activity, Scale, Video, User, Search, LayoutDashboard, LogOut, Edit3, Briefcase, FileText, Upload, Plus, Trash2, BarChart2, CheckCircle, XCircle, MinusCircle } from 'lucide-react'
+import { ClipboardList, Activity, Scale, Video, User, Search, LayoutDashboard, LogOut, Edit3, Briefcase, FileText, Upload, Plus, Trash2, BarChart2, CheckCircle, XCircle, MinusCircle, Calendar } from 'lucide-react'
 import { Helmet } from 'react-helmet-async'
 
 function fmt(d) { return new Date(d).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}) }
@@ -13,9 +13,9 @@ function initials(name) { return (name||'?').split(' ').slice(0,2).map(p=>p[0]).
 const CASE_TYPES = ['Criminal Defence','Family Law','Property Law','Corporate Law','Consumer Rights','Labour Law','Civil Disputes','Divorce','Taxation','Intellectual Property','Cyber Law','Bail & FIR']
 
 function StatusBadge({ status }) {
-  const map = { pending:{bg:'rgba(201,148,58,0.12)',color:'#C9943A'}, confirmed:{bg:'rgba(45,122,79,0.1)',color:'#2D7A4F'}, completed:{bg:'rgba(123,29,46,0.08)',color:'#7B1D2E'}, cancelled:{bg:'#FEE2E2',color:'#B91C1C'} }
+  const map = { pending:{bg:'rgba(201,148,58,0.15)',color:'#C9943A'}, confirmed:{bg:'rgba(22, 163, 74, 0.15)',color:'#16A34A'}, completed:{bg:'rgba(123,29,46,0.15)',color:'#7B1D2E'}, cancelled:{bg:'#FEE2E2',color:'#B91C1C'} }
   const c = map[status] || map.pending
-  return <span style={{padding:'0.2rem 0.7rem',borderRadius:50,fontSize:'0.7rem',fontWeight:700,textTransform:'uppercase',background:c.bg,color:c.color}}>{status}</span>
+  return <span style={{padding:'0.3rem 0.8rem',borderRadius:50,fontSize:'0.75rem',fontWeight:800,textTransform:'uppercase',background:c.bg,color:c.color, letterSpacing: '0.5px'}}>{status}</span>
 }
 
 /* ─── CLIENT DASHBOARD ─── */
@@ -66,39 +66,185 @@ function ClientDash() {
 
   return (
     <div>
+      <style>{`
+        .stat-card-premium {
+          background: rgba(255, 255, 255, 0.85);
+          backdrop-filter: blur(20px);
+          border: 1px solid rgba(255, 255, 255, 0.9);
+          border-radius: 24px;
+          padding: 2.2rem;
+          box-shadow: 0 15px 35px rgba(0,0,0,0.03);
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .stat-card-premium:hover {
+          transform: translateY(-8px);
+          box-shadow: 0 25px 45px rgba(123, 29, 46, 0.08);
+          border-color: rgba(123, 29, 46, 0.15);
+        }
+        .case-card-premium {
+          display: flex;
+          gap: 24px;
+          align-items: center;
+          padding: 1.8rem;
+          background: rgba(255, 255, 255, 0.75);
+          backdrop-filter: blur(10px);
+          border-radius: 20px;
+          border: 1px solid rgba(0,0,0,0.05);
+          margin-bottom: 1.2rem;
+          box-shadow: 0 8px 25px rgba(0,0,0,0.03);
+          transition: all 0.3s ease;
+        }
+        .case-card-premium:hover {
+          box-shadow: 0 15px 35px rgba(123, 29, 46, 0.06);
+          border-color: rgba(123, 29, 46, 0.2);
+          transform: scale(1.01);
+        }
+        .doc-btn-premium {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 0.85rem;
+          font-weight: 800;
+          padding: 0.6rem 1.2rem;
+          border-radius: 12px;
+          border: 1px solid rgba(123,29,46,0.15);
+          background: #fff;
+          color: var(--txt-2);
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+        .doc-btn-premium:hover {
+          background: linear-gradient(135deg, rgba(123,29,46,0.05), rgba(123,29,46,0.1));
+          color: var(--bur);
+          border-color: rgba(123,29,46,0.3);
+        }
+        .dash-tabs-container {
+          display: flex;
+          gap: 8px;
+          margin-bottom: 2.5rem;
+          flex-wrap: wrap;
+          background: rgba(255, 255, 255, 0.7);
+          padding: 0.5rem;
+          border-radius: 50px;
+          width: fit-content;
+          backdrop-filter: blur(15px);
+          border: 1px solid rgba(255, 255, 255, 0.9);
+          box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+        }
+        .dash-tab-btn {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 0.8rem 1.8rem;
+          border: none;
+          border-radius: 50px;
+          font-size: 0.95rem;
+          font-weight: 800;
+          cursor: pointer;
+          background: transparent;
+          color: var(--txt-2);
+          font-family: inherit;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .dash-tab-btn.active {
+          background: linear-gradient(135deg, var(--bur), #5C1521);
+          color: #fff;
+          box-shadow: 0 8px 25px rgba(123,29,46,0.3);
+        }
+        .dash-tab-btn:not(.active):hover {
+          background: rgba(255,255,255,0.9);
+          color: var(--bur);
+        }
+        .form-input-premium {
+          width: 100%;
+          padding: 1rem 1.2rem;
+          border: 1.5px solid rgba(0,0,0,0.08);
+          border-radius: 16px;
+          font-size: 0.95rem;
+          font-family: inherit;
+          background: rgba(255,255,255,0.8);
+          transition: all 0.2s ease;
+          color: var(--text);
+        }
+        .form-input-premium:focus {
+          border-color: var(--bur);
+          box-shadow: 0 0 0 4px rgba(123,29,46,0.1);
+          outline: none;
+          background: #fff;
+        }
+        .video-join-btn {
+          font-size: 0.85rem;
+          color: #fff !important;
+          font-weight: 800;
+          margin-top: 12px;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          background: linear-gradient(135deg, var(--bur), #5C1521);
+          padding: 0.7rem 1.4rem;
+          border-radius: 12px;
+          text-decoration: none;
+          transition: all 0.3s ease;
+          box-shadow: 0 6px 20px rgba(123,29,46,0.25);
+        }
+        .video-join-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 10px 25px rgba(123,29,46,0.35);
+        }
+        .update-timeline-node {
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1rem;
+          color: #fff;
+          font-weight: 800;
+          box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+          position: relative;
+          z-index: 2;
+        }
+      `}</style>
+      
       <div style={s.statsRow}>
         {stats.map(([num,label]) => (
-          <div key={label} style={s.statCard}><div style={s.statNum}>{num}</div><div style={s.statLabel}>{label}</div></div>
+          <div key={label} className="stat-card-premium">
+            <div style={s.statNum}>{num}</div>
+            <div style={s.statLabel}>{label}</div>
+          </div>
         ))}
       </div>
 
-      <div style={s.tabs}>
+      <div className="dash-tabs-container">
         {[
-          ['bookings',<ClipboardList size={16}/>,'My Bookings'],
-          ['tracker',<Briefcase size={16}/>,'Case Tracker'],
-          ['updates',<Activity size={16}/>,'Case Updates']
+          ['bookings',<ClipboardList size={18}/>,'My Bookings'],
+          ['tracker',<Briefcase size={18}/>,'Case Tracker'],
+          ['updates',<Activity size={18}/>,'Case Updates']
         ].map(([id,icon,label]) => (
-          <button key={id} onClick={() => setTab(id)} style={{...s.tab, ...(tab===id ? s.tabActive : {})}}><span style={{display:'flex'}}>{icon}</span>{label}</button>
+          <button key={id} onClick={() => setTab(id)} className={`dash-tab-btn ${tab === id ? 'active' : ''}`}>
+            {icon}{label}
+          </button>
         ))}
       </div>
 
       {tab === 'bookings' && (
         <div style={s.section} className="dash-section-responsive">
-          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'1.2rem'}}>
-            <h3 style={{fontWeight:800}}>My Bookings</h3>
-            <Link to="/search" className="btn btn-primary btn-sm">+ New Booking</Link>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'2rem'}}>
+            <h3 style={s.hTitle}>My Bookings</h3>
+            <Link to="/search" className="btn btn-primary">+ New Booking</Link>
           </div>
           {loading ? <div className="spinner-wrap"><div className="spinner"></div></div> :
           bookings.length === 0 ? (
-            <div style={s.empty}><div style={{color:'var(--txt-3)',display:'flex',justifyContent:'center',marginBottom:12}}><ClipboardList size={40}/></div><p>No bookings yet.</p><Link to="/search" className="btn btn-primary" style={{marginTop:12,display:'inline-block'}}>Find a Lawyer</Link></div>
+            <div style={s.empty}><div style={{color:'var(--txt-3)',display:'flex',justifyContent:'center',marginBottom:16}}><ClipboardList size={56}/></div><p style={{fontSize:'1.1rem', fontWeight:600}}>No bookings yet.</p><Link to="/search" className="btn btn-primary" style={{marginTop:16,display:'inline-block'}}>Find a Lawyer</Link></div>
           ) : bookings.map(b => (
-            <div key={b._id} style={s.bookingItem} className="case-card-premium">
-              <div style={s.biIcon}><Scale size={20} color="var(--bur)" /></div>
+            <div key={b._id} className="case-card-premium">
+              <div style={s.biIcon}><Scale size={24} color="var(--bur)" /></div>
               <div style={{flex:1}}>
-                <div style={{fontWeight:800,fontSize:'.95rem'}}>{b.lawyerName}</div>
-                <div style={{fontSize:'0.78rem',color:'#3D2028',marginTop:2}}>{b.caseType} · {fmt(b.scheduledDate)} at {b.scheduledTime}</div>
-                <div style={{fontSize:'0.78rem',color:'#3D2028',marginTop:2}}>Case # {b.caseNumber} · Fee: ₹{(b.fee||0).toLocaleString()}</div>
-                {b.meetingLink && <a href={b.meetingLink} target="_blank" rel="noreferrer" style={{fontSize:'0.8rem',color:'var(--bur)',fontWeight:800,marginTop:8,display:'inline-flex',alignItems:'center',gap:4, background: 'var(--cream-2)', padding: '.4rem .8rem', borderRadius: 8}}><Video size={14}/>Join Video Call</a>}
+                <div style={{fontWeight:800,fontSize:'1.1rem', color:'var(--text)', marginBottom:4}}>{b.lawyerName}</div>
+                <div style={{fontSize:'0.85rem',color:'#475569', fontWeight:600}}>{b.caseType} &nbsp;&bull;&nbsp; {fmt(b.scheduledDate)} at {b.scheduledTime}</div>
+                <div style={{fontSize:'0.85rem',color:'#475569', fontWeight:600, marginTop:4}}>Case # {b.caseNumber} &nbsp;&bull;&nbsp; Fee: ₹{(b.fee||0).toLocaleString()}</div>
+                {b.meetingLink && <a href={b.meetingLink} target="_blank" rel="noreferrer" className="video-join-btn"><Video size={16}/> Join Video Consultation</a>}
               </div>
               <StatusBadge status={b.status} />
             </div>
@@ -108,21 +254,22 @@ function ClientDash() {
 
       {tab === 'tracker' && (
         <div style={s.section} className="dash-section-responsive">
-          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'1.5rem'}}>
-            <h3 style={{fontWeight:800}}>Personal Case Tracker</h3>
-            <button className="btn btn-primary btn-sm" onClick={() => setShowAddCase(true)}><Plus size={16}/> Add Case</button>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'2rem'}}>
+            <h3 style={s.hTitle}>Personal Case Tracker</h3>
+            <button className="btn btn-primary" onClick={() => setShowAddCase(true)}><Plus size={18}/> Add Case</button>
           </div>
 
           {showAddCase && (
             <div style={s.addForm}>
+              <h4 style={{marginBottom:'1.5rem', fontWeight:800}}>Track a New Case</h4>
               <div style={s.formGrid} className="dash-form-grid-responsive">
-                <div className="form-group"><label>Case Number</label><input value={newCase.caseNumber} onChange={e=>setNewCase({...newCase, caseNumber:e.target.value})} placeholder="e.g. CNR: DLCT01-000..."/></div>
-                <div className="form-group"><label>Court Name</label><input value={newCase.courtName} onChange={e=>setNewCase({...newCase, courtName:e.target.value})} placeholder="e.g. Saket District Court"/></div>
-                <div className="form-group"><label>Opposite Party / Advocate</label><input value={newCase.lawyerName} onChange={e=>setNewCase({...newCase, lawyerName:e.target.value})} /></div>
-                <div className="form-group"><label>Current Status</label><select value={newCase.status} onChange={e=>setNewCase({...newCase, status:e.target.value})}><option>Active</option><option>Hearing</option><option>Judgment Pending</option><option>Resolved</option></select></div>
-                <div className="form-group"><label>Next Hearing / Reminder</label><input type="date" value={newCase.nextHearing} onChange={e=>setNewCase({...newCase, nextHearing:e.target.value})} /></div>
+                <div className="form-group"><label>Case Number</label><input className="form-input-premium" value={newCase.caseNumber} onChange={e=>setNewCase({...newCase, caseNumber:e.target.value})} placeholder="e.g. CNR: DLCT01-000..."/></div>
+                <div className="form-group"><label>Court Name</label><input className="form-input-premium" value={newCase.courtName} onChange={e=>setNewCase({...newCase, courtName:e.target.value})} placeholder="e.g. Saket District Court"/></div>
+                <div className="form-group"><label>Opposite Party / Advocate</label><input className="form-input-premium" value={newCase.lawyerName} onChange={e=>setNewCase({...newCase, lawyerName:e.target.value})} placeholder="Name..."/></div>
+                <div className="form-group"><label>Current Status</label><select className="form-input-premium" value={newCase.status} onChange={e=>setNewCase({...newCase, status:e.target.value})}><option>Active</option><option>Hearing</option><option>Judgment Pending</option><option>Resolved</option></select></div>
+                <div className="form-group"><label>Next Hearing / Reminder</label><input className="form-input-premium" type="date" value={newCase.nextHearing} onChange={e=>setNewCase({...newCase, nextHearing:e.target.value})} /></div>
               </div>
-              <div style={{display:'flex', gap:10, marginTop:'1.5rem'}}>
+              <div style={{display:'flex', gap:12, marginTop:'2rem'}}>
                 <button className="btn btn-primary" onClick={addCase}>Save Case</button>
                 <button className="btn btn-outline" onClick={() => setShowAddCase(false)}>Cancel</button>
               </div>
@@ -130,25 +277,25 @@ function ClientDash() {
           )}
 
           {trackerCases.length === 0 ? (
-            <div style={s.empty}><Briefcase size={40} style={{marginBottom:12, opacity:0.3}}/><p>No manual cases added yet. Track your offline cases here.</p></div>
+            <div style={s.empty}><Briefcase size={56} style={{marginBottom:16, opacity:0.3}}/><p style={{fontSize:'1.1rem', fontWeight:600}}>No manual cases added yet.<br/>Track your offline cases here.</p></div>
           ) : (
-            <div style={{display:'flex', flexDirection:'column', gap:12}}>
+            <div style={{display:'flex', flexDirection:'column', gap:16}}>
               {trackerCases.map(c => (
-                <div key={c.id} style={s.trackerItem}>
-                  <div style={s.biIcon}><Briefcase size={20} color="var(--bur)" /></div>
+                <div key={c.id} className="case-card-premium">
+                  <div style={s.biIcon}><Briefcase size={24} color="var(--bur)" /></div>
                   <div style={{flex:1}}>
-                    <div style={{fontWeight:800, fontSize:'.95rem'}}>{c.caseNumber}</div>
-                    <div style={{fontSize:'.8rem', color:'#3D2028'}}>{c.courtName} · {c.lawyerName || 'Advocate not specified'}</div>
-                    {c.nextHearing && <div style={{fontSize:'.8rem', color:'var(--bur)', fontWeight:800, marginTop:4}}>📅 Next Hearing: {fmt(c.nextHearing)}</div>}
-                    <div style={{display:'flex', gap:10, marginTop:10}}>
-                      <button style={s.docBtn} onClick={() => showToast('Simulating document upload...')}>
-                        <Upload size={14}/> Upload Documents
+                    <div style={{fontWeight:800, fontSize:'1.1rem', marginBottom:4}}>{c.caseNumber}</div>
+                    <div style={{fontSize:'.85rem', color:'#475569', fontWeight:600}}>{c.courtName} &nbsp;&bull;&nbsp; {c.lawyerName || 'Advocate not specified'}</div>
+                    {c.nextHearing && <div style={{fontSize:'.85rem', color:'var(--bur)', fontWeight:800, marginTop:8, display:'inline-flex', alignItems:'center', gap:6, background: 'rgba(123,29,46,0.05)', padding: '0.4rem 0.8rem', borderRadius: 8}}><Calendar size={14}/> Next Hearing: {fmt(c.nextHearing)}</div>}
+                    <div style={{display:'flex', gap:10, marginTop:16}}>
+                      <button className="doc-btn-premium" onClick={() => showToast('Simulating document upload...')}>
+                        <Upload size={16}/> Upload Documents
                       </button>
                     </div>
                   </div>
-                  <div style={{textAlign:'right', display:'flex', flexDirection:'column', alignItems:'flex-end', gap:10}}>
-                    <span style={{padding:'.2rem .8rem', background:'var(--bur-l)', color:'#fff', borderRadius:50, fontSize:'.7rem', fontWeight:800}}>{c.status}</span>
-                    <button style={{background:'none', border:'none', color:'var(--red)', cursor:'pointer'}} onClick={() => deleteCase(c.id)}><Trash2 size={16}/></button>
+                  <div style={{textAlign:'right', display:'flex', flexDirection:'column', alignItems:'flex-end', gap:12}}>
+                    <span style={{padding:'.3rem 1rem', background:'var(--cream-2)', color:'var(--bur)', borderRadius:50, fontSize:'.75rem', fontWeight:800, border: '1px solid rgba(123,29,46,0.1)'}}>{c.status}</span>
+                    <button style={{background:'none', border:'none', color:'var(--red)', cursor:'pointer', padding: 8, background: 'rgba(220,38,38,0.05)', borderRadius: 12, transition: 'all 0.2s'}} onClick={() => deleteCase(c.id)}><Trash2 size={18}/></button>
                   </div>
                 </div>
               ))}
@@ -159,21 +306,26 @@ function ClientDash() {
 
       {tab === 'updates' && (
         <div style={s.section} className="dash-section-responsive">
-          <h3 style={{fontWeight:800,marginBottom:'1.2rem'}}>Verified Case Updates</h3>
+          <h3 style={{...s.hTitle, marginBottom:'2rem'}}>Verified Case Updates</h3>
           {updates.length === 0 ? (
-            <div style={s.empty}><div style={{color:'#3D2028',display:'flex',justifyContent:'center',marginBottom:12}}><Activity size={40}/></div><p>No updates yet. Your lawyer will post updates here.</p></div>
+            <div style={s.empty}><div style={{color:'#3D2028',display:'flex',justifyContent:'center',marginBottom:16}}><Activity size={56} style={{opacity:0.3}}/></div><p style={{fontSize:'1.1rem', fontWeight:600}}>No updates yet.<br/>Your lawyer will post updates here.</p></div>
           ) : (
-            <div>
+            <div style={{position: 'relative', paddingLeft: 20}}>
+              {/* Timeline vertical line */}
+              <div style={{position: 'absolute', left: 35, top: 20, bottom: 20, width: 2, background: 'rgba(123,29,46,0.1)', zIndex: 0}} />
+              
               {updates.map((u,i) => (
-                <div key={u._id} style={s.updateItem}>
-                  <div style={{...s.udot, background: u.status==='done'?'var(--green)':u.status==='active'?'var(--bur)':'var(--border)', color:'#fff', border:'none', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'0.6rem', fontWeight:700}}>
+                <div key={u._id} className="case-card-premium" style={{position: 'relative', zIndex: 1, gap: 24}}>
+                  <div className="update-timeline-node" style={{background: u.status==='done'?'#16A34A':u.status==='active'?'var(--bur)':'#94A3B8'}}>
                     {u.status==='done'?'✓':u.status==='active'?'●':''}
                   </div>
                   <div style={{flex:1}}>
-                    <div style={{fontWeight:800,fontSize:'1rem'}}>{u.title}</div>
-                    <div style={{fontSize:'0.9rem',color:'var(--txt-2)',marginTop:4, lineHeight:1.6}}>{u.description}</div>
-                    <div style={{fontSize:'0.75rem',color:'var(--txt-3)',marginTop:6, fontWeight:600}}>Case #{u.caseNumber} · {fmt(u.createdAt)} · {u.stage}</div>
-                    {u.nextHearing && <div style={{fontSize:'0.85rem',color:'var(--bur)',fontWeight:800,marginTop:8, display:'inline-flex', alignItems:'center', gap:4}}><Calendar size={14}/> Next Hearing: {fmt(u.nextHearing)}</div>}
+                    <div style={{fontWeight:800,fontSize:'1.1rem', color: 'var(--text)', marginBottom: 6}}>{u.title}</div>
+                    <div style={{fontSize:'0.95rem',color:'#475569', lineHeight:1.6}}>{u.description}</div>
+                    <div style={{fontSize:'0.8rem',color:'#94A3B8',marginTop:12, fontWeight:700, textTransform: 'uppercase', letterSpacing: '0.5px'}}>
+                      Case #{u.caseNumber} &nbsp;&bull;&nbsp; {fmt(u.createdAt)} &nbsp;&bull;&nbsp; Stage: {u.stage}
+                    </div>
+                    {u.nextHearing && <div style={{fontSize:'0.85rem',color:'var(--bur)',fontWeight:800,marginTop:12, display:'inline-flex', alignItems:'center', gap:6, background: 'rgba(123,29,46,0.05)', padding: '0.5rem 1rem', borderRadius: 12}}><Calendar size={16}/> Next Hearing: {fmt(u.nextHearing)}</div>}
                   </div>
                 </div>
               ))}
@@ -250,43 +402,131 @@ function LawyerDash() {
 
   return (
     <div>
+      <style>{`
+        .dash-tabs-container {
+          display: flex;
+          gap: 8px;
+          margin-bottom: 2.5rem;
+          flex-wrap: wrap;
+          background: rgba(255, 255, 255, 0.7);
+          padding: 0.5rem;
+          border-radius: 50px;
+          width: fit-content;
+          backdrop-filter: blur(15px);
+          border: 1px solid rgba(255, 255, 255, 0.9);
+          box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+        }
+        .dash-tab-btn {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 0.8rem 1.8rem;
+          border: none;
+          border-radius: 50px;
+          font-size: 0.95rem;
+          font-weight: 800;
+          cursor: pointer;
+          background: transparent;
+          color: var(--txt-2);
+          font-family: inherit;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .dash-tab-btn.active {
+          background: linear-gradient(135deg, var(--bur), #5C1521);
+          color: #fff;
+          box-shadow: 0 8px 25px rgba(123,29,46,0.3);
+        }
+        .dash-tab-btn:not(.active):hover {
+          background: rgba(255,255,255,0.9);
+          color: var(--bur);
+        }
+        .stat-card-premium {
+          background: rgba(255, 255, 255, 0.85);
+          backdrop-filter: blur(20px);
+          border: 1px solid rgba(255, 255, 255, 0.9);
+          border-radius: 24px;
+          padding: 2.2rem;
+          box-shadow: 0 15px 35px rgba(0,0,0,0.03);
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .stat-card-premium:hover {
+          transform: translateY(-8px);
+          box-shadow: 0 25px 45px rgba(123, 29, 46, 0.08);
+          border-color: rgba(123, 29, 46, 0.15);
+        }
+        .case-card-premium {
+          display: flex;
+          gap: 24px;
+          align-items: center;
+          padding: 1.8rem;
+          background: rgba(255, 255, 255, 0.75);
+          backdrop-filter: blur(10px);
+          border-radius: 20px;
+          border: 1px solid rgba(0,0,0,0.05);
+          margin-bottom: 1.2rem;
+          box-shadow: 0 8px 25px rgba(0,0,0,0.03);
+          transition: all 0.3s ease;
+        }
+        .case-card-premium:hover {
+          box-shadow: 0 15px 35px rgba(123, 29, 46, 0.06);
+          border-color: rgba(123, 29, 46, 0.2);
+          transform: scale(1.01);
+        }
+        .form-input-premium {
+          width: 100%;
+          padding: 1rem 1.2rem;
+          border: 1.5px solid rgba(0,0,0,0.08);
+          border-radius: 16px;
+          font-size: 0.95rem;
+          font-family: inherit;
+          background: rgba(255,255,255,0.8);
+          transition: all 0.2s ease;
+          color: var(--text);
+        }
+        .form-input-premium:focus {
+          border-color: var(--bur);
+          box-shadow: 0 0 0 4px rgba(123,29,46,0.1);
+          outline: none;
+          background: #fff;
+        }
+      `}</style>
       <div style={s.statsRow}>
         {stats.map(([num,label]) => (
-          <div key={label} style={s.statCard}><div style={s.statNum}>{num}</div><div style={s.statLabel}>{label}</div></div>
+          <div key={label} className="stat-card-premium"><div style={s.statNum}>{num}</div><div style={s.statLabel}>{label}</div></div>
         ))}
       </div>
 
-      <div style={s.tabs}>
+      <div className="dash-tabs-container">
         {[
-          ['bookings',<ClipboardList size={16}/>,'Client Bookings'],
-          ['post',<Edit3 size={16}/>,'Post Case Update'],
-          ['outcome',<BarChart2 size={16}/>,'Log Outcome'],
-          ['profile',<User size={16}/>,'Practice Settings']
+          ['bookings',<ClipboardList size={18}/>,'Client Bookings'],
+          ['post',<Edit3 size={18}/>,'Post Case Update'],
+          ['outcome',<BarChart2 size={18}/>,'Log Outcome'],
+          ['profile',<User size={18}/>,'Practice Settings']
         ].map(([id,icon,label]) => (
-          <button key={id} onClick={() => setTab(id)} style={{...s.tab,...(tab===id?s.tabActive:{})}}><span style={{display:'flex'}}>{icon}</span>{label}</button>
+          <button key={id} onClick={() => setTab(id)} className={`dash-tab-btn ${tab === id ? 'active' : ''}`}>{icon}{label}</button>
         ))}
       </div>
 
       {tab === 'bookings' && (
         <div style={s.section} className="dash-section-responsive">
-          <h3 style={{fontWeight:800,marginBottom:'1.2rem'}}>Client Bookings</h3>
+          <h3 style={{...s.hTitle, marginBottom:'2rem'}}>Client Bookings</h3>
           {loading ? <div className="spinner-wrap"><div className="spinner"></div></div> :
           bookings.length === 0 ? (
-            <div style={s.empty}><div style={{color:'#3D2028',display:'flex',justifyContent:'center',marginBottom:12}}><ClipboardList size={40}/></div><p>No client bookings yet. Your profile is live!</p></div>
+            <div style={s.empty}><div style={{color:'#3D2028',display:'flex',justifyContent:'center',marginBottom:16}}><ClipboardList size={56} style={{opacity:0.3}}/></div><p style={{fontSize:'1.1rem', fontWeight:600}}>No client bookings yet.<br/>Your profile is live!</p></div>
           ) : bookings.map(b => (
-            <div key={b._id} style={s.bookingItem} className="case-card-premium">
-              <div style={s.biIcon}><User size={20} color="var(--bur)" /></div>
+            <div key={b._id} className="case-card-premium">
+              <div style={s.biIcon}><User size={24} color="var(--bur)" /></div>
               <div style={{flex:1}}>
-                <div style={{fontWeight:800,fontSize:'.95rem'}}>{b.clientName}</div>
-                <div style={{fontSize:'0.78rem',color:'#3D2028',marginTop:2}}>{b.caseType} · {fmt(b.scheduledDate)} at {b.scheduledTime}</div>
-                <div style={{fontSize:'0.78rem',color:'#3D2028',marginTop:2}}>Case # {b.caseNumber} · ₹{(b.fee||0).toLocaleString()}</div>
-                {b.description && <div style={{fontSize:'0.82rem',color:'var(--txt-2)',marginTop:6,fontStyle:'italic', background:'var(--cream-2)', padding: '8px', borderRadius: 8}}>"{b.description.slice(0,120)}{b.description.length>120?'...':''}"</div>}
-                {b.meetingLink && <a href={b.meetingLink} target="_blank" rel="noreferrer" style={{fontSize:'0.8rem',color:'var(--bur)',fontWeight:800,marginTop:12,display:'inline-flex',alignItems:'center',gap:4, background:'var(--cream-2)', padding:'.4rem .8rem', borderRadius: 8}}><Video size={14}/>Join Video Call</a>}
+                <div style={{fontWeight:800,fontSize:'1.1rem', color:'var(--text)', marginBottom:4}}>{b.clientName}</div>
+                <div style={{fontSize:'0.85rem',color:'#475569', fontWeight:600}}>{b.caseType} &nbsp;&bull;&nbsp; {fmt(b.scheduledDate)} at {b.scheduledTime}</div>
+                <div style={{fontSize:'0.85rem',color:'#475569', fontWeight:600, marginTop:4}}>Case # {b.caseNumber} &nbsp;&bull;&nbsp; ₹{(b.fee||0).toLocaleString()}</div>
+                {b.description && <div style={{fontSize:'0.9rem',color:'#475569',marginTop:12,fontStyle:'italic', background:'rgba(0,0,0,0.02)', padding: '12px 16px', borderRadius: 12, borderLeft: '4px solid var(--bur)'}}>"{b.description.slice(0,120)}{b.description.length>120?'...':''}"</div>}
+                {b.meetingLink && <a href={b.meetingLink} target="_blank" rel="noreferrer" style={{fontSize:'0.85rem',color:'#fff',fontWeight:800,marginTop:16,display:'inline-flex',alignItems:'center',gap:8, background:'linear-gradient(135deg, var(--bur), #5C1521)', padding:'.7rem 1.4rem', borderRadius: 12, textDecoration:'none', boxShadow:'0 6px 20px rgba(123,29,46,0.25)'}}><Video size={16}/>Join Video Call</a>}
               </div>
-              <div style={{display:'flex',flexDirection:'column',gap:8,alignItems:'flex-end'}}>
+              <div style={{display:'flex',flexDirection:'column',gap:12,alignItems:'flex-end'}}>
                 <StatusBadge status={b.status} />
-                {b.status==='pending' && <button className="btn btn-primary btn-sm" style={{fontSize:'0.72rem'}} onClick={() => updateStatus(b._id,'confirmed')}>Confirm</button>}
-                {b.status==='confirmed' && <button className="btn btn-outline btn-sm" style={{fontSize:'0.72rem'}} onClick={() => updateStatus(b._id,'completed')}>Mark Done</button>}
+                {b.status==='pending' && <button className="btn btn-primary" style={{padding: '0.6rem 1.2rem'}} onClick={() => updateStatus(b._id,'confirmed')}>Confirm</button>}
+                {b.status==='confirmed' && <button className="btn btn-outline" style={{padding: '0.6rem 1.2rem'}} onClick={() => updateStatus(b._id,'completed')}>Mark Done</button>}
               </div>
             </div>
           ))}
@@ -295,63 +535,63 @@ function LawyerDash() {
 
       {tab === 'post' && (
         <div style={s.section} className="dash-section-responsive">
-          <h3 style={{fontWeight:800,marginBottom:'1.5rem'}}>Post Case Update</h3>
-          <div style={{background:'var(--cream-2)',border:'1px solid var(--border)',borderRadius:16,padding:'2rem'}}>
+          <h3 style={{...s.hTitle, marginBottom:'2rem'}}>Post Case Update</h3>
+          <div style={{background:'rgba(255,255,255,0.7)',border:'1px solid rgba(0,0,0,0.05)',borderRadius:24,padding:'3rem', boxShadow: '0 10px 30px rgba(0,0,0,0.02)'}}>
             <div className="form-group">
-              <label>Select Booking / Case</label>
-              <select value={upForm.bookingId} onChange={e => setUpForm(f=>({...f,bookingId:e.target.value}))}>
+              <label style={{fontWeight:700, marginBottom:8, display:'block'}}>Select Booking / Case</label>
+              <select className="form-input-premium" value={upForm.bookingId} onChange={e => setUpForm(f=>({...f,bookingId:e.target.value}))}>
                 <option value="">— Select a booking —</option>
                 {bookings.map(b => <option key={b._id} value={b._id}>{b.caseNumber} — {b.clientName} ({b.caseType})</option>)}
               </select>
             </div>
-            <div className="form-group"><label>Update Title</label><input type="text" placeholder="e.g. Documents Filed with Court" value={upForm.title} onChange={e=>setUpForm(f=>({...f,title:e.target.value}))} /></div>
-            <div className="form-group">
-              <label>Details</label>
+            <div className="form-group" style={{marginTop:'1.5rem'}}><label style={{fontWeight:700, marginBottom:8, display:'block'}}>Update Title</label><input className="form-input-premium" type="text" placeholder="e.g. Documents Filed with Court" value={upForm.title} onChange={e=>setUpForm(f=>({...f,title:e.target.value}))} /></div>
+            <div className="form-group" style={{marginTop:'1.5rem'}}>
+              <label style={{fontWeight:700, marginBottom:8, display:'block'}}>Details</label>
               <textarea rows="4" placeholder="Describe what happened in the case today..." value={upForm.description} onChange={e=>setUpForm(f=>({...f,description:e.target.value}))}
-                style={{width:'100%',padding:'0.8rem 1rem',border:'1.5px solid var(--border)',borderRadius:12,fontSize:'0.92rem',color:'var(--text)',outline:'none',resize:'vertical',fontFamily:'Plus Jakarta Sans,sans-serif'}} />
+                className="form-input-premium" style={{resize:'vertical'}} />
             </div>
-            <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'1.5rem'}} className="dash-form-grid-responsive">
+            <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'1.5rem', marginTop:'1.5rem'}} className="dash-form-grid-responsive">
               <div className="form-group">
-                <label>Stage</label>
-                <select value={upForm.stage} onChange={e=>setUpForm(f=>({...f,stage:e.target.value}))}>
-                  {['consultation','filing','hearing','judgment','appeal','closed'].map(s=><option key={s}>{s}</option>)}
+                <label style={{fontWeight:700, marginBottom:8, display:'block'}}>Stage</label>
+                <select className="form-input-premium" value={upForm.stage} onChange={e=>setUpForm(f=>({...f,stage:e.target.value}))}>
+                  {['consultation','filing','hearing','judgment','appeal','closed'].map(st=><option key={st}>{st}</option>)}
                 </select>
               </div>
               <div className="form-group">
-                <label>Status</label>
-                <select value={upForm.status} onChange={e=>setUpForm(f=>({...f,status:e.target.value}))}>
+                <label style={{fontWeight:700, marginBottom:8, display:'block'}}>Status</label>
+                <select className="form-input-premium" value={upForm.status} onChange={e=>setUpForm(f=>({...f,status:e.target.value}))}>
                   <option value="done">Done</option>
                   <option value="active">Active / Current</option>
                   <option value="pending">Pending</option>
                 </select>
               </div>
             </div>
-            <div className="form-group"><label>Next Hearing Date (optional)</label><input type="date" value={upForm.nextHearing} onChange={e=>setUpForm(f=>({...f,nextHearing:e.target.value}))} /></div>
-            <button className="btn btn-primary btn-lg" style={{width:'100%', marginTop:'1rem'}} onClick={postUpdate}>Post Update to Client →</button>
+            <div className="form-group" style={{marginTop:'1.5rem'}}><label style={{fontWeight:700, marginBottom:8, display:'block'}}>Next Hearing Date (optional)</label><input className="form-input-premium" type="date" value={upForm.nextHearing} onChange={e=>setUpForm(f=>({...f,nextHearing:e.target.value}))} /></div>
+            <button className="btn btn-primary btn-lg" style={{width:'100%', marginTop:'2.5rem', padding:'1.2rem', fontSize:'1.1rem'}} onClick={postUpdate}>Post Update to Client →</button>
           </div>
         </div>
       )}
 
       {tab === 'outcome' && (
         <div style={s.section} className="dash-section-responsive">
-          <h3 style={{fontWeight:800,marginBottom:'0.5rem'}}>Log Closed Case Outcome</h3>
-          <p style={{color:'#4A2030',fontSize:'.88rem',marginBottom:'1.5rem'}}>Record outcomes of closed cases to help build platform-wide statistics for clients.</p>
-          <div style={{background:'var(--cream-2)',border:'1px solid var(--border)',borderRadius:16,padding:'2rem'}}>
+          <h3 style={{...s.hTitle, marginBottom:'0.5rem'}}>Log Closed Case Outcome</h3>
+          <p style={{color:'#475569',fontSize:'.95rem',marginBottom:'2rem', fontWeight:600}}>Record outcomes of closed cases to help build platform-wide statistics for clients.</p>
+          <div style={{background:'rgba(255,255,255,0.7)',border:'1px solid rgba(0,0,0,0.05)',borderRadius:24,padding:'3rem', boxShadow: '0 10px 30px rgba(0,0,0,0.02)'}}>
 
             <div className="form-group">
-              <label>Case Type / Practice Area</label>
-              <select value={outcomeForm.caseType} onChange={e=>setOutcomeForm(f=>({...f,caseType:e.target.value}))}>
+              <label style={{fontWeight:700, marginBottom:8, display:'block'}}>Case Type / Practice Area</label>
+              <select className="form-input-premium" value={outcomeForm.caseType} onChange={e=>setOutcomeForm(f=>({...f,caseType:e.target.value}))}>
                 <option value="">— Select case type —</option>
                 {CASE_TYPES.map(ct=><option key={ct} value={ct}>{ct}</option>)}
               </select>
             </div>
 
-            <div className="form-group">
-              <label>Outcome</label>
-              <div style={{display:'flex',gap:12,flexWrap:'wrap',marginTop:4}}>
-                {[['won','Won',<CheckCircle size={16}/>,'#16A34A','#F0FDF4'],['lost','Lost',<XCircle size={16}/>,'#DC2626','#FEF2F2'],['settled','Settled',<MinusCircle size={16}/>,'#D97706','#FFFBEB']].map(
+            <div className="form-group" style={{marginTop:'1.5rem'}}>
+              <label style={{fontWeight:700, marginBottom:8, display:'block'}}>Outcome</label>
+              <div style={{display:'flex',gap:16,flexWrap:'wrap',marginTop:8}}>
+                {[['won','Won',<CheckCircle size={18}/>,'#16A34A','#F0FDF4'],['lost','Lost',<XCircle size={18}/>,'#DC2626','#FEF2F2'],['settled','Settled',<MinusCircle size={18}/>,'#D97706','#FFFBEB']].map(
                   ([val,label,icon,color,bg])=>(
-                    <label key={val} style={{display:'flex',alignItems:'center',gap:8,padding:'.6rem 1.2rem',borderRadius:50,border:`2px solid ${outcomeForm.outcome===val?color:'var(--border)'}`,background:outcomeForm.outcome===val?bg:'#fff',cursor:'pointer',fontWeight:700,fontSize:'.88rem',color:outcomeForm.outcome===val?color:'var(--txt-2)',transition:'all .2s'}}>
+                    <label key={val} style={{display:'flex',alignItems:'center',gap:10,padding:'.8rem 1.6rem',borderRadius:50,border:`2px solid ${outcomeForm.outcome===val?color:'rgba(0,0,0,0.08)'}`,background:outcomeForm.outcome===val?bg:'#fff',cursor:'pointer',fontWeight:800,fontSize:'.95rem',color:outcomeForm.outcome===val?color:'#475569',transition:'all .2s', boxShadow: outcomeForm.outcome===val?'0 4px 15px rgba(0,0,0,0.05)':'none'}}>
                       <input type="radio" name="outcome" value={val} checked={outcomeForm.outcome===val} onChange={()=>setOutcomeForm(f=>({...f,outcome:val}))} style={{display:'none'}}/>
                       {icon}{label}
                     </label>
@@ -360,19 +600,19 @@ function LawyerDash() {
               </div>
             </div>
 
-            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'1.5rem'}} className="dash-form-grid-responsive">
+            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'1.5rem', marginTop:'1.5rem'}} className="dash-form-grid-responsive">
               <div className="form-group">
-                <label>Duration (days the case ran)</label>
-                <input type="number" min="0" placeholder="e.g. 180" value={outcomeForm.durationDays} onChange={e=>setOutcomeForm(f=>({...f,durationDays:e.target.value}))}/>
+                <label style={{fontWeight:700, marginBottom:8, display:'block'}}>Duration (days the case ran)</label>
+                <input className="form-input-premium" type="number" min="0" placeholder="e.g. 180" value={outcomeForm.durationDays} onChange={e=>setOutcomeForm(f=>({...f,durationDays:e.target.value}))}/>
               </div>
               <div className="form-group">
-                <label>Date Closed</label>
-                <input type="date" value={outcomeForm.dateClosed} onChange={e=>setOutcomeForm(f=>({...f,dateClosed:e.target.value}))}/>
+                <label style={{fontWeight:700, marginBottom:8, display:'block'}}>Date Closed</label>
+                <input className="form-input-premium" type="date" value={outcomeForm.dateClosed} onChange={e=>setOutcomeForm(f=>({...f,dateClosed:e.target.value}))}/>
               </div>
             </div>
 
-            <button className="btn btn-primary btn-lg" style={{width:'100%',marginTop:'1rem',display:'flex',alignItems:'center',justifyContent:'center',gap:8}} onClick={logOutcome} disabled={submittingOutcome}>
-              {submittingOutcome ? <><span className="spinner" style={{width:18,height:18,borderWidth:2}}/> Logging...</> : <><BarChart2 size={18}/> Submit Outcome</>}
+            <button className="btn btn-primary btn-lg" style={{width:'100%',marginTop:'2.5rem',display:'flex',alignItems:'center',justifyContent:'center',gap:10, padding:'1.2rem', fontSize:'1.1rem'}} onClick={logOutcome} disabled={submittingOutcome}>
+              {submittingOutcome ? <><span className="spinner" style={{width:20,height:20,borderWidth:3}}/> Logging...</> : <><BarChart2 size={20}/> Submit Outcome</>}
             </button>
           </div>
         </div>
@@ -380,13 +620,15 @@ function LawyerDash() {
 
       {tab === 'profile' && (
         <div style={s.section} className="dash-section-responsive">
-          <h3 style={{fontWeight:800,marginBottom:'1.2rem'}}>Practice Settings</h3>
-          <p style={{color:'#3D2028', marginBottom:'2rem'}}>Update your specialization, fee, and availability status.</p>
-          <div style={{background:'var(--cream-2)', border:'1px solid var(--border)', borderRadius:16, padding:'2rem', textAlign:'center'}}>
-            <User size={48} color="var(--bur)" style={{marginBottom:16}}/>
-            <h4 style={{marginBottom:8}}>Profile Management</h4>
-            <p style={{fontSize:'.9rem', color:'#3D2028', marginBottom:'1.5rem'}}>Manage your public profile information, bar registration details, and practice areas.</p>
-            <button className="btn btn-outline" onClick={() => showToast('Profile editor coming soon...')}>Edit Practice Details</button>
+          <h3 style={{...s.hTitle, marginBottom:'1rem'}}>Practice Settings</h3>
+          <p style={{color:'#475569', fontSize:'.95rem', marginBottom:'2.5rem', fontWeight:600}}>Update your specialization, fee, and availability status.</p>
+          <div style={{background:'rgba(255,255,255,0.7)', border:'1px solid rgba(0,0,0,0.05)', borderRadius:24, padding:'4rem 2rem', textAlign:'center', boxShadow:'0 10px 30px rgba(0,0,0,0.02)'}}>
+            <div style={{width: 80, height: 80, borderRadius: '24px', background: 'linear-gradient(135deg, rgba(123,29,46,0.1), rgba(123,29,46,0.2))', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem'}}>
+              <User size={40} color="var(--bur)" />
+            </div>
+            <h4 style={{marginBottom:12, fontSize:'1.5rem', fontWeight:800}}>Profile Management</h4>
+            <p style={{fontSize:'1rem', color:'#475569', marginBottom:'2rem', maxWidth: 400, margin: '0 auto 2rem', lineHeight: 1.6}}>Manage your public profile information, bar registration details, and practice areas.</p>
+            <button className="btn btn-outline" style={{padding: '0.8rem 1.6rem'}} onClick={() => showToast('Profile editor coming soon...')}>Edit Practice Details</button>
           </div>
         </div>
       )}
@@ -411,45 +653,71 @@ export default function Dashboard() {
   const handleLogout = () => { logout(); navigate('/') }
 
   return (
-    <div className="page-reveal" style={{ paddingTop: 95, background: '#F8F9FA', minHeight: '100vh' }}>
+    <div className="page-reveal" style={{ paddingTop: 95, background: '#F8F9FA', minHeight: '100vh', paddingBottom: '5rem' }}>
       <Helmet>
         <title>My Dashboard — Justice Junction 24/7</title>
       </Helmet>
-      <div className="container" style={{ maxWidth: 1400 }}>
+      
+      {/* Absolute background blobs for glassmorphism effect */}
+      <div style={{position: 'absolute', top: 200, left: 100, width: 400, height: 400, background: 'radial-gradient(circle, rgba(201,148,58,0.1) 0%, rgba(201,148,58,0) 70%)', zIndex: 0, pointerEvents: 'none'}} />
+      <div style={{position: 'absolute', top: 500, right: 100, width: 500, height: 500, background: 'radial-gradient(circle, rgba(123,29,46,0.08) 0%, rgba(123,29,46,0) 70%)', zIndex: 0, pointerEvents: 'none'}} />
+      
+      <div className="container" style={{ maxWidth: 1400, position: 'relative', zIndex: 1 }}>
         
         {/* Personalized Welcome Banner */}
-        <div className="section-bg-abstract parallax" style={{ borderRadius: 32, padding: '4rem 3rem', marginBottom: '3rem', color: '#fff', position: 'relative', overflow: 'hidden', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div className="parallax" style={{ 
+          borderRadius: 32, 
+          padding: '4rem 3.5rem', 
+          marginBottom: '3rem', 
+          color: '#fff', 
+          position: 'relative', 
+          overflow: 'hidden', 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          boxShadow: '0 20px 50px rgba(0,0,0,0.1)',
+          background: 'url(https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=2000&auto=format&fit=crop) center/cover no-repeat'
+        }}>
           {/* Dark overlay for text readability */}
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(92,21,33,0.88) 0%, rgba(26,10,13,0.82) 100%)', zIndex: 1 }} />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(26,10,13,0.95) 0%, rgba(123,29,46,0.85) 100%)', zIndex: 1 }} />
+          
           <div style={{ position: 'relative', zIndex: 2 }}>
-            <div className="tag" style={{ background: 'var(--gold)', color: '#000', border: 'none', marginBottom: '1rem' }}>Active Session</div>
-            <h1 className="boutique-heading" style={{ fontSize: '3rem', color: '#fff', fontStyle: 'normal', marginBottom: 8, textShadow: '0 2px 8px rgba(0,0,0,0.3)' }}>Welcome, {user?.name?.split(' ')[0]}!</h1>
-            <p style={{ fontSize: '1.1rem', color: '#F5E6D3' }}>
-              {user?.role === 'lawyer' ? 'Your legal practice is flourishing. 4 new inquiries today.' : "Your legal matters are being handled. 2 updates pending review."}
+            <div style={{ display: 'inline-block', background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)', color: 'var(--gold)', border: '1px solid rgba(255,255,255,0.2)', padding: '0.4rem 1rem', borderRadius: 50, fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: '1.5rem' }}>
+              Active Session
+            </div>
+            <h1 style={{ fontSize: '3.5rem', color: '#fff', fontFamily: "'Playfair Display', serif", fontWeight: 800, marginBottom: 12, textShadow: '0 4px 15px rgba(0,0,0,0.2)', lineHeight: 1.1 }}>
+              Welcome back, {user?.name?.split(' ')[0]}.
+            </h1>
+            <p style={{ fontSize: '1.15rem', color: '#F5E6D3', opacity: 0.9, maxWidth: 600, lineHeight: 1.6, fontWeight: 500 }}>
+              {user?.role === 'lawyer' ? 'Your legal practice is flourishing. Check your client bookings and log case updates below.' : "Your legal matters are securely managed. Access your case tracker, appointments, and lawyer updates seamlessly."}
             </p>
           </div>
-          <div className="hide-mobile" style={{ textAlign: 'right', position: 'relative', zIndex: 2 }}>
-            <div style={{ fontSize: '2.5rem', fontWeight: 800, fontFamily: 'Sora, sans-serif', textShadow: '0 2px 8px rgba(0,0,0,0.3)' }}>{new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</div>
-            <div style={{ fontSize: '.9rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 2, color: '#F5E6D3' }}>System Status: Operational</div>
+          <div className="hide-mobile" style={{ textAlign: 'right', position: 'relative', zIndex: 2, background: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(15px)', padding: '2rem', borderRadius: 24, border: '1px solid rgba(255,255,255,0.15)' }}>
+            <div style={{ fontSize: '3rem', fontWeight: 800, fontFamily: 'Sora, sans-serif', textShadow: '0 2px 8px rgba(0,0,0,0.3)', lineHeight: 1 }}>
+              {new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+            </div>
+            <div style={{ fontSize: '.85rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: 2, color: 'var(--gold)', marginTop: 8 }}>
+              System Operational
+            </div>
           </div>
         </div>
 
         <div className="grid-dashboard" style={s.wrap}>
           {/* Sidebar */}
-          <div style={{ ...s.sidebar, background: 'rgba(255,255,255,0.8)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.5)' }}>
+          <div style={s.sidebar}>
             <div style={s.sbUser}>
               <div style={s.sbAvatar}>{initials(user?.name)}</div>
-              <div style={{ fontWeight: 800, fontSize: '1.1rem', marginBottom: 2 }}>{user?.name}</div>
+              <div style={{ fontWeight: 800, fontSize: '1.2rem', marginBottom: 6, color: 'var(--text)' }}>{user?.name}</div>
               <div style={s.sbRoleBadge}>
-                {user?.role === 'lawyer' ? <><Scale size={12} /> Advocate</> : <><User size={12} /> Client</>}
+                {user?.role === 'lawyer' ? <><Scale size={14} /> Advocate</> : <><User size={14} /> Client</>}
               </div>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-              <Link to="/dashboard" style={{ ...s.sbLink, ...(location.pathname === '/dashboard' ? s.sbLinkActive : {}) }}><LayoutDashboard size={18} /> Dashboard</Link>
-              <Link to="/search" style={s.sbLink}><Search size={18} /> Browse Lawyers</Link>
-              <Link to="/knowledge-hub" style={s.sbLink}><FileText size={18} /> Knowledge Hub</Link>
-              <div style={{ margin: '1.5rem 0', height: 1, background: 'var(--border)' }} />
-              <button onClick={handleLogout} style={{ ...s.sbLink, background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', color: '#B91C1C' }}><LogOut size={18} /> Logout</button>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <Link to="/dashboard" style={{ ...s.sbLink, ...(location.pathname === '/dashboard' ? s.sbLinkActive : {}) }}><LayoutDashboard size={20} /> Dashboard</Link>
+              <Link to="/search" style={s.sbLink}><Search size={20} /> Browse Lawyers</Link>
+              <Link to="/knowledge-hub" style={s.sbLink}><FileText size={20} /> Knowledge Hub</Link>
+              <div style={{ margin: '2rem 0', height: 1, background: 'rgba(0,0,0,0.05)' }} />
+              <button onClick={handleLogout} style={{ ...s.sbLink, background: 'rgba(220,38,38,0.05)', color: '#DC2626', border: 'none', cursor: 'pointer', textAlign: 'left', fontWeight: 800 }}><LogOut size={20} /> Logout Account</button>
             </div>
           </div>
 
@@ -464,34 +732,24 @@ export default function Dashboard() {
 }
 
 const s = {
-  wrap: { display:'grid', gridTemplateColumns:'260px 1fr', gap:'2rem', paddingBottom:'5rem' },
-  sidebar: { background:'#fff', border:'1px solid var(--border)', borderRadius:'24px', padding:'2.5rem 1.5rem', height:'fit-content', position:'sticky', top:110, boxShadow:'0 10px 30px rgba(0,0,0,0.02)' },
-  sbUser: { textAlign:'center', paddingBottom:'1.5rem', borderBottom:'1px solid var(--border)', marginBottom:'1.5rem' },
-  sbAvatar: { width:64, height:64, borderRadius:'20px', background:'linear-gradient(135deg, var(--bur), var(--bur-d))', color:'#fff', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:"'Playfair Display',serif", fontSize:'1.5rem', fontWeight:800, margin:'0 auto 1rem' },
-  sbRoleBadge: { fontSize:'0.7rem', color:'#3D2028', textTransform:'uppercase', letterSpacing:'1px', fontWeight:800, display:'flex', justifyContent:'center', alignItems:'center', gap:4, background: 'var(--cream-2)', padding: '.3rem .6rem', borderRadius: 50, width: 'fit-content', margin: '0 auto' },
-  sbLink: { display:'flex', alignItems:'center', gap:10, padding:'0.8rem 1.2rem', borderRadius:14, fontSize:'0.9rem', fontWeight:700, color:'var(--txt-2)', textDecoration:'none', transition:'all 0.2s' },
-  sbLinkActive: { background:'var(--bur)', color:'#fff', boxShadow:'0 4px 15px rgba(123,29,46,0.2)' },
+  wrap: { display:'grid', gridTemplateColumns:'280px 1fr', gap:'2.5rem' },
+  sidebar: { background:'rgba(255, 255, 255, 0.7)', backdropFilter:'blur(20px)', border:'1px solid rgba(255, 255, 255, 0.9)', borderRadius:'32px', padding:'3rem 2rem', height:'fit-content', position:'sticky', top:120, boxShadow:'0 20px 50px rgba(0,0,0,0.03)' },
+  sbUser: { textAlign:'center', paddingBottom:'2.5rem', borderBottom:'1px solid rgba(0,0,0,0.06)', marginBottom:'2rem' },
+  sbAvatar: { width:88, height:88, borderRadius:'28px', background:'linear-gradient(135deg, var(--bur), #5C1521)', color:'#fff', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:"'Playfair Display',serif", fontSize:'2.2rem', fontWeight:800, margin:'0 auto 1.5rem', boxShadow: '0 12px 25px rgba(123, 29, 46, 0.25)' },
+  sbRoleBadge: { fontSize:'0.75rem', color:'var(--bur)', textTransform:'uppercase', letterSpacing:'1px', fontWeight:800, display:'flex', justifyContent:'center', alignItems:'center', gap:6, background: 'rgba(123, 29, 46, 0.08)', padding: '.4rem 1rem', borderRadius: 50, width: 'fit-content', margin: '0 auto' },
+  sbLink: { display:'flex', alignItems:'center', gap:14, padding:'1.1rem 1.4rem', borderRadius:'20px', fontSize:'0.95rem', fontWeight:700, color:'#475569', textDecoration:'none', transition:'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)' },
+  sbLinkActive: { background:'linear-gradient(135deg, var(--bur), #5C1521)', color:'#fff', boxShadow:'0 10px 25px rgba(123,29,46,0.3)' },
   
   main: { minWidth: 0 },
-  hTitle: { fontFamily:"'Playfair Display',serif", fontSize:'2.2rem', fontWeight:800, lineHeight: 1 },
-  statsRow: { display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))', gap:'1.2rem', marginBottom:'2rem' },
-  statCard: { background:'#fff', border:'1px solid var(--border)', borderRadius:'20px', padding:'1.8rem', boxShadow:'0 10px 30px rgba(0,0,0,0.02)' },
-  statNum: { fontFamily:"Sora, sans-serif", fontSize:'2.2rem', fontWeight:800, color:'var(--bur)', lineHeight:1 },
-  statLabel: { fontSize:'0.8rem', color:'#475569', marginTop:8, fontWeight:700, textTransform: 'uppercase', letterSpacing: '1px' },
+  hTitle: { fontFamily:"'Playfair Display',serif", fontSize:'2.4rem', fontWeight:800, lineHeight: 1.2, color: 'var(--text)' },
+  statsRow: { display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))', gap:'1.5rem', marginBottom:'3rem' },
+  statNum: { fontFamily:"Sora, sans-serif", fontSize:'3rem', fontWeight:800, background: 'linear-gradient(135deg, var(--bur), #5C1521)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', lineHeight:1 },
+  statLabel: { fontSize:'0.85rem', color:'#475569', marginTop:12, fontWeight:800, textTransform: 'uppercase', letterSpacing: '1px' },
   
-  tabs: { display:'flex', gap:10, marginBottom:'2rem', flexWrap:'wrap' },
-  tab: { display:'flex', alignItems:'center', gap:8, padding:'0.7rem 1.4rem', border:'1.5px solid var(--border)', borderRadius:50, fontSize:'.9rem', fontWeight:700, cursor:'pointer', background:'#fff', color:'var(--txt-2)', fontFamily:'inherit', transition:'all 0.2s' },
-  tabActive: { background:'var(--bur)', color:'#fff', borderColor:'var(--bur)', boxShadow:'0 4px 12px rgba(123,29,46,0.15)' },
+  section: { background:'rgba(255, 255, 255, 0.8)', backdropFilter:'blur(20px)', border:'1px solid rgba(255, 255, 255, 0.9)', borderRadius:'36px', padding:'3.5rem', boxShadow:'0 20px 60px rgba(0,0,0,0.03)' },
+  biIcon: { width:60, height:60, borderRadius:20, background:'linear-gradient(135deg, rgba(123,29,46,0.05), rgba(123,29,46,0.12))', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, border: '1px solid rgba(123,29,46,0.1)' },
+  addForm: { background:'rgba(255,255,255,0.7)', padding:'3rem', borderRadius:28, marginBottom:'2.5rem', border:'1px solid rgba(0,0,0,0.05)', boxShadow: '0 15px 40px rgba(0,0,0,0.03)' },
+  formGrid: { display:'grid', gridTemplateColumns:'1fr 1fr', gap:'1.8rem' },
   
-  section: { background:'#fff', border:'1px solid var(--border)', borderRadius:'28px', padding:'2.5rem', boxShadow:'0 10px 40px rgba(0,0,0,0.02)' },
-  bookingItem: { display:'flex', gap:16, alignItems:'center', padding:'1.2rem 0', borderBottom:'1px solid var(--border)' },
-  biIcon: { width:48, height:48, borderRadius:14, background:'var(--cream-2)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 },
-  trackerItem: { display:'flex', gap:16, alignItems:'center', padding:'1.5rem', background: 'var(--cream-2)', borderRadius: 20, border: '1px solid var(--border)' },
-  docBtn: { display: 'flex', alignItems: 'center', gap: 6, fontSize: '.75rem', fontWeight: 800, padding: '.4rem .8rem', borderRadius: 8, border: '1px solid var(--border)', background: '#fff', cursor: 'pointer' },
-  addForm: { background:'var(--cream-2)', padding:'2rem', borderRadius:20, marginBottom:'2rem', border:'1px solid var(--border)' },
-  formGrid: { display:'grid', gridTemplateColumns:'1fr 1fr', gap:'1.2rem' },
-  
-  updateItem: { display:'flex', gap:16, padding:'1.5rem 0', borderBottom:'1px solid var(--border)' },
-  udot: { width:24, height:24, borderRadius:'50%', flexShrink:0, marginTop:4 },
-  empty: { textAlign:'center', padding:'4rem 2rem', color:'#3D2028' }
+  empty: { textAlign:'center', padding:'6rem 2rem', color:'#475569', display: 'flex', flexDirection: 'column', alignItems: 'center', background: 'rgba(255,255,255,0.5)', borderRadius: 28, border: '2px dashed rgba(0,0,0,0.08)' }
 }
