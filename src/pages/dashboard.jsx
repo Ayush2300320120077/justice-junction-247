@@ -125,12 +125,12 @@ function ClientDash() {
           gap: 8px;
           margin-bottom: 2.5rem;
           flex-wrap: wrap;
-          background: #FDF6EE;
+          background: rgba(0, 0, 0, 0.4);
           padding: 0.5rem;
           border-radius: 50px;
           width: fit-content;
-          border: 1px solid rgba(123, 29, 46, 0.1);
-          box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+          border: 1px solid rgba(255, 255, 255, 0.05);
+          box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
         }
         .dash-tab-btn {
           display: flex;
@@ -143,18 +143,18 @@ function ClientDash() {
           font-weight: 800;
           cursor: pointer;
           background: transparent;
-          color: #5A3A42;
+          color: #A09B9C;
           font-family: inherit;
           transition: all 0.3s ease;
         }
         .dash-tab-btn.active {
-          background: #7B1D2E;
-          color: #fff;
-          box-shadow: 0 4px 15px rgba(123, 29, 46, 0.2);
+          background: #E5B05C;
+          color: #050203;
+          box-shadow: 0 4px 15px rgba(201,148,58,0.4);
         }
         .dash-tab-btn:not(.active):hover {
-          background: rgba(123, 29, 46, 0.05);
-          color: #7B1D2E;
+          background: rgba(255, 255, 255, 0.05);
+          color: #fff;
         }
         .form-input-premium {
           width: 100%;
@@ -389,7 +389,7 @@ function ClientDash() {
                     {u.status==='done'?'✓':'●'}
                   </div>
                   <div style={{flex:1}}>
-                    <div style={{fontWeight:800,fontSize:'1.1rem', color: '#1A0A0D', marginBottom: 6}}>{u.title}</div>
+                    <div style={{fontWeight:800,fontSize:'1.1rem', color: '#fff', marginBottom: 6}}>{u.title}</div>
                     <div style={{fontSize:'0.95rem',color:'#5A3A42', lineHeight:1.6}}>{u.description}</div>
                     <div style={{fontSize:'0.8rem',color:'#5A3A42',marginTop:12, fontWeight:700, textTransform: 'uppercase', letterSpacing: '0.5px'}}>
                       Case #{u.caseNumber} &nbsp;&bull;&nbsp; {fmt(u.createdAt)} &nbsp;&bull;&nbsp; Stage: {u.stage}
@@ -407,15 +407,15 @@ function ClientDash() {
           <h3 style={{...s.hTitle, marginBottom:'1.5rem'}}>Account Settings</h3>
           <div style={{background:'#FDF6EE', border:'1px solid rgba(123, 29, 46, 0.05)', borderRadius:24, padding:'3rem', boxShadow: '0 10px 30px rgba(123, 29, 46, 0.05)'}}>
             <div className="form-group" style={{marginBottom: '1.5rem'}}>
-              <label style={{color: '#5A3A42'}}>Full Name</label>
+              <label style={{color: '#A09B9C'}}>Full Name</label>
               <input className="form-input-premium" type="text" value={user?.name||''} readOnly style={{opacity: 0.8}} />
             </div>
             <div className="form-group" style={{marginBottom: '1.5rem'}}>
-              <label style={{color: '#5A3A42'}}>Email Address</label>
+              <label style={{color: '#A09B9C'}}>Email Address</label>
               <input className="form-input-premium" type="email" value={user?.email||''} readOnly style={{opacity: 0.8}} />
             </div>
             <div className="form-group" style={{marginBottom: '2rem'}}>
-              <label style={{color: '#5A3A42'}}>Phone Number</label>
+              <label style={{color: '#A09B9C'}}>Phone Number</label>
               <input className="form-input-premium" type="text" placeholder="Update your phone number" />
             </div>
             <button className="btn btn-primary" style={{padding: '0.8rem 2rem'}}>Save Changes</button>
@@ -497,12 +497,12 @@ function LawyerDash() {
           gap: 8px;
           margin-bottom: 2.5rem;
           flex-wrap: wrap;
-          background: #FDF6EE;
+          background: rgba(0, 0, 0, 0.4);
           padding: 0.5rem;
           border-radius: 50px;
           width: fit-content;
-          border: 1px solid rgba(123, 29, 46, 0.1);
-          box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+          border: 1px solid rgba(255, 255, 255, 0.05);
+          box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
         }
         .dash-tab-btn {
           display: flex;
@@ -515,45 +515,47 @@ function LawyerDash() {
           font-weight: 800;
           cursor: pointer;
           background: transparent;
-          color: #5A3A42;
+          color: #A09B9C;
           font-family: inherit;
           transition: all 0.3s ease;
         }
         .dash-tab-btn.active {
-          background: #7B1D2E;
-          color: #fff;
-          box-shadow: 0 4px 15px rgba(123, 29, 46, 0.2);
+          background: #E5B05C;
+          color: #050203;
+          box-shadow: 0 4px 15px rgba(201,148,58,0.4);
         }
         .dash-tab-btn:not(.active):hover {
-          background: rgba(123, 29, 46, 0.05);
-          color: #7B1D2E;
+          background: rgba(255, 255, 255, 0.05);
+          color: #fff;
         }
         .stat-card-premium {
-          background: #FDF6EE;
-          border: 1px solid rgba(123, 29, 46, 0.05);
+          background: rgba(255, 255, 255, 0.02);
+          border: 1px solid rgba(255, 255, 255, 0.06);
           border-radius: 24px;
           padding: 2.2rem;
           transition: all 0.3s ease;
+          backdrop-filter: blur(20px);
         }
         .stat-card-premium:hover {
           transform: translateY(-5px);
-          box-shadow: 0 15px 35px rgba(123, 29, 46, 0.08);
-          border-color: rgba(123, 29, 46, 0.15);
+          box-shadow: 0 15px 35px rgba(201, 148, 58, 0.1);
+          border-color: rgba(201, 148, 58, 0.2);
         }
         .case-card-premium {
           display: flex;
           gap: 24px;
           align-items: center;
           padding: 1.8rem;
-          background: #fff;
+          background: rgba(255, 255, 255, 0.02);
           border-radius: 20px;
-          border: 1px solid rgba(123, 29, 46, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.06);
           margin-bottom: 1.2rem;
           transition: all 0.3s ease;
+          backdrop-filter: blur(20px);
         }
         .case-card-premium:hover {
-          box-shadow: 0 12px 30px rgba(123, 29, 46, 0.08);
-          border-color: rgba(123, 29, 46, 0.2);
+          box-shadow: 0 12px 30px rgba(201, 148, 58, 0.1);
+          border-color: rgba(201, 148, 58, 0.2);
           transform: scale(1.01);
         }
         .form-input-premium {
@@ -622,27 +624,27 @@ function LawyerDash() {
           <h3 style={{...s.hTitle, marginBottom:'2rem'}}>Post Case Update</h3>
           <div style={{background:'#FDF6EE', border:'1px solid rgba(123, 29, 46, 0.05)', borderRadius:24, padding:'3rem', boxShadow: '0 10px 30px rgba(123, 29, 46, 0.05)'}}>
             <div className="form-group">
-              <label style={{color: '#5A3A42'}}>Select Booking / Case</label>
+              <label style={{color: '#A09B9C'}}>Select Booking / Case</label>
               <select className="form-input-premium" value={upForm.bookingId} onChange={e => setUpForm(f=>({...f,bookingId:e.target.value}))}>
                 <option value="">— Select a booking —</option>
                 {bookings.map(b => <option key={b._id} value={b._id}>{b.caseNumber} — {b.clientName} ({b.caseType})</option>)}
               </select>
             </div>
-            <div className="form-group" style={{marginTop:'1.5rem'}}><label style={{color: '#5A3A42'}}>Update Title</label><input className="form-input-premium" type="text" placeholder="e.g. Documents Filed with Court" value={upForm.title} onChange={e=>setUpForm(f=>({...f,title:e.target.value}))} /></div>
+            <div className="form-group" style={{marginTop:'1.5rem'}}><label style={{color: '#A09B9C'}}>Update Title</label><input className="form-input-premium" type="text" placeholder="e.g. Documents Filed with Court" value={upForm.title} onChange={e=>setUpForm(f=>({...f,title:e.target.value}))} /></div>
             <div className="form-group" style={{marginTop:'1.5rem'}}>
-              <label style={{color: '#5A3A42'}}>Details</label>
+              <label style={{color: '#A09B9C'}}>Details</label>
               <textarea rows="4" placeholder="Describe what happened in the case today..." value={upForm.description} onChange={e=>setUpForm(f=>({...f,description:e.target.value}))}
                 className="form-input-premium" style={{resize:'vertical'}} />
             </div>
             <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'1.5rem', marginTop:'1.5rem'}} className="dash-form-grid-responsive">
               <div className="form-group">
-                <label style={{color: '#5A3A42'}}>Stage</label>
+                <label style={{color: '#A09B9C'}}>Stage</label>
                 <select className="form-input-premium" value={upForm.stage} onChange={e=>setUpForm(f=>({...f,stage:e.target.value}))}>
                   {['consultation','filing','hearing','judgment','appeal','closed'].map(st=><option key={st}>{st}</option>)}
                 </select>
               </div>
               <div className="form-group">
-                <label style={{color: '#5A3A42'}}>Status</label>
+                <label style={{color: '#A09B9C'}}>Status</label>
                 <select className="form-input-premium" value={upForm.status} onChange={e=>setUpForm(f=>({...f,status:e.target.value}))}>
                   <option value="done">Done</option>
                   <option value="active">Active / Current</option>
@@ -650,7 +652,7 @@ function LawyerDash() {
                 </select>
               </div>
             </div>
-            <div className="form-group" style={{marginTop:'1.5rem'}}><label style={{color: '#5A3A42'}}>Next Hearing Date (optional)</label><input className="form-input-premium" type="date" value={upForm.nextHearing} onChange={e=>setUpForm(f=>({...f,nextHearing:e.target.value}))} /></div>
+            <div className="form-group" style={{marginTop:'1.5rem'}}><label style={{color: '#A09B9C'}}>Next Hearing Date (optional)</label><input className="form-input-premium" type="date" value={upForm.nextHearing} onChange={e=>setUpForm(f=>({...f,nextHearing:e.target.value}))} /></div>
             <button className="btn btn-primary btn-lg" style={{width:'100%', marginTop:'2.5rem', padding:'1.2rem', fontSize:'1.1rem'}} onClick={postUpdate}>Post Update to Client →</button>
           </div>
         </div>
@@ -663,7 +665,7 @@ function LawyerDash() {
           <div style={{background:'#FDF6EE', border:'1px solid rgba(123, 29, 46, 0.05)', borderRadius:24, padding:'3rem', boxShadow: '0 10px 30px rgba(123, 29, 46, 0.05)'}}>
 
             <div className="form-group">
-              <label style={{color: '#5A3A42'}}>Case Type / Practice Area</label>
+              <label style={{color: '#A09B9C'}}>Case Type / Practice Area</label>
               <select className="form-input-premium" value={outcomeForm.caseType} onChange={e=>setOutcomeForm(f=>({...f,caseType:e.target.value}))}>
                 <option value="">— Select case type —</option>
                 {CASE_TYPES.map(ct=><option key={ct} value={ct}>{ct}</option>)}
@@ -671,7 +673,7 @@ function LawyerDash() {
             </div>
 
             <div className="form-group" style={{marginTop:'1.5rem'}}>
-              <label style={{color: '#5A3A42'}}>Outcome</label>
+              <label style={{color: '#A09B9C'}}>Outcome</label>
               <div style={{display:'flex',gap:16,flexWrap:'wrap',marginTop:8}}>
                 {[['won','Won',<CheckCircle size={18}/>,'#22C55E','#F0FDF4'],['lost','Lost',<XCircle size={18}/>,'#EF4444','#FEF2F2'],['settled','Settled',<MinusCircle size={18}/>,'#F59E0B','#FFFBEB']].map(
                   ([val,label,icon,color,bg])=>(
@@ -686,11 +688,11 @@ function LawyerDash() {
 
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'1.5rem', marginTop:'1.5rem'}} className="dash-form-grid-responsive">
               <div className="form-group">
-                <label style={{color: '#5A3A42'}}>Duration (days the case ran)</label>
+                <label style={{color: '#A09B9C'}}>Duration (days the case ran)</label>
                 <input className="form-input-premium" type="number" min="0" placeholder="e.g. 180" value={outcomeForm.durationDays} onChange={e=>setOutcomeForm(f=>({...f,durationDays:e.target.value}))}/>
               </div>
               <div className="form-group">
-                <label style={{color: '#5A3A42'}}>Date Closed</label>
+                <label style={{color: '#A09B9C'}}>Date Closed</label>
                 <input className="form-input-premium" type="date" value={outcomeForm.dateClosed} onChange={e=>setOutcomeForm(f=>({...f,dateClosed:e.target.value}))}/>
               </div>
             </div>
@@ -739,12 +741,13 @@ export default function Dashboard() {
   return (
     <div className="page-reveal" style={{ 
       paddingTop: 100, 
-      background: 'url(https://images.unsplash.com/photo-1589829085413-56de8ae18c73?q=80&w=2000&auto=format&fit=crop) center/cover no-repeat fixed', 
+      backgroundColor: '#050203', 
       minHeight: '100vh', 
       paddingBottom: '6rem',
       position: 'relative'
     }}>
-      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(253, 246, 238, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%)', zIndex: 0 }} />
+      {/* Deep cinematic background */}
+      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at top right, rgba(201,148,58,0.08), transparent 40%), radial-gradient(circle at bottom left, rgba(123, 29, 46, 0.15), transparent 50%)', zIndex: 0 }} />
       <Helmet>
         <title>My Dashboard — Justice Junction 24/7</title>
       </Helmet>
@@ -756,36 +759,37 @@ export default function Dashboard() {
           borderRadius: 36, 
           padding: '4.5rem 4rem', 
           marginBottom: '3.5rem', 
-          color: '#1A0A0D', 
+          color: '#fff', 
           position: 'relative', 
           overflow: 'hidden', 
           display: 'flex', 
           justifyContent: 'space-between', 
           alignItems: 'center',
-          background: '#fff',
-          border: '1px solid rgba(123, 29, 46, 0.1)',
-          boxShadow: '0 25px 60px rgba(123, 29, 46, 0.05)'
+          background: 'rgba(255, 255, 255, 0.02)',
+          border: '1px solid rgba(255, 255, 255, 0.06)',
+          boxShadow: '0 30px 60px rgba(0, 0, 0, 0.4)',
+          backdropFilter: 'blur(30px)'
         }}>
           {/* Subtle inner gradient */}
-          <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at top right, rgba(201,148,58,0.05), transparent 50%)', zIndex: 0 }} />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(201,148,58,0.05) 0%, transparent 100%)', zIndex: 0 }} />
           
           <div style={{ position: 'relative', zIndex: 2 }}>
-            <div style={{ display: 'inline-block', background: 'rgba(123, 29, 46, 0.05)', color: '#7B1D2E', padding: '0.4rem 1.2rem', borderRadius: 50, fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: '1.5rem' }}>
+            <div style={{ display: 'inline-block', background: 'rgba(201,148,58,0.1)', color: '#E5B05C', padding: '0.4rem 1.2rem', borderRadius: 50, fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: '1.5rem', border: '1px solid rgba(201,148,58,0.2)' }}>
               Session Active
             </div>
-            <h1 style={{ fontSize: '3.6rem', color: '#1A0A0D', fontFamily: "'Playfair Display', serif", fontWeight: 700, marginBottom: 16, lineHeight: 1.1, letterSpacing: '-0.02em' }}>
+            <h1 style={{ fontSize: '3.6rem', color: '#fff', fontFamily: "'Playfair Display', serif", fontWeight: 700, marginBottom: 16, lineHeight: 1.1, letterSpacing: '-0.02em', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>
               Welcome, {user?.name ? user.name.split(' ')[0] : 'User'}.
             </h1>
-            <p style={{ fontSize: '1.15rem', color: '#5A3A42', maxWidth: 650, lineHeight: 1.7, fontWeight: 500 }}>
+            <p style={{ fontSize: '1.15rem', color: '#A09B9C', maxWidth: 650, lineHeight: 1.7, fontWeight: 500 }}>
               {user?.role === 'lawyer' ? 'Your legal practice is flourishing. Manage your clients and log case updates securely.' : "Find peace of mind. Your legal matters are organized securely. Access your case tracker and updates below."}
             </p>
           </div>
           
-          <div className="hide-mobile" style={{ textAlign: 'right', position: 'relative', zIndex: 2, background: '#FDF6EE', padding: '2rem 2.5rem', borderRadius: 28, border: '1px solid rgba(123, 29, 46, 0.05)', boxShadow: '0 10px 30px rgba(123, 29, 46, 0.03)' }}>
-            <div style={{ fontSize: '2.8rem', fontWeight: 700, fontFamily: 'Sora, sans-serif', color: '#1A0A0D', lineHeight: 1, letterSpacing: '-0.03em' }}>
+          <div className="hide-mobile" style={{ textAlign: 'right', position: 'relative', zIndex: 2, background: 'rgba(0, 0, 0, 0.2)', padding: '2rem 2.5rem', borderRadius: 28, border: '1px solid rgba(255, 255, 255, 0.05)', boxShadow: 'inset 0 2px 10px rgba(255,255,255,0.02)' }}>
+            <div style={{ fontSize: '2.8rem', fontWeight: 700, fontFamily: 'Sora, sans-serif', color: '#fff', lineHeight: 1, letterSpacing: '-0.03em' }}>
               {new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
             </div>
-            <div style={{ fontSize: '.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 2, color: '#C9943A', marginTop: 12 }}>
+            <div style={{ fontSize: '.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: 2, color: '#E5B05C', marginTop: 12 }}>
               Everything Operational
             </div>
           </div>
@@ -795,7 +799,7 @@ export default function Dashboard() {
           <div style={s.sidebar}>
             <div style={s.sbUser}>
               <div style={s.sbAvatar}>{initials(user?.name)}</div>
-              <div style={{ fontWeight: 800, fontSize: '1.25rem', marginBottom: 6, color: '#1A0A0D', letterSpacing: '-0.01em' }}>{user?.name}</div>
+              <div style={{ fontWeight: 800, fontSize: '1.25rem', marginBottom: 6, color: '#fff', letterSpacing: '-0.01em' }}>{user?.name}</div>
               <div style={s.sbRoleBadge}>
                 {user?.role === 'lawyer' ? <><Scale size={14} /> Advocate</> : <><User size={14} /> Client</>}
               </div>
@@ -804,8 +808,8 @@ export default function Dashboard() {
               <Link to="/dashboard" style={{ ...s.sbLink, ...(location.pathname === '/dashboard' ? s.sbLinkActive : {}) }}><LayoutDashboard size={18} /> Dashboard</Link>
               <Link to="/search" style={s.sbLink}><Search size={18} /> Browse Lawyers</Link>
               <Link to="/knowledge-hub" style={s.sbLink}><FileText size={18} /> Knowledge Hub</Link>
-              <div style={{ margin: '1.5rem 0', height: 1, background: 'rgba(123, 29, 46, 0.05)' }} />
-              <button onClick={handleLogout} style={{ ...s.sbLink, color: '#DC2626', border: 'none', cursor: 'pointer', textAlign: 'left', fontWeight: 700 }}><LogOut size={18} /> Logout</button>
+              <div style={{ margin: '1.5rem 0', height: 1, background: 'rgba(255, 255, 255, 0.08)' }} />
+              <button onClick={handleLogout} style={{ ...s.sbLink, color: '#FF6B6B', border: 'none', cursor: 'pointer', textAlign: 'left', fontWeight: 700 }}><LogOut size={18} /> Logout</button>
             </div>
           </div>
           {/* Main Content */}
@@ -820,23 +824,23 @@ export default function Dashboard() {
 
 const s = {
   wrap: { display:'grid', gridTemplateColumns:'280px 1fr', gap:'2.5rem' },
-  sidebar: { background:'#fff', border:'1px solid rgba(123, 29, 46, 0.1)', borderRadius:'32px', padding:'3rem 2rem', height:'fit-content', position:'sticky', top:120, boxShadow:'0 25px 60px rgba(123, 29, 46, 0.05)' },
-  sbUser: { textAlign:'center', paddingBottom:'2.5rem', borderBottom:'1px solid rgba(123, 29, 46, 0.05)', marginBottom:'2rem' },
-  sbAvatar: { width:96, height:96, borderRadius:'32px', background:'linear-gradient(145deg, #FDF6EE, #fff)', color:'#7B1D2E', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:"'Playfair Display',serif", fontSize:'2.5rem', fontWeight:600, margin:'0 auto 1.5rem', boxShadow: '0 12px 25px rgba(123, 29, 46, 0.08)', border: '1px solid rgba(123, 29, 46, 0.05)' },
-  sbRoleBadge: { fontSize:'0.75rem', color:'#7B1D2E', textTransform:'uppercase', letterSpacing:'1.5px', fontWeight:700, display:'flex', justifyContent:'center', alignItems:'center', gap:6, background: '#FDF6EE', padding: '.4rem 1rem', borderRadius: 50, width: 'fit-content', margin: '0 auto' },
-  sbLink: { display:'flex', alignItems:'center', gap:14, padding:'1rem 1.4rem', borderRadius:'20px', fontSize:'0.92rem', fontWeight:600, color:'#5A3A42', textDecoration:'none', transition:'all 0.3s ease' },
-  sbLinkActive: { background:'#7B1D2E', color:'#fff', boxShadow: '0 8px 20px rgba(123, 29, 46, 0.2)' },
+  sidebar: { background:'rgba(255, 255, 255, 0.02)', border:'1px solid rgba(255, 255, 255, 0.06)', borderRadius:'32px', padding:'3rem 2rem', height:'fit-content', position:'sticky', top:120, boxShadow:'0 25px 50px rgba(0, 0, 0, 0.3)', backdropFilter: 'blur(30px)' },
+  sbUser: { textAlign:'center', paddingBottom:'2.5rem', borderBottom:'1px solid rgba(255, 255, 255, 0.08)', marginBottom:'2rem' },
+  sbAvatar: { width:96, height:96, borderRadius:'32px', background:'linear-gradient(145deg, rgba(201,148,58,0.15), rgba(201,148,58,0.02))', color:'#E5B05C', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:"'Playfair Display',serif", fontSize:'2.5rem', fontWeight:600, margin:'0 auto 1.5rem', boxShadow: '0 12px 25px rgba(0,0,0,0.4)', border: '1px solid rgba(201,148,58,0.2)' },
+  sbRoleBadge: { fontSize:'0.75rem', color:'#050203', textTransform:'uppercase', letterSpacing:'1.5px', fontWeight:800, display:'flex', justifyContent:'center', alignItems:'center', gap:6, background: '#E5B05C', padding: '.4rem 1rem', borderRadius: 50, width: 'fit-content', margin: '0 auto', boxShadow: '0 4px 15px rgba(201,148,58,0.3)' },
+  sbLink: { display:'flex', alignItems:'center', gap:14, padding:'1rem 1.4rem', borderRadius:'20px', fontSize:'0.92rem', fontWeight:600, color:'#A09B9C', textDecoration:'none', transition:'all 0.3s ease' },
+  sbLinkActive: { background:'rgba(255, 255, 255, 0.08)', color:'#fff', boxShadow: '0 8px 20px rgba(0,0,0,0.2)', border: '1px solid rgba(255, 255, 255, 0.05)' },
   
   main: { minWidth: 0 },
-  hTitle: { fontFamily:"'Playfair Display',serif", fontSize:'2.2rem', fontWeight:700, lineHeight: 1.2, color: '#1A0A0D', letterSpacing: '-0.02em' },
+  hTitle: { fontFamily:"'Playfair Display',serif", fontSize:'2.2rem', fontWeight:700, lineHeight: 1.2, color: '#fff', letterSpacing: '-0.02em', textShadow: '0 2px 10px rgba(0,0,0,0.5)' },
   statsRow: { display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(220px,1fr))', gap:'1.5rem', marginBottom:'3rem' },
-  statNum: { fontFamily:"Sora, sans-serif", fontSize:'clamp(1.8rem, 2.5vw, 2.8rem)', fontWeight:700, color: '#7B1D2E', lineHeight:1, overflowWrap: 'break-word', wordWrap: 'break-word', hyphens: 'auto', letterSpacing: '-0.03em' },
-  statLabel: { fontSize:'0.8rem', color:'#5A3A42', marginTop:12, fontWeight:700, textTransform: 'uppercase', letterSpacing: '1.2px' },
+  statNum: { fontFamily:"Sora, sans-serif", fontSize:'clamp(1.8rem, 2.5vw, 2.8rem)', fontWeight:700, color: '#E5B05C', lineHeight:1, overflowWrap: 'break-word', wordWrap: 'break-word', hyphens: 'auto', letterSpacing: '-0.03em', textShadow: '0 2px 15px rgba(201,148,58,0.3)' },
+  statLabel: { fontSize:'0.8rem', color:'#A09B9C', marginTop:12, fontWeight:700, textTransform: 'uppercase', letterSpacing: '1.2px' },
   
-  section: { background:'#fff', border:'1px solid rgba(123, 29, 46, 0.1)', borderRadius:'36px', padding:'3.5rem', boxShadow:'0 25px 60px rgba(123, 29, 46, 0.05)' },
-  biIcon: { width:56, height:56, borderRadius:20, background:'rgba(123, 29, 46, 0.05)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 },
-  addForm: { background:'#FDF6EE', padding:'3rem', borderRadius:28, marginBottom:'2.5rem', border:'1px solid rgba(123, 29, 46, 0.05)' },
+  section: { background:'rgba(255, 255, 255, 0.02)', border:'1px solid rgba(255, 255, 255, 0.06)', borderRadius:'36px', padding:'3.5rem', boxShadow:'0 30px 60px rgba(0, 0, 0, 0.4)', backdropFilter: 'blur(30px)' },
+  biIcon: { width:56, height:56, borderRadius:20, background:'rgba(201,148,58,0.1)', display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0, color: '#E5B05C', border: '1px solid rgba(201,148,58,0.2)' },
+  addForm: { background:'rgba(0, 0, 0, 0.2)', padding:'3rem', borderRadius:28, marginBottom:'2.5rem', border:'1px solid rgba(255, 255, 255, 0.05)' },
   formGrid: { display:'grid', gridTemplateColumns:'1fr 1fr', gap:'1.8rem' },
   
-  empty: { textAlign:'center', padding:'6rem 2rem', color:'#5A3A42', display: 'flex', flexDirection: 'column', alignItems: 'center', background: '#FDF6EE', borderRadius: 28, border: '1px dashed rgba(123, 29, 46, 0.1)' }
+  empty: { textAlign:'center', padding:'6rem 2rem', color:'#A09B9C', display: 'flex', flexDirection: 'column', alignItems: 'center', background: 'rgba(0, 0, 0, 0.2)', borderRadius: 28, border: '1px dashed rgba(255, 255, 255, 0.1)' }
 }
