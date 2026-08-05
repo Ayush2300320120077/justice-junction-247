@@ -125,13 +125,13 @@ function ClientDash() {
           gap: 8px;
           margin-bottom: 2.5rem;
           flex-wrap: wrap;
-          background: rgba(0, 0, 0, 0.3);
+          background: rgba(255, 255, 255, 0.05);
           padding: 0.5rem;
           border-radius: 50px;
           width: fit-content;
           backdrop-filter: blur(15px);
           border: 1px solid rgba(255, 255, 255, 0.1);
-          box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+          box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
         .dash-tab-btn {
           display: flex;
@@ -144,7 +144,7 @@ function ClientDash() {
           font-weight: 800;
           cursor: pointer;
           background: transparent;
-          color: #F5E6D3;
+          color: #E5D0E3;
           font-family: inherit;
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -499,11 +499,13 @@ function LawyerDash() {
           gap: 8px;
           margin-bottom: 2.5rem;
           flex-wrap: wrap;
-          background: rgba(253, 246, 238, 0.8);
+          background: rgba(255, 255, 255, 0.05);
           padding: 0.5rem;
           border-radius: 50px;
           width: fit-content;
-          border: 1px solid rgba(123, 29, 46, 0.1);
+          backdrop-filter: blur(15px);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
         .dash-tab-btn {
           display: flex;
@@ -516,45 +518,47 @@ function LawyerDash() {
           font-weight: 800;
           cursor: pointer;
           background: transparent;
-          color: #5A3A42;
+          color: #E5D0E3;
           font-family: inherit;
           transition: all 0.3s ease;
         }
         .dash-tab-btn.active {
-          background: #7B1D2E;
-          color: #fff;
-          box-shadow: 0 8px 25px rgba(123, 29, 46, 0.2);
+          background: #C9943A;
+          color: #1A0A0D;
+          box-shadow: 0 8px 25px rgba(201,148,58,0.3);
         }
         .dash-tab-btn:not(.active):hover {
-          background: rgba(123, 29, 46, 0.05);
-          color: #7B1D2E;
+          background: rgba(255, 255, 255, 0.1);
+          color: #fff;
         }
         .stat-card-premium {
-          background: #FDF6EE;
-          border: 1px solid rgba(123, 29, 46, 0.05);
+          background: rgba(255, 255, 255, 0.05);
+          backdrop-filter: blur(20px);
+          border: 1px solid rgba(255, 255, 255, 0.1);
           border-radius: 24px;
           padding: 2.2rem;
           transition: all 0.3s ease;
         }
         .stat-card-premium:hover {
           transform: translateY(-5px);
-          box-shadow: 0 15px 35px rgba(123, 29, 46, 0.08);
-          border-color: rgba(123, 29, 46, 0.15);
+          box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+          border-color: rgba(255, 255, 255, 0.2);
         }
         .case-card-premium {
           display: flex;
           gap: 24px;
           align-items: center;
           padding: 1.8rem;
-          background: #fff;
+          background: rgba(255, 255, 255, 0.03);
+          backdrop-filter: blur(10px);
           border-radius: 20px;
-          border: 1px solid rgba(123, 29, 46, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.08);
           margin-bottom: 1.2rem;
           transition: all 0.3s ease;
         }
         .case-card-premium:hover {
-          box-shadow: 0 12px 30px rgba(123, 29, 46, 0.08);
-          border-color: rgba(123, 29, 46, 0.2);
+          box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+          border-color: rgba(255, 255, 255, 0.15);
           transform: scale(1.01);
         }
         .form-input-premium {
