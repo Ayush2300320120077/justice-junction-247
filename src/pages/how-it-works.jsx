@@ -127,7 +127,7 @@ export default function HowItWorks() {
 
 const s = {
   hero: { padding: '8rem 0 6rem', background: 'linear-gradient(135deg, rgba(123,29,46,0.05), rgba(201,148,58,0.08))' },
-  h1: { fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: 800, lineHeight: 1.1, marginBottom: '1rem' },
+  h1: { fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2.5rem, 3.8vw, 3.0rem)', fontWeight: 800, lineHeight: 1.1, marginBottom: '1rem' },
   heroSub: { fontSize: '1.2rem', color: 'var(--txt-3)', maxWidth: 600, margin: '1.5rem auto 0', lineHeight: 1.7 },
   h2: { fontFamily: "'Playfair Display', serif", fontSize: '2.5rem', fontWeight: 800 },
   stepsGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: '2rem', maxWidth: 1100, margin: '0 auto' },
@@ -143,6 +143,6 @@ const s = {
   trustTitle: { fontFamily: "'Playfair Display', serif", fontSize: '1.1rem', marginBottom: 8 },
   trustDesc: { fontSize: '.9rem', color: 'var(--txt-3)', lineHeight: 1.7 },
   cta: { padding: '8rem 0', background: 'linear-gradient(rgba(42,22,32,0.95), rgba(123,29,46,0.98))', color: '#fff' },
-  ctaTitle: { fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 800, marginBottom: '1.5rem' },
+  ctaTitle: { fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2rem, 3.8vw, 2.6rem)', fontWeight: 800, marginBottom: '1.5rem' },
   ctaSub: { fontSize: '1.1rem', color: 'rgba(255,255,255,0.8)', marginBottom: '3rem', maxWidth: 550, margin: '0 auto 3rem' },
 }

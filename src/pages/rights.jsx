@@ -592,7 +592,7 @@ export default function Rights() {
 
       <section style={{padding:'5rem 5vw', background:'var(--bur)', color:'#fff', textAlign:'center'}}>
         <div className="container">
-          <h2 style={{fontFamily:"'Playfair Display',serif", fontSize:'clamp(1.8rem,4vw,2.8rem)', marginBottom:'1rem'}}>Need Personalised Legal Advice?</h2>
+          <h2 style={{fontFamily:"'Playfair Display',serif", fontSize:'clamp(1.8rem, 4vw, 2.8rem)', marginBottom:'1rem'}}>Need Personalised Legal Advice?</h2>
           <p style={{color:'rgba(255,255,255,.8)', marginBottom:'2.5rem', fontSize:'1.05rem'}}>These guides provide general information. For your specific situation, speak to a verified lawyer.</p>
           <Link to="/search" className="btn btn-gold btn-xl">Find a Verified Lawyer →</Link>
         </div>
@@ -604,7 +604,7 @@ export default function Rights() {
 const s = {
   hero: { padding:'6rem 0', position:'relative', overflow:'hidden', color:'#fff', background:'var(--bur)' },
   heroBg: { position:'absolute', inset:0, background:`linear-gradient(rgba(123,29,46,0.92),rgba(123,29,46,0.97)),url('/justice-bg.webp')`, backgroundSize:'cover', zIndex:1 },
-  h1: { fontFamily:"'Playfair Display',serif", fontSize:'clamp(2.5rem,5vw,3.8rem)', fontWeight:800, marginBottom:'1.2rem' },
+  h1: { fontFamily:"'Playfair Display',serif", fontSize:'clamp(2.5rem, 3.8vw, 2.8rem)', fontWeight:800, marginBottom:'1.2rem' },
   heroSub: { fontSize:'1.1rem', color:'rgba(255,255,255,.85)', maxWidth:600, margin:'0 auto' },
   catChip: { padding:'.5rem 1.1rem', borderRadius:'50px', background:'#fff', border:'1.5px solid var(--border)', fontSize:'.82rem', fontWeight:700, color:'var(--txt-2)', textDecoration:'none', transition:'all .2s' },
   catActive: { background:'var(--bur)', color:'#fff', borderColor:'var(--bur)' },

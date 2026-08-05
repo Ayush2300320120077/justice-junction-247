@@ -13,6 +13,8 @@ const Book            = lazy(() => import('./pages/book'))
 const Dashboard       = lazy(() => import('./pages/dashboard'))
 const Login           = lazy(() => import('./pages/login'))
 const Register        = lazy(() => import('./pages/register'))
+const ResetPassword   = lazy(() => import('./pages/reset-password'))
+const VerifyEmail     = lazy(() => import('./pages/verify-email'))
 const About           = lazy(() => import('./pages/about'))
 const Contact         = lazy(() => import('./pages/contact'))
 const FAQ             = lazy(() => import('./pages/faq'))
@@ -101,8 +103,10 @@ export default function App() {
             <Route path="/" element={<Home />} />
             <Route path="/search" element={<Search />} />
             <Route path="/book" element={<Book />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+            <Route path="/login"          element={<Login />} />
+            <Route path="/register"       element={<Register />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/verify-email"   element={<VerifyEmail />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/faq" element={<FAQ />} />

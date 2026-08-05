@@ -3,6 +3,30 @@ const express = require('express');
 const connectDB = require('../../middleware/db');
 const authMiddleware = require('../../middleware/auth');
 const Article = require('../../models/Article');
+const DOMPurify = require('isomorphic-dompurify');
+
+// ── HTML sanitisation config (used on every admin write) ────────────────────
+// Allowlist note: there is currently no rich-text editor UI in the admin panel
+// (src/pages/admin/content.jsx uses plain <textarea> for FAQs/Announcements;
+// no admin page calls the article create/update API from the UI).
+// The list below covers the task-specified set.  If an editor (Quill, TipTap,
+// etc.) is ever wired up, re-evaluate this list against its actual output.
+// Strips unconditionally: <script>, <style>, <iframe>, <form>, <input>,
+// <object>, <embed>, all event-handler attributes, and javascript: URIs.
+const SANITIZE_OPTS = {
+  ALLOWED_TAGS: [
+    'p', 'br', 'strong', 'em', 'u',
+    'h1', 'h2', 'h3', 'h4',
+    'ul', 'ol', 'li',
+    'a', 'blockquote', 'img',
+  ],
+  ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'target'],
+};
+
+function sanitizeContent(raw) {
+  if (!raw || typeof raw !== 'string') return raw;
+  return DOMPurify.sanitize(raw, SANITIZE_OPTS);
+}
 
 const app = express();
 app.use(express.json());
@@ -52,7 +76,8 @@ router.post('/', authMiddleware, async (req, res) => {
   try {
     if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
     await connectDB();
-    const { title, content, category, coverImageUrl, isPublished, description } = req.body;
+    const { title, content: rawContent, category, coverImageUrl, isPublished, description } = req.body;
+    const content = sanitizeContent(rawContent); // strip any XSS vectors before persisting
     // Generate slug from title
     const baseSlug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
     let slug = baseSlug;
@@ -68,6 +93,10 @@ router.put('/:id', authMiddleware, async (req, res) => {
   try {
     if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
     await connectDB();
+    // Sanitize content if it is being updated
+    if (req.body.content !== undefined) {
+      req.body.content = sanitizeContent(req.body.content);
+    }
     const article = await Article.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!article) return res.status(404).json({ error: 'Article not found' });
     res.json({ article });

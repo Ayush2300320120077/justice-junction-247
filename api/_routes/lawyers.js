@@ -148,6 +148,10 @@ router.put('/profile/update', requireAuth, async (req, res) => {
 // POST /api/lawyers/seed/demo — BUG 5 FIX: admin auth + dev-only guard
 router.post('/seed/demo', requireAuth, async (req, res) => {
   try {
+    // Hard kill-switch: ALLOW_SEED must be explicitly set to 'true'
+    if (process.env.ALLOW_SEED !== 'true') {
+      return res.status(403).json({ error: 'Seeding disabled — set ALLOW_SEED=true to enable.' });
+    }
     // Only allow in non-production environments OR for admins
     if (process.env.NODE_ENV === 'production' && req.user.role !== 'admin') {
       return res.status(403).json({ error: 'Seed endpoint is disabled in production' });

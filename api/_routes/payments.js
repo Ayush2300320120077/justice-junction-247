@@ -192,7 +192,9 @@ router.post('/verify-subscription', requireAuth, async (req, res) => {
     lawyer.subscription = plan;
     lawyer.subscriptionFeatures = PLAN_FEATURES[plan];
     lawyer.subscriptionExpiry = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
-    lawyer.isVerified = true;
+    // NOTE: isVerified is intentionally NOT set here.
+    // Credential verification (bar-council review) is a separate admin action:
+    // PATCH /api/admin/lawyers/:id/verify is the only path that may set isVerified.
     await lawyer.save();
 
     res.json({ success: true, plan, message: `${PLAN_FEATURES[plan].name} plan activated!` });

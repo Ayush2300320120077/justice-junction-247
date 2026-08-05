@@ -153,7 +153,7 @@ export default function About() {
 
           <h1 style={{
             fontFamily: "'Plus Jakarta Sans', sans-serif",
-            fontSize: 'clamp(2.8rem, 6vw, 5rem)',
+            fontSize: 'clamp(2.8rem, 4.5vw, 3.8rem)',
             fontWeight: 900, lineHeight: 1.08, letterSpacing: '-0.04em',
             color: '#fff', maxWidth: 900, marginBottom: '1.8rem'
           }}>

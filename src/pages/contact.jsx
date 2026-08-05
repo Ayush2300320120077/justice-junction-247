@@ -174,7 +174,7 @@ export default function Contact() {
 
 const s = {
   hero: { padding:'5rem 0', background:'var(--bur)', color:'#fff' },
-  h1: { fontFamily:"'Playfair Display',serif", fontSize:'clamp(2rem,5vw,3rem)', fontWeight:800, marginBottom:'1rem', color:'#fff' },
+  h1: { fontFamily:"'Playfair Display',serif", fontSize:'clamp(2rem, 3.8vw, 2.3rem)', fontWeight:800, marginBottom:'1rem', color:'#fff' },
   heroSub: { fontSize:'1.05rem', color:'rgba(255,255,255,.8)', maxWidth:600, margin:'0 auto' },
   grid: { display:'grid', gridTemplateColumns:'1fr 1.4fr', gap:'3rem', alignItems:'start' },
   infoCard: { background:'#fff', padding:'1.5rem', borderRadius:'16px', border:'1px solid var(--border)', display:'flex', alignItems:'center', gap:'1rem' },

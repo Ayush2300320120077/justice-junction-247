@@ -875,7 +875,7 @@ export default function DocumentGenerator() {
             <FileText size={12} color="#F5C4B3" />
             <span style={{ fontSize: '.7rem', color: '#F5C4B3', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '2.5px' }}>Free Legal Document Tools</span>
           </div>
-          <h1 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(2.2rem, 5vw, 3.8rem)', fontWeight: 900, color: '#fff', letterSpacing: '-0.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
+          <h1 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(2.2rem, 3.8vw, 2.8rem)', fontWeight: 900, color: '#fff', letterSpacing: '-0.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
             Draft Legal Documents <span style={{ color: '#F5C4B3' }}>in Minutes</span>
           </h1>
           <p style={{ color: 'rgba(245,224,200,0.75)', maxWidth: 600, margin: '0 auto 2rem', fontSize: '1.05rem', lineHeight: 1.8 }}>

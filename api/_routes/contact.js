@@ -1,18 +1,10 @@
 require('dotenv').config();
 const express = require('express');
-const nodemailer = require('nodemailer');
 const connectDB = require('../../middleware/db');
 const ContactMessage = require('../../models/ContactMessage');
+const { sendEmail } = require('../../utils/mailer');
 
 const app = express();
-app.use(express.json());
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-  if (req.method === 'OPTIONS') return res.sendStatus(200);
-  next();
-});
 
 const router = express.Router();
 
@@ -37,20 +29,11 @@ router.post('/', async (req, res) => {
     await connectDB();
     await ContactMessage.create({ name, email, subject, message });
 
-    const emailUser = process.env.EMAIL_USER;
-    const emailPass = process.env.EMAIL_PASS;
     const supportEmail = process.env.SUPPORT_EMAIL;
 
-    if (emailUser && emailPass) {
-      const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: { user: emailUser, pass: emailPass },
-      });
-
-      await transporter.sendMail({
-        from: `"Justice Junction Contact" <${emailUser}>`,
+    try {
+      await sendEmail({
         to: supportEmail,
-        replyTo: email,
         subject: `[JJ Contact] ${subject || 'New Message'} — from ${name}`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -71,11 +54,13 @@ router.post('/', async (req, res) => {
           </div>
         `,
       });
-    } else {
-      // Graceful fallback: log to console (visible in Vercel logs)
-      console.log('=== CONTACT FORM SUBMISSION (no email credentials set) ===');
+    } catch (mailErr) {
+      // sendEmail already logs a warning when credentials are absent.
+      // For other failures (SMTP timeout etc.) log and fall through — the
+      // ContactMessage is already saved, so the submission is not lost.
+      console.error('Contact form — email delivery error (non-blocking):', mailErr.message);
+      console.log('=== CONTACT FORM SUBMISSION (email delivery failed, saved to DB) ===');
       console.log('Name:', name, '| Email:', email, '| Subject:', subject || 'N/A');
-      console.log('Message:', message);
     }
 
     return res.status(200).json({ success: true });

@@ -18,6 +18,7 @@ const aiInteractionLogSchema = new mongoose.Schema({
   userFeedbackRating: { type: Number, min: 1, max: 5, default: null },
   reviewerRating: { type: Number, min: 1, max: 5, default: null },
   reviewerNotes: { type: String, default: '' },
+  recommendedLawyerIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Lawyer' }],
   metadata: { type: mongoose.Schema.Types.Mixed, default: {} }
 });
 

@@ -106,11 +106,21 @@ export default function AIChatWidget() {
       setMessages(prev => [...prev, botMsg])
     } catch (err) {
       console.error('AIChatWidget error:', err)
+      let fallbackText = "I'm temporarily unavailable. For assistance or legal advice, please search our verified lawyer directory."
+      let fallbackAction = { type: 'lawyer', link: '/search' }
+
+      if (err.message && err.message.includes('free question limit')) {
+        fallbackText = "You've reached the free question limit — sign up for more."
+        fallbackAction = { type: 'register', link: '/register' }
+      } else if (err.message && err.message.includes('usage limit reached')) {
+        fallbackText = err.message
+      }
+
       const fallbackMsg = {
         id: Date.now() + 1,
         role: 'bot',
-        text: "I'm temporarily unavailable. For assistance or legal advice, please search our verified lawyer directory.",
-        suggestedAction: { type: 'lawyer', link: '/search' },
+        text: fallbackText,
+        suggestedAction: fallbackAction,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       }
       setMessages(prev => [...prev, fallbackMsg])
@@ -156,6 +166,9 @@ export default function AIChatWidget() {
     } else if (action.type === 'lawyer') {
       icon = <Calendar size={16} className="text-amber-700" />
       label = "Find a Verified Lawyer →"
+    } else if (action.type === 'register') {
+      icon = <User size={16} className="text-amber-700" />
+      label = "Sign Up / Register →"
     }
 
     return (

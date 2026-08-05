@@ -204,7 +204,7 @@ export default function Login() {
 
             <h2 style={{
               fontFamily: "'Plus Jakarta Sans', Georgia, serif",
-              fontSize: 'clamp(2.2rem, 4.5vw, 3.4rem)',
+              fontSize: 'clamp(2.2rem, 3.4vw, 2.5rem)',
               fontWeight: 900,
               marginBottom: '1.2rem',
               lineHeight: 1.15,

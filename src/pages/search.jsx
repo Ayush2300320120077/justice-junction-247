@@ -331,7 +331,7 @@ export default function Search() {
           </div>
           <h1 style={{
             fontFamily: "'Plus Jakarta Sans', sans-serif",
-            fontSize: 'clamp(2.2rem, 5vw, 3.8rem)',
+            fontSize: 'clamp(2.2rem, 3.8vw, 2.8rem)',
             fontWeight: 900, color: '#fff', letterSpacing: '-0.04em',
             lineHeight: 1.1, marginBottom: '1rem'
           }}>

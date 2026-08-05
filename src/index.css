@@ -22,11 +22,11 @@ body {
   font-family: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   background: #FDF6EE;
   color: #1A0A0D;
-  line-height: 1.75;
+  line-height: 1.65;
   overflow-x: hidden;
   max-width: 100vw;
   width: 100%;
-  font-size: 16px;
+  font-size: 15px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -63,9 +63,9 @@ h1, h2, h3, h4, h5, h6 {
   color: #1A0A0D;
 }
 
-h1 { font-size: clamp(2rem, 5.5vw, 3.8rem); }
-h2 { font-size: clamp(1.6rem, 4vw, 2.8rem); }
-h3 { font-size: clamp(1.2rem, 3vw, 1.8rem); }
+h1 { font-size: clamp(1.8rem, 4vw, 3.2rem); }
+h2 { font-size: clamp(1.5rem, 3.2vw, 2.4rem); }
+h3 { font-size: clamp(1.2rem, 2.5vw, 1.6rem); }
 
 /* Root Color System & Variables */
 :root {
@@ -82,16 +82,16 @@ h3 { font-size: clamp(1.2rem, 3vw, 1.8rem); }
   --bur-light: #9E2A3F;
   --blush-light: #F5C4B3;
   --cream: #FDF6EE;
-  --cream-2: #F5E0C8;
-  --cream-3: #E8C9A8;
+  --cream-2: rgba(255, 255, 255, 0.7);
+  --cream-3: rgba(255, 255, 255, 0.5);
   --gold: #C9943A;
   --gold-l: #9B2D42;
   --gold-p: rgba(123,29,46,0.08);
   --txt: #1A0A0D;
   --txt-2: #4A1A28;
   --txt-3: #5A3A42;
-  --white: #fff;
-  --border: #E8C9A8;
+  --white: rgba(255, 255, 255, 0.85);
+  --border: rgba(255, 255, 255, 0.6);
   --border-2: #D4A882;
   --green: #2ECC71;
   --green-l: rgba(46, 204, 113, 0.15);
@@ -144,8 +144,8 @@ h3 { font-size: clamp(1.2rem, 3vw, 1.8rem); }
 .btn-secondary:hover, .btn-outline:hover { background: #7B1D2E; color: #fff; transform: translateY(-1px); }
 .btn-gold { padding: .7rem 1.6rem; background: #7B1D2E; color: #fff; border-radius: var(--r-sm); font-size: .88rem; box-shadow: 0 2px 12px rgba(123,29,46,.2); }
 .btn-gold:hover { background: #5C1521; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(123,29,46,.3); }
-.btn-white { padding: .7rem 1.8rem; background: #fff; color: #7B1D2E; border-radius: var(--r-sm); font-size: .9rem; }
-.btn-white:hover { background: #F5E0C8; transform: translateY(-1px); }
+.btn-white { padding: .7rem 1.8rem; background: rgba(255, 255, 255, 0.95); color: #7B1D2E; border-radius: var(--r-sm); font-size: .9rem; border: 1px solid rgba(255, 255, 255, 0.6); }
+.btn-white:hover { background: #fff; transform: translateY(-1px); }
 .btn-ghost { padding: .55rem 1.2rem; background: transparent; color: var(--txt-2); border-radius: var(--r-sm); font-size: .85rem; border: 1.5px solid var(--border); }
 .btn-ghost:hover { background: var(--cream-2); border-color: var(--border-2); }
 .btn-sm { padding: .42rem 1rem; font-size: .78rem; }
@@ -164,7 +164,7 @@ h3 { font-size: clamp(1.2rem, 3vw, 1.8rem); }
   border-radius: var(--r-sm);
   font-size: .92rem;
   color: #1A0A0D !important;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.7);
   outline: none;
   transition: var(--tr);
 }
@@ -175,14 +175,16 @@ h3 { font-size: clamp(1.2rem, 3vw, 1.8rem); }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 
 .card {
-  background: #fff;
-  border: 1px solid #EDD5BE;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: var(--r-lg);
   padding: 1.8rem;
-  box-shadow: 0 4px 16px rgba(139,26,42,0.06);
+  box-shadow: 0 8px 24px rgba(139, 26, 42, 0.08);
 }
 .card-hover { transition: var(--tr); }
-.card-hover:hover { transform: translateY(-3px); border-color: #D4A882; box-shadow: 0 8px 24px rgba(139,26,42,0.10); }
+.card-hover:hover { transform: translateY(-3px); border-color: #D4A882; box-shadow: 0 12px 32px rgba(139,26,42,0.12); }
 
 /* ═══════════════════════════════════════════
    4. RESPONSIVE MEDIA QUERIES & BREAKPOINTS
@@ -325,16 +327,19 @@ h3 { font-size: clamp(1.2rem, 3vw, 1.8rem); }
 
 .global-bg {
   position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1;
-  background: var(--cream);
+  background: url('/bg-cinematic-light.jpg') center/cover no-repeat fixed;
   overflow: hidden;
+}
+.global-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(253,246,238,0.7) 0%, rgba(255,255,255,0.4) 50%, rgba(253,246,238,0.85) 100%);
+  pointer-events: none;
 }
 
 .bg-mesh {
-  position: absolute; inset: -50%;
-  background: linear-gradient(-45deg, #FDF8F4, #F5E6D3, #FFF9F2, #EDD5BE);
-  background-size: 400% 400%;
-  animation: meshGradient 15s ease infinite;
-  opacity: 0.5;
+  display: none;
 }
 
 @keyframes meshGradient {

@@ -143,7 +143,7 @@ export default function Register() {
 
             <h2 style={{
               fontFamily: "'Plus Jakarta Sans', Georgia, serif",
-              fontSize: 'clamp(2.2rem, 4.5vw, 3.2rem)',
+              fontSize: 'clamp(2.2rem, 3.4vw, 2.4rem)',
               fontWeight: 900,
               marginBottom: '1.2rem',
               lineHeight: 1.15,

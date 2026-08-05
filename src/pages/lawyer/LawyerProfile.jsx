@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
-import { MapPin, Landmark, Star, ShieldCheck, MessageCircle, Gavel, Languages, Clock, Briefcase, Globe, ExternalLink, CalendarDays, Video } from 'lucide-react'
+import { MapPin, Landmark, Star, ShieldCheck, Award, MessageCircle, Gavel, Languages, Clock, Briefcase, Globe, ExternalLink, CalendarDays, Video } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 
 export default function LawyerProfile() {
@@ -61,11 +61,29 @@ export default function LawyerProfile() {
             <Link to="/" style={{ color: 'inherit' }}>Home</Link> / <Link to="/search" style={{ color: 'inherit' }}>Lawyers</Link> / <span style={{ color: 'var(--gold)', fontWeight: 700 }}>{lawyer.name}</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 12 }}>
-            <h1 className="boutique-heading" style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', color: '#fff', fontStyle: 'normal', margin: 0 }}>Adv. {lawyer.name}</h1>
+            <h1 className="boutique-heading" style={{ fontSize: 'clamp(2rem, 3.8vw, 2.3rem)', color: '#fff', fontStyle: 'normal', margin: 0 }}>Adv. {lawyer.name}</h1>
             {lawyer.isVerified && (
               <div style={{ ...s.barBadge, background: '#e8c9a8', color: '#1A0A0D' }}>
                 <ShieldCheck size={14} />
                 <span>Bar Council Verified</span>
+              </div>
+            )}
+            {/* Subscription badge — shown only when plan is pro/elite AND not expired.
+                Intentionally uses a distinct teal palette so clients never confuse
+                a paid membership with a bar-council credential check. */}
+            {(['pro', 'elite'].includes(lawyer.subscription)) &&
+             lawyer.subscriptionExpiry &&
+             new Date(lawyer.subscriptionExpiry) > new Date() && (
+              <div style={{
+                ...s.barBadge,
+                background: lawyer.subscription === 'elite'
+                  ? 'linear-gradient(135deg, #0F766E, #0D9488)'
+                  : 'linear-gradient(135deg, #1D4ED8, #2563EB)',
+                color: '#fff',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.18)'
+              }}>
+                <Award size={14} />
+                <span>{lawyer.subscription === 'elite' ? 'Elite Member' : 'Pro Member'}</span>
               </div>
             )}
             {lawyer.designation && (

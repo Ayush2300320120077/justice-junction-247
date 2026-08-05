@@ -1,22 +1,83 @@
 require('dotenv').config();
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const rateLimit = require('express-rate-limit');
 const connectDB = require('../../middleware/db');
 const CaseOutcome = require('../../models/CaseOutcome');
 const AiInteractionLog = require('../../models/AiInteractionLog');
+const AIRequestLog = require('../../models/AIRequestLog');
 const ChatQuery = require('../../models/ChatQuery');
+const { requireAuth } = require('../../middleware/auth');
 const { retrieveContext } = require('../../backend/ai/retrieve');
 const { classifyIssue } = require('../../backend/ai/classify');
 
-const app = express();
-app.use(express.json());
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-  if (req.method === 'OPTIONS') return res.sendStatus(200);
+const optionalAuth = (req, res, next) => {
+  let token = req.cookies?.accessToken;
+  if (!token && req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+    token = req.headers.authorization.split(' ')[1];
+  }
+  if (!token) {
+    req.user = null;
+    return next();
+  }
+  try {
+    req.user = jwt.verify(token, process.env.JWT_SECRET);
+  } catch (err) {
+    req.user = null;
+  }
   next();
+};
+
+const app = express();
+
+// ── AI rate limiter: 20 requests per user per hour ────────────────────────────
+// keyGenerator uses req.user.id (set by requireAuth) so limits are per-user,
+// not per-IP — prevents sharing a single IP limit across all users on a network.
+const aiLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 20, // 20 AI requests per user per hour
+  message: { error: 'AI request limit reached. Please try again in an hour.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: (req) => req.user.id, // req.user is guaranteed to exist when this limiter is used
 });
+
+const aiAnonLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 5, // 5 AI requests per IP per hour for unauthenticated users
+  message: { error: 'You have reached the free question limit. Please sign up for more.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+const chatRateLimiter = (req, res, next) => {
+  if (req.user) {
+    return aiLimiter(req, res, next);
+  } else {
+    return aiAnonLimiter(req, res, next);
+  }
+};
+
+// ── Daily cap helper ──────────────────────────────────────────────────────────
+// Checks AIRequestLog (TTL-indexed, 1-hr expiry per doc) to enforce a 50-req/day
+// ceiling on top of the hourly rate limit. Returns true if the user is over cap.
+async function isOverDailyCap(userId) {
+  const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
+  const countToday = await AIRequestLog.countDocuments({
+    identifier: userId,
+    timestamp: { $gte: since }
+  });
+  return countToday >= 50;
+}
+
+// ── Non-blocking AI request logger ───────────────────────────────────────────
+async function logAIRequest(userId) {
+  try {
+    await AIRequestLog.create({ identifier: userId });
+  } catch (logErr) {
+    console.error('AIRequestLog write error (non-blocking):', logErr.message);
+  }
+}
 
 const router = express.Router();
 
@@ -142,9 +203,15 @@ ${Object.entries(answers || {}).map(([k, v]) => `${k}: ${v}`).join('\n')}
   return draftText;
 }
 
-router.post('/generate-document', async (req, res) => {
+router.post('/generate-document', requireAuth, aiLimiter, async (req, res) => {
   try {
     await connectDB();
+
+    // ── Daily cap check (50 requests / 24 hours per user) ──────────────────────
+    if (await isOverDailyCap(req.user.id)) {
+      return res.status(429).json({ error: 'Daily AI usage limit reached. Please try again tomorrow.' });
+    }
+
     const { documentType, answers } = req.body;
     if (!documentType) {
       return res.status(400).json({ error: 'documentType is required' });
@@ -205,6 +272,9 @@ router.post('/generate-document', async (req, res) => {
     while ((match = regex.exec(draftText)) !== null) {
       flaggedSections.push(match[0]);
     }
+
+    // ── Log this AI request (non-blocking) ────────────────────────────────────
+    logAIRequest(req.user.id);
 
     return res.status(200).json({ draftText, flaggedSections });
   } catch (err) {
@@ -324,34 +394,33 @@ router.patch('/feedback', async (req, res) => {
 });
 
 /* ─── POST /api/ai/classify ─── */
-router.post('/classify', async (req, res) => {
+router.post('/classify', requireAuth, aiLimiter, async (req, res) => {
   try {
+    // ── Daily cap check (50 requests / 24 hours per user) ──────────────────────
+    await connectDB();
+    if (await isOverDailyCap(req.user.id)) {
+      return res.status(429).json({ error: 'Daily AI usage limit reached. Please try again tomorrow.' });
+    }
+
     const { text } = req.body;
     if (!text || typeof text !== 'string' || !text.trim()) {
       return res.status(400).json({ error: 'text string is required' });
     }
 
-    let userId = null;
-    const authHeader = req.headers.authorization;
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-      try {
-        const decoded = jwt.verify(authHeader.split(' ')[1], process.env.JWT_SECRET);
-        userId = decoded?.id || null;
-      } catch (e) {}
-    }
+    // req.user is guaranteed by requireAuth — no manual Bearer decode needed
+    const userId = req.user.id;
 
     const result = await classifyIssue(text, { userId });
+
+    // ── Log this AI request (non-blocking) ────────────────────────────────────
+    logAIRequest(userId);
+
     return res.status(200).json(result);
   } catch (err) {
     console.error('POST /api/ai/classify error:', err);
     return res.status(500).json({ error: err.message });
   }
 });
-
-/* ─── Rate Limiter for AI Chat (20 msgs / hr per IP/User) ─── */
-const chatRateLimitMap = new Map();
-
-
 
 /* ─── POST /api/ai/chat ─── */
 const CHAT_SYSTEM_PROMPT = `You are Justice Junction's official AI Legal Assistant specializing in Indian law (IPC/BNS, CPC, Constitution, Consumer Protection, RTI, Family Law, etc.).
@@ -373,7 +442,7 @@ You MUST respond with valid JSON with no markdown formatting or backticks around
 }
 Note: "suggestedAction" is optional and should only be included if a specific platform feature is relevant.`;
 
-router.post('/chat', async (req, res) => {
+router.post('/chat', optionalAuth, chatRateLimiter, async (req, res) => {
   const startTime = Date.now();
   try {
     const { message, history } = req.body;
@@ -381,40 +450,20 @@ router.post('/chat', async (req, res) => {
       return res.status(400).json({ error: 'message string is required' });
     }
 
-    // Rate Limiting (20 messages per IP/user per 60 minutes)
-    let rateKey = 'anonymous';
-    let user = null;
-    const authHeader = req.headers.authorization;
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-      try {
-        const decoded = jwt.verify(authHeader.split(' ')[1], process.env.JWT_SECRET);
-        if (decoded && decoded.id) {
-          rateKey = `user_${decoded.id}`;
-          user = decoded;
-        }
-      } catch (e) {
-        // Fallback to IP on invalid token
+    // ── Daily cap check (50 requests / 24 hours per user) ──────────────────────
+    await connectDB();
+    if (req.user) {
+      if (await isOverDailyCap(req.user.id)) {
+        return res.status(429).json({
+          error: 'Daily AI usage limit reached. Please try again tomorrow.',
+          suggestedAction: { type: 'lawyer', link: '/search' }
+        });
       }
     }
-    if (rateKey === 'anonymous') {
-      const rawIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress || '127.0.0.1';
-      rateKey = `ip_${rawIp.toString().split(',')[0].trim()}`;
-    }
 
-    const now = Date.now();
-    const windowMs = 60 * 60 * 1000;
-    const userTimestamps = (chatRateLimitMap.get(rateKey) || []).filter(ts => now - ts < windowMs);
-
-    if (userTimestamps.length >= 20) {
-      return res.status(429).json({
-        error: 'Rate limit exceeded',
-        reply: 'You have reached the limit of 20 AI queries per hour. For immediate legal help, please connect with a verified lawyer.',
-        suggestedAction: { type: 'lawyer', link: '/search' }
-      });
-    }
-
-    userTimestamps.push(now);
-    chatRateLimitMap.set(rateKey, userTimestamps);
+    // req.user is set by optionalAuth — no manual Bearer decode needed
+    const user = req.user;
+    const rateKey = user ? `user_${user.id}` : `anon_${req.ip}`;
 
     // 1. RAG Retrieval Phase
     let retrievedChunks = [];
@@ -523,6 +572,11 @@ Respond ONLY with valid JSON with no markdown formatting or backticks around it:
         });
       } catch (logErr) { /* non-blocking */ }
 
+      // ── Log this AI request (non-blocking) ──────────────────────────────────
+      if (user) {
+        logAIRequest(user.id);
+      }
+
       return res.status(200).json({
         reply: responseText,
         suggestedAction: action || { type: 'lawyer', link: '/search' },
@@ -614,16 +668,10 @@ Respond ONLY with valid JSON with no markdown formatting or backticks around it:
         });
       } catch (logErr) { /* non-blocking */ }
 
-      // ChatQuery log for research/analytics (fire-and-forget)
-      try {
-        await ChatQuery.create({
-          userId: user?.id || null,
-          query: message,
-          classifiedCategory: suggestedAction?.type || null,
-          response: finalReply,
-          sessionId: rateKey
-        });
-      } catch (cqErr) { /* non-blocking */ }
+      // ── Log this AI request (non-blocking) ──────────────────────────────────
+      if (user) {
+        logAIRequest(user.id);
+      }
 
       return res.status(200).json({
         reply: finalReply,

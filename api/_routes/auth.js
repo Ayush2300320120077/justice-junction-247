@@ -8,6 +8,7 @@ const User = require('../../models/User');
 const Lawyer = require('../../models/Lawyer');
 const { requireAuth } = require('../../middleware/auth');
 const { body, validationResult } = require('express-validator');
+const { sendEmail } = require('../../utils/mailer');
 
 const validate = (req, res, next) => {
   const errors = validationResult(req);
@@ -120,10 +121,35 @@ router.post('/register', authLimiter, [
     await user.save();
 
     setAuthCookies(res, accessToken, refreshToken);
-    
-    res.status(201).json({ 
+
+    // ── Send email-verification email (non-blocking) ─────────────────────────────────
+    // Registration succeeds regardless of email delivery outcome.
+    const verifyUrl = `${process.env.FRONTEND_URL}/verify-email?token=${emailVerificationToken}`;
+    sendEmail({
+      to: email,
+      subject: 'Verify your Justice Junction email address',
+      html: `
+        <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
+          <div style="background:#7B1D2E;color:#fff;padding:24px;border-radius:8px 8px 0 0;">
+            <h2 style="margin:0;">Verify Your Email</h2>
+          </div>
+          <div style="padding:24px;border:1px solid #eee;border-top:none;border-radius:0 0 8px 8px;">
+            <p>Hi ${name},</p>
+            <p>Welcome to <strong>Justice Junction 24/7</strong>! Please verify your email address by clicking the button below.</p>
+            <p style="text-align:center;margin:32px 0;">
+              <a href="${verifyUrl}" style="background:#7B1D2E;color:#fff;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:bold;display:inline-block;">Verify Email Address</a>
+            </p>
+            <p>Or copy and paste this link into your browser:</p>
+            <p style="word-break:break-all;color:#7B1D2E;">${verifyUrl}</p>
+            <p style="color:#888;font-size:12px;">This link expires in 24 hours. If you didn't create an account, you can safely ignore this email.</p>
+          </div>
+        </div>
+      `,
+    }).catch(mailErr => console.error('[register] Verification email error (non-blocking):', mailErr.message));
+
+    res.status(201).json({
       user: { id: user._id, name, email, role },
-      message: 'Registration successful. Please verify your email.'
+      message: 'Registration successful. Please check your email to verify your account.'
     });
   } catch (err) {
     console.error('Register error:', err.message);
@@ -259,11 +285,33 @@ router.post('/forgot-password', authLimiter, [
     user.resetPasswordToken = resetToken;
     user.resetPasswordExpires = Date.now() + 15 * 60 * 1000; // 15 minutes
     await user.save();
-    
-    // TODO: Send email with resetToken via nodemailer
-    // The token must only travel via the registered email address — never in the HTTP response
-    // Example: sendResetEmail(user.email, `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`)
-    
+
+    // ── Send password-reset email (non-blocking) ──────────────────────────────
+    // The token travels only via the registered email address — never in the
+    // HTTP response (which is intentionally generic to prevent user enumeration).
+    const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
+    sendEmail({
+      to: user.email,
+      subject: 'Reset your Justice Junction password',
+      html: `
+        <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
+          <div style="background:#7B1D2E;color:#fff;padding:24px;border-radius:8px 8px 0 0;">
+            <h2 style="margin:0;">Password Reset Request</h2>
+          </div>
+          <div style="padding:24px;border:1px solid #eee;border-top:none;border-radius:0 0 8px 8px;">
+            <p>We received a request to reset the password for your Justice Junction account.</p>
+            <p>Click the button below to set a new password. <strong>This link expires in 15 minutes.</strong></p>
+            <p style="text-align:center;margin:32px 0;">
+              <a href="${resetUrl}" style="background:#7B1D2E;color:#fff;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:bold;display:inline-block;">Reset My Password</a>
+            </p>
+            <p>Or copy and paste this link into your browser:</p>
+            <p style="word-break:break-all;color:#7B1D2E;">${resetUrl}</p>
+            <p style="color:#888;font-size:12px;">If you didn't request a password reset, you can safely ignore this email. Your password will not change.</p>
+          </div>
+        </div>
+      `,
+    }).catch(mailErr => console.error('[forgot-password] Reset email error (non-blocking):', mailErr.message));
+
     res.json({ message: safeMsg });
   } catch (err) {
     console.error('Forgot password error:', err.message);

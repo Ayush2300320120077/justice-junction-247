@@ -508,7 +508,7 @@ export default function Home() {
 
         /* ── Stats numbers: don't overflow ── */
         @media (max-width: 480px) {
-          .stat-num { font-size: clamp(1.8rem, 8vw, 2.5rem) !important; }
+          .stat-num { font-size: clamp(1.8rem, 6.0vw, 1.9rem) !important; }
         }
 
         /* ── Marquee: slow down slightly on mobile ── */
@@ -703,7 +703,7 @@ export default function Home() {
           {/* Main headline — maxWidth 640 keeps it clear of SVG on right */}
           <h1 className="hero-text-in" style={{
             fontFamily: "'Plus Jakarta Sans', sans-serif",
-            fontSize: 'clamp(2.4rem, 5.2vw, 4.8rem)',
+            fontSize: 'clamp(2.2rem, 3.0vw, 2.8rem)',
             fontWeight: 900, lineHeight: 1.08, letterSpacing: '-0.04em',
             color: '#fff', marginBottom: '1.5rem',
             maxWidth: 640
@@ -723,7 +723,7 @@ export default function Home() {
 
           {/* Sub — constrained to 560px */}
           <p className="hero-text-in" style={{
-            fontSize: 'clamp(.9rem, 1.35vw, 1.1rem)',
+            fontSize: 'clamp(0.9rem, 1.2vw, 1.05rem)',
             color: 'rgba(245,218,196,0.76)', maxWidth: 560, lineHeight: 1.88,
             marginBottom: '2.8rem', fontWeight: 400
           }}>
@@ -1521,7 +1521,7 @@ export default function Home() {
               backdropFilter: 'blur(20px)',
               border: '1px solid rgba(255,255,255,0.10)',
               borderRadius: 28,
-              padding: 'clamp(2.5rem, 5vw, 4rem)',
+              padding: 'clamp(2.5rem, 3.8vw, 3.0rem)',
               maxWidth: 860, margin: '0 auto',
               position: 'relative', overflow: 'hidden',
               boxShadow: '0 40px 80px rgba(0,0,0,0.4)'
@@ -1981,7 +1981,7 @@ export default function Home() {
             </div>
             <h2 style={{
               fontFamily: "'Plus Jakarta Sans',sans-serif",
-              fontSize: 'clamp(2rem, 4.5vw, 3.8rem)',
+              fontSize: 'clamp(2rem, 3.4vw, 2.8rem)',
               fontWeight: 900, color: '#fff',
               letterSpacing: '-0.04em', lineHeight: 1.1,
               marginBottom: '1rem'

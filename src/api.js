@@ -45,10 +45,13 @@ async function request(path, options = {}) {
 
 export const API = {
   // Auth
-  register:      (body)       => request('/auth/register', { method: 'POST', body }),
-  login:         (body)       => request('/auth/login',    { method: 'POST', body }),
-  logout:        ()           => request('/auth/logout',   { method: 'POST' }),
-  me:            ()           => request('/auth/me'),
+  register:        (body) => request('/auth/register',       { method: 'POST', body }),
+  login:           (body) => request('/auth/login',          { method: 'POST', body }),
+  logout:          ()     => request('/auth/logout',         { method: 'POST' }),
+  me:              ()     => request('/auth/me'),
+  forgotPassword:  (body) => request('/auth/forgot-password', { method: 'POST', body }),
+  resetPassword:   (body) => request('/auth/reset-password',  { method: 'POST', body }), // body: { token, newPassword }
+  verifyEmail:     (body) => request('/auth/verify-email',    { method: 'POST', body }), // body: { token }
 
   // Lawyers
   getLawyers:    (params={})  => { const qs = new URLSearchParams(params).toString(); return request(`/lawyers${qs ? '?' + qs : ''}`) },

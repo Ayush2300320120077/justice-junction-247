@@ -233,7 +233,7 @@ export default function ClientPricing() {
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '0.4rem 1.2rem', background: 'rgba(201,148,58,0.15)', border: '1px solid rgba(201,148,58,0.3)', borderRadius: 50, color: 'var(--gold-l)', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '2rem', backdropFilter: 'blur(10px)' }}>
             <Zap size={14} fill="currentColor" /> Transparent Pricing
           </div>
-          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2.8rem, 6vw, 4.5rem)', fontWeight: 700, lineHeight: 1.1, marginBottom: '1.5rem', textShadow: '0 4px 20px rgba(0,0,0,0.8)', color: '#fff' }}>
+          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2.8rem, 4.5vw, 3.4rem)', fontWeight: 700, lineHeight: 1.1, marginBottom: '1.5rem', textShadow: '0 4px 20px rgba(0,0,0,0.8)', color: '#fff' }}>
             Justice is priceless.<br />
             <span className="gradient-text">Access to it shouldn't be.</span>
           </h1>

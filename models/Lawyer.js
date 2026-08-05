@@ -73,4 +73,27 @@ lawyerSchema.methods.updateRating = function() {
   this.totalReviews = this.reviews.length
 }
 
+// ── Search / sort indexes ──────────────────────────────────────────────────────────────
+//
+// Fields are derived from the actual query/sort shape in GET /api/lawyers
+// (api/_routes/lawyers.js lines 31-54).  Every search executes with
+// { isBlocked: {$ne:true}, verificationStatus: {$ne:'rejected'} } as base
+// filters and defaults to averageRating:-1 as the sort key, so this
+// compound index is hit on virtually every request.
+//
+// Compound: covers the most-queried path (filtered list sorted by rating)
+lawyerSchema.index({ isBlocked: 1, verificationStatus: 1, averageRating: -1 });
+
+// city / state — regex queries on these fields benefit from an index prefix
+lawyerSchema.index({ city: 1 });
+lawyerSchema.index({ state: 1 });
+
+// specializations — queried with $in; a multikey index lets Mongo index each element
+lawyerSchema.index({ specializations: 1 });
+
+// Sort-only fields (when the caller overrides the default sort)
+lawyerSchema.index({ consultationFee: 1 }); // sort: price_low / price_high
+lawyerSchema.index({ experience: -1 });      // sort: experience
+lawyerSchema.index({ createdAt: -1 });       // sort: newest
+
 module.exports = mongoose.models.Lawyer || mongoose.model('Lawyer', lawyerSchema)
