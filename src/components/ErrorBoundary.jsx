@@ -21,7 +21,7 @@ export default class ErrorBoundary extends React.Component {
   }
 
   handleRetry = () => {
-    window.location.reload();
+    this.setState({ hasError: false, error: null })
   }
 
   render() {
@@ -35,10 +35,10 @@ export default class ErrorBoundary extends React.Component {
         }}>
           <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⚖️</div>
           <h2 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '1.5rem', marginBottom: '0.75rem' }}>
-            Page failed to load
+            Something went wrong
           </h2>
           <p style={{ color: 'rgba(255,255,255,0.6)', marginBottom: '2rem', maxWidth: 400 }}>
-            Page failed to load — please refresh.
+            We encountered an unexpected error loading this page. Please try again or return home.
           </p>
           <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
             <button
@@ -49,7 +49,7 @@ export default class ErrorBoundary extends React.Component {
                 fontWeight: 700, cursor: 'pointer', fontSize: '0.9rem'
               }}
             >
-              Refresh
+              Try Again
             </button>
             <Link
               to="/"

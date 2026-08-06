@@ -32,11 +32,9 @@ async function request(path, options = {}) {
         const retryData = await retryRes.json()
         if (!retryRes.ok) throw new Error(retryData.error || 'Something went wrong')
         return retryData
-      } else {
-        window.location.href = '/login'
       }
     } catch (_) {
-      window.location.href = '/login'
+      // Refresh failed — let original error propagate
     }
   }
 
@@ -67,7 +65,6 @@ export const API = {
   myBookings:    ()           => request('/bookings/my'),
   getBooking:    (id)         => request(`/bookings/${id}`),
   updateStatus:  (id, status) => request(`/bookings/${id}/status`, { method: 'PUT', body: { status } }),
-  getBookedSlots: (lawyerId, date) => request(`/bookings/lawyer/${lawyerId}/slots?date=${date}`),
 
   // Case updates
   postUpdate:    (body)       => request('/cases', { method: 'POST', body }),

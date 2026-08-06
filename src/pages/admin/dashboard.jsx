@@ -79,11 +79,10 @@ export default function AdminDashboard() {
       });
       if (res.ok) {
         const data = await res.json();
-        // Backend returns { success, data: [...], total, page, totalPages }
-        setUsers(data.data || data.users || []);
-        setTotalUsersCount(data.total || data.totalUsers || 0);
+        setUsers(data.users || []);
+        setTotalUsersCount(data.totalUsers || 0);
         setUserTotalPages(data.totalPages || 1);
-        setUserPage(data.page || page);
+        setUserPage(data.currentPage || page);
       }
     } catch (err) {
       console.error('Failed to fetch users', err);
@@ -656,8 +655,8 @@ const s = {
   activeTabBtn: { backgroundColor: '#1A0D10', color: '#F9EEE4', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' },
   tabBadge: { backgroundColor: '#f59e0b', color: '#fff', fontSize: '0.75rem', fontWeight: 800, padding: '0.1rem 0.5rem', borderRadius: '9999px', marginLeft: '0.25rem' },
   
-  grid4: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap: '1.5rem', marginBottom: '1.5rem' },
-  grid2: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 400px), 1fr))', gap: '1.5rem', marginBottom: '1.5rem' },
+  grid4: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem', marginBottom: '1.5rem' },
+  grid2: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '1.5rem', marginBottom: '1.5rem' },
   card: { backgroundColor: '#ffffff', borderRadius: '12px', padding: '1.5rem', boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1)', border: '1px solid #f1f5f9' },
   kpiLabel: { margin: '0 0 0.5rem 0', color: '#64748b', fontSize: '0.875rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' },
   kpiValue: { margin: 0, fontSize: '2rem', fontWeight: 800, color: '#0f172a' },
@@ -684,7 +683,7 @@ const s = {
   subTabBtn: { padding: '0.5rem 1rem', border: '1px solid #cbd5e1', background: '#fff', borderRadius: '6px', fontSize: '0.85rem', fontWeight: 600, color: '#475569', cursor: 'pointer' },
   activeSubTabBtn: { backgroundColor: '#3b82f6', color: '#fff', borderColor: '#3b82f6' },
   
-  queueGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: '1.5rem' },
+  queueGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem' },
   queueCard: { backgroundColor: '#f8fafc', borderRadius: '10px', padding: '1.25rem', border: '1px solid #e2e8f0' },
   queueDetails: { fontSize: '0.9rem', color: '#334155', display: 'flex', flexDirection: 'column', gap: '0.4rem', marginBottom: '1.25rem' },
   queueActions: { display: 'flex', gap: '0.75rem' },

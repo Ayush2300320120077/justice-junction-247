@@ -1,6 +1,6 @@
 import { Link, useNavigate, useLocation, useSearchParams, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { FileText, Download, CheckCircle, ShieldCheck, Info, ChevronDown, Stamp, IndianRupee, Printer } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 
@@ -84,7 +84,32 @@ const TEMPLATES = [
       { name: 'governingState', label: 'Governing State', type: 'text', required: true },
     ],
   },
-
+  {
+    id: 'promissory', name: 'Promissory Note', description: 'Legal document for debt acknowledgment and repayment under Negotiable Instruments Act 1881.',
+    fields: [
+      { name: 'borrower', label: 'Borrower Full Name', type: 'text', required: true },
+      { name: 'borrowerAddress', label: 'Borrower Address', type: 'textarea', required: true },
+      { name: 'lender', label: 'Lender Full Name', type: 'text', required: true },
+      { name: 'amount', label: 'Loan Amount in ₹', type: 'number', required: true },
+      { name: 'interest', label: 'Interest Rate % per annum', type: 'number' },
+      { name: 'repaymentDate', label: 'Repayment Date', type: 'date', required: true },
+      { name: 'city', label: 'City', type: 'text', required: true },
+    ],
+  },
+  {
+    id: 'consumer-complaint', name: 'Consumer Complaint', description: 'Complaint to Consumer Forum under Consumer Protection Act 2019.',
+    fields: [
+      { name: 'complainantName', label: 'Complainant Name', type: 'text', required: true },
+      { name: 'complainantAddress', label: 'Complainant Address', type: 'textarea', required: true },
+      { name: 'oppositeParty', label: 'Opposite Party Name', type: 'text', required: true },
+      { name: 'oppositePartyAddress', label: 'Opposite Party Address', type: 'textarea', required: true },
+      { name: 'product', label: 'Product/Service Purchased', type: 'text', required: true },
+      { name: 'purchaseDate', label: 'Date of Purchase', type: 'date', required: true },
+      { name: 'amountPaid', label: 'Amount Paid in ₹', type: 'number', required: true },
+      { name: 'complaintDetails', label: 'Nature of Defect/Deficiency', type: 'textarea', required: true },
+      { name: 'reliefRequested', label: 'Relief Requested', type: 'textarea', required: true },
+    ],
+  },
   {
     id: 'rti', name: 'RTI Application', description: 'Right to Information application under RTI Act 2005 to any public authority.',
     fields: [
@@ -680,14 +705,8 @@ export default function DocumentGenerator() {
   const [formData, setFormData] = useState({})
   const [generatedId, setGeneratedId] = useState(null)
   const [fieldErrors, setFieldErrors] = useState({})
-  const { isLoggedIn, loading } = useAuth()
+  const { isLoggedIn } = useAuth()
   const navigate = useNavigate(); const location = useLocation(); const [searchParams] = useSearchParams(); const params = useParams();
-
-  useEffect(() => {
-    if (!loading && !isLoggedIn) {
-      navigate('/login?returnUrl=/document-generator')
-    }
-  }, [isLoggedIn, loading, navigate])
 
   // New AI state variables
   const [aiMode, setAiMode] = useState(false)

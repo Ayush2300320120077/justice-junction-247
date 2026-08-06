@@ -31,7 +31,7 @@ const setAuthCookies = (res, accessToken, refreshToken) => {
   const cookieOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'Strict'
+    sameSite: 'strict'
   };
   res.cookie('accessToken', accessToken, { ...cookieOptions, maxAge: 15 * 60 * 1000 });
   res.cookie('refreshToken', refreshToken, { ...cookieOptions, maxAge: 7 * 24 * 60 * 60 * 1000 });
@@ -156,25 +156,6 @@ router.patch('/users/:id/status', asyncHandler(async (req, res) => {
 }));
 
 // ── LAWYERS ──
-// GET all lawyers (verified, pending, rejected) — used by /admin/lawyers page
-router.get('/lawyers', asyncHandler(async (req, res) => {
-  await connectDB();
-  const { page, limit, skip } = paginate(req);
-
-  const filter = {};
-  if (req.query.verified === 'true') filter.isVerified = true;
-  else if (req.query.verified === 'false') filter.isVerified = false;
-  if (req.query.search) {
-    const searchRegex = new RegExp(req.query.search, 'i');
-    filter.$or = [{ name: searchRegex }, { email: searchRegex }, { barRegistrationNumber: searchRegex }];
-  }
-
-  const lawyers = await Lawyer.find(filter).populate('user', 'email name').sort({ createdAt: -1 }).skip(skip).limit(limit);
-  const total = await Lawyer.countDocuments(filter);
-
-  res.json({ success: true, data: lawyers, total, page, totalPages: Math.ceil(total / limit) || 1 });
-}));
-
 router.get('/lawyers/pending', asyncHandler(async (req, res) => {
   await connectDB();
   const { page, limit, skip } = paginate(req);
@@ -338,63 +319,6 @@ router.delete('/document-templates/:id', asyncHandler(async (req, res) => {
   const template = await DocumentTemplate.findByIdAndDelete(req.params.id);
   if (!template) return res.status(404).json({ success: false, error: 'Template not found' });
   res.json({ success: true, message: 'Template deleted' });
-}));
-
-// ── CLIENTS (alias: users with role=client) ──
-// GET all clients — used by /admin/clients page
-router.get('/clients', asyncHandler(async (req, res) => {
-  await connectDB();
-  const { page, limit, skip } = paginate(req);
-
-  const filter = { role: 'client' };
-  if (req.query.status !== undefined) filter.isBlocked = req.query.status === 'blocked';
-  if (req.query.search) {
-    const searchRegex = new RegExp(req.query.search, 'i');
-    filter.$or = [{ name: searchRegex }, { email: searchRegex }];
-  }
-
-  const clients = await User.find(filter).select('-password').sort({ createdAt: -1 }).skip(skip).limit(limit);
-  const total = await User.countDocuments(filter);
-
-  res.json({ success: true, data: clients, total, page, totalPages: Math.ceil(total / limit) || 1 });
-}));
-
-// ── BOOKINGS (admin view) ──
-// GET all bookings — admin can view and approve/reject
-router.get('/bookings', asyncHandler(async (req, res) => {
-  await connectDB();
-  const { page, limit, skip } = paginate(req);
-
-  const filter = {};
-  if (req.query.status) filter.status = req.query.status;
-  if (req.query.search) {
-    const searchRegex = new RegExp(req.query.search, 'i');
-    filter.$or = [{ clientName: searchRegex }, { lawyerName: searchRegex }, { caseType: searchRegex }, { caseNumber: searchRegex }];
-  }
-
-  const bookings = await Booking.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit);
-  const total = await Booking.countDocuments(filter);
-
-  res.json({ success: true, data: bookings, total, page, totalPages: Math.ceil(total / limit) || 1 });
-}));
-
-// PATCH /api/admin/bookings/:id/status — admin approve/reject/complete a booking
-router.patch('/bookings/:id/status', asyncHandler(async (req, res) => {
-  await connectDB();
-  const { status } = req.body;
-  const ALLOWED = ['pending', 'confirmed', 'completed', 'cancelled'];
-  if (!status || !ALLOWED.includes(status)) {
-    return res.status(400).json({ success: false, error: `status must be one of: ${ALLOWED.join(', ')}` });
-  }
-
-  const booking = await Booking.findByIdAndUpdate(
-    req.params.id,
-    { status },
-    { new: true }
-  );
-  if (!booking) return res.status(404).json({ success: false, error: 'Booking not found' });
-
-  res.json({ success: true, data: booking, message: `Booking ${status}` });
 }));
 
 // ── PAYMENTS ──

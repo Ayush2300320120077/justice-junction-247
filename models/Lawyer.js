@@ -66,17 +66,11 @@ const lawyerSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 })
 
-lawyerSchema.methods.updateRating = async function() {
-  const Review = mongoose.model('Review');
-  const reviews = await Review.find({ lawyerId: this._id });
-  if (!reviews.length) { 
-    this.averageRating = 0; 
-    this.totalReviews = 0; 
-    return;
-  }
-  const sum = reviews.reduce((a, r) => a + r.rating, 0);
-  this.averageRating = Math.round((sum / reviews.length) * 10) / 10;
-  this.totalReviews = reviews.length;
+lawyerSchema.methods.updateRating = function() {
+  if (!this.reviews.length) { this.averageRating = 0; return }
+  const sum = this.reviews.reduce((a, r) => a + r.rating, 0)
+  this.averageRating = Math.round((sum / this.reviews.length) * 10) / 10
+  this.totalReviews = this.reviews.length
 }
 
 // ── Search / sort indexes ──────────────────────────────────────────────────────────────

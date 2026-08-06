@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom'
 import LawyerCard from '../components/LawyerCard'
 import SkeletonCard from '../components/SkeletonCard'
 import { useToast } from '../context/ToastContext'
-import { useAuth } from '../context/AuthContext'
 import { SearchX, Filter, X, ChevronDown, Star, MapPin, Scale, DollarSign, Loader2, Globe, Video, Phone, TrendingUp, Info, Sparkles, Bot, AlertTriangle } from 'lucide-react'
 import { Helmet } from 'react-helmet-async'
 import demoLawyers from '../data/demoLawyers'
@@ -17,7 +16,6 @@ export default function Search() {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const { showToast } = useToast()
-  const { isLoggedIn } = useAuth()
   
   // States
   const [lawyers, setLawyers] = useState([])
@@ -48,10 +46,6 @@ export default function Search() {
   const [urgencyFlag, setUrgencyFlag] = useState(null)
 
   const handleAiClassify = async () => {
-    if (!isLoggedIn) {
-      showToast('Please log in to use this feature', 'error')
-      return
-    }
     if (!aiProblemText.trim() || classifying) return
     setClassifying(true)
     try {

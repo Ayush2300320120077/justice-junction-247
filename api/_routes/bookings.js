@@ -115,30 +115,6 @@ router.get('/:id', requireAuth, async (req, res) => {
   }
 });
 
-// GET /api/bookings/lawyer/:id/slots — get booked slots for a lawyer on a specific date
-router.get('/lawyer/:id/slots', async (req, res) => {
-  try {
-    await connectDB();
-    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-      return res.status(400).json({ error: 'Invalid lawyer ID' });
-    }
-    const date = req.query.date;
-    if (!date) return res.status(400).json({ error: 'Date is required' });
-
-    const bookings = await Booking.find({
-      lawyer: req.params.id,
-      scheduledDate: date,
-      status: 'confirmed'
-    }).select('scheduledTime -_id');
-
-    const bookedSlots = bookings.map(b => b.scheduledTime);
-    res.json({ bookedSlots });
-  } catch (err) {
-    console.error('Get slots error:', err.message);
-    res.status(500).json({ error: 'Failed to fetch slots.' });
-  }
-});
-
 // PUT /api/bookings/:id/status — update booking status (BUG 3 FIX: ownership + enum validation)
 router.put('/:id/status', requireAuth, async (req, res) => {
   try {
@@ -176,8 +152,8 @@ router.put('/:id/status', requireAuth, async (req, res) => {
       if (!lawyerProfile || booking.lawyer.toString() !== lawyerProfile._id.toString()) {
         return res.status(403).json({ error: 'Access denied: not your booking' });
       }
-      // Lawyers can confirm or cancel bookings
-      if (!['confirmed', 'cancelled'].includes(status)) {
+      // Lawyers can confirm or complete bookings
+      if (!['confirmed', 'completed', 'cancelled'].includes(status)) {
         return res.status(403).json({ error: 'Invalid status transition' });
       }
     } else {

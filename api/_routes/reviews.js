@@ -24,7 +24,6 @@ router.post('/', authMiddleware, async (req, res) => {
       const booking = await Booking.findById(bookingId);
       if (!booking) return res.status(404).json({ error: 'Booking not found' });
       if (booking.client.toString() !== req.user.id) return res.status(403).json({ error: 'Not your booking' });
-      if (booking.status !== 'completed') return res.status(400).json({ error: 'Booking must be completed before leaving a review' });
     }
     
     // Check if already reviewed this booking
@@ -36,11 +35,9 @@ router.post('/', authMiddleware, async (req, res) => {
     const review = await Review.create({ clientId: req.user.id, lawyerId, bookingId, rating, comment });
     
     // Update lawyer's average rating
-    const lawyer = await Lawyer.findById(lawyerId);
-    if (lawyer) {
-      await lawyer.updateRating();
-      await lawyer.save();
-    }
+    const reviews = await Review.find({ lawyerId });
+    const avgRating = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
+    await Lawyer.findByIdAndUpdate(lawyerId, { averageRating: Math.round(avgRating * 10) / 10, totalReviews: reviews.length });
     
     res.status(201).json({ review, message: 'Review posted successfully' });
   } catch (err) { res.status(500).json({ error: err.message }); }

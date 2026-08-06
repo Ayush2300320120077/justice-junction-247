@@ -19,38 +19,6 @@ const validate = (req, res, next) => {
 
 const router = express.Router();
 
-// GET /api/lawyers/stats — public stats for homepage
-router.get('/stats', async (req, res) => {
-  try {
-    await connectDB();
-    
-    const filter = {
-      $or: [
-        { verificationStatus: 'verified' },
-        { isVerified: true },
-        { verificationStatus: { $exists: false } }
-      ],
-      verificationStatus: { $ne: 'rejected' },
-      isBlocked: { $ne: true }
-    };
-    
-    const [lawyerCount, citiesResult] = await Promise.all([
-      Lawyer.countDocuments(filter),
-      Lawyer.distinct('city', filter)
-    ]);
-    
-    const validCities = citiesResult.filter(c => c && c.trim() !== '');
-    
-    return res.status(200).json({
-      lawyers: lawyerCount,
-      cities: validCities.length
-    });
-  } catch (err) {
-    console.error('Stats fetch error:', err);
-    return res.status(500).json({ error: err.message });
-  }
-});
-
 // GET /api/lawyers — public lawyer search with filters
 router.get('/', async (req, res) => {
   try {
@@ -140,9 +108,8 @@ router.post('/:id/review', requireAuth, [
     }
 
     const { rating, comment } = req.body;
-    const Review = require('../../models/Review');
-    await Review.create({ clientId: req.user.id, lawyerId: lawyer._id, rating, comment });
-    await lawyer.updateRating();
+    lawyer.reviews.push({ client: req.user.id, clientName: req.user.name, rating, comment });
+    lawyer.updateRating();
     await lawyer.save();
 
     res.json({ message: 'Review added successfully', averageRating: lawyer.averageRating });

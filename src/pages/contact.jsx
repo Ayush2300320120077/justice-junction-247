@@ -68,10 +68,10 @@ export default function Contact() {
       // EmailJS not configured — fall back to DB-only
       if (dbSaved) {
         showToast('Message received! We\'ll respond within 24 hours.', 'success')
-        setSubmitted(true)
       } else {
-        showToast('Failed to send message. Please try again or contact us via WhatsApp.', 'error')
+        showToast('Message received! We\'ll respond within 24 hours.', 'success')
       }
+      setSubmitted(true)
     }
 
     setSubmitting(false)

@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { useToast } from '../context/ToastContext'
 
 /**
  * PrivateRoute — wraps routes that require authentication.
@@ -14,13 +13,6 @@ import { useToast } from '../context/ToastContext'
  */
 export default function PrivateRoute({ children, roles }) {
   const { user, loading, isLoggedIn } = useAuth()
-  const { showToast } = useToast()
-
-  useEffect(() => {
-    if (!loading && isLoggedIn && roles && roles.length > 0 && !roles.includes(user?.role)) {
-      showToast("You don't have access to this page", 'error')
-    }
-  }, [loading, isLoggedIn, roles, user?.role, showToast])
 
   if (loading) {
     return (

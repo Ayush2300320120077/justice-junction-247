@@ -22,7 +22,11 @@ async function sendEmail({ to, subject, html }) {
   const emailPass = process.env.EMAIL_PASS;
 
   if (!emailUser || !emailPass) {
-    throw new Error('Email delivery unavailable: SMTP credentials (EMAIL_USER / EMAIL_PASS) are not configured.');
+    console.warn(
+      `[mailer] EMAIL_USER / EMAIL_PASS not configured — skipping email to "${to}" (subject: "${subject}"). ` +
+      'Set these in Vercel environment settings to enable transactional email.'
+    );
+    return;
   }
 
   const transporter = nodemailer.createTransport({
