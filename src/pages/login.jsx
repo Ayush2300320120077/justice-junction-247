@@ -64,7 +64,12 @@ export default function Login() {
     e.preventDefault()
     setLoading(true)
     try {
-      const data = await API.login({ email, password })
+      const data = await API.login({ email, password, rememberMe })
+      
+      if (data.user?.role !== roleTab && data.user?.role !== 'admin') {
+        throw new Error(`This account is registered as a ${data.user?.role}. Please select the ${data.user?.role === 'lawyer' ? 'Lawyer Portal' : 'Client Login'} tab.`);
+      }
+
       login(data.user)
       showToast(`Welcome back, ${data.user?.name || 'User'}!`, 'success')
       navigate(data.user?.role === 'admin' ? '/admin/dashboard' : '/dashboard')
@@ -88,12 +93,17 @@ export default function Login() {
     }
   }
 
-  const handleForgotPassword = () => {
+  const handleForgotPassword = async () => {
     if (!email) {
       showToast('Please enter your email address first.', 'error')
       return
     }
-    showToast(`Password reset link sent to ${email}`, 'success')
+    try {
+      await API.forgotPassword({ email })
+      showToast(`Password reset link sent to ${email}`, 'success')
+    } catch (err) {
+      showToast(err.message || 'Failed to send reset link', 'error')
+    }
   }
 
   return (
@@ -323,6 +333,7 @@ export default function Login() {
           </div>
 
           {/* 1-Click Quick Demo Login Chips */}
+          {import.meta.env.MODE !== 'production' && (
           <div style={{ marginBottom: '1.5rem', background: 'rgba(123, 29, 46, 0.15)', padding: '10px 14px', borderRadius: 12, border: '1px dashed rgba(245, 196, 179, 0.25)' }}>
             <div style={{ fontSize: '0.72rem', color: '#F5C4B3', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 8 }}>
               ⚡ 1-Click Demo Login (Test Accounts)
@@ -336,6 +347,7 @@ export default function Login() {
               </button>
             </div>
           </div>
+          )}
 
           {/* Form */}
           <form onSubmit={handleLogin}>

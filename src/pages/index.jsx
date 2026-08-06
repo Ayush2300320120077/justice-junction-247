@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
+import { API } from '../api'
 import {
   ShieldCheck, Search, Star, Bot, BadgeCheck, Video,
   Lock, Clock, ArrowRight, ChevronRight, IndianRupee,
@@ -144,14 +145,32 @@ export default function Home() {
   const navigate = useNavigate()
   const [reviewIdx, setReviewIdx] = useState(0)
   const [reviewPaused, setReviewPaused] = useState(false)
+  const [stats, setStats] = useState({ lawyers: 1338, cities: 100 })
   const carouselRef = useRef(null)
   const intervalRef = useRef(null)
   const heroRef = useRef(null)
   const [scrollY, setScrollY] = useState(0)
 
+  useEffect(() => {
+    API.get('/lawyers/stats').then(res => {
+      if (res.data && res.data.lawyers && res.data.cities) {
+        setStats(res.data);
+      }
+    }).catch(err => console.error("Failed to load stats:", err));
+  }, []);
+
   // Parallax scroll for hero
   useEffect(() => {
-    const onScroll = () => setScrollY(window.scrollY)
+    let ticking = false;
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrollY(window.scrollY);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
@@ -728,8 +747,8 @@ export default function Home() {
             marginBottom: '2.8rem', fontWeight: 400
           }}>
             India's first 100% price-transparent legal marketplace.{' '}
-            <strong style={{ color: '#F5C4B3', fontWeight: 700 }}>1,338+ Bar Council verified advocates</strong>{' '}
-            across <strong style={{ color: '#F5C4B3', fontWeight: 700 }}>100+ cities</strong>.
+            <strong style={{ color: '#F5C4B3', fontWeight: 700 }}>{stats.lawyers.toLocaleString()}+ Bar Council verified advocates</strong>{' '}
+            across <strong style={{ color: '#F5C4B3', fontWeight: 700 }}>{stats.cities}+ cities</strong>.
             Instant booking. Encrypted video calls. AI-powered matching.
           </p>
 

@@ -269,6 +269,10 @@ h3 { font-size: clamp(1.2rem, 2.5vw, 1.6rem); }
   .form-row {
     grid-template-columns: 1fr !important;
   }
+
+  .booking-grid {
+    grid-template-columns: 1fr !important;
+  }
 }
 
 /* ── Tablet Viewports (641px to 1024px) ── */
@@ -300,6 +304,9 @@ h3 { font-size: clamp(1.2rem, 2.5vw, 1.6rem); }
     grid-template-columns: 1fr 1fr !important;
     gap: 2.5rem !important;
   }
+  .booking-grid {
+    grid-template-columns: 1fr !important;
+  }
 }
 
 /* ── Desktop Viewports (1025px+) ── */
@@ -315,6 +322,9 @@ h3 { font-size: clamp(1.2rem, 2.5vw, 1.6rem); }
   }
   .grid-footer {
     grid-template-columns: 2fr 1fr 1fr 1fr;
+  }
+  .booking-grid {
+    grid-template-columns: 1.5fr 1fr;
   }
 }
 

@@ -30,14 +30,15 @@ const authLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-const setAuthCookies = (res, accessToken, refreshToken) => {
+const setAuthCookies = (res, accessToken, refreshToken, rememberMe = false) => {
   const cookieOptions = {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict'
+    sameSite: 'Strict'
   };
+  const refreshMaxAge = rememberMe ? 30 * 24 * 60 * 60 * 1000 : 7 * 24 * 60 * 60 * 1000;
   res.cookie('accessToken', accessToken, { ...cookieOptions, maxAge: 15 * 60 * 1000 }); // 15 mins
-  res.cookie('refreshToken', refreshToken, { ...cookieOptions, maxAge: 7 * 24 * 60 * 60 * 1000 }); // 7 days
+  res.cookie('refreshToken', refreshToken, { ...cookieOptions, maxAge: refreshMaxAge });
 };
 
 // Prevent refreshTokens array growing unboundedly — keep max 5
@@ -164,7 +165,7 @@ router.post('/login', authLimiter, [
 ], async (req, res) => {
   try {
     await connectDB();
-    const { email, password } = req.body;
+    const { email, password, rememberMe } = req.body;
     const user = await User.findOne({ email });
     
     if (!user) return res.status(400).json({ error: 'Invalid email or password' });
@@ -198,7 +199,7 @@ router.post('/login', authLimiter, [
     user.refreshTokens = [...user.refreshTokens.slice(-(MAX_REFRESH_TOKENS - 1)), refreshToken];
     await user.save();
 
-    setAuthCookies(res, accessToken, refreshToken);
+    setAuthCookies(res, accessToken, refreshToken, rememberMe);
 
     res.json({ 
       user: { id: user._id, name: user.name, email: user.email, role: user.role } 
@@ -290,7 +291,7 @@ router.post('/forgot-password', authLimiter, [
     // The token travels only via the registered email address — never in the
     // HTTP response (which is intentionally generic to prevent user enumeration).
     const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
-    sendEmail({
+    await sendEmail({
       to: user.email,
       subject: 'Reset your Justice Junction password',
       html: `
@@ -310,12 +311,12 @@ router.post('/forgot-password', authLimiter, [
           </div>
         </div>
       `,
-    }).catch(mailErr => console.error('[forgot-password] Reset email error (non-blocking):', mailErr.message));
+    });
 
     res.json({ message: safeMsg });
   } catch (err) {
     console.error('Forgot password error:', err.message);
-    res.status(500).json({ error: 'Request failed. Please try again.' });
+    res.status(500).json({ error: err.message.includes('Email delivery') ? err.message : 'Request failed. Please try again.' });
   }
 });
 

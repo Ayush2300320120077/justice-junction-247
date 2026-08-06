@@ -611,8 +611,12 @@ function LawyerDash() {
               </div>
               <div style={{display:'flex',flexDirection:'column',gap:12,alignItems:'flex-end'}}>
                 <StatusBadge status={b.status} />
-                {b.status==='pending' && <button className="btn btn-primary" style={{padding: '0.6rem 1.2rem'}} onClick={() => updateStatus(b._id,'confirmed')}>Confirm</button>}
-                {b.status==='confirmed' && <button className="btn btn-outline" style={{padding: '0.6rem 1.2rem'}} onClick={() => updateStatus(b._id,'completed')}>Mark Done</button>}
+                {b.status==='pending' && (
+                  <div style={{display:'flex', gap:'8px'}}>
+                    <button className="btn btn-primary" style={{padding: '0.6rem 1.2rem'}} onClick={() => updateStatus(b._id,'confirmed')}>Accept</button>
+                    <button className="btn btn-outline" style={{padding: '0.6rem 1.2rem', borderColor: '#7B1D2E', color: '#7B1D2E'}} onClick={() => updateStatus(b._id,'cancelled')}>Reject</button>
+                  </div>
+                )}
               </div>
             </div>
           ))}

@@ -40,6 +40,7 @@ const AdminLogin      = lazy(() => import('./pages/admin/login'))
 const AdminDashboard  = lazy(() => import('./pages/admin/dashboard'))
 const AdminLawyers    = lazy(() => import('./pages/admin/lawyers'))
 const AdminClients    = lazy(() => import('./pages/admin/clients'))
+const AdminBookings   = lazy(() => import('./pages/admin/bookings'))
 const AdminContent    = lazy(() => import('./pages/admin/content'))
 const AdminSettings   = lazy(() => import('./pages/admin/settings'))
 const AdminSubs       = lazy(() => import('./pages/admin/subscriptions'))
@@ -135,6 +136,7 @@ export default function App() {
             <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
             <Route path="/admin/lawyers" element={<AdminRoute><AdminLawyers /></AdminRoute>} />
             <Route path="/admin/clients" element={<AdminRoute><AdminClients /></AdminRoute>} />
+            <Route path="/admin/bookings" element={<AdminRoute><AdminBookings /></AdminRoute>} />
             <Route path="/admin/content" element={<AdminRoute><AdminContent /></AdminRoute>} />
             <Route path="/admin/settings" element={<AdminRoute><AdminSettings /></AdminRoute>} />
             <Route path="/admin/subscriptions" element={<AdminRoute><AdminSubs /></AdminRoute>} />

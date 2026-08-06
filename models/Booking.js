@@ -11,9 +11,9 @@ const bookingSchema = new mongoose.Schema({
   meetingLink:String,caseNumber:{type:String,unique:true},createdAt:{type:Date,default:Date.now}
 })
 bookingSchema.pre('save',function(next){
-  if(!this.caseNumber)this.caseNumber='JJ-'+new Date().getFullYear()+'-'+Math.floor(10000+Math.random()*90000)
-  if(!this.platformFee)this.platformFee=Math.round(this.fee*0.10)
-  if(!this.lawyerPayout)this.lawyerPayout=this.fee-this.platformFee
+  if(!this.caseNumber)this.caseNumber='JJ-'+new Date().getFullYear()+'-'+require('crypto').randomBytes(4).toString('hex').toUpperCase()
+  if(this.platformFee == null)this.platformFee=Math.round(this.fee*0.10)
+  if(this.lawyerPayout == null)this.lawyerPayout=this.fee-this.platformFee
   next()
 })
 module.exports=mongoose.models.Booking||mongoose.model('Booking',bookingSchema)

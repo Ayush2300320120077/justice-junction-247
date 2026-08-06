@@ -33,7 +33,8 @@ export default function AdminLawyers() {
       });
       if (res.ok) {
         const data = await res.json();
-        const lawyerList = Array.isArray(data) ? data : (data.lawyers || []);
+        // Backend returns { success, data: [...], total, page, totalPages }
+        const lawyerList = Array.isArray(data) ? data : (data.data || data.lawyers || []);
         if (lawyerList.length > 0) {
           setLawyers(lawyerList);
           setLoading(false);

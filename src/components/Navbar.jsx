@@ -91,7 +91,7 @@ export default function Navbar() {
                 <span style={{display:'flex',color:'#fff'}}><Heart size={16}/></span>
                 {favCount > 0 && <span style={{...s.badge, width:16, height:16, fontSize:'.6rem', top:-4, right:-4}}>{favCount}</span>}
               </Link>
-              <button style={s.burger} onClick={() => setMobileOpen(o => !o)} aria-label="Toggle Navigation Menu">
+              <button style={s.burger} onClick={() => setMobileOpen(o => !o)} aria-label="Toggle Navigation Menu" aria-expanded={mobileOpen}>
                 {mobileOpen ? '✕' : '☰'}
               </button>
             </div>
@@ -172,10 +172,10 @@ const s = {
   navScrolled:{top: 0, boxShadow:'0 10px 30px rgba(0,0,0,0.5)', background: 'rgba(26, 10, 13, 0.9)', backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)', borderBottom:'1px solid rgba(255,255,255,0.08)'},
   inner:{display:'flex',alignItems:'center',justifyContent:'space-between',height:72},
   links:{display:'flex',alignItems:'center',gap:'0.5rem',listStyle:'none'},
-  link:{fontSize:'.9rem',fontWeight:600,color:'rgba(255,255,255,0.9)',textDecoration:'none',padding:'.5rem 1rem',borderRadius:'50px',transition:'all 0.3s ease', textShadow: '0 2px 8px rgba(0,0,0,0.8)', outline: 'none'},
+  link:{fontSize:'.9rem',fontWeight:600,color:'rgba(255,255,255,0.95)',textDecoration:'none',padding:'.5rem 1rem',borderRadius:'50px',transition:'all 0.3s ease', textShadow: '0 2px 8px rgba(0,0,0,0.8)', outline: 'none'},
   linkActive:{color:'#fff',background:'rgba(255,255,255,0.1)'},
   actions:{display:'flex',gap:12,alignItems:'center'},
-  iconBtn:{width:40,height:40,borderRadius:'50%',background:'rgba(0,0,0,0.2)',border:'1px solid rgba(255,255,255,0.2)',display:'flex',alignItems:'center',justifyContent:'center',position:'relative',textDecoration:'none',cursor:'pointer',transition:'all 0.3s ease', backdropFilter:'blur(4px)', outline: 'none'},
+  iconBtn:{width:40,height:40,borderRadius:'50%',background:'rgba(0,0,0,0.4)',border:'1px solid rgba(255,255,255,0.3)',color:'rgba(255,255,255,0.9)',display:'flex',alignItems:'center',justifyContent:'center',position:'relative',textDecoration:'none',cursor:'pointer',transition:'all 0.3s ease', backdropFilter:'blur(4px)', outline: 'none'},
   badge:{position:'absolute',top:-2,right:-2,width:18,height:18,background:'#8B1A2A',color:'#fff',borderRadius:'50%',fontSize:'.65rem',fontWeight:800,display:'flex',alignItems:'center',justifyContent:'center',border: '2px solid rgba(255,255,255,0.2)'},
   userChip:{display:'flex',alignItems:'center',gap:8,padding:'.4rem .8rem',background:'rgba(255,255,255,0.1)',borderRadius:50,border:'1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)'},
   userAv:{width:28,height:28,borderRadius:'50%',background:'#7B1D2E',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'.8rem',fontWeight:700},

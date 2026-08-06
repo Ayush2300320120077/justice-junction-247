@@ -19,7 +19,42 @@ export default function AIAssistantChat() {
   const [sessionId, setSessionId] = useState('')
   const [isMobile, setIsMobile] = useState(false)
   const scrollRef = useRef(null)
+  const chatPanelRef = useRef(null)
   const navigate = useNavigate(); const location = useLocation(); const [searchParams] = useSearchParams(); const params = useParams();
+
+  // Focus trap
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setIsOpen(false);
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      const focusableElements = chatPanelRef.current?.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (!focusableElements || focusableElements.length === 0) return;
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === firstElement) {
+          lastElement.focus();
+          e.preventDefault();
+        }
+      } else {
+        if (document.activeElement === lastElement) {
+          firstElement.focus();
+          e.preventDefault();
+        }
+      }
+    };
+    
+    document.addEventListener('keydown', handleKeyDown);
+    // Auto-focus first element if needed or just trap
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen]);
 
   // Detect mobile
   useEffect(() => {
@@ -103,7 +138,7 @@ export default function AIAssistantChat() {
         .filter(m => m.role === 'user' || m.role === 'assistant')
         .map(m => ({ role: m.role, content: m.text }))
 
-      const data = await API.assistant({ message: msgText, conversationHistory, sessionId })
+      const data = await API.assistant({ message: msgText, history: conversationHistory, sessionId })
 
       setMessages(prev => [...prev, {
         id: Date.now() + 1,
@@ -209,7 +244,13 @@ export default function AIAssistantChat() {
 
       {/* ── CHAT PANEL (open state) ────────────────────────────────────── */}
       {isOpen && (
-        <div style={panelStyle}>
+        <div 
+          ref={chatPanelRef}
+          role="dialog" 
+          aria-modal="true" 
+          aria-label="AI Legal Assistant Chat"
+          style={panelStyle}
+        >
 
           {/* 1. HEADER */}
           <div style={{

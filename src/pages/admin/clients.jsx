@@ -31,7 +31,7 @@ export default function AdminClients() {
       });
       if (res.ok) {
         const data = await res.json();
-        const clientList = Array.isArray(data) ? data : (data.clients || data.users || []);
+        const clientList = Array.isArray(data) ? data : (data.data || data.clients || data.users || []);
         if (clientList.length > 0) {
           setClients(clientList);
           setLoading(false);

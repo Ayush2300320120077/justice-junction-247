@@ -22,7 +22,7 @@ export default function Footer() {
 
         {[
           ['Platform', [['/', 'Find a Lawyer'],['/search','Search Lawyers'],['/knowledge-hub','Know Your Rights'],['/knowledge-hub','Legal Guides'],['/document-generator','Document Generator'],['/join-as-lawyer','For Lawyers']]],
-          ['Company', [['/about','About Us'],['/how-it-works','How It Works'],['/join-as-lawyer','Join as Advocate'],['/faq','FAQs'],['/contact','Contact Us']]],
+          ['Company', [['/about','About Us'],['/join-as-lawyer','Join as Advocate'],['/contact','Contact Us']]],
           ['Legal', [['/privacy-policy','Privacy Policy'],['/disclaimer','Disclaimer'],['/terms','Terms of Service']]],
         ].map(([title, links]) => (
           <div key={title} className="mobile-text-center">

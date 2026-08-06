@@ -30,6 +30,11 @@ const optionalAuth = (req, res, next) => {
 
 const app = express();
 
+const isLiveEmbedderKeys = Boolean((process.env.VOYAGE_API_KEY && !process.env.VOYAGE_API_KEY.includes('your_')) || (process.env.OPENAI_API_KEY && !process.env.OPENAI_API_KEY.includes('your_')));
+if (!isLiveEmbedderKeys) {
+  console.warn('WARNING: VOYAGE_API_KEY or VECTOR_DB_URL are placeholders or missing. RAG pipeline will use local-fallback search mode with reduced accuracy.');
+}
+
 // ── AI rate limiter: 20 requests per user per hour ────────────────────────────
 // keyGenerator uses req.user.id (set by requireAuth) so limits are per-user,
 // not per-IP — prevents sharing a single IP limit across all users on a network.
@@ -39,7 +44,7 @@ const aiLimiter = rateLimit({
   message: { error: 'AI request limit reached. Please try again in an hour.' },
   standardHeaders: true,
   legacyHeaders: false,
-  keyGenerator: (req) => req.user.id, // req.user is guaranteed to exist when this limiter is used
+  keyGenerator: (req) => req.user?.id || req.ip,
 });
 
 const aiAnonLimiter = rateLimit({
@@ -326,20 +331,11 @@ router.get('/case-estimate', async (req, res) => {
 });
 
 /* ─── POST /api/ai/log-outcome ─── */
-router.post('/log-outcome', async (req, res) => {
+router.post('/log-outcome', requireAuth, async (req, res) => {
   try {
     await connectDB();
 
-    // JWT auth — same pattern as api/auth.js line 108
-    const authHeader = req.headers.authorization;
-    if (!authHeader) return res.status(401).json({ error: 'Unauthorized: no token provided' });
-    let decoded;
-    try {
-      decoded = jwt.verify(authHeader.split(' ')[1], process.env.JWT_SECRET);
-    } catch (e) {
-      return res.status(401).json({ error: 'Unauthorized: invalid or expired token' });
-    }
-    if (decoded.role !== 'lawyer') {
+    if (req.user.role !== 'lawyer') {
       return res.status(403).json({ error: 'Forbidden: only lawyers can log case outcomes' });
     }
 
@@ -372,7 +368,7 @@ router.post('/log-outcome', async (req, res) => {
 });
 
 /* ─── PATCH /api/ai/feedback ─── */
-router.patch('/feedback', async (req, res) => {
+router.patch('/feedback', requireAuth, async (req, res) => {
   try {
     await connectDB();
     const { logId, rating } = req.body;
@@ -383,14 +379,18 @@ router.patch('/feedback', async (req, res) => {
     if (isNaN(numRating) || numRating < 1 || numRating > 5) {
       return res.status(400).json({ error: 'rating must be a number between 1 and 5' });
     }
+    const log = await AiInteractionLog.findById(logId);
+    if (!log) {
+      return res.status(404).json({ error: 'Log entry not found' });
+    }
+    if (log.userId && log.userId.toString() !== req.user.id) {
+      return res.status(403).json({ error: 'Forbidden: you can only rate your own AI interactions' });
+    }
     const updated = await AiInteractionLog.findByIdAndUpdate(
       logId,
       { userFeedbackRating: numRating },
       { new: true }
     );
-    if (!updated) {
-      return res.status(404).json({ error: 'Log entry not found' });
-    }
     return res.status(200).json({ success: true, logId: updated._id, userFeedbackRating: updated.userFeedbackRating });
   } catch (err) {
     console.error('AI feedback endpoint error:', err);
@@ -587,7 +587,8 @@ Respond ONLY with valid JSON with no markdown formatting or backticks around it:
         suggestedAction: action || { type: 'lawyer', link: '/search' },
         logId: logDoc?._id || null,
         sources,
-        isMock: true
+        isMock: true,
+        searchMode: isLiveEmbedder ? 'live' : 'local-fallback'
       });
     }
 
@@ -643,7 +644,8 @@ Respond ONLY with valid JSON with no markdown formatting or backticks around it:
           suggestedAction: { type: 'lawyer', link: '/search' },
           logId: logDoc?._id || null,
           sources,
-          isMock: true
+          isMock: true,
+          searchMode: isLiveEmbedder ? 'live' : 'local-fallback'
         });
       }
 
@@ -684,7 +686,8 @@ Respond ONLY with valid JSON with no markdown formatting or backticks around it:
         reply: finalReply,
         suggestedAction,
         logId: logDoc?._id || null,
-        sources
+        sources,
+        searchMode: isLiveEmbedder ? 'live' : 'local-fallback'
       });
     } catch (apiErr) {
       console.error('Anthropic fetch error in /chat:', apiErr);

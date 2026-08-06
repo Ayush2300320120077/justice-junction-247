@@ -15,6 +15,7 @@ const ADMIN_NAV = [
   { path: '/admin/ai-eval', label: 'AI Evaluation', icon: Bot },
   { path: '/admin/lawyers', label: 'Lawyers', icon: Scale },
   { path: '/admin/clients', label: 'Clients', icon: Users },
+  { path: '/admin/bookings', label: 'Bookings', icon: CreditCard },
   { path: '/admin/subscriptions', label: 'Subscriptions', icon: CreditCard },
   { path: '/admin/contact-inbox', label: 'Contact Inbox', icon: Inbox },
   { path: '/admin/content', label: 'Content Manager', icon: FileText },
