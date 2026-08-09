@@ -653,13 +653,24 @@ router.put('/settings', asyncHandler(async (req, res) => {
 // ── SUBSCRIPTIONS ──
 router.get('/subscriptions', asyncHandler(async (req, res) => {
   await connectDB();
-  const subs = await UserSubscription.find().populate('userId').populate('planId').sort({ createdAt: -1 });
-  res.json({ success: true, data: subs });
+  const lawyers = await Lawyer.find().select('name email subscription razorpaySubscriptionId').sort({ createdAt: -1 });
+  res.json({ success: true, data: lawyers });
 }));
 router.put('/subscriptions/:id', asyncHandler(async (req, res) => {
   await connectDB();
-  const sub = await UserSubscription.findByIdAndUpdate(req.params.id, req.body, { new: true });
-  res.json({ success: true, data: sub });
+  const { action, plan } = req.body;
+  let lawyer = await Lawyer.findById(req.params.id);
+  if (!lawyer) return res.status(404).json({ success: false, error: 'Lawyer not found' });
+
+  if (action === 'change_plan' && plan) {
+    lawyer.subscription = plan;
+  } else if (action === 'cancel') {
+    lawyer.subscription = 'free';
+    lawyer.razorpaySubscriptionId = null;
+  }
+  
+  await lawyer.save();
+  res.json({ success: true, lawyer });
 }));
 
 

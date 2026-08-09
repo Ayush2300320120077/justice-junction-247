@@ -18,7 +18,10 @@ export default function AdminSubscriptions() {
       const res = await fetch('/api/admin/subscriptions', {
         credentials: 'include'
       });
-      if (res.ok) setSubs(await res.json());
+      if (res.ok) {
+        const data = await res.json();
+        setSubs(data.data || []);
+      }
     } catch (err) {
       console.error(err);
     } finally {
