@@ -191,7 +191,7 @@ router.patch('/lawyers/:id/verify', asyncHandler(async (req, res) => {
     ? `<p>Dear ${lawyer.name},</p><p>Your account has been successfully verified! You will now appear in search results.</p>`
     : `<p>Dear ${lawyer.name},</p><p>Unfortunately, your verification was rejected.</p><p>Reason: ${reason || 'Verification rejected'}</p><p>Please update your credentials and try again.</p>`;
     
-  sendEmail({ email: lawyer.email, subject, html }).catch(console.error);
+  sendEmail({ to: lawyer.email, subject, html }).catch(console.error);
 
   res.json({ success: true, data: lawyer, message: `Lawyer ${approved ? 'approved' : 'rejected'}` });
 }));
