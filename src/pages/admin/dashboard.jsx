@@ -144,16 +144,16 @@ export default function AdminDashboard() {
           body: JSON.stringify({ userId: targetId })
         });
       } else if (actionType === 'verify-lawyer-approve') {
-        res = await fetch('/api/admin/verify-lawyer', { credentials: 'include',
-          method: 'POST',
+        res = await fetch(`/api/admin/lawyers/${targetId}/verify`, { credentials: 'include',
+          method: 'PATCH',
           headers: {  'Content-Type': 'application/json' },
-          body: JSON.stringify({ lawyerId: targetId, approved: true })
+          body: JSON.stringify({ approved: true })
         });
       } else if (actionType === 'verify-lawyer-reject') {
-        res = await fetch('/api/admin/verify-lawyer', { credentials: 'include',
-          method: 'POST',
+        res = await fetch(`/api/admin/lawyers/${targetId}/verify`, { credentials: 'include',
+          method: 'PATCH',
           headers: {  'Content-Type': 'application/json' },
-          body: JSON.stringify({ lawyerId: targetId, approved: false, reason: rejectionReason })
+          body: JSON.stringify({ approved: false, reason: rejectionReason })
         });
       } else if (actionType === 'verify-client-approve') {
         res = await fetch('/api/admin/verify-client', { credentials: 'include',
