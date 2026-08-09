@@ -50,7 +50,6 @@ const AdminReports    = lazy(() => import('./pages/admin/reports'))
 const AdminTemplates  = lazy(() => import('./pages/admin/templates'))
 const AdminAiEval     = lazy(() => import('./pages/admin/ai-eval'))
 const AdminQueries    = lazy(() => import('./pages/admin/queries'))
-const AdminBookings   = lazy(() => import('./pages/admin/bookings'))
 
 
 // Floating widgets (loaded lazily, no SSR concerns now)
@@ -194,7 +193,6 @@ export default function App() {
             <Route path="/admin/analytics" element={<AdminRoute><AdminAnalytics /></AdminRoute>} />
             <Route path="/admin/contact-inbox" element={<AdminRoute><AdminInbox /></AdminRoute>} />
             <Route path="/admin/reports" element={<AdminRoute><AdminReports /></AdminRoute>} />
-            <Route path="/admin/bookings" element={<AdminRoute><AdminBookings /></AdminRoute>} />
             <Route path="/admin/queries" element={<AdminRoute><AdminQueries /></AdminRoute>} />
             <Route path="/admin/templates" element={<AdminRoute><AdminTemplates /></AdminRoute>} />
             <Route path="/admin/ai-eval" element={<AdminRoute><AdminAiEval /></AdminRoute>} />
