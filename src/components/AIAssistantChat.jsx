@@ -103,7 +103,7 @@ export default function AIAssistantChat({ startOpen = false }) {
         .filter(m => m.role === 'user' || m.role === 'assistant')
         .map(m => ({ role: m.role, content: m.text }))
 
-      const data = await API.assistant({ message: msgText, conversationHistory, sessionId })
+      const data = await API.chat({ message: msgText, history: conversationHistory })
 
       setMessages(prev => [...prev, {
         id: Date.now() + 1,

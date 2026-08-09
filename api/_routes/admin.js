@@ -546,8 +546,8 @@ router.get('/ai-logs', asyncHandler(async (req, res) => {
 
 router.patch('/ai-logs/:id/annotate', asyncHandler(async (req, res) => {
   await connectDB();
-  const { adminRating, adminNote } = req.body;
-  const log = await AiInteractionLog.findByIdAndUpdate(req.params.id, { adminRating, adminNote }, { new: true });
+  const { reviewerRating, reviewerNotes } = req.body;
+  const log = await AiInteractionLog.findByIdAndUpdate(req.params.id, { reviewerRating, reviewerNotes }, { new: true });
   res.json({ success: true, data: log });
 }));
 
