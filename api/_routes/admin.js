@@ -488,4 +488,49 @@ router.patch('/queries/resolve', asyncHandler(async (req, res) => {
   res.json({ success: true, data: doc, message: 'Updated successfully' });
 }));
 
+// ── REAL-TIME CASE DASHBOARD ──
+router.get('/bookings', asyncHandler(async (req, res) => {
+  await connectDB();
+  
+  const { status, lawyerId, search, page = 1, limit = 20 } = req.query;
+  const skip = (parseInt(page, 10) - 1) * parseInt(limit, 10);
+  
+  let query = {};
+  
+  if (status && status !== 'all') {
+    query.status = status;
+  }
+  
+  if (lawyerId) {
+    query.lawyer = lawyerId;
+  }
+  
+  if (search) {
+    const searchRegex = new RegExp(search, 'i');
+    query.$or = [
+      { caseNumber: searchRegex },
+      { clientName: searchRegex },
+      { lawyerName: searchRegex }
+    ];
+  }
+  
+  const total = await Booking.countDocuments(query);
+  
+  const bookings = await Booking.find(query)
+    .populate('client', 'name email phone')
+    .populate('lawyer', 'name email phone barCouncilState')
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(parseInt(limit, 10))
+    .lean();
+    
+  res.json({
+    success: true,
+    data: bookings,
+    total,
+    page: parseInt(page, 10),
+    totalPages: Math.ceil(total / parseInt(limit, 10)) || 1
+  });
+}));
+
 module.exports = router;
