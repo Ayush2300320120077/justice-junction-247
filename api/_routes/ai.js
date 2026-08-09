@@ -693,30 +693,6 @@ Respond ONLY with valid JSON with no markdown formatting or backticks around it:
       logId: logDoc?._id || null,
       sources
     });
-    } catch (apiErr) {
-      console.error('Anthropic fetch error in /chat:', apiErr);
-      const latencyMs = Date.now() - startTime;
-      let logDoc = null;
-      try {
-        logDoc = await AiInteractionLog.create({
-          userId: user?.id || null,
-          query: message,
-          retrievedChunks: retrievedChunks.map(c => ({ sourceId: c.sourceId, score: c.score, metadata: c.metadata, text: c.text })),
-          response: "An error occurred while processing your request.",
-          module: 'chat',
-          latencyMs,
-          ...(ragFailed ? { 'metadata.ragFailed': true } : {})
-        });
-      } catch (lErr) {}
-
-      return res.status(200).json({
-        reply: "An error occurred while processing your request. This is general legal information, not legal advice. I recommend booking a verified lawyer on the platform for your specific situation.",
-        suggestedAction: { type: 'lawyer', link: '/search' },
-        logId: logDoc?._id || null,
-        sources,
-        isMock: true
-      });
-    }
   } catch (err) {
     console.error('POST /api/ai/chat route error:', err);
     return res.status(500).json({
