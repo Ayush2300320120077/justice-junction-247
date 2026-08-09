@@ -607,14 +607,23 @@ Respond ONLY with valid JSON with no markdown formatting or backticks around it:
 
     if (aiProvider === 'gemini') {
       const formattedHistory = [];
+      const flatHistory = [];
       if (Array.isArray(history)) {
         history.slice(-6).forEach(item => {
           const role = item.role === 'assistant' || item.role === 'bot' ? 'model' : 'user';
           const content = item.content || item.text;
-          if (content) formattedHistory.push({ role, parts: [{ text: content }] });
+          if (content) flatHistory.push({ role, content });
         });
       }
-      formattedHistory.push({ role: 'user', parts: [{ text: message }] });
+      flatHistory.push({ role: 'user', content: message });
+
+      flatHistory.forEach(item => {
+        if (formattedHistory.length > 0 && formattedHistory[formattedHistory.length - 1].role === item.role) {
+          formattedHistory[formattedHistory.length - 1].parts[0].text += '\\n' + item.content;
+        } else {
+          formattedHistory.push({ role: item.role, parts: [{ text: item.content }] });
+        }
+      });
 
       const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`, {
         method: 'POST',
@@ -625,21 +634,34 @@ Respond ONLY with valid JSON with no markdown formatting or backticks around it:
         })
       });
 
-      if (!response.ok) throw new Error('Gemini API Error');
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Gemini API Error:', response.status, errorText);
+        throw new Error(`Gemini API Error: ${response.status}`);
+      }
       const data = await response.json();
       responseTextRaw = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
 
     } else {
       // Anthropic
       const formattedHistory = [];
+      const flatHistory = [];
       if (Array.isArray(history)) {
         history.slice(-6).forEach(item => {
           const role = item.role === 'assistant' || item.role === 'bot' ? 'assistant' : 'user';
           const content = item.content || item.text;
-          if (content) formattedHistory.push({ role, content });
+          if (content) flatHistory.push({ role, content });
         });
       }
-      formattedHistory.push({ role: 'user', content: message });
+      flatHistory.push({ role: 'user', content: message });
+
+      flatHistory.forEach(item => {
+        if (formattedHistory.length > 0 && formattedHistory[formattedHistory.length - 1].role === item.role) {
+          formattedHistory[formattedHistory.length - 1].content += '\\n' + item.content;
+        } else {
+          formattedHistory.push({ role: item.role, content: item.content });
+        }
+      });
 
       const response = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
@@ -656,7 +678,11 @@ Respond ONLY with valid JSON with no markdown formatting or backticks around it:
         })
       });
 
-      if (!response.ok) throw new Error('Anthropic API Error');
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Anthropic API Error:', response.status, errorText);
+        throw new Error(`Anthropic API Error: ${response.status}`);
+      }
       const data = await response.json();
       responseTextRaw = data.content?.[0]?.text?.trim() || '';
     }
