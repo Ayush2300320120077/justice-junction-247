@@ -5,7 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { 
   LayoutDashboard, Scale, Users, CreditCard, 
   Inbox, FileText, AlertTriangle, BarChart3, 
-  Settings, LogOut, Menu, X, UserCheck, ShieldCheck, Bot
+  Settings, LogOut, Menu, X, UserCheck, ShieldCheck, Bot, MessageCircle
 } from 'lucide-react';
 
 const ADMIN_NAV = [
@@ -16,6 +16,7 @@ const ADMIN_NAV = [
   { path: '/admin/lawyers', label: 'Lawyers', icon: Scale },
   { path: '/admin/clients', label: 'Clients', icon: Users },
   { path: '/admin/subscriptions', label: 'Subscriptions', icon: CreditCard },
+  { path: '/admin/queries', label: 'Queries & Complaints', icon: MessageCircle },
   { path: '/admin/contact-inbox', label: 'Contact Inbox', icon: Inbox },
   { path: '/admin/content', label: 'Content Manager', icon: FileText },
   { path: '/admin/reports', label: 'Reports', icon: AlertTriangle },

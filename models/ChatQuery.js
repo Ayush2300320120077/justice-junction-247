@@ -6,7 +6,9 @@ const chatQuerySchema = new mongoose.Schema({
   classifiedCategory: String,
   response: String,
   recommendedLawyerIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Lawyer' }],
-  sessionId: String
+  sessionId: String,
+  resolved: { type: Boolean, default: false },
+  adminNote: { type: String, default: '' }
 }, { timestamps: true })
 
 chatQuerySchema.index({ userId: 1 })

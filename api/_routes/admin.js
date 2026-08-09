@@ -15,6 +15,7 @@ const Article = require('../../models/Article');
 const DocumentTemplate = require('../../models/DocumentTemplate');
 const { sendEmail } = require('../../utils/mailer');
 const ChatQuery = require('../../models/ChatQuery');
+const ContactMessage = require('../../models/ContactMessage');
 const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
@@ -375,4 +376,116 @@ router.get('/chat-queries', asyncHandler(async (req, res) => {
 
 
 app.use('/api/admin', router);
-module.exports = app;
+// ── UNIFIED QUERIES & COMPLAINTS ──
+router.get('/queries', asyncHandler(async (req, res) => {
+  await connectDB();
+  // Get query params
+  const typeFilter = req.query.type || 'all'; // 'all', 'contact', 'chat', 'review'
+  const resolvedFilter = req.query.resolved; // 'true', 'false', or undefined
+  const search = req.query.search ? req.query.search.toLowerCase() : '';
+  
+  let results = [];
+  
+  // 1. Fetch Contact Messages
+  if (typeFilter === 'all' || typeFilter === 'contact') {
+    let q = {};
+    if (resolvedFilter !== undefined) q.resolved = resolvedFilter === 'true';
+    const contacts = await ContactMessage.find(q).sort({ createdAt: -1 }).limit(100).lean();
+    contacts.forEach(c => {
+      results.push({
+        _id: c._id,
+        sourceType: 'contact',
+        user: { name: c.name, email: c.email },
+        content: `Subject: ${c.subject || 'N/A'}\nMessage: ${c.message}`,
+        resolved: c.resolved,
+        adminNote: c.adminNote,
+        createdAt: c.createdAt
+      });
+    });
+  }
+  
+  // 2. Fetch Chat Queries
+  if (typeFilter === 'all' || typeFilter === 'chat') {
+    let q = {};
+    if (resolvedFilter !== undefined) q.resolved = resolvedFilter === 'true';
+    const chats = await ChatQuery.find(q).populate('userId', 'name email').sort({ createdAt: -1 }).limit(100).lean();
+    chats.forEach(c => {
+      results.push({
+        _id: c._id,
+        sourceType: 'chat',
+        user: c.userId ? { name: c.userId.name, email: c.userId.email } : { name: 'Anonymous', email: '' },
+        content: `Query: ${c.query}\nResponse: ${c.response}`,
+        resolved: c.resolved,
+        adminNote: c.adminNote,
+        createdAt: c.createdAt
+      });
+    });
+  }
+  
+  // 3. Fetch Reviews
+  if (typeFilter === 'all' || typeFilter === 'review') {
+    let q = {};
+    if (resolvedFilter !== undefined) q.resolved = resolvedFilter === 'true';
+    const reviews = await Review.find(q).populate('clientId', 'name email').populate('lawyerId', 'name').sort({ createdAt: -1 }).limit(100).lean();
+    reviews.forEach(r => {
+      results.push({
+        _id: r._id,
+        sourceType: 'review',
+        user: r.clientId ? { name: r.clientId.name, email: r.clientId.email } : { name: 'Unknown', email: '' },
+        content: `Lawyer: ${r.lawyerId ? r.lawyerId.name : 'Unknown'}\nRating: ${r.rating}\nComment: ${r.comment || 'No comment'}`,
+        resolved: r.resolved,
+        adminNote: r.adminNote,
+        createdAt: r.createdAt
+      });
+    });
+  }
+  
+  // Search filter
+  if (search) {
+    results = results.filter(r => 
+      (r.user.name && r.user.name.toLowerCase().includes(search)) ||
+      (r.user.email && r.user.email.toLowerCase().includes(search)) ||
+      (r.content && r.content.toLowerCase().includes(search))
+    );
+  }
+  
+  // Sort combined results by descending date
+  results.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  
+  // Simple array slice pagination
+  const page = parseInt(req.query.page, 10) || 1;
+  const limit = parseInt(req.query.limit, 10) || 20;
+  const skip = (page - 1) * limit;
+  const paginatedResults = results.slice(skip, skip + limit);
+  
+  res.json({
+    success: true,
+    data: paginatedResults,
+    total: results.length,
+    page,
+    totalPages: Math.ceil(results.length / limit) || 1
+  });
+}));
+
+router.patch('/queries/resolve', asyncHandler(async (req, res) => {
+  await connectDB();
+  const { id, sourceType, resolved, adminNote } = req.body;
+  if (!id || !sourceType) return res.status(400).json({ success: false, error: 'id and sourceType are required' });
+  
+  let Model;
+  if (sourceType === 'contact') Model = ContactMessage;
+  else if (sourceType === 'chat') Model = ChatQuery;
+  else if (sourceType === 'review') Model = Review;
+  else return res.status(400).json({ success: false, error: 'Invalid sourceType' });
+  
+  const updateData = {};
+  if (resolved !== undefined) updateData.resolved = resolved;
+  if (adminNote !== undefined) updateData.adminNote = adminNote;
+  
+  const doc = await Model.findByIdAndUpdate(id, updateData, { new: true });
+  if (!doc) return res.status(404).json({ success: false, error: 'Record not found' });
+  
+  res.json({ success: true, data: doc, message: 'Updated successfully' });
+}));
+
+module.exports = router;

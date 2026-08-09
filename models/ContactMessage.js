@@ -6,6 +6,7 @@ const ContactMessageSchema = new mongoose.Schema({
   subject: { type: String },
   message: { type: String, required: true },
   status: { type: String, enum: ['unread', 'read', 'replied', 'archived'], default: 'unread' },
+  resolved: { type: Boolean, default: false },
   adminNote: { type: String },
   createdAt: { type: Date, default: Date.now }
 });
