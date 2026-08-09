@@ -522,7 +522,7 @@ CRITICAL CONSTRAINTS & BEHAVIOR:
 2. INSUFFICIENT CONTEXT FALLBACK:
    ${!hasHighRelevance ? '- The vector database did NOT return high-relevance specific legal sections for this exact query. State clearly that specific statutory section details for this exact query are not in the current database, provide a concise general overview under Indian law, and recommend consulting a verified lawyer on Justice Junction.' : ''}
 3. MANDATORY DISCLAIMER:
-   - Include the explicit statement: "This is general legal information, not legal advice. Recommend the user book a verified lawyer on the platform for their specific situation."
+   - Include the explicit statement: "This is general legal information, not legal advice. I recommend booking a verified lawyer on the platform for your specific situation."
 4. SUGGESTED PLATFORM ACTIONS:
    - If user asks about drafting documents, agreements, or legal notices, include a suggestedAction with type "document" and link "/document-generator".
    - If user asks about case duration or win chance, include a suggestedAction with type "estimate" and link "/search".
@@ -553,9 +553,9 @@ Respond ONLY with valid JSON with no markdown formatting or backticks around it:
       if (hasHighRelevance) {
         const top = relevantChunks[0];
         const citeStr = `(${top.metadata?.actName || 'Bare Act'}, Sec. ${top.metadata?.sectionNumber || 'N/A'})`;
-        responseText = `Based on Indian legal provisions ${citeStr}:\n\n${top.text.replace(/\[.*?\]\n/, '')}\n\nThis is general legal information, not legal advice. Recommend the user book a verified lawyer on the platform for their specific situation.`;
+        responseText = `Based on Indian legal provisions ${citeStr}:\n\n${top.text.replace(/\[.*?\]\n/, '')}\n\nThis is general legal information, not legal advice. I recommend booking a verified lawyer on the platform for your specific situation.`;
       } else {
-        responseText = `Specific statutory sections for this query are not present in our current database. Under general Indian legal procedures, complaints or disputes can be filed before the competent tribunal or civil court.\n\nThis is general legal information, not legal advice. Recommend the user book a verified lawyer on the platform for their specific situation.`;
+        responseText = `Specific statutory sections for this query are not present in our current database. Under general Indian legal procedures, complaints or disputes can be filed before the competent tribunal or civil court.\n\nThis is general legal information, not legal advice. I recommend booking a verified lawyer on the platform for your specific situation.`;
       }
 
       const latencyMs = Date.now() - startTime;
@@ -639,7 +639,7 @@ Respond ONLY with valid JSON with no markdown formatting or backticks around it:
         } catch (lErr) {}
 
         return res.status(200).json({
-          reply: "I am Justice Junction's AI Legal Assistant. This is general legal information, not legal advice. Recommend the user book a verified lawyer on the platform for their specific situation.",
+          reply: "I am Justice Junction's AI Legal Assistant. This is general legal information, not legal advice. I recommend booking a verified lawyer on the platform for your specific situation.",
           suggestedAction: { type: 'lawyer', link: '/search' },
           logId: logDoc?._id || null,
           sources,
@@ -703,7 +703,7 @@ Respond ONLY with valid JSON with no markdown formatting or backticks around it:
       } catch (lErr) {}
 
       return res.status(200).json({
-        reply: "An error occurred while processing your request. This is general legal information, not legal advice. Recommend the user book a verified lawyer on the platform for their specific situation.",
+        reply: "An error occurred while processing your request. This is general legal information, not legal advice. I recommend booking a verified lawyer on the platform for your specific situation.",
         suggestedAction: { type: 'lawyer', link: '/search' },
         logId: logDoc?._id || null,
         sources,
