@@ -16,6 +16,10 @@ const DocumentTemplate = require('../../models/DocumentTemplate');
 const { sendEmail } = require('../../utils/mailer');
 const ChatQuery = require('../../models/ChatQuery');
 const ContactMessage = require('../../models/ContactMessage');
+const Report = require('../../models/Report');
+const PlatformSettings = require('../../models/PlatformSettings');
+const FAQ = require('../../models/FAQ');
+const Announcement = require('../../models/Announcement');
 const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
@@ -486,6 +490,178 @@ router.patch('/queries/resolve', asyncHandler(async (req, res) => {
   
   res.json({ success: true, data: doc, message: 'Updated successfully' });
 }));
+
+// ── DASHBOARD & USER ACTIONS ──
+router.post('/promote', asyncHandler(async (req, res) => {
+  await connectDB();
+  const { userId, newRole } = req.body;
+  if(!userId || !newRole) return res.status(400).json({ success: false, error: 'userId and newRole required' });
+  const user = await User.findByIdAndUpdate(userId, { role: newRole }, { new: true });
+  res.json({ success: true, data: user });
+}));
+
+router.post('/demote', asyncHandler(async (req, res) => {
+  await connectDB();
+  const { userId } = req.body;
+  if(!userId) return res.status(400).json({ success: false, error: 'userId required' });
+  const user = await User.findByIdAndUpdate(userId, { role: 'client' }, { new: true });
+  res.json({ success: true, data: user });
+}));
+
+router.post('/verify-client', asyncHandler(async (req, res) => {
+  await connectDB();
+  const { clientId, action } = req.body; // action: 'approve' | 'reject'
+  const isVerified = action === 'approve';
+  const user = await User.findByIdAndUpdate(clientId, { isVerified }, { new: true });
+  res.json({ success: true, data: user });
+}));
+
+router.delete('/clients/:id', asyncHandler(async (req, res) => {
+  await connectDB();
+  const user = await User.findByIdAndDelete(req.params.id);
+  res.json({ success: true, data: user });
+}));
+
+router.delete('/lawyers/:id', asyncHandler(async (req, res) => {
+  await connectDB();
+  const user = await User.findByIdAndDelete(req.params.id);
+  await Lawyer.findOneAndDelete({ userId: req.params.id }); 
+  res.json({ success: true, data: user });
+}));
+
+// ── AI EVALUATION ──
+router.get('/ai-stats', asyncHandler(async (req, res) => {
+  await connectDB();
+  const totalQueries = await ChatQuery.countDocuments();
+  const logs = await AiInteractionLog.find({});
+  const successRate = 95; // Mock/Calculate
+  res.json({ success: true, data: { totalQueries, successRate, avgResponseTime: 1.2 } });
+}));
+
+router.get('/ai-logs', asyncHandler(async (req, res) => {
+  await connectDB();
+  const logs = await AiInteractionLog.find().sort({ createdAt: -1 }).limit(50);
+  res.json({ success: true, data: logs });
+}));
+
+router.patch('/ai-logs/:id/annotate', asyncHandler(async (req, res) => {
+  await connectDB();
+  const { adminRating, adminNote } = req.body;
+  const log = await AiInteractionLog.findByIdAndUpdate(req.params.id, { adminRating, adminNote }, { new: true });
+  res.json({ success: true, data: log });
+}));
+
+// ── CONTENT MANAGER ──
+router.get('/content', asyncHandler(async (req, res) => {
+  await connectDB();
+  const articles = await Article.find().sort({ createdAt: -1 });
+  const faqs = await FAQ.find().sort({ order: 1 });
+  const announcements = await Announcement.find().sort({ createdAt: -1 });
+  res.json({ success: true, data: { articles, faqs, announcements } });
+}));
+
+router.post('/content/:type', asyncHandler(async (req, res) => {
+  await connectDB();
+  let Model;
+  if(req.params.type === 'articles') Model = Article;
+  else if(req.params.type === 'faqs') Model = FAQ;
+  else if(req.params.type === 'announcements') Model = Announcement;
+  else return res.status(400).json({ error: 'Invalid type' });
+  const doc = await Model.create(req.body);
+  res.json({ success: true, data: doc });
+}));
+
+router.put('/content/:type/:id', asyncHandler(async (req, res) => {
+  await connectDB();
+  let Model;
+  if(req.params.type === 'articles') Model = Article;
+  else if(req.params.type === 'faqs') Model = FAQ;
+  else if(req.params.type === 'announcements') Model = Announcement;
+  else return res.status(400).json({ error: 'Invalid type' });
+  const doc = await Model.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  res.json({ success: true, data: doc });
+}));
+
+router.delete('/content/:type/:id', asyncHandler(async (req, res) => {
+  await connectDB();
+  let Model;
+  if(req.params.type === 'articles') Model = Article;
+  else if(req.params.type === 'faqs') Model = FAQ;
+  else if(req.params.type === 'announcements') Model = Announcement;
+  else return res.status(400).json({ error: 'Invalid type' });
+  const doc = await Model.findByIdAndDelete(req.params.id);
+  res.json({ success: true, data: doc });
+}));
+
+// ── CONTACT INBOX ──
+router.get('/contacts', asyncHandler(async (req, res) => {
+  await connectDB();
+  const contacts = await ContactMessage.find().sort({ createdAt: -1 });
+  res.json({ success: true, data: contacts });
+}));
+router.delete('/contacts/:id', asyncHandler(async (req, res) => {
+  await connectDB();
+  await ContactMessage.findByIdAndDelete(req.params.id);
+  res.json({ success: true, message: 'Deleted' });
+}));
+router.patch('/contacts/:id', asyncHandler(async (req, res) => {
+  await connectDB();
+  const doc = await ContactMessage.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  res.json({ success: true, data: doc });
+}));
+
+// ── REPORTS ──
+router.get('/reports', asyncHandler(async (req, res) => {
+  await connectDB();
+  const reports = await Report.find().populate('reporterId').populate('reportedId').sort({ createdAt: -1 });
+  res.json({ success: true, data: reports });
+}));
+router.patch('/reports/:id', asyncHandler(async (req, res) => {
+  await connectDB();
+  const report = await Report.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  res.json({ success: true, data: report });
+}));
+router.put('/reports/:id', asyncHandler(async (req, res) => {
+  await connectDB();
+  const report = await Report.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  res.json({ success: true, data: report });
+}));
+
+// ── SETTINGS ──
+router.get('/settings', asyncHandler(async (req, res) => {
+  await connectDB();
+  let settings = await PlatformSettings.findOne({});
+  if(!settings) {
+    settings = await PlatformSettings.create({
+      siteName: 'Justice Junction',
+      maintenanceMode: false,
+      aiModel: 'gemini-1.5-pro',
+      paymentGateway: 'razorpay'
+    });
+  }
+  res.json({ success: true, data: settings });
+}));
+router.put('/settings', asyncHandler(async (req, res) => {
+  await connectDB();
+  let settings = await PlatformSettings.findOne({});
+  if(!settings) settings = new PlatformSettings();
+  Object.assign(settings, req.body);
+  await settings.save();
+  res.json({ success: true, data: settings });
+}));
+
+// ── SUBSCRIPTIONS ──
+router.get('/subscriptions', asyncHandler(async (req, res) => {
+  await connectDB();
+  const subs = await UserSubscription.find().populate('userId').populate('planId').sort({ createdAt: -1 });
+  res.json({ success: true, data: subs });
+}));
+router.put('/subscriptions/:id', asyncHandler(async (req, res) => {
+  await connectDB();
+  const sub = await UserSubscription.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  res.json({ success: true, data: sub });
+}));
+
 
 app.use('/api/admin', router);
 module.exports = app;
