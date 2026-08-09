@@ -133,7 +133,7 @@ router.put('/profile/update', requireAuth, async (req, res) => {
       'phone', 'city', 'state', 'photo', 'address', 'dateOfBirth', 'gender',
       'barCouncilState', 'yearOfEnrollment', 'designation', 'currentFirm',
       'courts', 'consultationModes', 'availableDays', 'availableTimeFrom',
-      'availableTimeTo', 'linkedinUrl', 'websiteUrl'
+      'availableTimeTo', 'linkedinUrl', 'websiteUrl', 'verificationDocuments'
     ];
 
     allowed.forEach(f => { if (req.body[f] !== undefined) lawyer[f] = req.body[f]; });

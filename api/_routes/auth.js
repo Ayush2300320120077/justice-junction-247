@@ -58,7 +58,8 @@ router.post('/register', authLimiter, [
             barCouncilState, yearOfEnrollment, designation, currentFirm,
             courts, languages,
             consultationModes, availableDays, availableTimeFrom, availableTimeTo,
-            linkedinUrl, websiteUrl } = req.body;
+            linkedinUrl, websiteUrl, verificationDocuments
+          } = req.body;
 
     role = (role === 'lawyer') ? 'lawyer' : 'client';
 
@@ -107,6 +108,7 @@ router.post('/register', authLimiter, [
         availableTimeTo: availableTimeTo || '',
         linkedinUrl: linkedinUrl || '',
         websiteUrl: websiteUrl || '',
+        verificationDocuments: Array.isArray(verificationDocuments) ? verificationDocuments : (verificationDocuments ? [verificationDocuments] : []),
       });
     }
     

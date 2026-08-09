@@ -27,6 +27,7 @@ const lawyerSchema = new mongoose.Schema({
   languages: [String],
   isVerified: { type: Boolean, default: false },
   verificationStatus: { type: String, enum: ['pending', 'verified', 'rejected'], default: 'pending' },
+  verificationDocuments: [{ type: String }],
   rejectionReason: { type: String, default: '' },
   isBlocked: { type: Boolean, default: false },
   isAvailable: { type: Boolean, default: true },

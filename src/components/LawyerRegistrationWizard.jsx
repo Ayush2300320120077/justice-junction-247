@@ -24,6 +24,7 @@ const INITIAL_DATA = {
   barRegistrationNumber: '', barCouncilState: '',
   yearOfEnrollment: '', experience: '',
   designation: '', currentFirm: '',
+  verificationDocuments: '',
   // Step 3 — Practice
   specializations: [], courts: [], languages: [],
   // Step 4 — Consultation & Availability
@@ -60,6 +61,7 @@ export default function LawyerRegistrationWizard() {
     if (s === 2) {
       if (!formData.barRegistrationNumber.trim()) e.barRegistrationNumber = 'Bar Council Registration Number is required'
       if (!formData.barCouncilState) e.barCouncilState = 'Bar Council State is required'
+      if (!formData.verificationDocuments.trim()) e.verificationDocuments = 'Verification Document URL is required'
       if (formData.experience && (isNaN(formData.experience) || parseInt(formData.experience) < 0)) e.experience = 'Enter valid years'
     }
     if (s === 3) {
@@ -220,6 +222,14 @@ export default function LawyerRegistrationWizard() {
                 </select>
                 <Err field="barCouncilState" />
               </div>
+            </div>
+
+            <div className="form-group">
+              <label>Verification Document URL *</label>
+              <div className="input-wrap"><FileText size={16} className="input-icon" />
+                <input value={formData.verificationDocuments} onChange={e => set('verificationDocuments', e.target.value)} placeholder="e.g. Google Drive link to Bar Council ID" />
+              </div>
+              <Err field="verificationDocuments" />
             </div>
 
             <div className="form-row">

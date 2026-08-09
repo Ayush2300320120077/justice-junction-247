@@ -489,6 +489,8 @@ export default function AdminDashboard() {
 
                       <div style={s.queueDetails}>
                         <div><strong>Bar Reg No:</strong> {l.barRegistrationNumber}</div>
+                        <div><strong>Bar Council State:</strong> {l.barCouncilState || 'N/A'}</div>
+                        <div><strong>Documents:</strong> {l.verificationDocuments?.length > 0 ? l.verificationDocuments.map((doc, idx) => <a key={idx} href={doc} target="_blank" rel="noreferrer" style={{ color: '#3b82f6', textDecoration: 'underline', marginRight: 8 }}>View Doc {idx + 1}</a>) : 'None Provided'}</div>
                         <div><strong>City/State:</strong> {l.city}, {l.state}</div>
                         <div><strong>Experience:</strong> {l.experience} Years</div>
                         <div><strong>Specializations:</strong> {l.specializations?.join(', ') || 'N/A'}</div>

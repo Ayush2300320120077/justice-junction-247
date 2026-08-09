@@ -13,6 +13,7 @@ const UserSubscription = require('../../models/UserSubscription');
 const Review = require('../../models/Review');
 const Article = require('../../models/Article');
 const DocumentTemplate = require('../../models/DocumentTemplate');
+const { sendEmail } = require('../../utils/mailer');
 const ChatQuery = require('../../models/ChatQuery');
 const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
@@ -184,6 +185,14 @@ router.patch('/lawyers/:id/verify', asyncHandler(async (req, res) => {
   );
   if (!lawyer) return res.status(404).json({ success: false, error: 'Lawyer not found' });
   
+  // Send email notification
+  const subject = approved ? 'Account Verified - Justice Junction' : 'Account Verification Rejected - Justice Junction';
+  const html = approved 
+    ? `<p>Dear ${lawyer.name},</p><p>Your account has been successfully verified! You will now appear in search results.</p>`
+    : `<p>Dear ${lawyer.name},</p><p>Unfortunately, your verification was rejected.</p><p>Reason: ${reason || 'Verification rejected'}</p><p>Please update your credentials and try again.</p>`;
+    
+  sendEmail({ email: lawyer.email, subject, html }).catch(console.error);
+
   res.json({ success: true, data: lawyer, message: `Lawyer ${approved ? 'approved' : 'rejected'}` });
 }));
 
