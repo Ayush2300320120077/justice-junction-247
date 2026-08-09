@@ -7,6 +7,7 @@ const CaseOutcome = require('../../models/CaseOutcome');
 const AiInteractionLog = require('../../models/AiInteractionLog');
 const AIRequestLog = require('../../models/AIRequestLog');
 const ChatQuery = require('../../models/ChatQuery');
+const PlatformSettings = require('../../models/PlatformSettings');
 const { requireAuth } = require('../../middleware/auth');
 const { retrieveContext } = require('../../backend/ai/retrieve');
 const { classifyIssue } = require('../../backend/ai/classify');
@@ -535,10 +536,19 @@ Respond ONLY with valid JSON with no markdown formatting or backticks around it:
   "suggestedAction": { "type": "document" | "estimate" | "lawyer", "link": "/document-generator" | "/search" }
 }`;
 
-    const apiKey = process.env.ANTHROPIC_API_KEY;
+        // Fetch PlatformSettings for API Key
+    const settings = await PlatformSettings.findOne({}) || {};
+    const aiProvider = settings.aiProvider || 'mock';
+    let apiKey = settings.aiApiKey || '';
+    
+    // Fallback to env vars if setting is empty but provider is chosen
+    if (!apiKey) {
+      if (aiProvider === 'gemini') apiKey = process.env.GEMINI_API_KEY || '';
+      if (aiProvider === 'anthropic') apiKey = process.env.ANTHROPIC_API_KEY || '';
+    }
 
-    // Handle Local Fallback when Anthropic API Key is not set
-    if (!apiKey || apiKey.startsWith('your_') || apiKey.includes('placeholder')) {
+    // Handle Local Fallback
+    if (aiProvider === 'mock' || !apiKey || apiKey.startsWith('your_') || apiKey.includes('placeholder')) {
       let action = null;
       const lower = message.toLowerCase();
       if (lower.includes('draft') || lower.includes('agreement') || lower.includes('document') || lower.includes('notice') || lower.includes('affidavit')) {
@@ -591,20 +601,46 @@ Respond ONLY with valid JSON with no markdown formatting or backticks around it:
       });
     }
 
-    // Call Anthropic API
-    const formattedHistory = [];
-    if (Array.isArray(history)) {
-      history.slice(-6).forEach(item => {
-        const role = item.role === 'assistant' || item.role === 'bot' ? 'assistant' : 'user';
-        const content = item.content || item.text;
-        if (content) {
-          formattedHistory.push({ role, content });
-        }
-      });
-    }
-    formattedHistory.push({ role: 'user', content: message });
+    let finalReply = '';
+    let suggestedAction = undefined;
+    let responseTextRaw = '';
 
-    try {
+    if (aiProvider === 'gemini') {
+      const formattedHistory = [];
+      if (Array.isArray(history)) {
+        history.slice(-6).forEach(item => {
+          const role = item.role === 'assistant' || item.role === 'bot' ? 'model' : 'user';
+          const content = item.content || item.text;
+          if (content) formattedHistory.push({ role, parts: [{ text: content }] });
+        });
+      }
+      formattedHistory.push({ role: 'user', parts: [{ text: message }] });
+
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: RAG_SYSTEM_PROMPT }] },
+          contents: formattedHistory
+        })
+      });
+
+      if (!response.ok) throw new Error('Gemini API Error');
+      const data = await response.json();
+      responseTextRaw = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+
+    } else {
+      // Anthropic
+      const formattedHistory = [];
+      if (Array.isArray(history)) {
+        history.slice(-6).forEach(item => {
+          const role = item.role === 'assistant' || item.role === 'bot' ? 'assistant' : 'user';
+          const content = item.content || item.text;
+          if (content) formattedHistory.push({ role, content });
+        });
+      }
+      formattedHistory.push({ role: 'user', content: message });
+
       const response = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: {
@@ -613,79 +649,50 @@ Respond ONLY with valid JSON with no markdown formatting or backticks around it:
           'content-type': 'application/json'
         },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
+          model: 'claude-3-5-sonnet-20240620',
           max_tokens: 1000,
           system: RAG_SYSTEM_PROMPT,
           messages: formattedHistory
         })
       });
 
-      if (!response.ok) {
-        const errData = await response.json().catch(() => ({}));
-        console.error('Anthropic API Error in /chat:', errData);
-
-        const latencyMs = Date.now() - startTime;
-        let logDoc = null;
-        try {
-          logDoc = await AiInteractionLog.create({
-            userId: user?.id || null,
-            query: message,
-            retrievedChunks: retrievedChunks.map(c => ({ sourceId: c.sourceId, score: c.score, metadata: c.metadata, text: c.text })),
-            response: "I am Justice Junction's AI Legal Assistant...",
-            module: 'chat',
-            latencyMs,
-            ...(ragFailed ? { 'metadata.ragFailed': true } : {})
-          });
-        } catch (lErr) {}
-
-        return res.status(200).json({
-          reply: "I am Justice Junction's AI Legal Assistant. This is general legal information, not legal advice. I recommend booking a verified lawyer on the platform for your specific situation.",
-          suggestedAction: { type: 'lawyer', link: '/search' },
-          logId: logDoc?._id || null,
-          sources,
-          isMock: true
-        });
-      }
-
+      if (!response.ok) throw new Error('Anthropic API Error');
       const data = await response.json();
-      const rawText = data.content?.[0]?.text?.trim() || '';
+      responseTextRaw = data.content?.[0]?.text?.trim() || '';
+    }
 
-      let finalReply = '';
-      let suggestedAction = undefined;
+    try {
+      const parsed = JSON.parse(responseTextRaw.replace(/^\s*```json\s*/i, '').replace(/\s*```\s*$/i, ''));
+      finalReply = parsed.reply || responseTextRaw;
+      suggestedAction = parsed.suggestedAction || undefined;
+    } catch (jsonErr) {
+      finalReply = responseTextRaw;
+    }
 
-      try {
-        const parsed = JSON.parse(rawText.replace(/^```json\s*/i, '').replace(/\s*```$/i, ''));
-        finalReply = parsed.reply || rawText;
-        suggestedAction = parsed.suggestedAction || undefined;
-      } catch (jsonErr) {
-        finalReply = rawText;
-      }
-
-      const latencyMs = Date.now() - startTime;
-      let logDoc = null;
-      try {
-        logDoc = await AiInteractionLog.create({
-          userId: user?.id || null,
-          query: message,
-          retrievedChunks: retrievedChunks.map(c => ({ sourceId: c.sourceId, score: c.score, metadata: c.metadata, text: c.text })),
-          response: finalReply,
-          module: 'chat',
-          latencyMs,
-          ...(ragFailed ? { 'metadata.ragFailed': true } : {})
-        });
-      } catch (logErr) { /* non-blocking */ }
-
-      // ── Log this AI request (non-blocking) ──────────────────────────────────
-      if (user) {
-        logAIRequest(user.id);
-      }
-
-      return res.status(200).json({
-        reply: finalReply,
-        suggestedAction,
-        logId: logDoc?._id || null,
-        sources
+    const latencyMs = Date.now() - startTime;
+    let logDoc = null;
+    try {
+      logDoc = await AiInteractionLog.create({
+        userId: user?.id || null,
+        query: message,
+        retrievedChunks: retrievedChunks.map(c => ({ sourceId: c.sourceId, score: c.score, metadata: c.metadata, text: c.text })),
+        response: finalReply,
+        module: 'chat',
+        latencyMs,
+        ...(ragFailed ? { 'metadata.ragFailed': true } : {})
       });
+    } catch (logErr) { /* non-blocking */ }
+
+    if (user) {
+      logAIRequest(user.id);
+    }
+
+    return res.status(200).json({
+      reply: finalReply,
+      suggestedAction,
+      logId: logDoc?._id || null,
+      sources
+    });
     } catch (apiErr) {
       console.error('Anthropic fetch error in /chat:', apiErr);
       const latencyMs = Date.now() - startTime;

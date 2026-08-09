@@ -8,7 +8,8 @@ export default function AdminSettings() {
     maintenanceMode: false,
     registrationsPaused: false,
     dangerZoneEnabled: false,
-    supportEmail: import.meta.env.VITE_SUPPORT_EMAIL || 'supportjusticejunction247@gmail.com',
+    aiProvider: 'mock',
+    aiApiKey: '',
     platformFeePercentage: 10
   });
   const [loading, setLoading] = useState(true);
@@ -24,7 +25,10 @@ export default function AdminSettings() {
       const res = await fetch('/api/admin/settings', {
         credentials: 'include'
       });
-      if (res.ok) setSettings(await res.json());
+      if (res.ok) {
+        const json = await res.json();
+        setSettings(json.data || json);
+      }
     } catch (err) {
       console.error(err);
     } finally {
@@ -133,6 +137,38 @@ export default function AdminSettings() {
                   </button>
                 </div>
 
+                <div style={s.toggleRow}>
+                  <div>
+                    <div style={s.toggleTitle}>AI Provider</div>
+                    <div style={s.toggleDesc}>Select the AI model for the Legal Assistant bot.</div>
+                  </div>
+                  <select 
+                    style={s.selectInput}
+                    value={settings.aiProvider || 'mock'}
+                    onChange={(e) => setSettings({...settings, aiProvider: e.target.value})}
+                  >
+                    <option value="mock">Demo Template (No API Key)</option>
+                    <option value="gemini">Google Gemini (Recommended)</option>
+                    <option value="anthropic">Anthropic Claude</option>
+                  </select>
+                </div>
+
+                {settings.aiProvider !== 'mock' && (
+                  <div style={{...s.toggleRow, flexDirection: 'column', alignItems: 'flex-start', gap: 12}}>
+                    <div>
+                      <div style={s.toggleTitle}>AI API Key</div>
+                      <div style={s.toggleDesc}>Enter your {settings.aiProvider === 'gemini' ? 'Google Gemini' : 'Anthropic'} API key here. It is saved securely.</div>
+                    </div>
+                    <input 
+                      type="password" 
+                      style={s.textInput}
+                      value={settings.aiApiKey || ''}
+                      onChange={(e) => setSettings({...settings, aiApiKey: e.target.value})}
+                      placeholder={`Enter ${settings.aiProvider} API key...`}
+                    />
+                  </div>
+                )}
+
               </div>
             </div>
 
@@ -190,9 +226,10 @@ const s = {
   
   toggleRow: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1rem 0', borderBottom: '1px solid #f1f5f9', ':last-child': { borderBottom: 'none', paddingBottom: 0 } },
   toggleTitle: { fontSize: '0.95rem', fontWeight: 600, color: '#0f172a', marginBottom: '0.25rem' },
-  toggleDesc: { fontSize: '0.85rem', color: '#64748b' },
-  toggleBtn: { width: '52px', height: '28px', borderRadius: '9999px', border: 'none', cursor: 'pointer', position: 'relative', transition: 'background-color 0.2s' },
+  toggleDesc: { fontSize: '0.85rem', color: '#64748b', marginTop: '0.2rem' },
+  toggleBtn: { position: 'relative', width: '52px', height: '28px', borderRadius: '14px', border: 'none', cursor: 'pointer', transition: 'background-color 0.2s', padding: 0 },
   toggleKnob: { width: '24px', height: '24px', backgroundColor: '#fff', borderRadius: '50%', position: 'absolute', top: '2px', left: '2px', transition: 'transform 0.2s', boxShadow: '0 2px 4px rgba(0,0,0,0.2)' },
-  
+  selectInput: { width: '100%', maxWidth: '300px', padding: '0.5rem', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '0.9rem', color: '#1e293b', outline: 'none' },
+  textInput: { width: '100%', maxWidth: '400px', padding: '0.6rem', borderRadius: '6px', border: '1px solid #cbd5e1', fontSize: '0.9rem', color: '#1e293b', outline: 'none' },
   dangerBtn: { display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.6rem 1.2rem', backgroundColor: '#fff', color: '#ef4444', border: '1px solid #fca5a5', borderRadius: '6px', fontSize: '0.9rem', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s', ':hover': { backgroundColor: '#fee2e2' } }
 };
