@@ -105,18 +105,18 @@ function useReveal(threshold = 0.12) {
 const SPECS = ['Criminal Defence', 'Family Law', 'Property Law', 'Corporate Law', 'Consumer Rights', 'Labour Law', 'Cyber Law', 'Taxation']
 
 const AREAS = [
-  { emoji: '⚖️', name: 'Criminal Defence', desc: 'FIR, bail, Sessions Court, Anticipatory Bail', grad: 'linear-gradient(160deg,#3D0E16,#7B1D2E)', bgImg: '/images/hero-courtroom.jpg' },
-  { emoji: '👨‍👩‍👧', name: 'Family & Divorce', desc: 'Divorce, child custody, alimony, DV cases', grad: 'linear-gradient(160deg,#1A0A0D,#4A1A28)', bgImg: '/images/family-legal.jpg' },
-  { emoji: '🏠', name: 'Property & RERA', desc: 'Title disputes, registry, builder fraud', grad: 'linear-gradient(160deg,#2D1B0E,#6B3A1F)', bgImg: '/images/law-books.jpg' },
-  { emoji: '🏢', name: 'Corporate Law', desc: 'Contracts, IP, compliance, M&A, startups', grad: 'linear-gradient(160deg,#0D1B2A,#1E3A5F)', bgImg: '/images/ai-legal.jpg' },
-  { emoji: '🛒', name: 'Consumer Rights', desc: 'Consumer forum, e-commerce, RERA, refunds', grad: 'linear-gradient(160deg,#0A2E1A,#1A6B3A)', bgImg: '/images/supreme-court.jpg' },
-  { emoji: '👷', name: 'Labour Law', desc: 'Wrongful termination, PF, ESIC, factory act', grad: 'linear-gradient(160deg,#1E1A0A,#6B5A1A)', bgImg: '/images/hero-scales.jpg' },
-  { emoji: '💻', name: 'Cyber Law', desc: 'Online fraud, IT Act, cybercrime FIR, data breach', grad: 'linear-gradient(160deg,#0A0D2E,#1A246B)', bgImg: '/images/ai-legal.jpg' },
-  { emoji: '💰', name: 'Taxation', desc: 'GST disputes, income tax notices, appeals', grad: 'linear-gradient(160deg,#1A2E0A,#3A6B1A)', bgImg: '/images/law-books.jpg' },
-  { emoji: '📋', name: 'Bail & FIR', desc: 'Emergency same-day bail & FIR assistance', grad: 'linear-gradient(160deg,#3D0E16,#7B1D2E)', bgImg: '/images/hero-courtroom.jpg' },
-  { emoji: '💡', name: 'Intellectual Property', desc: 'Patents, trademarks, copyright, trade secrets', grad: 'linear-gradient(160deg,#2E1A0A,#6B3A1A)', bgImg: '/images/law-books.jpg' },
-  { emoji: '🤝', name: 'Civil Disputes', desc: 'Recovery suits, injunctions, declaratory relief', grad: 'linear-gradient(160deg,#0A1A2E,#1A3A6B)', bgImg: '/images/supreme-court.jpg' },
-  { emoji: '💍', name: 'Divorce', desc: 'Contested & mutual consent, maintenance', grad: 'linear-gradient(160deg,#1A0A0D,#4A1A28)', bgImg: '/images/family-legal.jpg' },
+  { emoji: '⚖️', name: 'Criminal Defence', desc: 'FIR, bail, Sessions Court, Anticipatory Bail', grad: 'linear-gradient(160deg,#3D0E16,#7B1D2E)', bgImg: '/images/hero-courtroom.webp' },
+  { emoji: '👨‍👩‍👧', name: 'Family & Divorce', desc: 'Divorce, child custody, alimony, DV cases', grad: 'linear-gradient(160deg,#1A0A0D,#4A1A28)', bgImg: '/images/family-legal.webp' },
+  { emoji: '🏠', name: 'Property & RERA', desc: 'Title disputes, registry, builder fraud', grad: 'linear-gradient(160deg,#2D1B0E,#6B3A1F)', bgImg: '/images/law-books.webp' },
+  { emoji: '🏢', name: 'Corporate Law', desc: 'Contracts, IP, compliance, M&A, startups', grad: 'linear-gradient(160deg,#0D1B2A,#1E3A5F)', bgImg: '/images/ai-legal.webp' },
+  { emoji: '🛒', name: 'Consumer Rights', desc: 'Consumer forum, e-commerce, RERA, refunds', grad: 'linear-gradient(160deg,#0A2E1A,#1A6B3A)', bgImg: '/images/supreme-court.webp' },
+  { emoji: '👷', name: 'Labour Law', desc: 'Wrongful termination, PF, ESIC, factory act', grad: 'linear-gradient(160deg,#1E1A0A,#6B5A1A)', bgImg: '/images/hero-scales.webp' },
+  { emoji: '💻', name: 'Cyber Law', desc: 'Online fraud, IT Act, cybercrime FIR, data breach', grad: 'linear-gradient(160deg,#0A0D2E,#1A246B)', bgImg: '/images/ai-legal.webp' },
+  { emoji: '💰', name: 'Taxation', desc: 'GST disputes, income tax notices, appeals', grad: 'linear-gradient(160deg,#1A2E0A,#3A6B1A)', bgImg: '/images/law-books.webp' },
+  { emoji: '📋', name: 'Bail & FIR', desc: 'Emergency same-day bail & FIR assistance', grad: 'linear-gradient(160deg,#3D0E16,#7B1D2E)', bgImg: '/images/hero-courtroom.webp' },
+  { emoji: '💡', name: 'Intellectual Property', desc: 'Patents, trademarks, copyright, trade secrets', grad: 'linear-gradient(160deg,#2E1A0A,#6B3A1A)', bgImg: '/images/law-books.webp' },
+  { emoji: '🤝', name: 'Civil Disputes', desc: 'Recovery suits, injunctions, declaratory relief', grad: 'linear-gradient(160deg,#0A1A2E,#1A3A6B)', bgImg: '/images/supreme-court.webp' },
+  { emoji: '💍', name: 'Divorce', desc: 'Contested & mutual consent, maintenance', grad: 'linear-gradient(160deg,#1A0A0D,#4A1A28)', bgImg: '/images/family-legal.webp' },
 ]
 
 const REVIEWS = [
@@ -548,7 +548,7 @@ export default function Home() {
           style={{
             position: 'absolute',
             inset: '-8%',
-            backgroundImage: 'url(/images/hero-wide-v2.jpg)',
+            backgroundImage: 'url(/images/hero-wide-v2.webp)',
             backgroundSize: 'cover',
             backgroundPosition: 'center center',
             zIndex: 0
@@ -956,7 +956,7 @@ export default function Home() {
         {/* Background image */}
         <div style={{
           position: 'absolute', inset: 0,
-          backgroundImage: 'url(/images/supreme-court.jpg)',
+          backgroundImage: 'url(/images/supreme-court.webp)',
           backgroundSize: 'cover', backgroundPosition: 'center 60%',
           filter: 'brightness(0.25)',
           zIndex: 0
@@ -1249,7 +1249,7 @@ export default function Home() {
         }}>
           <div style={{
             position: 'absolute', inset: 0,
-            backgroundImage: 'url(/images/law-books.jpg)',
+            backgroundImage: 'url(/images/law-books.webp)',
             backgroundSize: 'cover',
             backgroundPosition: 'center'
           }} />
@@ -1330,7 +1330,7 @@ export default function Home() {
       <section style={{ padding: '8rem 0', background: '#fff', position: 'relative', overflow: 'hidden' }}>
         <div style={{
           position: 'absolute', inset: 0,
-          backgroundImage: 'url(/images/ai-legal.jpg)',
+          backgroundImage: 'url(/images/ai-legal.webp)',
           backgroundSize: 'cover', backgroundPosition: 'center',
           opacity: 0.04, zIndex: 0
         }} />
@@ -1464,7 +1464,7 @@ export default function Home() {
         {/* BG Image */}
         <div style={{
           position: 'absolute', inset: 0,
-          backgroundImage: 'url(/images/city-night.jpg)',
+          backgroundImage: 'url(/images/city-night.webp)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           filter: 'brightness(0.2)',
@@ -1715,7 +1715,7 @@ export default function Home() {
         {/* BG */}
         <div style={{
           position: 'absolute', inset: 0,
-          backgroundImage: 'url(/images/hero-scales.jpg)',
+          backgroundImage: 'url(/images/hero-scales.webp)',
           backgroundSize: 'cover', backgroundPosition: 'center',
           filter: 'brightness(0.18)',
           zIndex: 0
@@ -1891,7 +1891,7 @@ export default function Home() {
         {/* Cinematic Background Image with Parallax */}
         <div style={{
           position: 'absolute', inset: 0,
-          backgroundImage: 'url(/images/supreme-court.jpg)',
+          backgroundImage: 'url(/images/supreme-court.webp)',
           backgroundSize: 'cover', backgroundPosition: 'center',
           backgroundAttachment: 'fixed',
           zIndex: 0
@@ -1977,7 +1977,7 @@ export default function Home() {
         {/* Deep Cinematic Background */}
         <div style={{
           position: 'absolute', inset: 0,
-          backgroundImage: 'url(/images/hero-courtroom.jpg)',
+          backgroundImage: 'url(/images/hero-courtroom.webp)',
           backgroundSize: 'cover', backgroundPosition: 'center',
           opacity: 0.35, zIndex: 0, filter: 'grayscale(100%) contrast(1.2)'
         }} />

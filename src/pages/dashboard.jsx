@@ -741,7 +741,7 @@ export default function Dashboard() {
   return (
     <div className="page-reveal" style={{ 
       paddingTop: 100, 
-      background: 'url(/dashboard-bg.jpg) center/cover no-repeat fixed', 
+      background: 'url(/dashboard-bg.webp) center/cover no-repeat fixed', 
       minHeight: '100vh', 
       paddingBottom: '6rem',
       position: 'relative'

@@ -58,7 +58,7 @@ export default function AdminDashboard() {
   const fetchStats = async () => {
     setStatsLoading(true);
     try {
-      const res = await fetch('/api/admin/stats', {
+      const res = await fetch('/api/admin/dashboard/stats', {
         credentials: 'include'
       });
       if (res.ok) {
@@ -79,10 +79,10 @@ export default function AdminDashboard() {
       });
       if (res.ok) {
         const data = await res.json();
-        setUsers(data.users || []);
-        setTotalUsersCount(data.totalUsers || 0);
+        setUsers(data.data || []);
+        setTotalUsersCount(data.total || 0);
         setUserTotalPages(data.totalPages || 1);
-        setUserPage(data.currentPage || page);
+        setUserPage(data.page || page);
       }
     } catch (err) {
       console.error('Failed to fetch users', err);
@@ -95,13 +95,13 @@ export default function AdminDashboard() {
   const fetchPendingVerifications = async () => {
     setQueueLoading(true);
     try {
-      const res = await fetch('/api/admin/pending-verifications', {
+      const res = await fetch('/api/admin/lawyers/pending', {
         credentials: 'include'
       });
       if (res.ok) {
         const data = await res.json();
-        setPendingLawyers(data.lawyers || []);
-        setPendingClients(data.clients || []);
+        setPendingLawyers(data.data || []);
+        setPendingClients([]);
       }
     } catch (err) {
       console.error('Failed to fetch pending verifications', err);

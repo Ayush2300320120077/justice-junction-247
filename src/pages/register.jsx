@@ -78,13 +78,13 @@ export default function Register() {
       <Helmet><title>Register Free — Cinematic Portal | Justice Junction 24/7</title></Helmet>
 
       {/* Visual Side with Ambient Video & Backdrop */}
-      <div className="auth-visual-side" style={{ backgroundImage: "url('/images/hero-courtroom.jpg')" }}>
+      <div className="auth-visual-side" style={{ backgroundImage: "url('/images/hero-courtroom.webp')" }}>
         <video
           autoPlay
           loop
           muted
           playsInline
-          poster="/images/hero-courtroom.jpg"
+          poster="/images/hero-courtroom.webp"
           className="auth-video-bg"
         >
           <source src="https://assets.mixkit.co/videos/preview/mixkit-scales-of-justice-close-up-42861-large.mp4" type="video/mp4" />

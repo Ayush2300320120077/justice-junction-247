@@ -11,8 +11,8 @@ const SUGGESTIONS = [
   'Rental agreement help'
 ]
 
-export default function AIAssistantChat() {
-  const [isOpen, setIsOpen] = useState(false)
+export default function AIAssistantChat({ startOpen = false }) {
+  const [isOpen, setIsOpen] = useState(startOpen)
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
   const [isTyping, setIsTyping] = useState(false)

@@ -26,17 +26,15 @@ export default function AdminClients() {
 
   const fetchClients = async () => {
     try {
-      const res = await fetch('/api/admin/clients', {
+      const res = await fetch('/api/admin/users?role=client', {
         credentials: 'include'
       });
       if (res.ok) {
         const data = await res.json();
-        const clientList = Array.isArray(data) ? data : (data.clients || data.users || []);
-        if (clientList.length > 0) {
-          setClients(clientList);
-          setLoading(false);
-          return;
-        }
+        const clientList = Array.isArray(data.data) ? data.data : (Array.isArray(data) ? data : []);
+        setClients(clientList);
+        setLoading(false);
+        return;
       }
     } catch (err) {
       console.error('Fetch clients error:', err);

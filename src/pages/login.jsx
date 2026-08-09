@@ -11,7 +11,7 @@ const THEMES = [
     id: 'courtroom',
     name: 'Courtroom Ambient',
     videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-scales-of-justice-close-up-42861-large.mp4',
-    posterUrl: '/images/hero-courtroom.jpg',
+    posterUrl: '/images/hero-courtroom.webp',
     tagline: 'SCALES OF JUSTICE',
     quote: '"Justice is the first virtue of social institutions, as truth is of systems of thought."',
     author: 'John Rawls'
@@ -20,7 +20,7 @@ const THEMES = [
     id: 'supreme',
     name: 'Supreme Law',
     videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-judge-gaveling-42862-large.mp4',
-    posterUrl: '/images/supreme-court.jpg',
+    posterUrl: '/images/supreme-court.webp',
     tagline: 'CONSTITUTIONAL INTEGRITY',
     quote: '"The law is not a mystery, but a tool for empowerment. We bridge complexity & resolution."',
     author: 'Justice Junction Motto'
@@ -29,7 +29,7 @@ const THEMES = [
     id: 'counsel',
     name: 'Executive Counsel',
     videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-lawyer-reading-a-book-42860-large.mp4',
-    posterUrl: '/images/lawyer-hero.jpg',
+    posterUrl: '/images/lawyer-hero.webp',
     tagline: 'VERIFIED EXPERT NETWORK',
     quote: '"In matters of truth and justice, there is no difference between large and small problems."',
     author: 'Albert Einstein'

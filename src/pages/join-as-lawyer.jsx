@@ -6,11 +6,11 @@
  * PLACEHOLDER ASSETS — swap these when real files are ready:
  *   Hero video   → /videos/hero-lawyers.mp4
  *                  Royalty-free source: https://coverr.co/search?q=legal+office
- *   Hero poster  → /images/hero-lawyers-poster.jpg
+ *   Hero poster  → /images/hero-lawyers-poster.webp
  *                  Royalty-free source: https://www.pexels.com/search/courtroom/
- *   Proof img 1  → /images/proof-courtroom.jpg
+ *   Proof img 1  → /images/proof-courtroom.webp
  *                  Royalty-free source: https://pixabay.com/images/search/indian+lawyer/
- *   Proof img 2  → /images/proof-consultation.jpg
+ *   Proof img 2  → /images/proof-consultation.webp
  *                  Royalty-free source: https://www.pexels.com/search/lawyer+office/
  * ─────────────────────────────────────────────────────────────────
  *
@@ -102,8 +102,8 @@ const HOW_IT_WORKS = [
 const PROOF_BLOCKS = [
   {
     tag: 'Verified Profiles',
-    // TODO: replace with /images/proof-courtroom.jpg sourced from pixabay.com/images/search/indian+lawyer/
-    img: '/images/proof-courtroom.jpg',
+    // TODO: replace with /images/proof-courtroom.webp sourced from pixabay.com/images/search/indian+lawyer/
+    img: '/images/proof-courtroom.webp',
     alt: 'Advocate standing in Indian courtroom — Justice Junction verified lawyer',
     title: (<>Your credentials,<br /><em>front and center.</em></>),
     body: 'Every advocate on Justice Junction carries a government-verified Bar Council badge. Clients choose you because they trust the platform — and the platform trusts you.',
@@ -116,8 +116,8 @@ const PROOF_BLOCKS = [
   },
   {
     tag: 'Practice Management',
-    // TODO: replace with /images/proof-consultation.jpg sourced from pexels.com/search/lawyer+office/
-    img: '/images/proof-consultation.jpg',
+    // TODO: replace with /images/proof-consultation.webp sourced from pexels.com/search/lawyer+office/
+    img: '/images/proof-consultation.webp',
     alt: 'Lawyer conducting video consultation on laptop — Justice Junction dashboard',
     title: (<>One dashboard for your<br /><em>entire practice.</em></>),
     body: 'Manage appointments, track case milestones, send updates to clients, and monitor your monthly earnings — all from a single, mobile-friendly dashboard.',
@@ -514,17 +514,17 @@ export default function JoinAsLawyer() {
           loop
           playsInline
           preload="metadata"
-          poster="/images/hero-lawyers-poster.jpg"
+          poster="/images/hero-lawyers-poster.webp"
           aria-hidden="true"
         >
           <source src="/videos/hero-lawyers.mp4" type="video/mp4" />
         </video>
 
         {/* Static image fallback — mobile only (shown via CSS media query) */}
-        {/* TODO: provide /public/images/hero-lawyers-poster.jpg from https://www.pexels.com/search/courtroom/ */}
+        {/* TODO: provide /public/images/hero-lawyers-poster.webp from https://www.pexels.com/search/courtroom/ */}
         <img
           className="jl-hero-img-fallback"
-          src="/images/hero-lawyers-poster.jpg"
+          src="/images/hero-lawyers-poster.webp"
           alt="Legal professional in a courtroom"
           loading="eager"
         />

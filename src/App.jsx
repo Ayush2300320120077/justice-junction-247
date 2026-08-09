@@ -1,5 +1,6 @@
 import React, { Suspense, lazy, useState, useEffect } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
+import { MessageSquare } from 'lucide-react'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import AdminRoute from './components/admin/AdminRoute'
@@ -61,6 +62,56 @@ const LoadingSpinner = () => (
     <div className="spinner" />
   </div>
 )
+
+const LazyChatWrapper = () => {
+  const [loaded, setLoaded] = useState(false)
+  const location = useLocation()
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 640
+
+  useEffect(() => {
+    const handleOpen = () => setLoaded(true)
+    window.addEventListener('open-ai-chat', handleOpen)
+    return () => window.removeEventListener('open-ai-chat', handleOpen)
+  }, [])
+
+  if (location.pathname.startsWith('/admin')) return null
+
+  if (!loaded) {
+    const launcherStyle = isMobile ? {
+      position: 'fixed', bottom: 24, right: 24,
+      width: 56, height: 56, borderRadius: 20,
+      background: '#7B1D2E', color: '#fff',
+      zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center',
+      boxShadow: '0 8px 30px rgba(123, 29, 46, 0.4)', border: 'none',
+      cursor: 'pointer', transition: 'transform 0.2s ease, background 0.2s ease',
+    } : {
+      position: 'fixed', bottom: 96, right: 24,
+      width: 56, height: 56, borderRadius: 20,
+      background: '#7B1D2E', color: '#fff',
+      zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center',
+      boxShadow: '0 8px 30px rgba(123, 29, 46, 0.4)', border: 'none',
+      cursor: 'pointer', transition: 'transform 0.2s ease, background 0.2s ease',
+    }
+    return (
+      <button
+        onClick={() => setLoaded(true)}
+        style={launcherStyle}
+        aria-label="Open AI Legal Assistant"
+        title="Ask AI Legal Assistant"
+        onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.08)'; e.currentTarget.style.background = '#5C1521' }}
+        onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.background = '#7B1D2E' }}
+      >
+        <MessageSquare size={26} />
+      </button>
+    )
+  }
+
+  return (
+    <Suspense fallback={null}>
+      <AIAssistantChat startOpen={true} />
+    </Suspense>
+  )
+}
 
 export default function App() {
   const location = useLocation()
@@ -156,7 +207,7 @@ export default function App() {
 
       {/* Global floating widgets */}
       <Suspense fallback={null}>
-        <AIAssistantChat />
+        <LazyChatWrapper />
         <WhatsAppHelpline />
         <BackToTop />
         <CookieConsent />

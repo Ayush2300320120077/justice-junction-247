@@ -138,7 +138,7 @@ export default function ClientPricing() {
         .pricing-hero {
           position: relative;
           padding: 8rem 5vw 10rem;
-          background: url('/pricing-cinematic-bg.jpg') center/cover no-repeat;
+          background: url('/pricing-cinematic-bg.webp') center/cover no-repeat;
           background-attachment: fixed;
           text-align: center;
           border-bottom: 1px solid rgba(201, 148, 58, 0.2);
