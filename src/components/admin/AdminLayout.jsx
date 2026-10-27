@@ -5,11 +5,13 @@ import { useAuth } from '../../context/AuthContext';
 import { 
   LayoutDashboard, Scale, Users, CreditCard, 
   Inbox, FileText, AlertTriangle, BarChart3, 
-  Settings, LogOut, Menu, X, UserCheck, ShieldCheck, Bot, MessageCircle
+  Settings, LogOut, Menu, X, UserCheck, ShieldCheck, Bot, MessageCircle,
+  Archive
 } from 'lucide-react';
 
 const ADMIN_NAV = [
   { path: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { path: '/case-vault/dashboard', label: 'Case Vault', icon: Archive },
   { path: '/admin/dashboard?tab=users', label: 'User Management', icon: UserCheck },
   { path: '/admin/dashboard?tab=verification', label: 'Verification Queue', icon: ShieldCheck },
   { path: '/admin/ai-eval', label: 'AI Evaluation', icon: Bot },
@@ -21,7 +23,7 @@ const ADMIN_NAV = [
   { path: '/admin/content', label: 'Content Manager', icon: FileText },
   { path: '/admin/reports', label: 'Reports', icon: AlertTriangle },
   { path: '/admin/analytics', label: 'Analytics', icon: BarChart3 },
-  { path: '/admin/settings', label: 'Settings', icon: Settings },
+  { path: '/admin/settings', label: 'Settings', icon: Settings }
 ];
 
 

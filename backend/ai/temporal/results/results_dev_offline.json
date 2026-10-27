@@ -1,0 +1,551 @@
+{
+ "meta": {
+  "split": "dev",
+  "subset": "all",
+  "n": 165,
+  "generator": "offline",
+  "params": {
+   "theta": 0.44,
+   "tau": 0.6,
+   "k": 5
+  },
+  "date": "2026-10-11"
+ },
+ "resolver": {
+  "overall": {
+   "n": 157,
+   "regime": 1,
+   "date": 1
+  },
+  "byType": {
+   "temporal_lookup": {
+    "n": 85,
+    "regime": 1,
+    "date": 1
+   },
+   "boundary": {
+    "n": 21,
+    "regime": 1,
+    "date": 1
+   },
+   "month_only": {
+    "n": 18,
+    "regime": 1,
+    "date": 1
+   },
+   "explicit_trap": {
+    "n": 14,
+    "regime": 1,
+    "date": 1
+   },
+   "two_axis": {
+    "n": 10,
+    "regime": 1,
+    "date": 1
+   },
+   "ambiguous_no_date": {
+    "n": 5,
+    "regime": 1,
+    "date": 1
+   },
+   "retroactivity_trap": {
+    "n": 4,
+    "regime": 1,
+    "date": 1
+   }
+  },
+  "byFormat": {
+   "fmt6": {
+    "n": 9,
+    "regime": 1,
+    "date": 1
+   },
+   "fmt4": {
+    "n": 19,
+    "regime": 1,
+    "date": 1
+   },
+   "fmt5": {
+    "n": 13,
+    "regime": 1,
+    "date": 1
+   },
+   "fmt7": {
+    "n": 20,
+    "regime": 1,
+    "date": 1
+   },
+   "fmt2": {
+    "n": 17,
+    "regime": 1,
+    "date": 1
+   },
+   "fmt3": {
+    "n": 10,
+    "regime": 1,
+    "date": 1
+   },
+   "fmt1": {
+    "n": 19,
+    "regime": 1,
+    "date": 1
+   },
+   "fmt0": {
+    "n": 13,
+    "regime": 1,
+    "date": 1
+   }
+  },
+  "bySide": {
+   "boundary-new": {
+    "n": 9,
+    "regime": 1,
+    "date": 1
+   },
+   "boundary-old": {
+    "n": 12,
+    "regime": 1,
+    "date": 1
+   },
+   "June 2024": {
+    "n": 9,
+    "regime": 1,
+    "date": 1
+   },
+   "August 2024": {
+    "n": 9,
+    "regime": 1,
+    "date": 1
+   }
+  }
+ },
+ "byM": {
+  "1": {
+   "agg": {
+    "C1": {
+     "n": 165,
+     "accuracy_all": 0.41818181818181815,
+     "ci95": [
+      0.34545454545454546,
+      0.4909090909090909
+     ],
+     "accuracy_answerable_strict": 0.40540540540540543,
+     "hit_gold_lenient": 0.40540540540540543,
+     "citation": {
+      "total": 151,
+      "exist_rate": 1,
+      "applicable_rate": 0.4304635761589404,
+      "CP": 0.4304635761589404,
+      "TIR": 0.5695364238410596,
+      "gold_precision": 0.41721854304635764,
+      "gold_recall": 0.3987341772151899,
+      "questions_with_inapplicable_cite": 0.5695364238410596,
+      "fabricated": 0
+     },
+     "api_errors": 0,
+     "ucr": 0,
+     "temporal": {
+      "wrong_code_cited_rate": 0.5472972972972973,
+      "safe_rate_retroactivity": 0.25
+     },
+     "retrieval": {
+      "recall_at_5": 0.8581081081081081,
+      "mrr": 0.6342342342342342
+     },
+     "behaviour": {
+      "abstain_on_unanswerable": 1,
+      "false_abstain_on_answerable": 0,
+      "ask_dates_when_dates_given": 0,
+      "ask_dates_on_ambiguous": 0
+     },
+     "byType": {
+      "temporal_lookup": {
+       "n": 85,
+       "acc": 0.4588235294117647
+      },
+      "boundary": {
+       "n": 21,
+       "acc": 0.6190476190476191
+      },
+      "month_only": {
+       "n": 18,
+       "acc": 0.4444444444444444
+      },
+      "explicit_trap": {
+       "n": 14,
+       "acc": 0
+      },
+      "two_axis": {
+       "n": 10,
+       "acc": 0
+      },
+      "ambiguous_no_date": {
+       "n": 5,
+       "acc": 0
+      },
+      "unanswerable": {
+       "n": 8,
+       "acc": 1
+      },
+      "retroactivity_trap": {
+       "n": 4,
+       "acc": 0.25
+      }
+     },
+     "monthOnly": {
+      "june2024": 0.7777777777777778,
+      "august2024": 0.1111111111111111
+     },
+     "boundary": {
+      "before_cutover": 0.9166666666666666,
+      "on_after_cutover": 0.2222222222222222
+     },
+     "latency_ms_mean": 8.593953333333337
+    },
+    "C1L": {
+     "n": 165,
+     "accuracy_all": 0.4121212121212121,
+     "ci95": [
+      0.3393939393939394,
+      0.4909090909090909
+     ],
+     "accuracy_answerable_strict": 0.39864864864864863,
+     "hit_gold_lenient": 0.39864864864864863,
+     "citation": {
+      "total": 142,
+      "exist_rate": 1,
+      "applicable_rate": 0.47183098591549294,
+      "CP": 0.47183098591549294,
+      "TIR": 0.528169014084507,
+      "gold_precision": 0.45774647887323944,
+      "gold_recall": 0.41139240506329117,
+      "questions_with_inapplicable_cite": 0.528169014084507,
+      "fabricated": 0
+     },
+     "api_errors": 0,
+     "ucr": 0,
+     "temporal": {
+      "wrong_code_cited_rate": 0.47297297297297297,
+      "safe_rate_retroactivity": 0.25
+     },
+     "retrieval": {
+      "recall_at_5": 0.4358108108108108,
+      "mrr": 0.4448198198198198
+     },
+     "behaviour": {
+      "abstain_on_unanswerable": 1,
+      "false_abstain_on_answerable": 0.060810810810810814,
+      "ask_dates_when_dates_given": 0,
+      "ask_dates_on_ambiguous": 0
+     },
+     "byType": {
+      "temporal_lookup": {
+       "n": 85,
+       "acc": 0.49411764705882355
+      },
+      "boundary": {
+       "n": 21,
+       "acc": 0.42857142857142855
+      },
+      "month_only": {
+       "n": 18,
+       "acc": 0.4444444444444444
+      },
+      "explicit_trap": {
+       "n": 14,
+       "acc": 0
+      },
+      "two_axis": {
+       "n": 10,
+       "acc": 0
+      },
+      "ambiguous_no_date": {
+       "n": 5,
+       "acc": 0
+      },
+      "unanswerable": {
+       "n": 8,
+       "acc": 1
+      },
+      "retroactivity_trap": {
+       "n": 4,
+       "acc": 0.25
+      }
+     },
+     "monthOnly": {
+      "june2024": 0,
+      "august2024": 0.8888888888888888
+     },
+     "boundary": {
+      "before_cutover": 0,
+      "on_after_cutover": 1
+     },
+     "latency_ms_mean": 7.355864848484851
+    },
+    "C2": {
+     "n": 165,
+     "accuracy_all": 0.9454545454545454,
+     "ci95": [
+      0.9090909090909091,
+      0.9757575757575757
+     ],
+     "accuracy_answerable_strict": 0.9391891891891891,
+     "hit_gold_lenient": 0.9391891891891891,
+     "citation": {
+      "total": 156,
+      "exist_rate": 1,
+      "applicable_rate": 1,
+      "CP": 1,
+      "TIR": 0,
+      "gold_precision": 0.9551282051282052,
+      "gold_recall": 0.9430379746835443,
+      "questions_with_inapplicable_cite": 0,
+      "fabricated": 0
+     },
+     "api_errors": 0,
+     "ucr": 0,
+     "temporal": {
+      "wrong_code_cited_rate": 0,
+      "safe_rate_retroactivity": 1
+     },
+     "retrieval": {
+      "recall_at_5": 0.9594594594594594,
+      "mrr": 0.9493243243243243
+     },
+     "behaviour": {
+      "abstain_on_unanswerable": 1,
+      "false_abstain_on_answerable": 0.013513513513513514,
+      "ask_dates_when_dates_given": 0,
+      "ask_dates_on_ambiguous": 1
+     },
+     "byType": {
+      "temporal_lookup": {
+       "n": 85,
+       "acc": 0.9647058823529412
+      },
+      "boundary": {
+       "n": 21,
+       "acc": 0.9523809523809523
+      },
+      "month_only": {
+       "n": 18,
+       "acc": 0.7777777777777778
+      },
+      "explicit_trap": {
+       "n": 14,
+       "acc": 1
+      },
+      "two_axis": {
+       "n": 10,
+       "acc": 0.9
+      },
+      "ambiguous_no_date": {
+       "n": 5,
+       "acc": 1
+      },
+      "unanswerable": {
+       "n": 8,
+       "acc": 1
+      },
+      "retroactivity_trap": {
+       "n": 4,
+       "acc": 1
+      }
+     },
+     "monthOnly": {
+      "june2024": 0.7777777777777778,
+      "august2024": 0.7777777777777778
+     },
+     "boundary": {
+      "before_cutover": 1,
+      "on_after_cutover": 0.8888888888888888
+     },
+     "latency_ms_mean": 13.437101212121215
+    },
+    "C3": {
+     "n": 165,
+     "accuracy_all": 0.9090909090909091,
+     "ci95": [
+      0.8606060606060606,
+      0.9515151515151515
+     ],
+     "accuracy_answerable_strict": 0.9054054054054054,
+     "hit_gold_lenient": 0.9054054054054054,
+     "citation": {
+      "total": 148,
+      "exist_rate": 1,
+      "applicable_rate": 0.9864864864864865,
+      "CP": 0.9864864864864865,
+      "TIR": 0.013513513513513514,
+      "gold_precision": 0.972972972972973,
+      "gold_recall": 0.9113924050632911,
+      "questions_with_inapplicable_cite": 0.013513513513513514,
+      "fabricated": 0
+     },
+     "api_errors": 0,
+     "ucr": 0,
+     "temporal": {
+      "wrong_code_cited_rate": 0,
+      "safe_rate_retroactivity": 0.75
+     },
+     "retrieval": {
+      "recall_at_5": 0.8581081081081081,
+      "mrr": 0.6342342342342342
+     },
+     "behaviour": {
+      "abstain_on_unanswerable": 1,
+      "false_abstain_on_answerable": 0.006756756756756757,
+      "ask_dates_when_dates_given": 0.013513513513513514,
+      "ask_dates_on_ambiguous": 1
+     },
+     "byType": {
+      "temporal_lookup": {
+       "n": 85,
+       "acc": 0.9882352941176471
+      },
+      "boundary": {
+       "n": 21,
+       "acc": 0.9523809523809523
+      },
+      "month_only": {
+       "n": 18,
+       "acc": 0.8888888888888888
+      },
+      "explicit_trap": {
+       "n": 14,
+       "acc": 1
+      },
+      "two_axis": {
+       "n": 10,
+       "acc": 0
+      },
+      "ambiguous_no_date": {
+       "n": 5,
+       "acc": 1
+      },
+      "unanswerable": {
+       "n": 8,
+       "acc": 1
+      },
+      "retroactivity_trap": {
+       "n": 4,
+       "acc": 0.75
+      }
+     },
+     "monthOnly": {
+      "june2024": 0.8888888888888888,
+      "august2024": 0.8888888888888888
+     },
+     "boundary": {
+      "before_cutover": 1,
+      "on_after_cutover": 0.8888888888888888
+     },
+     "latency_ms_mean": 16.62514909090909
+    },
+    "C4": {
+     "n": 165,
+     "accuracy_all": 0.9454545454545454,
+     "ci95": [
+      0.9090909090909091,
+      0.9757575757575757
+     ],
+     "accuracy_answerable_strict": 0.9391891891891891,
+     "hit_gold_lenient": 0.9391891891891891,
+     "citation": {
+      "total": 156,
+      "exist_rate": 1,
+      "applicable_rate": 1,
+      "CP": 1,
+      "TIR": 0,
+      "gold_precision": 0.9551282051282052,
+      "gold_recall": 0.9430379746835443,
+      "questions_with_inapplicable_cite": 0,
+      "fabricated": 0
+     },
+     "api_errors": 0,
+     "ucr": 0,
+     "temporal": {
+      "wrong_code_cited_rate": 0,
+      "safe_rate_retroactivity": 1
+     },
+     "retrieval": {
+      "recall_at_5": 0.9594594594594594,
+      "mrr": 0.9493243243243243
+     },
+     "behaviour": {
+      "abstain_on_unanswerable": 1,
+      "false_abstain_on_answerable": 0.013513513513513514,
+      "ask_dates_when_dates_given": 0,
+      "ask_dates_on_ambiguous": 1
+     },
+     "byType": {
+      "temporal_lookup": {
+       "n": 85,
+       "acc": 0.9647058823529412
+      },
+      "boundary": {
+       "n": 21,
+       "acc": 0.9523809523809523
+      },
+      "month_only": {
+       "n": 18,
+       "acc": 0.7777777777777778
+      },
+      "explicit_trap": {
+       "n": 14,
+       "acc": 1
+      },
+      "two_axis": {
+       "n": 10,
+       "acc": 0.9
+      },
+      "ambiguous_no_date": {
+       "n": 5,
+       "acc": 1
+      },
+      "unanswerable": {
+       "n": 8,
+       "acc": 1
+      },
+      "retroactivity_trap": {
+       "n": 4,
+       "acc": 1
+      }
+     },
+     "monthOnly": {
+      "june2024": 0.7777777777777778,
+      "august2024": 0.7777777777777778
+     },
+     "boundary": {
+      "before_cutover": 1,
+      "on_after_cutover": 0.8888888888888888
+     },
+     "latency_ms_mean": 17.8497206060606
+    }
+   },
+   "sig": {
+    "C4_vs_C1": {
+     "c4_only_correct": 90,
+     "other_only_correct": 3,
+     "mcnemar_exact_p": 6.224673473360542e-13
+    },
+    "C4_vs_C1L": {
+     "c4_only_correct": 91,
+     "other_only_correct": 3,
+     "mcnemar_exact_p": 2.1201240479683123e-12
+    },
+    "C4_vs_C2": {
+     "c4_only_correct": 0,
+     "other_only_correct": 0,
+     "mcnemar_exact_p": 1
+    },
+    "C4_vs_C3": {
+     "c4_only_correct": 12,
+     "other_only_correct": 6,
+     "mcnemar_exact_p": 0.23788452148437447
+    }
+   }
+  }
+ },
+ "skipped": []
+}

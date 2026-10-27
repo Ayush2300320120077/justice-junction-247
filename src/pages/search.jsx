@@ -4,18 +4,72 @@ import { Link } from 'react-router-dom'
 import LawyerCard from '../components/LawyerCard'
 import SkeletonCard from '../components/SkeletonCard'
 import { useToast } from '../context/ToastContext'
-import { SearchX, Filter, X, ChevronDown, Star, MapPin, Scale, DollarSign, Loader2, Globe, Video, Phone, TrendingUp, Info, Sparkles, Bot, AlertTriangle } from 'lucide-react'
+import { useAuth } from '../context/AuthContext'
+import { SearchX, Filter, X, ChevronDown, Star, MapPin, Scale, DollarSign, Loader2, Globe, Video, TrendingUp, Info, Sparkles, Bot, AlertTriangle } from 'lucide-react'
 import { Helmet } from 'react-helmet-async'
 import demoLawyers from '../data/demoLawyers'
 import { API } from '../api'
 
 const SPECS = ['Criminal Defence','Family Law','Property Law','Corporate Law','Consumer Rights','Labour Law','Civil Disputes','Divorce','Taxation','Intellectual Property','Cyber Law','Bail & FIR']
-const CITIES = ['Delhi','Mumbai','Bangalore','Hyderabad','Chennai','Kolkata','Ahmedabad','Pune','Jaipur','Lucknow']
+
+// ── Client-side AI classifier (works without login, mirrors backend logic) ──
+const EMERGENCY_KEYWORDS = [
+  'arrest', 'police', 'jail', 'bail', 'lockup', 'raid',
+  'domestic violence', 'assault', 'threat', 'eviction', 'harassment',
+  'seizure', 'kidnap', 'beaten', 'extortion', 'police custody', 'judicial custody'
+];
+
+function isEmergencyText(text) {
+  const lower = text.toLowerCase();
+  if (/\bfir\b/i.test(lower)) return true;
+  return EMERGENCY_KEYWORDS.some(k => lower.includes(k));
+}
+
+function localClassify(text) {
+  const lower = text.toLowerCase()
+  let category = 'Civil Disputes'
+  let confidence = 0.70
+
+  if (lower.includes('hack') || lower.includes('cyber') || lower.includes('phishing') || lower.includes('fake profile') || lower.includes('online fraud') || lower.includes('social media')) {
+    category = 'Cyber Law'; confidence = 0.93
+  } else if (lower.includes('tax') || lower.includes('gst') || lower.includes('income tax') || lower.includes('audit notice')) {
+    category = 'Taxation'; confidence = 0.92
+  } else if (lower.includes('trademark') || lower.includes('patent') || lower.includes('copyright') || lower.includes('logo') || lower.includes('brand')) {
+    category = 'Intellectual Property'; confidence = 0.94
+  } else if (lower.includes('divorce') || lower.includes('alimony') || lower.includes('mutual consent divorce')) {
+    category = 'Divorce'; confidence = 0.92
+  } else if (lower.includes('bail') || /\bfir\b/i.test(lower) || lower.includes('police lockup') || lower.includes('complaint at police station')) {
+    category = 'Bail & FIR'; confidence = 0.90
+  } else if (lower.includes('arrest') || lower.includes('crime') || lower.includes('criminal defence') || lower.includes('accused of theft') || lower.includes('accused of assault') || lower.includes('accused')) {
+    category = 'Criminal Defence'; confidence = 0.88
+  } else if (lower.includes('child custody') || lower.includes('guardianship') || lower.includes('adoption') || lower.includes('family dispute') || lower.includes('maintenance')) {
+    category = 'Family Law'; confidence = 0.85
+  } else if (lower.includes('property') || lower.includes('land') || lower.includes('flat') || lower.includes('builder') || lower.includes('tenant') || lower.includes('lease') || lower.includes('rent') || lower.includes('rera')) {
+    category = 'Property Law'; confidence = 0.89
+  } else if (lower.includes('defective') || lower.includes('consumer') || lower.includes('refund') || lower.includes('warranty') || lower.includes('insurance claim')) {
+    category = 'Consumer Rights'; confidence = 0.91
+  } else if (lower.includes('job') || lower.includes('salary') || lower.includes('employer') || lower.includes('employee') || lower.includes('labour') || lower.includes('severance') || lower.includes('termination') || lower.includes('posh') || lower.includes('pf') || lower.includes('gratuity') || lower.includes('fired')) {
+    category = 'Labour Law'; confidence = 0.88
+  } else if (lower.includes('company') || lower.includes('startup') || lower.includes('shareholder') || lower.includes('equity') || lower.includes('incorporation') || lower.includes('sebi') || lower.includes('corporate')) {
+    category = 'Corporate Law'; confidence = 0.87
+  }
+
+  const isEmergency = isEmergencyText(text)
+  return {
+    category,
+    confidence,
+    urgency: isEmergency ? 'emergency' : 'routine',
+    urgencyReason: isEmergency
+      ? 'Problem description contains immediate police, arrest, custody, or emergency safety concerns.'
+      : 'Standard legal guidance and consultation requested.'
+  }
+}
 
 export default function Search() {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const { showToast } = useToast()
+  const { isLoggedIn } = useAuth()
   
   // States
   const [lawyers, setLawyers] = useState([])
@@ -26,7 +80,7 @@ export default function Search() {
   const [usingDemo, setUsingDemo] = useState(false)
   const [showDemoBanner, setShowDemoBanner] = useState(true)
   
-  // Filter States (init from URL)
+  // Filter States
   const [spec, setSpec] = useState('')
   const [city, setCity] = useState('')
   const [debouncedCity, setDebouncedCity] = useState('')
@@ -35,38 +89,62 @@ export default function Search() {
   const [language, setLanguage] = useState('')
   const [availability, setAvailability] = useState('')
   const [minRating, setMinRating] = useState('')
+  const [experienceLevel, setExperienceLevel] = useState('')
   const [showFilters, setShowFilters] = useState(false)
   const [caseEstimate, setCaseEstimate] = useState(null)
   const [estimateLoading, setEstimateLoading] = useState(false)
 
-  // AI Free-Text Issue Classification States
+  // AI Free-Text Classification States
   const [aiProblemText, setAiProblemText] = useState('')
   const [classifying, setClassifying] = useState(false)
   const [aiNote, setAiNote] = useState('')
   const [urgencyFlag, setUrgencyFlag] = useState(null)
+  const [aiConfidence, setAiConfidence] = useState(null)
 
+  // ── AI Auto-Match: works for ALL users (logged in or not) ──────────────────
+  // If user is logged in and server is reachable, uses backend (Anthropic AI).
+  // Falls back to local keyword classifier in all other cases.
   const handleAiClassify = async () => {
     if (!aiProblemText.trim() || classifying) return
     setClassifying(true)
+    setAiNote('')
     try {
-      const res = await API.classify({ text: aiProblemText })
-      if (res && res.category) {
-        setSpec(res.category)
-        setAiNote(`AI suggested: ${res.category} — you can change this anytime`)
-        if (res.urgency === 'emergency') {
+      let result = null
+
+      // Try server-side AI first (only works if logged in due to auth guard)
+      if (isLoggedIn) {
+        try {
+          result = await API.classify({ text: aiProblemText })
+        } catch (serverErr) {
+          // Server unavailable or rate-limited → fall through to local
+          console.warn('Server classify failed, using local fallback:', serverErr.message)
+        }
+      }
+
+      // Local keyword classifier fallback (always available, no auth needed)
+      if (!result || !result.category) {
+        result = localClassify(aiProblemText)
+      }
+
+      if (result && result.category) {
+        setSpec(result.category)
+        setAiConfidence(result.confidence)
+        const pct = result.confidence ? `${Math.round(result.confidence * 100)}% confidence` : ''
+        setAiNote(`✓ AI matched: ${result.category}${pct ? ` (${pct})` : ''} — you can change this anytime`)
+        if (result.urgency === 'emergency') {
           setUrgencyFlag('emergency')
-          setAvailability('available')
+          setAvailability('online')  // Show online lawyers first in emergencies
         } else {
           setUrgencyFlag('routine')
         }
       }
     } catch (err) {
       console.warn('AI Classify error:', err)
+      showToast('Could not classify. Try selecting manually.', 'error')
     } finally {
       setClassifying(false)
     }
   }
-
 
   const observer = useRef()
   const initialSyncDone = useRef(false)
@@ -81,7 +159,7 @@ export default function Search() {
     if (node) observer.current.observe(node)
   }, [loading, hasMore])
 
-  // Debounce city input — only update debouncedCity 500ms after user stops typing
+  // Debounce city input
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedCity(city)
@@ -94,7 +172,6 @@ export default function Search() {
     if (initialSyncDone.current) return
     initialSyncDone.current = true
     
-    // Try URL first, then LocalStorage
     const specialization = searchParams.get('specialization')
     const qCity = searchParams.get('city')
     const qFee = searchParams.get('maxFee')
@@ -107,75 +184,95 @@ export default function Search() {
     const initialSort = sort || saved.sortBy || 'rating'
 
     if (initialSpec) setSpec(initialSpec)
-    if (initialCity) {
-      setCity(initialCity)
-      setDebouncedCity(initialCity)
-    }
+    if (initialCity) { setCity(initialCity); setDebouncedCity(initialCity) }
     if (initialFee) setMaxFee(initialFee)
     if (initialSort) setSortBy(initialSort)
-    
     if (saved.language) setLanguage(saved.language)
     if (saved.availability) setAvailability(saved.availability)
     if (saved.minRating) setMinRating(saved.minRating)
+    if (saved.experienceLevel) setExperienceLevel(saved.experienceLevel)
   }, [])
 
   // Persist filters to localStorage whenever they change
   useEffect(() => {
     if (!hasMounted.current) return
-    const filters = { spec, city, maxFee, sortBy, language, availability, minRating }
+    const filters = { spec, city, maxFee, sortBy, language, availability, minRating, experienceLevel }
     localStorage.setItem('jj_search_filters', JSON.stringify(filters))
-  }, [spec, city, maxFee, sortBy, language, availability, minRating])
+  }, [spec, city, maxFee, sortBy, language, availability, minRating, experienceLevel])
 
-  // Filter demo data in-memory
+  // ── Filter demo data in-memory ─────────────────────────────────────────────
   const getFilteredDemoLawyers = () => {
     let filtered = [...demoLawyers]
 
+    // Specialization filter
     if (spec) {
       filtered = filtered.filter(l =>
-        l.specialization.toLowerCase() === spec.toLowerCase() ||
+        (l.specialization && l.specialization.toLowerCase() === spec.toLowerCase()) ||
         (l.specializations && l.specializations.some(s => s.toLowerCase() === spec.toLowerCase()))
       )
     }
+    // City filter (partial match with alias support)
     if (debouncedCity) {
-      filtered = filtered.filter(l =>
-        l.city.toLowerCase().includes(debouncedCity.toLowerCase())
-      )
+      const q = debouncedCity.toLowerCase().trim()
+      const isBangalore = q === 'bangalore' || q === 'bengaluru'
+      const isBombay = q === 'bombay' || q === 'mumbai'
+      const isCalcutta = q === 'calcutta' || q === 'kolkata'
+      const isMadras = q === 'madras' || q === 'chennai'
+
+      filtered = filtered.filter(l => {
+        const c = (l.city || '').toLowerCase()
+        const st = (l.state || '').toLowerCase()
+        if (isBangalore) return c.includes('bengaluru') || c.includes('bangalore') || st.includes('karnataka')
+        if (isBombay) return c.includes('mumbai') || c.includes('bombay') || st.includes('maharashtra')
+        if (isCalcutta) return c.includes('kolkata') || c.includes('calcutta') || st.includes('bengal')
+        if (isMadras) return c.includes('chennai') || c.includes('madras') || st.includes('tamil')
+        return c.includes(q) || st.includes(q)
+      })
     }
+    // Max fee filter
     if (maxFee) {
-      filtered = filtered.filter(l => (l.fee || l.consultationFee) <= Number(maxFee))
+      filtered = filtered.filter(l => (l.consultationFee || l.fee || 0) <= Number(maxFee))
     }
+    // Language filter
     if (language) {
       filtered = filtered.filter(l =>
         l.languages && l.languages.some(lang => lang.toLowerCase() === language.toLowerCase())
       )
     }
+    // Availability filter
     if (availability) {
       filtered = filtered.filter(l => {
-        if (availability === 'online') return l.availability === 'Online' || l.availability === 'Both'
-        if (availability === 'offline') return l.availability === 'Offline' || l.availability === 'Both'
-        if (availability === 'both') return l.availability === 'Both'
+        const av = (l.availability || '').toLowerCase()
+        if (availability === 'online')  return av === 'online'  || av === 'both'
+        if (availability === 'offline') return av === 'offline' || av === 'both'
+        if (availability === 'both')    return av === 'both'
         return true
       })
     }
+    // Min rating filter
     if (minRating) {
-      filtered = filtered.filter(l => (l.rating || l.averageRating) >= Number(minRating))
+      filtered = filtered.filter(l => (l.averageRating || l.rating || 0) >= Number(minRating))
+    }
+    // Experience level filter
+    if (experienceLevel) {
+      filtered = filtered.filter(l => l.experienceLevel === experienceLevel)
     }
 
     // Sort
     if (sortBy === 'rating') {
-      filtered.sort((a, b) => (b.rating || b.averageRating) - (a.rating || a.averageRating))
+      filtered.sort((a, b) => (b.averageRating || b.rating || 0) - (a.averageRating || a.rating || 0))
     } else if (sortBy === 'experience') {
-      filtered.sort((a, b) => b.experience - a.experience)
+      filtered.sort((a, b) => (b.experience || 0) - (a.experience || 0))
     } else if (sortBy === 'price_low') {
-      filtered.sort((a, b) => (a.fee || a.consultationFee) - (b.fee || b.consultationFee))
+      filtered.sort((a, b) => (a.consultationFee || a.fee || 0) - (b.consultationFee || b.fee || 0))
     } else if (sortBy === 'price_high') {
-      filtered.sort((a, b) => (b.fee || b.consultationFee) - (a.fee || a.consultationFee))
+      filtered.sort((a, b) => (b.consultationFee || b.fee || 0) - (a.consultationFee || a.fee || 0))
     }
 
     return filtered
   }
 
-  // Load data
+  // ── Load data ──────────────────────────────────────────────────────────────
   const fetchData = async (p, isNew = false) => {
     setLoading(true)
     try {
@@ -186,6 +283,7 @@ export default function Search() {
       if (language) params.append('language', language)
       if (availability) params.append('availability', availability)
       if (minRating) params.append('minRating', minRating)
+      if (experienceLevel) params.append('experienceLevel', experienceLevel)
 
       const res = await fetch(`/api/search?${params.toString()}`)
       const data = await res.json()
@@ -195,10 +293,9 @@ export default function Search() {
           setLawyers(data.lawyers)
         } else {
           setLawyers(prev => {
-            // Prevent duplicates
             const ids = new Set(prev.map(l => l._id))
-            const filtered = data.lawyers.filter(l => !ids.has(l._id))
-            return [...prev, ...filtered]
+            const deduped = data.lawyers.filter(l => !ids.has(l._id))
+            return [...prev, ...deduped]
           })
         }
         setHasMore(data.lawyers.length === 8)
@@ -206,7 +303,6 @@ export default function Search() {
         setUsingDemo(false)
       } else {
         if (isNew) {
-          // Fallback to demo data
           const demoFiltered = getFilteredDemoLawyers()
           setLawyers(demoFiltered)
           setTotal(demoFiltered.length)
@@ -216,7 +312,6 @@ export default function Search() {
       }
     } catch (err) {
       if (isNew) {
-        // API failed — fallback to demo data
         const demoFiltered = getFilteredDemoLawyers()
         setLawyers(demoFiltered)
         setTotal(demoFiltered.length)
@@ -235,7 +330,7 @@ export default function Search() {
 
   const hasMounted = useRef(false)
 
-  // Effect for filter change (Reset) — uses debouncedCity so typing doesn't cause reload
+  // Effect for filter change (Reset)
   useEffect(() => {
     if (!hasMounted.current) {
       hasMounted.current = true
@@ -244,7 +339,6 @@ export default function Search() {
     setPage(1)
     fetchData(1, true)
 
-    // Silently update URL without triggering Next.js router transitions
     const p = new URLSearchParams()
     if (spec) p.set('specialization', spec)
     if (debouncedCity) p.set('city', debouncedCity)
@@ -257,7 +351,7 @@ export default function Search() {
     const newUrl = `/search${p.toString() ? '?' + p.toString() : ''}`
     window.history.replaceState({ ...window.history.state, as: newUrl, url: newUrl }, '', newUrl)
 
-  }, [spec, debouncedCity, maxFee, sortBy, language, availability, minRating])
+  }, [spec, debouncedCity, maxFee, sortBy, language, availability, minRating, experienceLevel])
 
   // Fetch case estimate when specialization filter changes
   useEffect(() => {
@@ -277,7 +371,14 @@ export default function Search() {
     setLanguage('')
     setAvailability('')
     setMinRating('')
+    setExperienceLevel('')
+    setAiNote('')
+    setUrgencyFlag(null)
+    setAiConfidence(null)
   }
+
+  // Active filter count badge
+  const activeFilterCount = [spec, debouncedCity, maxFee, language, availability, minRating, experienceLevel].filter(Boolean).length
 
   return (
     <div style={{ background: '#F5F0EC', minHeight: '100vh' }}>
@@ -290,6 +391,7 @@ export default function Search() {
         @keyframes slideInLeft { from{opacity:0;transform:translateX(-20px)} to{opacity:1;transform:translateX(0)} }
         @keyframes fadeInUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
         @keyframes shimmer { 0%{background-position:0% 50%} 100%{background-position:200% 50%} }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
         .filter-sidebar-inner::-webkit-scrollbar { width: 4px; }
         .filter-sidebar-inner::-webkit-scrollbar-track { background: transparent; }
         .filter-sidebar-inner::-webkit-scrollbar-thumb { background: rgba(123,29,46,0.2); border-radius: 4px; }
@@ -303,9 +405,14 @@ export default function Search() {
         .fee-chip:hover { background: #7B1D2E !important; color: #fff !important; }
         .apply-filter-btn:hover { opacity: 0.9; transform: translateY(-1px); }
         .reset-btn:hover { background: rgba(123,29,46,0.06) !important; }
+        .search-sidebar-mobile { position: static !important; }
+        .ai-textarea:focus { border-color: #7B1D2E !important; box-shadow: 0 0 0 3px rgba(123,29,46,0.12); }
         @media(max-width:768px){
           .search-two-col { flex-direction: column !important; }
           .filter-sidebar { width: 100% !important; position: static !important; }
+        }
+        @media(min-width:769px){
+          .show-mobile { display: none !important; }
         }
       `}} />
 
@@ -319,7 +426,6 @@ export default function Search() {
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(160deg, rgba(10,4,6,0.93) 0%, rgba(92,21,33,0.88) 55%, rgba(10,4,6,0.95) 100%)' }} />
         <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 120, background: 'linear-gradient(to bottom, transparent, #F5F0EC)' }} />
         <div className="container" style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
-          {/* Breadcrumb pill */}
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
             background: 'rgba(245,196,179,0.1)', border: '1px solid rgba(245,196,179,0.22)',
@@ -338,10 +444,9 @@ export default function Search() {
             Find the Right <span style={{ color: '#F5C4B3' }}>Legal Expert</span>
           </h1>
           <p style={{ fontSize: '1.05rem', color: 'rgba(245,224,200,0.78)', maxWidth: 580, margin: '0 auto 2rem', lineHeight: 1.8 }}>
-            Browse <strong style={{ color: '#F5C4B3' }}>1,338+</strong> Bar Council verified advocates across India.
-            Filter by area, location, language, fee & availability.
+            Browse <strong style={{ color: '#F5C4B3' }}>110+</strong> Bar Council verified advocates across India.
+            Filter by area, location, language, fee &amp; availability.
           </p>
-
         </div>
       </section>
 
@@ -349,7 +454,7 @@ export default function Search() {
       <div style={{ background: '#fff', borderBottom: '1px solid #EDD5BE', padding: '.85rem 0', overflowX: 'auto' }}>
         <div className="container" style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'nowrap', minWidth: 'max-content' }}>
           <span style={{ fontSize: '.72rem', fontWeight: 800, color: '#9A7A84', textTransform: 'uppercase', letterSpacing: '1.5px', flexShrink: 0, marginRight: 4 }}>Quick filter:</span>
-          {['Criminal Defence','Family Law','Property Law','Corporate Law','Cyber Law','Bail & FIR','Divorce','Taxation','Labour Law'].map(s => (
+          {['Criminal Defence','Family Law','Property Law','Corporate Law','Cyber Law','Bail & FIR','Divorce','Taxation','Labour Law','Intellectual Property'].map(s => (
             <button key={s} onClick={() => setSpec(s === spec ? '' : s)} style={{
               background: spec === s ? '#7B1D2E' : 'transparent',
               border: `1.5px solid ${spec === s ? '#7B1D2E' : '#E8C9A8'}`,
@@ -399,7 +504,7 @@ export default function Search() {
             <div>
               <div style={{ fontWeight: 800, color: '#1A0A0D', fontSize: '.95rem' }}>Verified Advocates Found</div>
               <div style={{ color: '#9A7A84', fontSize: '.75rem', marginTop: 1 }}>
-                {spec ? `Specializing in ${spec}` : 'All practice areas'}{city ? ` · ${city}` : ''}
+                {spec ? `Specializing in ${spec}` : 'All practice areas'}{debouncedCity ? ` · ${debouncedCity}` : ''}
               </div>
             </div>
           </div>
@@ -408,9 +513,12 @@ export default function Search() {
             <button
               className="show-mobile"
               onClick={() => setShowFilters(true)}
-              style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#7B1D2E', color: '#fff', border: 'none', borderRadius: 10, padding: '.55rem 1.1rem', fontSize: '.85rem', fontWeight: 700, cursor: 'pointer' }}
+              style={{ display: 'flex', alignItems: 'center', gap: 6, background: '#7B1D2E', color: '#fff', border: 'none', borderRadius: 10, padding: '.55rem 1.1rem', fontSize: '.85rem', fontWeight: 700, cursor: 'pointer', position: 'relative' }}
             >
               <Filter size={15} /> Filters
+              {activeFilterCount > 0 && (
+                <span style={{ position: 'absolute', top: -6, right: -6, background: '#F59E0B', color: '#fff', borderRadius: '50%', width: 18, height: 18, fontSize: '.65rem', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{activeFilterCount}</span>
+              )}
             </button>
             <button onClick={clearFilters} style={{ background: 'rgba(123,29,46,0.06)', border: 'none', borderRadius: 10, padding: '.55rem 1rem', fontSize: '.82rem', fontWeight: 700, color: '#7B1D2E', cursor: 'pointer' }} className="reset-btn">
               Reset All
@@ -471,7 +579,7 @@ export default function Search() {
         <div className="search-two-col" style={{ display: 'flex', gap: '1.8rem', alignItems: 'flex-start' }}>
 
           {/* ── Sidebar ── */}
-          <aside className={`filter-sidebar search-sidebar-mobile ${showFilters ? 'open' : ''}`} style={{
+          <aside className={`filter-sidebar ${showFilters ? 'open' : ''}`} style={{
             width: 290, flexShrink: 0,
             background: '#fff', border: '1px solid #E8C9A8',
             borderRadius: 22, overflow: 'hidden',
@@ -488,6 +596,9 @@ export default function Search() {
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <Filter size={16} color="#F5C4B3" />
                 <span style={{ fontWeight: 800, fontSize: '1rem', color: '#fff', fontFamily: "'Plus Jakarta Sans',sans-serif" }}>Filters</span>
+                {activeFilterCount > 0 && (
+                  <span style={{ background: '#F59E0B', color: '#fff', borderRadius: 20, padding: '1px 7px', fontSize: '.68rem', fontWeight: 900 }}>{activeFilterCount} active</span>
+                )}
               </div>
               <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                 <button onClick={clearFilters} style={{ background: 'rgba(255,255,255,0.12)', border: 'none', borderRadius: 8, padding: '.3rem .7rem', color: '#F5C4B3', fontSize: '.72rem', fontWeight: 700, cursor: 'pointer' }}>Reset</button>
@@ -498,14 +609,16 @@ export default function Search() {
             {/* Scrollable filter body */}
             <div className="filter-sidebar-inner" style={{ overflowY: 'auto', flex: 1, padding: '1.2rem 1.4rem' }}>
 
-              {/* AI Classifier */}
+              {/* ── AI Auto-Match (works for ALL users) ── */}
               <div style={{ marginBottom: '1.5rem' }}>
                 <div style={st.sblabel}><Sparkles size={13} color="#7B1D2E" /> AI Auto-Match</div>
                 <textarea
-                  style={{ width: '100%', minHeight: 64, resize: 'vertical', border: '1.5px solid #E8C9A8', borderRadius: 12, padding: '.65rem .9rem', fontSize: '.82rem', fontWeight: 600, color: '#1A0A0D', outline: 'none', background: '#FDF6EE', boxSizing: 'border-box' }}
-                  placeholder="Describe your legal problem in plain language…"
+                  className="ai-textarea"
+                  style={{ width: '100%', minHeight: 70, resize: 'vertical', border: '1.5px solid #E8C9A8', borderRadius: 12, padding: '.65rem .9rem', fontSize: '.82rem', fontWeight: 600, color: '#1A0A0D', outline: 'none', background: '#FDF6EE', boxSizing: 'border-box', transition: 'border-color 0.2s, box-shadow 0.2s' }}
+                  placeholder="Describe your legal issue… e.g. 'My landlord won't return deposit' or 'Got FIR for fraud'"
                   value={aiProblemText}
                   onChange={e => setAiProblemText(e.target.value)}
+                  onKeyDown={e => { if (e.key === 'Enter' && e.ctrlKey) { e.preventDefault(); handleAiClassify() } }}
                 />
                 <button
                   onClick={handleAiClassify}
@@ -514,14 +627,17 @@ export default function Search() {
                     marginTop: 6, width: '100%', padding: '.52rem .8rem',
                     background: classifying ? 'rgba(123,29,46,0.5)' : 'linear-gradient(135deg,#7B1D2E,#5C1521)',
                     color: '#fff', border: 'none', borderRadius: 10,
-                    fontSize: '.8rem', fontWeight: 800, cursor: 'pointer',
+                    fontSize: '.8rem', fontWeight: 800, cursor: classifying || !aiProblemText.trim() ? 'not-allowed' : 'pointer',
                     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-                    transition: 'all 0.2s'
+                    transition: 'all 0.2s', opacity: !aiProblemText.trim() ? 0.6 : 1
                   }}
                 >
                   {classifying ? <Loader2 size={13} className="animate-spin" /> : <Bot size={13} />}
-                  {classifying ? 'AI is analyzing…' : 'AI Auto-Match Specialization'}
+                  {classifying ? 'Analyzing…' : 'AI Auto-Match Specialization'}
                 </button>
+                <div style={{ fontSize: '.7rem', color: '#9A7A84', marginTop: 4, textAlign: 'center' }}>
+                  {isLoggedIn ? '✓ Powered by Anthropic AI' : 'Works without login · Ctrl+Enter to run'}
+                </div>
                 {aiNote && (
                   <div style={{ fontSize: '.72rem', color: '#166534', background: '#F0FDF4', padding: '.35rem .6rem', borderRadius: 8, marginTop: 5, fontWeight: 700, border: '1px solid #BBF7D0' }}>{aiNote}</div>
                 )}
@@ -543,11 +659,22 @@ export default function Search() {
                 <div style={st.sblabel}><MapPin size={13} color="#7B1D2E" /> Location</div>
                 <input
                   style={st.inp}
-                  placeholder="City or Pincode"
+                  placeholder="City or State (e.g. Delhi, Mumbai)"
                   value={city}
                   onChange={e => setCity(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), setDebouncedCity(e.target.value))}
                 />
+                {/* City chips */}
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginTop: 6 }}>
+                  {['Delhi','Mumbai','Bengaluru','Hyderabad','Chennai','Kolkata','Pune','Jaipur','Ahmedabad','Lucknow'].map(c => (
+                    <button key={c} onClick={() => { setCity(c === city ? '' : c); setDebouncedCity(c === city ? '' : c) }} style={{
+                      background: city === c ? '#7B1D2E' : '#FDF6EE',
+                      border: `1px solid ${city === c ? '#7B1D2E' : '#E8C9A8'}`,
+                      color: city === c ? '#fff' : '#4A2030',
+                      borderRadius: 20, padding: '.2rem .55rem', fontSize: '.7rem', fontWeight: 700, cursor: 'pointer', transition: 'all 0.15s'
+                    }}>{c}</button>
+                  ))}
+                </div>
               </div>
 
               {/* Max Fee chips */}
@@ -567,7 +694,7 @@ export default function Search() {
                         fontSize: '.8rem', fontWeight: 800, cursor: 'pointer',
                         transition: 'all 0.2s', fontFamily: "'Sora',sans-serif"
                       }}
-                    >₹{amt >= 1000 ? (amt / 1000) + 'k' : amt}</button>
+                    >≤ ₹{amt >= 1000 ? (amt / 1000) + 'k' : amt}</button>
                   ))}
                 </div>
               </div>
@@ -588,15 +715,15 @@ export default function Search() {
                 <div style={st.sblabel}><Globe size={13} color="#7B1D2E" /> Language</div>
                 <select style={st.sel} value={language} onChange={e => setLanguage(e.target.value)}>
                   <option value="">All Languages</option>
-                  {['Hindi','English','Tamil','Bengali','Marathi','Gujarati','Telugu','Kannada','Punjabi','Urdu'].map(l => <option key={l}>{l}</option>)}
+                  {['Hindi','English','Tamil','Bengali','Marathi','Gujarati','Telugu','Kannada','Punjabi','Urdu','Malayalam','Odia','Tulu','Marwari'].map(l => <option key={l}>{l}</option>)}
                 </select>
               </div>
 
               {/* Availability */}
               <div style={{ marginBottom: '1.4rem' }}>
                 <div style={st.sblabel}><Video size={13} color="#7B1D2E" /> Availability</div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  {[['', 'Any Mode'], ['online', '🖥 Online'], ['offline', '🏛 Offline'], ['both', '🌐 Online + Offline']].map(([v, l]) => (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  {[['', 'Any Mode'], ['online', '🖥 Online'], ['offline', '🏛 In-Person'], ['both', '🌐 Online + In-Person']].map(([v, l]) => (
                     <label key={v} style={{
                       display: 'flex', alignItems: 'center', gap: 9,
                       fontSize: '.85rem', fontWeight: 600, cursor: 'pointer',
@@ -623,8 +750,8 @@ export default function Search() {
               {/* Min Rating */}
               <div style={{ marginBottom: '1.4rem' }}>
                 <div style={st.sblabel}><Star size={13} color="#7B1D2E" /> Minimum Rating</div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  {[['', 'All Ratings'], ['4', '⭐⭐⭐⭐ 4+ Stars'], ['3', '⭐⭐⭐ 3+ Stars']].map(([v, l]) => (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  {[['', 'All Ratings'], ['4.5', '⭐ 4.5+ Stars'], ['4', '⭐ 4+ Stars'], ['3', '⭐ 3+ Stars']].map(([v, l]) => (
                     <label key={v} style={{
                       display: 'flex', alignItems: 'center', gap: 9,
                       fontSize: '.85rem', fontWeight: 600, cursor: 'pointer',
@@ -648,6 +775,22 @@ export default function Search() {
                 </div>
               </div>
 
+              {/* Experience Level */}
+              <div style={{ marginBottom: '1.4rem' }}>
+                <div style={st.sblabel}><Scale size={13} color="#7B1D2E" /> Experience Level</div>
+                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                  {[['', 'All'], ['junior', '🌱 Junior (<8 yrs)'], ['mid', '🏛 Mid (8–15 yrs)'], ['senior', '⚖️ Senior (15+ yrs)']].map(([v, l]) => (
+                    <button key={v} onClick={() => setExperienceLevel(experienceLevel === v ? '' : v)} style={{
+                      padding: '.4rem .7rem', borderRadius: 20, fontSize: '.75rem', fontWeight: 700, cursor: 'pointer',
+                      border: `1.5px solid ${experienceLevel === v ? '#7B1D2E' : '#E8C9A8'}`,
+                      background: experienceLevel === v ? '#7B1D2E' : '#FDF6EE',
+                      color: experienceLevel === v ? '#fff' : '#4A2030',
+                      transition: 'all 0.18s', whiteSpace: 'nowrap'
+                    }}>{l}</button>
+                  ))}
+                </div>
+              </div>
+
               {/* Promo box */}
               <div style={{ background: 'linear-gradient(135deg, #7B1D2E, #3D0E16)', borderRadius: 18, padding: '1.3rem', textAlign: 'center', marginTop: '.5rem' }}>
                 <div style={{ fontSize: '1.4rem', marginBottom: 6 }}>🌟</div>
@@ -662,7 +805,7 @@ export default function Search() {
                 width: '100%', padding: '1rem', background: 'linear-gradient(135deg, #7B1D2E, #5C1521)',
                 color: '#fff', border: 'none', borderRadius: 14, fontWeight: 800, fontSize: '1rem',
                 cursor: 'pointer', transition: 'all 0.2s'
-              }}>Apply Filters</button>
+              }}>Apply Filters ({activeFilterCount} active)</button>
             </div>
           </aside>
 
@@ -680,7 +823,7 @@ export default function Search() {
                   No advocates match your filters
                 </h2>
                 <p style={{ color: '#4A2030', maxWidth: 400, margin: '0 auto 1.5rem', lineHeight: 1.75, fontSize: '.92rem' }}>
-                  Our network is growing fast. Try adjusting your filters or remove a few to see more results.
+                  Our network is growing fast. Try adjusting your filters or broaden the criteria to see more results.
                 </p>
                 <button onClick={clearFilters} style={{
                   display: 'inline-flex', alignItems: 'center', gap: 8,
@@ -709,7 +852,7 @@ export default function Search() {
             {/* Skeleton loading */}
             {loading && lawyers.length === 0 && (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.4rem' }}>
-                {[1, 2, 3, 4].map(i => <SkeletonCard key={i} />)}
+                {[1, 2, 3, 4, 5, 6].map(i => <SkeletonCard key={i} />)}
               </div>
             )}
 
@@ -747,5 +890,3 @@ const st = {
   inp: { width: '100%', padding: '.65rem .9rem', borderRadius: 12, border: '1.5px solid #E8C9A8', background: '#FDF6EE', fontSize: '.88rem', fontWeight: 600, outline: 'none', color: '#1A0D10', boxSizing: 'border-box' },
   tooltip: { position: 'absolute', right: 0, top: '130%', background: '#1A0A0D', color: '#F5E6D3', fontSize: '.72rem', fontWeight: 600, padding: '.5rem .85rem', borderRadius: 10, width: 220, lineHeight: 1.5, zIndex: 50, pointerEvents: 'none', opacity: 0, transition: 'opacity .2s', whiteSpace: 'normal' }
 }
-
-

@@ -23,7 +23,7 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   try {
     await connectDB();
-    const { city, state, specialization, minExp, maxFee, sort, page = 1, limit = 12 } = req.query;
+    const { city, state, specialization, minExp, maxFee, sort, language, availability, minRating, experienceLevel, page = 1, limit = 12 } = req.query;
 
     const parsedPage = Math.max(1, parseInt(page) || 1);
     const parsedLimit = Math.min(50, Math.max(1, parseInt(limit) || 12)); // Cap at 50
@@ -43,6 +43,18 @@ router.get('/', async (req, res) => {
     if (specialization) filter.specializations = { $in: [new RegExp(specialization.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i')] };
     if (minExp) filter.experience = { $gte: parseInt(minExp) };
     if (maxFee) filter.consultationFee = { $lte: parseFloat(maxFee) };
+    if (minRating) filter.averageRating = { $gte: parseFloat(minRating) };
+    if (language) filter.languages = { $in: [new RegExp(language.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i')] };
+    if (experienceLevel) filter.experienceLevel = experienceLevel;
+    if (availability) {
+      if (availability === 'online') {
+        filter.$and = filter.$and || [];
+        filter.$and.push({ $or: [{ consultationModes: { $in: [/online/i] } }, { isAvailable: true }] });
+      } else if (availability === 'offline') {
+        filter.$and = filter.$and || [];
+        filter.$and.push({ consultationModes: { $in: [/offline|in-person/i] } });
+      }
+    }
 
     const sortMap = {
       rating:     { averageRating: -1 },

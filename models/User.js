@@ -5,7 +5,13 @@ const userSchema = new mongoose.Schema({
   name: { type: String, required: true, trim: true },
   email: { type: String, required: true, unique: true, lowercase: true },
   password: { type: String, required: true, minlength: 6 },
-  role: { type: String, enum: ['client', 'lawyer', 'admin'], default: 'client' },
+  role: {
+    type: String,
+    // Existing platform roles → client | lawyer | admin
+    // Case Vault (SIH26190) roles → officer | legal-officer | court-clerk
+    enum: ['client', 'lawyer', 'admin', 'officer', 'legal-officer', 'court-clerk'],
+    default: 'client',
+  },
   previousRole: { type: String, default: null },
   phone: { type: String },
   city: { type: String },

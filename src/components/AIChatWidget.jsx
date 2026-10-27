@@ -99,6 +99,7 @@ export default function AIChatWidget() {
         suggestedAction: data.suggestedAction || undefined,
         logId: data.logId || null,
         sources: data.sources || [],
+        verification: data.verification || null,
         userRating: null,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       }
@@ -202,10 +203,22 @@ export default function AIChatWidget() {
           <div style={s.sourcesList}>
             {msg.sources.map((src, idx) => (
               <div key={idx} style={s.sourceItem}>
-                <div style={{ fontWeight: 700, color: 'var(--txt)' }}>
-                  {src.actName} · Sec. {src.sectionNumber}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, flexWrap: 'wrap' }}>
+                  <div style={{ fontWeight: 700, color: 'var(--txt)' }}>
+                    {src.actName} · Sec. {src.sectionNumber}
+                  </div>
+                  {src.verdict === 'pass' && (
+                    <span style={s.badgePass}>
+                      Applicable on your date
+                    </span>
+                  )}
+                  {src.verdict === 'needs_date' && (
+                    <span style={s.badgeNeedsDate}>
+                      Date needed
+                    </span>
+                  )}
                 </div>
-                {src.sectionTitle && <div style={{ fontSize: '.7rem', color: '#6B7280' }}>{src.sectionTitle}</div>}
+                {src.sectionTitle && <div style={{ fontSize: '.7rem', color: '#6B7280', marginTop: 2 }}>{src.sectionTitle}</div>}
               </div>
             ))}
           </div>
@@ -287,6 +300,16 @@ export default function AIChatWidget() {
                   </div>
                   {m.role === 'user' && <div style={{ ...s.msgAvatar, background: 'var(--bur)', color: '#fff' }}><User size={14}/></div>}
                 </div>
+                {m.role === 'bot' && m.verification?.repaired?.length > 0 && (
+                  <div style={s.repairedNote}>
+                    A citation from a repealed code was replaced with its current counterpart.
+                  </div>
+                )}
+                {m.role === 'bot' && m.verification?.status === 'ask_dates' && (
+                  <div style={s.askDatesHint}>
+                    Tell me the date of the offence and the date the case/FIR began; the applicable law depends on whether it was before or on/after 1 July 2024.
+                  </div>
+                )}
                 {m.role === 'bot' && renderSources(m)}
                 {m.role === 'bot' && renderFeedbackButtons(m)}
                 {m.role === 'bot' && m.suggestedAction && renderSuggestedAction(m.suggestedAction)}
@@ -356,6 +379,10 @@ const s = {
   sourcesToggleBtn: { width: '100%', padding: '.45rem .75rem', background: 'none', border: 'none', fontSize: '.74rem', fontWeight: 700, color: 'var(--txt)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' },
   sourcesList: { padding: '.5rem .75rem', borderTop: '1px solid #E5E7EB', display: 'flex', flexDirection: 'column', gap: 6, fontSize: '.74rem', background: '#fff' },
   sourceItem: { padding: '.35rem .5rem', background: '#F9FAFB', borderRadius: '8px', border: '1px solid #F3F4F6' },
+  badgePass: { fontSize: '.66rem', fontWeight: 700, color: '#065F46', background: '#D1FAE5', border: '1px solid #A7F3D0', borderRadius: '9999px', padding: '1px 8px', whiteSpace: 'nowrap' },
+  badgeNeedsDate: { fontSize: '.66rem', fontWeight: 700, color: '#92400E', background: '#FEF3C7', border: '1px solid #FDE68A', borderRadius: '9999px', padding: '1px 8px', whiteSpace: 'nowrap' },
+  repairedNote: { marginLeft: 36, marginTop: 4, fontSize: '.74rem', color: '#4B5563', fontStyle: 'italic' },
+  askDatesHint: { marginLeft: 36, marginTop: 6, padding: '.45rem .75rem', background: '#FEF3C7', border: '1px solid #FCD34D', borderRadius: '8px', fontSize: '.74rem', lineHeight: 1.4, color: '#92400E', fontWeight: 500 },
   feedbackRow: { marginLeft: 36, marginTop: 4, display: 'flex', alignItems: 'center', gap: 6 },
   feedbackBtn: { background: 'none', border: '1px solid #E5E7EB', borderRadius: '6px', padding: '3px 6px', color: '#6B7280', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all .2s' },
   feedbackBtnActive: { background: '#7B1D2E', color: '#fff', borderColor: '#7B1D2E' },

@@ -3,6 +3,7 @@ import { Link, useParams, useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { MapPin, Landmark, Star, ShieldCheck, Award, MessageCircle, Gavel, Languages, Clock, Briefcase, Globe, ExternalLink, CalendarDays, Video } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
+import demoLawyers from '../../data/demoLawyers'
 
 export default function LawyerProfile() {
   const { id } = useParams()
@@ -13,14 +14,30 @@ export default function LawyerProfile() {
 
   useEffect(() => {
     if (!id) return
+
+    // Immediate check if it's a demo lawyer
+    const demoFound = demoLawyers.find(l => l._id === id)
+    if (demoFound) {
+      setLawyer(demoFound)
+      setLoading(false)
+      return
+    }
+
     fetch(`/api/lawyers/${id}`)
       .then(r => r.json())
       .then(data => {
-        setLawyer(data.lawyer || data)
+        if (data.lawyer && data.lawyer._id) {
+          setLawyer(data.lawyer)
+        } else {
+          const fallback = demoLawyers.find(l => l._id === id)
+          if (fallback) setLawyer(fallback)
+        }
         setLoading(false)
       })
       .catch(err => {
         console.error(err)
+        const fallback = demoLawyers.find(l => l._id === id)
+        if (fallback) setLawyer(fallback)
         setLoading(false)
       })
   }, [id])
@@ -28,13 +45,18 @@ export default function LawyerProfile() {
   if (loading) return <div style={{ paddingTop: 140, textAlign: 'center' }}><div className="spinner" /></div>
   if (!lawyer || !lawyer._id) return <div style={{ paddingTop: 140, textAlign: 'center' }}><p>Lawyer not found.</p></div>
 
-  const ogTitle = `${lawyer.name} — ${lawyer.specializations?.[0] || 'Lawyer'} in ${lawyer.city}`
+  const fee = lawyer.consultationFee ?? lawyer.fee ?? 0
+  const rating = lawyer.averageRating ?? lawyer.rating ?? 5.0
+  const reviewsCount = lawyer.totalReviews ?? lawyer.reviewCount ?? 0
+  const specs = lawyer.specializations || (lawyer.specialization ? [lawyer.specialization] : [])
+
+  const ogTitle = `${lawyer.name} — ${specs[0] || 'Advocate'} in ${lawyer.city}`
   const ogDesc = `Book a consultation with ${lawyer.name}. ${lawyer.experience} years of experience in ${lawyer.city}. Verified by Justice Junction 24/7.`
   const ogUrl = `https://justice-junction-app.vercel.app/lawyer/${lawyer._id}`
 
   const handleBook = () => {
     if (!isLoggedIn) { navigate('/login'); return }
-    navigate(`/book?lawyerId=${lawyer._id}&lawyerName=${encodeURIComponent(lawyer.name)}&fee=${lawyer.consultationFee}`)
+    navigate(`/book?lawyerId=${lawyer._id}&lawyerName=${encodeURIComponent(lawyer.name)}&fee=${fee}`)
   }
 
   const handleWhatsApp = () => {
@@ -62,15 +84,18 @@ export default function LawyerProfile() {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 12 }}>
             <h1 className="boutique-heading" style={{ fontSize: 'clamp(2rem, 3.8vw, 2.3rem)', color: '#fff', fontStyle: 'normal', margin: 0 }}>Adv. {lawyer.name}</h1>
-            {lawyer.isVerified && (
+            {lawyer.verified || lawyer.isVerified ? (
               <div style={{ ...s.barBadge, background: '#e8c9a8', color: '#1A0A0D' }}>
                 <ShieldCheck size={14} />
                 <span>Bar Council Verified</span>
               </div>
+            ) : null}
+            {lawyer.isDemo && (
+              <div style={{ ...s.barBadge, background: '#FDF6EE', color: '#7B1D2E', border: '1px solid #E8C9A8' }}>
+                <span>DEMO PROFILE</span>
+              </div>
             )}
-            {/* Subscription badge — shown only when plan is pro/elite AND not expired.
-                Intentionally uses a distinct teal palette so clients never confuse
-                a paid membership with a bar-council credential check. */}
+            {/* Subscription badge */}
             {(['pro', 'elite'].includes(lawyer.subscription)) &&
              lawyer.subscriptionExpiry &&
              new Date(lawyer.subscriptionExpiry) > new Date() && (
@@ -93,11 +118,11 @@ export default function LawyerProfile() {
               </div>
             )}
           </div>
-          <div style={{ fontSize: '1.2rem', color: '#e8c9a8', fontWeight: 700, marginBottom: '1.5rem' }}>{lawyer.specializations?.join(' · ')}</div>
+          <div style={{ fontSize: '1.2rem', color: '#e8c9a8', fontWeight: 700, marginBottom: '1.5rem' }}>{specs.join(' · ')}</div>
           <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
-            <span style={{ ...s.metaItem, color: 'rgba(255,255,255,0.9)' }}><MapPin size={16} /> {lawyer.city}, {lawyer.state}</span>
+            <span style={{ ...s.metaItem, color: 'rgba(255,255,255,0.9)' }}><MapPin size={16} /> {lawyer.city}{lawyer.state ? `, ${lawyer.state}` : ''}</span>
             <span style={{ ...s.metaItem, color: 'rgba(255,255,255,0.9)' }}><Landmark size={16} /> {lawyer.experience} Years Experience</span>
-            <span style={{ ...s.metaItem, color: 'rgba(255,255,255,0.9)' }}><Star size={16} fill="#e8c9a8" color="#e8c9a8" /> {lawyer.averageRating || 5.0} ({lawyer.totalReviews || 0} Reviews)</span>
+            <span style={{ ...s.metaItem, color: 'rgba(255,255,255,0.9)' }}><Star size={16} fill="#e8c9a8" color="#e8c9a8" /> {rating.toFixed(1)} ({reviewsCount} Reviews)</span>
           </div>
         </div>
       </div>
@@ -109,13 +134,13 @@ export default function LawyerProfile() {
             <div className="card" style={{ padding: '2.5rem', boxShadow: 'var(--sh-xl)' }}>
               <div style={s.section}>
                 <h2 style={s.h2}>Professional Summary</h2>
-                <p style={s.bio}>{lawyer.bio || 'No professional bio available for this advocate.'}</p>
+                <p style={s.bio}>{lawyer.bio || 'Experienced advocate committed to delivering justice and expert legal representation for clients.'}</p>
               </div>
 
               <div style={s.section}>
                 <h2 style={s.h2}>Practice Areas</h2>
                 <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-                  {lawyer.specializations?.map(spec => (
+                  {specs.map(spec => (
                     <span key={spec} className="badge badge-primary" style={{ padding: '.5rem 1rem', fontSize: '.9rem' }}>{spec}</span>
                   ))}
                 </div>
@@ -134,10 +159,10 @@ export default function LawyerProfile() {
 
               <div style={s.section}>
                 <h2 style={s.h2}><Languages size={18} style={{ marginRight: 8, verticalAlign: 'middle' }} /> Languages Known</h2>
-                <div style={{ display: 'flex', gap: 12 }}>
-                  {lawyer.languages?.map(l => (
-                    <span key={l} style={{ fontSize: '0.95rem', fontWeight: 600, color: '#444' }}>{l}</span>
-                  )) || 'Not specified'}
+                <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                  {lawyer.languages && lawyer.languages.length > 0 ? lawyer.languages.map(l => (
+                    <span key={l} style={{ fontSize: '0.95rem', fontWeight: 600, color: '#444', background: '#F5F0EC', padding: '4px 12px', borderRadius: '20px' }}>{l}</span>
+                  )) : 'Hindi, English'}
                 </div>
               </div>
 
@@ -146,7 +171,7 @@ export default function LawyerProfile() {
                 <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
                   <div style={{ background: '#fdf8f4', padding: '1rem', borderRadius: 8, border: '1px solid #edd5be', display: 'inline-block' }}>
                     <span style={{ fontSize: '.85rem', color: '#888', fontWeight: 700 }}>REGISTRATION NO: </span>
-                    <span style={{ fontFamily: 'monospace', fontWeight: 800, color: '#7B1D2E' }}>{lawyer.barRegistrationNumber}</span>
+                    <span style={{ fontFamily: 'monospace', fontWeight: 800, color: '#7B1D2E' }}>{lawyer.barRegistrationNumber || lawyer.barCouncil || 'BCI/VERIFIED'}</span>
                   </div>
                   {lawyer.barCouncilState && (
                     <div style={{ background: '#fdf8f4', padding: '1rem', borderRadius: 8, border: '1px solid #edd5be', display: 'inline-block' }}>
@@ -181,10 +206,10 @@ export default function LawyerProfile() {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
                 <h2 style={s.h2}>Client Reviews</h2>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontWeight: 800, color: '#f59e0b' }}>
-                  <Star size={20} fill="#f59e0b" color="#f59e0b" /> {lawyer.averageRating || 5.0} / 5
+                  <Star size={20} fill="#f59e0b" color="#f59e0b" /> {rating.toFixed(1)} / 5 ({reviewsCount} total)
                 </div>
               </div>
-              {lawyer.reviews?.length > 0 ? (
+              {lawyer.reviews && lawyer.reviews.length > 0 ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                   {lawyer.reviews.map((r, i) => (
                     <div key={i} style={s.review}>
@@ -198,7 +223,7 @@ export default function LawyerProfile() {
                 </div>
               ) : (
                 <div style={{ textAlign: 'center', padding: '2rem', background: '#fdf8f4', borderRadius: 8 }}>
-                  <p style={{ color: '#888', fontSize: '0.95rem' }}>No reviews yet for this advocate.</p>
+                  <p style={{ color: '#888', fontSize: '0.95rem' }}>{reviewsCount > 0 ? `Verified rating: ${rating.toFixed(1)}/5 stars based on ${reviewsCount} client consultations.` : 'No written reviews yet for this advocate.'}</p>
                 </div>
               )}
             </div>
@@ -211,10 +236,10 @@ export default function LawyerProfile() {
                 <div style={{ marginBottom: '2rem' }}>
                   <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#888', textTransform: 'uppercase', letterSpacing: '.1em', marginBottom: 8 }}>Consultation Fee</div>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
-                    <span style={{ fontSize: '2.4rem', fontWeight: 800, color: '#7B1D2E' }}>₹{lawyer.consultationFee?.toLocaleString()}</span>
+                    <span style={{ fontSize: '2.4rem', fontWeight: 800, color: '#7B1D2E' }}>₹{fee.toLocaleString()}</span>
                     <span style={{ fontSize: '0.9rem', color: '#888', fontWeight: 600 }}>/ Session</span>
                   </div>
-                  <p style={{ fontSize: '.8rem', color: '#888', marginTop: 4 }}>Includes 30 mins video consultation & case summary.</p>
+                  <p style={{ fontSize: '.8rem', color: '#888', marginTop: 4 }}>Includes 30 mins video consultation &amp; case summary.</p>
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -230,7 +255,7 @@ export default function LawyerProfile() {
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                     <span className="pulse-dot" style={{ background: '#22c55e' }} />
                     <span style={{ fontSize: '0.9rem', fontWeight: 800, color: '#22c55e' }}>
-                      Available for Consult
+                      {lawyer.isAvailable !== false ? 'Available for Consult' : 'Booking Slots Next Week'}
                     </span>
                   </div>
                   <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 6 }}>

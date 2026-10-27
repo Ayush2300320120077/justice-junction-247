@@ -34,6 +34,7 @@ const Terms           = lazy(() => import('./pages/terms'))
 const Privacy         = lazy(() => import('./pages/privacy-policy'))
 const JoinAsLawyer    = lazy(() => import('./pages/join-as-lawyer'))
 const Subscriptions   = lazy(() => import('./pages/Subscriptions'))
+const ResearchTemporal = lazy(() => import('./pages/ResearchTemporal'))
 const NotFound        = lazy(() => import('./pages/404'))
 
 // Admin pages
@@ -50,6 +51,12 @@ const AdminReports    = lazy(() => import('./pages/admin/reports'))
 const AdminTemplates  = lazy(() => import('./pages/admin/templates'))
 const AdminAiEval     = lazy(() => import('./pages/admin/ai-eval'))
 const AdminQueries    = lazy(() => import('./pages/admin/queries'))
+
+// Case Vault pages (SIH26190)
+const CaseVaultDash   = lazy(() => import('./pages/case-vault/dashboard'))
+const CaseVaultDetail = lazy(() => import('./pages/case-vault/case-detail'))
+const CaseVaultCreate = lazy(() => import('./pages/case-vault/create-case'))
+const CaseVaultAudit  = lazy(() => import('./pages/case-vault/audit-log'))
 
 
 // Floating widgets (loaded lazily, no SSR concerns now)
@@ -133,8 +140,8 @@ export default function App() {
     window.scrollTo(0, 0)
   }, [location.pathname])
 
-  // Hide navbar/footer for admin routes
-  const isAdminRoute = location.pathname.startsWith('/admin')
+  // Hide navbar/footer for admin and case-vault routes
+  const isAdminRoute = location.pathname.startsWith('/admin') || location.pathname.startsWith('/case-vault')
 
   return (
     <>
@@ -175,6 +182,7 @@ export default function App() {
             <Route path="/disclaimer" element={<Disclaimer />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/privacy-policy" element={<Privacy />} />
+            <Route path="/research/temporal-verification" element={<ResearchTemporal />} />
 
             {/* Authenticated routes — require login */}
             <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
@@ -197,6 +205,11 @@ export default function App() {
             <Route path="/admin/templates" element={<AdminRoute><AdminTemplates /></AdminRoute>} />
             <Route path="/admin/ai-eval" element={<AdminRoute><AdminAiEval /></AdminRoute>} />
 
+            {/* Case Vault routes — officer / legal-officer / court-clerk / admin only */}
+            <Route path="/case-vault/dashboard"      element={<PrivateRoute roles={['officer','legal-officer','court-clerk','admin']}><CaseVaultDash /></PrivateRoute>} />
+            <Route path="/case-vault/create"          element={<PrivateRoute roles={['officer','admin']}><CaseVaultCreate /></PrivateRoute>} />
+            <Route path="/case-vault/cases/:id"       element={<PrivateRoute roles={['officer','legal-officer','court-clerk','admin']}><CaseVaultDetail /></PrivateRoute>} />
+            <Route path="/case-vault/audit-log/:docId" element={<PrivateRoute roles={['officer','legal-officer','court-clerk','admin']}><CaseVaultAudit /></PrivateRoute>} />
 
             {/* 404 fallback */}
             <Route path="*" element={<NotFound />} />

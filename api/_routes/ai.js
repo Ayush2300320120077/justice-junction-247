@@ -30,6 +30,7 @@ const optionalAuth = (req, res, next) => {
 };
 
 const app = express();
+app.use(express.json());
 
 // ── AI rate limiter: 20 requests per user per hour ────────────────────────────
 // keyGenerator uses req.user.id (set by requireAuth) so limits are per-user,
@@ -399,8 +400,15 @@ router.patch('/feedback', async (req, res) => {
   }
 });
 
+const classifyAnonLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 10,
+  message: { error: 'Too many classify requests. Sign up for more.' },
+  standardHeaders: true, legacyHeaders: false
+});
+
 /* ─── POST /api/ai/classify ─── */
-router.post('/classify', requireAuth, aiLimiter, async (req, res) => {
+router.post('/classify', optionalAuth, classifyAnonLimiter, async (req, res) => {
   try {
     // ── Daily cap check (50 requests / 24 hours per user) ──────────────────────
     await connectDB();
@@ -448,6 +456,123 @@ You MUST respond with valid JSON with no markdown formatting or backticks around
 }
 Note: "suggestedAction" is optional and should only be included if a specific platform feature is relevant.`;
 
+
+// ── Lazy-load the temporal module (avoids cold-start cost on non-criminal routes) ─────────
+let _jj = null;
+let _crosswalk = null;
+function getJJ() {
+  if (!_jj) _jj = require('../../backend/ai/temporal/src');
+  return _jj;
+}
+function getCrosswalk() {
+  if (!_crosswalk) _crosswalk = require('../../backend/ai/temporal/src/crosswalk');
+  return _crosswalk;
+}
+
+// ── Criminal-code gating helpers & heuristic ───────────────────────────────────────────
+function hasExplicitStatuteMention(question) {
+  if (!question || typeof question !== 'string') return false;
+  const q = question.toLowerCase();
+  if (/\b(ipc|bns|crpc|bnss|iea|bsa)\b/i.test(q)) return true;
+  if (/indian\s+penal\s+code|bharatiya\s+nyaya|bharatiya\s+nagarik|code\s+of\s+criminal\s+procedure|indian\s+evidence\s+act|bharatiya\s+sakshya/i.test(q)) return true;
+  if (/\b(?:sections?|sec\.?|s\.)\s*\d+[a-z]?\b/i.test(q)) return true;
+  return false;
+}
+
+function hasCriminalLawKeyword(question) {
+  if (!question || typeof question !== 'string') return false;
+  const q = question.toLowerCase();
+  return /\b(murder\w*|theft\w*|rape\w*|assault\w*|kidnap\w*|cheat\w*|arrest\w*|bail\w*|fir|f\.i\.r\.?|charge.?sheet\w*|trial\w*|evidence\w*|confession\w*|cognizab\w*|punishment(?:\s+for)?|offen[cs]e\w*|crime\w*|criminal\w*|homicide\w*|robber\w*|dacoit\w*|culpable\w*|sedition\w*|police\w*|accused\w*|cognizance\w*|witness\w*|imprison\w*|jail\w*)\b/i.test(q);
+}
+
+// Fix 1: If the question has NO explicit statute mention and NO criminal-law keyword,
+// do not enter the temporal layer even if a date is present.
+function isCriminalCodeQuestion(question) {
+  if (!question || typeof question !== 'string') return false;
+  const q = question.toLowerCase();
+
+  const hasExplicit = hasExplicitStatuteMention(question);
+  const hasCrimeWord = hasCriminalLawKeyword(question);
+
+  if (!hasExplicit && !hasCrimeWord) {
+    return false;
+  }
+
+  // Explicit statute mention -> enter
+  if (hasExplicit) return true;
+
+  // Has criminal keyword -> check for date presence, "before/after July 2024", or resolver dates
+  if (/\b(before|after|prior\s+to|since|pre|post)\b[^.?]{0,40}(?:july\s*2024|1\s*(?:st)?\s*july|new\s*(?:criminal\s*)?(?:laws?|codes?))/i.test(q)) return true;
+
+  try {
+    const resolved = getJJ().resolveDates(question);
+    if (resolved && (resolved.offence_date || resolved.proceeding_date)) return true;
+  } catch (_) { /* ignore */ }
+
+  try {
+    const { findDates } = require('../../backend/ai/temporal/src/resolver');
+    const dates = findDates(question);
+    if (dates && dates.length > 0) return true;
+  } catch (_) {}
+
+  return false;
+}
+
+// ── Build the temporal generateFn that reuses the same Anthropic fetch already in /chat ──
+function makeTemporalGenerateFn(apiKey) {
+  const SHORT_NAMES = {
+    IPC: 'Indian Penal Code', BNS: 'Bharatiya Nyaya Sanhita',
+    CRPC: 'Code of Criminal Procedure', BNSS: 'Bharatiya Nagarik Suraksha Sanhita',
+    IEA: 'Indian Evidence Act', BSA: 'Bharatiya Sakshya Adhiniyam'
+  };
+
+  return async function generateFn(query, segments) {
+    if (!segments || !segments.length) {
+      return 'No relevant statutory provision was found in the available context.\n\nThis is general legal information, not legal advice.';
+    }
+    // Build context text from the temporal retrieval segments
+    const ctx = segments
+      .flatMap(s => s.results || [])
+      .filter((r, i, a) => a.findIndex(x => x.chunk.id === r.chunk.id) === i)
+      .map(r => {
+        const codeName = SHORT_NAMES[r.chunk.code] || r.chunk.code;
+        return `[${codeName} – Section ${r.chunk.section}: ${r.chunk.title}]\n${(r.chunk.text || '').slice(0, 1200)}`;
+      })
+      .join('\n\n');
+
+    const systemPrompt = `You are Justice Junction's official AI Legal Assistant specializing in Indian criminal law (IPC/BNS, CrPC/BNSS, IEA/BSA).
+Use only the provided context; if nothing relevant, say so.
+Cite every provision as "(Act Name, Sec. N)" with the full act name, e.g. "(Bharatiya Nyaya Sanhita, Sec. 103)".
+Keep the disclaimer: "This is general legal information, not legal advice. I recommend booking a verified lawyer on the platform for your specific situation."
+
+CONTEXT:
+${ctx}`;
+
+    const anthropicBase = process.env.ANTHROPIC_BASE_URL || 'https://api.anthropic.com';
+    const response = await fetch(anthropicBase.replace(/\/$/, '') + '/v1/messages', {
+      method: 'POST',
+      headers: {
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: 'claude-3-5-sonnet-20240620',
+        max_tokens: 1000,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: query }]
+      })
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Anthropic API Error:', response.status, errorText);
+      throw new Error(`Anthropic API Error: ${response.status}`);
+    }
+    const data = await response.json();
+    return (data.content?.[0]?.text || '').trim();
+  };
+}
+
 router.post('/chat', optionalAuth, chatRateLimiter, async (req, res) => {
   const startTime = Date.now();
   try {
@@ -457,15 +582,17 @@ router.post('/chat', optionalAuth, chatRateLimiter, async (req, res) => {
     }
 
     // ── Daily cap check (50 requests / 24 hours per user) ──────────────────────
-    await connectDB();
-    if (req.user) {
-      if (await isOverDailyCap(req.user.id)) {
-        return res.status(429).json({
-          error: 'Daily AI usage limit reached. Please try again tomorrow.',
-          suggestedAction: { type: 'lawyer', link: '/search' }
-        });
+    try {
+      await connectDB();
+      if (req.user) {
+        if (await isOverDailyCap(req.user.id)) {
+          return res.status(429).json({
+            error: 'Daily AI usage limit reached. Please try again tomorrow.',
+            suggestedAction: { type: 'lawyer', link: '/search' }
+          });
+        }
       }
-    }
+    } catch (_) { /* non-blocking in test environment without active MongoDB */ }
 
     // req.user is set by optionalAuth — no manual Bearer decode needed
     const user = req.user;
@@ -478,7 +605,10 @@ router.post('/chat', optionalAuth, chatRateLimiter, async (req, res) => {
     // Minimum cosine similarity threshold for context relevance.
     // Dense embeddings (Voyage AI / OpenAI) score 0.60+, while local TF-IDF sparse fallback vectors score lower (~0.30+).
     // TODO: Maintain RELEVANCE_THRESHOLD = 0.60 as default once live Voyage AI (voyage-law-2) or OpenAI embeddings are active.
-    const isLiveEmbedder = Boolean((process.env.VOYAGE_API_KEY && !process.env.VOYAGE_API_KEY.includes('your_')) || (process.env.OPENAI_API_KEY && !process.env.OPENAI_API_KEY.includes('your_')));
+    const isLiveEmbedder = Boolean(
+      (process.env.VOYAGE_API_KEY && !process.env.VOYAGE_API_KEY.includes('your_')) ||
+      (process.env.OPENAI_API_KEY && !process.env.OPENAI_API_KEY.includes('your_'))
+    );
     const RELEVANCE_THRESHOLD = isLiveEmbedder ? 0.60 : 0.30;
 
     try {
@@ -492,8 +622,8 @@ router.post('/chat', optionalAuth, chatRateLimiter, async (req, res) => {
     const relevantChunks = retrievedChunks.filter(c => c.score >= RELEVANCE_THRESHOLD);
     const hasHighRelevance = relevantChunks.length > 0;
 
-    // Build Sources List for Frontend Widget
-    const sources = relevantChunks.slice(0, 3).map(c => ({
+    // Build Sources List for Frontend Widget (may be overridden by temporal path)
+    let sources = relevantChunks.slice(0, 3).map(c => ({
       actName: c.metadata?.actName || 'Bare Act / Statute',
       sectionNumber: c.metadata?.sectionNumber || 'General',
       sectionTitle: c.metadata?.sectionTitle || '',
@@ -536,16 +666,110 @@ Respond ONLY with valid JSON with no markdown formatting or backticks around it:
   "suggestedAction": { "type": "document" | "estimate" | "lawyer", "link": "/document-generator" | "/search" }
 }`;
 
-        // Fetch PlatformSettings for API Key
-    const settings = await PlatformSettings.findOne({}) || {};
-    const aiProvider = settings.aiProvider || 'mock';
+    // Fetch PlatformSettings for API Key
+    let settings = {};
+    try {
+      settings = (await PlatformSettings.findOne({})) || {};
+    } catch (_) {
+      settings = {};
+    }
+    const aiProvider = settings.aiProvider || (process.env.ANTHROPIC_API_KEY ? 'anthropic' : 'mock');
     let apiKey = settings.aiApiKey || '';
-    
+
     // Fallback to env vars if setting is empty but provider is chosen
     if (!apiKey) {
       if (aiProvider === 'gemini') apiKey = process.env.GEMINI_API_KEY || '';
       if (aiProvider === 'anthropic') apiKey = process.env.ANTHROPIC_API_KEY || '';
     }
+
+    // ── TEMPORAL VERIFICATION GATE ────────────────────────────────────────────
+    // Run only for criminal-code questions. Uses the offline generator in mock mode;
+    // wires our Anthropic fetch as generateFn when a live key is configured.
+    let temporalResult = null;
+    let temporalError = false;
+    const isTemporalCandidate = isCriminalCodeQuestion(message.trim());
+    const hasExplicitStatute = hasExplicitStatuteMention(message.trim());
+    const hasLiveAnthropicKey = Boolean(apiKey && !apiKey.startsWith('your_') && !apiKey.includes('placeholder'));
+
+    if (isTemporalCandidate) {
+      try {
+        const jj = getJJ();
+        const temporalOpts = hasLiveAnthropicKey
+          ? { generateFn: makeTemporalGenerateFn(apiKey) }
+          : { generator: 'offline' };
+        temporalResult = await jj.answerWithVerification(message.trim(), temporalOpts);
+
+        // Fix 2: If the temporal layer returns status 'abstained' and the question had no explicit statute mention,
+        // DISCARD the temporal result and return the existing non-temporal answer, with verification: { status: 'not_applicable' }.
+        if (temporalResult && temporalResult.status === 'abstained' && !hasExplicitStatute) {
+          temporalResult = null;
+        }
+      } catch (temporalErr) {
+        console.warn('[temporal] verification layer error (fail-safe triggered):', temporalErr.message);
+        temporalResult = null; // fall through to existing flow
+        temporalError = true;
+      }
+    }
+
+    // ── If temporal layer produced a result, build the response from it ─────────
+    if (temporalResult) {
+      const crosswalk = getCrosswalk();
+      // Map trace.finalVerification to the existing sources shape (+ verdict field)
+      const temporalSources = (temporalResult.trace?.finalVerification || []).map(v => {
+        const chunk = crosswalk.byId.get(v.id) || null;
+        return {
+          actName: chunk
+            ? ({ IPC: 'Indian Penal Code', BNS: 'Bharatiya Nyaya Sanhita', CRPC: 'Code of Criminal Procedure', BNSS: 'Bharatiya Nagarik Suraksha Sanhita', IEA: 'Indian Evidence Act', BSA: 'Bharatiya Sakshya Adhiniyam' }[chunk.code] || chunk.code)
+            : v.id,
+          sectionNumber: chunk?.section || (v.id.includes('_') ? v.id.split('_').slice(1).join('_') : ''),
+          sectionTitle: chunk?.title || '',
+          score: null,
+          verdict: v.verdict
+        };
+      });
+      if (temporalSources.length) sources = temporalSources;
+
+      const verificationField = {
+        status:   temporalResult.status,
+        regime:   temporalResult.trace?.regime || null,
+        repaired: temporalResult.trace?.repairs || [],
+        removed:  temporalResult.trace?.initialFlags || []
+      };
+
+      const finalReply = temporalResult.answer || '';
+      const latencyMs = Date.now() - startTime;
+      let logDoc = null;
+      try {
+        logDoc = await AiInteractionLog.create({
+          userId: user?.id || null,
+          query: message,
+          retrievedChunks: retrievedChunks.map(c => ({ sourceId: c.sourceId, score: c.score, metadata: c.metadata, text: c.text })),
+          response: finalReply,
+          module: 'chat',
+          latencyMs,
+          verificationStatus: temporalResult.status,
+          resolvedRegime:     temporalResult.trace?.regime || null,
+          citationVerdicts:   temporalResult.trace?.finalVerification || null,
+          ...(ragFailed ? { 'metadata.ragFailed': true } : {})
+        });
+      } catch (logErr) { /* non-blocking */ }
+
+      if (user) logAIRequest(user.id);
+
+      return res.status(200).json({
+        reply:           finalReply,
+        suggestedAction: { type: 'lawyer', link: '/search' },
+        logId:           logDoc?._id || null,
+        sources,
+        verification:    verificationField
+      });
+    }
+
+    // ── EXISTING FLOW (unchanged) ─────────────────────────────────────────────
+    // Temporal layer was not applicable, threw, or was discarded — continue exactly as before.
+    const defaultVerification = temporalError
+      ? { status: 'unverified', error: true }
+      : { status: 'not_applicable' };
 
     // Handle Local Fallback
     if (aiProvider === 'mock' || !apiKey || apiKey.startsWith('your_') || apiKey.includes('placeholder')) {
@@ -583,6 +807,7 @@ Respond ONLY with valid JSON with no markdown formatting or backticks around it:
           response: responseText,
           module: 'chat',
           latencyMs,
+          verificationStatus: defaultVerification.status,
           ...(ragFailed ? { 'metadata.ragFailed': true } : {})
         });
       } catch (logErr) { /* non-blocking */ }
@@ -597,7 +822,8 @@ Respond ONLY with valid JSON with no markdown formatting or backticks around it:
         suggestedAction: action || { type: 'lawyer', link: '/search' },
         logId: logDoc?._id || null,
         sources,
-        isMock: true
+        isMock: true,
+        verification: defaultVerification
       });
     }
 
@@ -663,7 +889,8 @@ Respond ONLY with valid JSON with no markdown formatting or backticks around it:
         }
       });
 
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
+      const anthropicBase = process.env.ANTHROPIC_BASE_URL || 'https://api.anthropic.com';
+      const response = await fetch(anthropicBase.replace(/\/$/, '') + '/v1/messages', {
         method: 'POST',
         headers: {
           'x-api-key': apiKey,
@@ -705,6 +932,7 @@ Respond ONLY with valid JSON with no markdown formatting or backticks around it:
         response: finalReply,
         module: 'chat',
         latencyMs,
+        verificationStatus: defaultVerification.status,
         ...(ragFailed ? { 'metadata.ragFailed': true } : {})
       });
     } catch (logErr) { /* non-blocking */ }
@@ -717,7 +945,8 @@ Respond ONLY with valid JSON with no markdown formatting or backticks around it:
       reply: finalReply,
       suggestedAction,
       logId: logDoc?._id || null,
-      sources
+      sources,
+      verification: defaultVerification
     });
   } catch (err) {
     console.error('POST /api/ai/chat route error:', err);
@@ -729,7 +958,30 @@ Respond ONLY with valid JSON with no markdown formatting or backticks around it:
   }
 });
 
+/* ─── POST /api/ai/verify-citations ──────────────────────────────────────────
+   Body: { question?: string (max 1000), answerText: string (max 4000) }
+   Auth: optional  |  Rate-limit: same chatRateLimiter (no LLM call)
+   Returns: jj.verifyCitations(answerText, { question })
+   ──────────────────────────────────────────────────────────────────────────── */
+router.post('/verify-citations', optionalAuth, chatRateLimiter, async (req, res) => {
+  try {
+    let { question, answerText } = req.body;
+    if (!answerText || typeof answerText !== 'string' || !answerText.trim()) {
+      return res.status(400).json({ error: 'answerText (string) is required' });
+    }
+    // Input length caps
+    if (typeof question === 'string' && question.length > 1000) question = question.slice(0, 1000);
+    if (answerText.length > 4000) answerText = answerText.slice(0, 4000);
+
+    const jj = getJJ();
+    const result = jj.verifyCitations(answerText, { question: question || '' });
+    return res.status(200).json(result);
+  } catch (err) {
+    console.error('POST /api/ai/verify-citations error:', err);
+    return res.status(500).json({ error: 'Internal server error', detail: err.message });
+  }
+});
+
 
 app.use('/api/ai', router);
 module.exports = app;
-

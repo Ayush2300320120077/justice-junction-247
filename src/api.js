@@ -109,4 +109,27 @@ export const API = {
   assistant:       (body)       => request('/ai/assistant', { method: 'POST', body }),
   rateInteraction: (body)       => request('/ai/feedback',  { method: 'PATCH', body }),
   classify:        (body)       => request('/ai/classify',  { method: 'POST', body }),
+
+  // ── Case Vault (SIH26190) ──────────────────────────────────────────────────
+  vault: {
+    // Cases
+    listCases:      (params = {}) => { const qs = new URLSearchParams(params).toString(); return request(`/case-vault/cases${qs ? '?' + qs : ''}`) },
+    createCase:     (body)        => request('/case-vault/cases',                        { method: 'POST', body }),
+    getCase:        (id)          => request(`/case-vault/cases/${id}`),
+
+    // Documents
+    uploadDocument:  (caseId, body)       => request(`/case-vault/cases/${caseId}/documents`, { method: 'POST', body }),
+    uploadVersion:   (docId, body)        => request(`/case-vault/documents/${docId}`,         { method: 'PUT',  body }),
+    downloadDoc:     (docId, params = {}) => { const qs = new URLSearchParams(params).toString(); return request(`/case-vault/documents/${docId}/download${qs ? '?' + qs : ''}`) },
+    verifyDoc:       (docId, params = {}) => { const qs = new URLSearchParams(params).toString(); return request(`/case-vault/documents/${docId}/verify${qs ? '?' + qs : ''}`) },
+
+    // Sign: body = { versionNumber, signatureData, contentHash, algorithm?, certificateFingerprint?, externalTxnId? }
+    signDoc:         (docId, body)        => request(`/case-vault/documents/${docId}/sign`,      { method: 'POST', body }),
+
+    // Signatures list (non-revoked, newest first)
+    getSignatures:   (docId)              => request(`/case-vault/documents/${docId}/signatures`),
+
+    // Audit log — paginated AccessLog for one document (real endpoint now exists)
+    getAuditLog:     (docId, params = {}) => { const qs = new URLSearchParams(params).toString(); return request(`/case-vault/documents/${docId}/audit${qs ? '?' + qs : ''}`) },
+  },
 }

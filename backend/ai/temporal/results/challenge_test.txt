@@ -1,0 +1,8 @@
+split=test tau=0.6 items=1783
+clean  n=306 flagged=0.0% 
+T1     n=306 flagged=100.0% label-correct=100.0%
+T2     n=306 flagged=98.0% label-correct=62.4%
+T3     n=306 flagged=99.3% label-correct=99.3%
+T4     n=253 flagged=100.0% label-correct=100.0%
+T5     n=306 flagged=94.8% label-correct=94.8%
+{ avgRecall: 0.9843137254901961, fpr: 0, J: 0.9843137254901961 }

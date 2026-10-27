@@ -1,0 +1,20 @@
+# jj-temporal offline-only and large data files — NOT deployed to Vercel
+# Kept:   backend/ai/temporal/data/corpus.json
+# Kept:   backend/ai/temporal/data/anchors.json
+# Kept:   backend/ai/temporal/data/params.json
+
+# Raw source data (large, offline ingestion only)
+backend/ai/temporal/data/raw/
+
+# QA dataset files (large, offline eval only)
+backend/ai/temporal/data/jj_statqa_v2.json
+backend/ai/temporal/data/jj_statqa_v2.jsonl
+
+# All results artifacts (per_question_*.jsonl, cache_*, etc.)
+backend/ai/temporal/results/
+
+# Eval harness and fixtures (offline-only)
+backend/ai/temporal/eval/fixtures/
+
+# Test files
+backend/ai/temporal/test/

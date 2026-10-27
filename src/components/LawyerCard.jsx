@@ -17,6 +17,11 @@ export default function LawyerCard({ lawyer, onCompare, compareList=[], isDemo=f
   const [hovered, setHovered] = useState(false)
   const color = avatarColor(lawyer.name)
 
+  // Normalise rating/fee fields — demo data may use different field names
+  const rating = lawyer.averageRating ?? lawyer.rating ?? 0
+  const reviews = lawyer.totalReviews ?? lawyer.reviewCount ?? 0
+  const fee = lawyer.consultationFee ?? lawyer.fee ?? 0
+
   const [isFav, setIsFav] = useState(false)
 
   useEffect(() => {
@@ -37,7 +42,7 @@ export default function LawyerCard({ lawyer, onCompare, compareList=[], isDemo=f
   const handleBook = (e) => {
     e.stopPropagation()
     if (!isLoggedIn) { navigate('/login'); return }
-    navigate(`/book?lawyerId=${lawyer._id}&lawyerName=${encodeURIComponent(lawyer.name)}&fee=${lawyer.consultationFee}`)
+    navigate(`/book?lawyerId=${lawyer._id}&lawyerName=${encodeURIComponent(lawyer.name)}&fee=${fee}`)
   }
 
   const inCompare = compareList.includes(lawyer._id)
@@ -65,9 +70,9 @@ export default function LawyerCard({ lawyer, onCompare, compareList=[], isDemo=f
           </div>
           <div style={s.spec}>{(lawyer.specializations||[]).slice(0,2).join(' · ')}</div>
           <div style={s.ratingRow}>
-            <span style={{color:'var(--gold)',fontSize:'0.75rem'}}>{stars(lawyer.averageRating||0)}</span>
-            <span style={{fontWeight:700,fontSize:'0.78rem'}}>{(lawyer.averageRating||0).toFixed(1)}</span>
-            <span style={{fontSize:'0.72rem',color:'var(--text-light)'}}>({lawyer.totalReviews||0})</span>
+            <span style={{color:'var(--gold)',fontSize:'0.75rem'}}>{stars(rating)}</span>
+            <span style={{fontWeight:700,fontSize:'0.78rem'}}>{rating.toFixed(1)}</span>
+            <span style={{fontSize:'0.72rem',color:'var(--text-light)'}}>({reviews})</span>
           </div>
         </div>
         
@@ -90,7 +95,7 @@ export default function LawyerCard({ lawyer, onCompare, compareList=[], isDemo=f
 
       {/* Location + Exp */}
       <div style={s.meta}>
-        <span style={s.metaItem}><MapPin size={13} /> {lawyer.city}, {lawyer.state} {lawyer.pincode ? `(${lawyer.pincode})` : ''}</span>
+        <span style={s.metaItem}><MapPin size={13} /> {lawyer.city}{lawyer.state ? `, ${lawyer.state}` : ''}</span>
         <span style={s.metaItem}><Landmark size={13} /> {lawyer.experience} yrs exp</span>
       </div>
 
@@ -105,17 +110,17 @@ export default function LawyerCard({ lawyer, onCompare, compareList=[], isDemo=f
       <div style={{padding:'0 1.2rem 0.8rem'}}>
         <div style={{display:'flex',justifyContent:'space-between',fontSize:'0.72rem',color:'var(--text-muted)',marginBottom:4}}>
           <span>Client Satisfaction</span>
-          <span>{Math.round((lawyer.averageRating||0)/5*100)}%</span>
+          <span>{Math.round(rating/5*100)}%</span>
         </div>
         <div className="progress-bar">
-          <div className="progress-fill" style={{width:`${Math.round((lawyer.averageRating||0)/5*100)}%`}}/>
+          <div className="progress-fill" style={{width:`${Math.round(rating/5*100)}%`}}/>
         </div>
       </div>
 
       {/* Footer */}
       <div style={s.footer}>
         <div>
-          <div className="num-display" style={s.price}>₹{(lawyer.consultationFee||0).toLocaleString()}</div>
+          <div className="num-display" style={s.price}>₹{fee.toLocaleString()}</div>
           <div style={s.priceUnit}>per consultation</div>
         </div>
         <div style={{display:'flex',gap:6,alignItems:'center'}}>
@@ -123,10 +128,18 @@ export default function LawyerCard({ lawyer, onCompare, compareList=[], isDemo=f
             ? <span style={s.available}><CircleCheck size={12}/> Available</span>
             : <span style={s.unavailable}>Busy</span>
           }
-          {isDemo
-            ? <button className="btn btn-outline btn-sm" onClick={(e) => { e.stopPropagation(); navigate(`/search`) }}>View Profile</button>
-            : <button className="btn btn-primary btn-sm" onClick={handleBook}>Book Now</button>
-          }
+          <button 
+            className="btn btn-outline btn-sm" 
+            onClick={(e) => { e.stopPropagation(); navigate(`/lawyer/${lawyer._id}`) }}
+          >
+            View
+          </button>
+          <button 
+            className="btn btn-primary btn-sm" 
+            onClick={handleBook}
+          >
+            Book
+          </button>
         </div>
       </div>
 

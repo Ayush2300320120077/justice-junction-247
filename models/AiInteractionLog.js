@@ -19,7 +19,11 @@ const aiInteractionLogSchema = new mongoose.Schema({
   reviewerRating: { type: Number, min: 1, max: 5, default: null },
   reviewerNotes: { type: String, default: '' },
   recommendedLawyerIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Lawyer' }],
-  metadata: { type: mongoose.Schema.Types.Mixed, default: {} }
+  metadata: { type: mongoose.Schema.Types.Mixed, default: {} },
+  // ── Temporal verification layer (optional) ──────────────────────────────────
+  verificationStatus: { type: String, default: null },          // 'answered' | 'ask_dates' | 'abstained' | 'unverified' | 'not_applicable'
+  resolvedRegime:     { type: mongoose.Schema.Types.Mixed, default: null }, // { PENAL, PROCEDURE, EVIDENCE } from resolver
+  citationVerdicts:   { type: mongoose.Schema.Types.Mixed, default: null }  // array from trace.finalVerification
 });
 
 

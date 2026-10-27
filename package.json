@@ -6,7 +6,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "server": "node server.js",
-    "dev:full": "concurrently \"npm run dev\" \"npm run server\""
+    "dev:full": "concurrently \"npm run dev\" \"npm run server\"",
+    "test:temporal": "node --test backend/ai/temporal/test/*.test.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.115.0",

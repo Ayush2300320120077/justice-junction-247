@@ -1,0 +1,106 @@
+{
+ "meta": {
+  "split": "dev",
+  "subset": "all",
+  "n": 3,
+  "generator": "claude",
+  "params": {
+   "theta": 0.44,
+   "tau": 0.6,
+   "k": 5
+  },
+  "date": "2026-10-11"
+ },
+ "resolver": {
+  "overall": {
+   "n": 3,
+   "regime": 1,
+   "date": 1
+  },
+  "byType": {
+   "temporal_lookup": {
+    "n": 3,
+    "regime": 1,
+    "date": 1
+   }
+  },
+  "byFormat": {
+   "fmt6": {
+    "n": 1,
+    "regime": 1,
+    "date": 1
+   },
+   "fmt4": {
+    "n": 1,
+    "regime": 1,
+    "date": 1
+   },
+   "fmt5": {
+    "n": 1,
+    "regime": 1,
+    "date": 1
+   }
+  },
+  "bySide": {}
+ },
+ "byM": {
+  "1": {
+   "agg": {
+    "C0": {
+     "n": 3,
+     "accuracy_all": 0,
+     "ci95": [
+      0,
+      0
+     ],
+     "accuracy_answerable_strict": 0,
+     "hit_gold_lenient": 0,
+     "citation": {
+      "total": 0,
+      "exist_rate": null,
+      "applicable_rate": null,
+      "CP": null,
+      "TIR": null,
+      "gold_precision": null,
+      "gold_recall": 0,
+      "questions_with_inapplicable_cite": null,
+      "fabricated": 0
+     },
+     "api_errors": 3,
+     "ucr": null,
+     "temporal": {
+      "wrong_code_cited_rate": 0,
+      "safe_rate_retroactivity": null
+     },
+     "retrieval": {
+      "recall_at_5": 0,
+      "mrr": 0
+     },
+     "behaviour": {
+      "abstain_on_unanswerable": null,
+      "false_abstain_on_answerable": 0,
+      "ask_dates_when_dates_given": 0,
+      "ask_dates_on_ambiguous": null
+     },
+     "byType": {
+      "temporal_lookup": {
+       "n": 3,
+       "acc": 0
+      }
+     },
+     "monthOnly": {
+      "june2024": null,
+      "august2024": null
+     },
+     "boundary": {
+      "before_cutover": null,
+      "on_after_cutover": null
+     },
+     "latency_ms_mean": 320.5099666666667
+    }
+   },
+   "sig": {}
+  }
+ },
+ "skipped": []
+}

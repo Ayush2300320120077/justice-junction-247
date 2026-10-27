@@ -89,6 +89,7 @@ app.use(require('./api/_routes/documents'));
 app.use(require('./api/_routes/articles'));
 app.use(require('./api/_routes/reviews'));
 app.use(require('./api/_routes/contact'));
+app.use(require('./api/_routes/case-vault')); // SIH26190 — Case Vault module
 
 // ── Health check ─────────────────────────────────────────────────────────────
 app.get('/health', (req, res) => res.json({ status: 'ok' }));

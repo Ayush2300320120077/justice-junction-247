@@ -1,0 +1,7 @@
+{
+ "theta": 0.44,
+ "tau": 0.6,
+ "_tuned_on": "dev split only",
+ "_theta_balanced_acc": 0.997,
+ "_tau_youden_J": 0.99
+}
