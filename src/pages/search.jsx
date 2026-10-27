@@ -444,7 +444,7 @@ export default function Search() {
             Find the Right <span style={{ color: '#F5C4B3' }}>Legal Expert</span>
           </h1>
           <p style={{ fontSize: '1.05rem', color: 'rgba(245,224,200,0.78)', maxWidth: 580, margin: '0 auto 2rem', lineHeight: 1.8 }}>
-            Browse <strong style={{ color: '#F5C4B3' }}>110+</strong> Bar Council verified advocates across India.
+            Browse <strong style={{ color: '#F5C4B3' }}>200+</strong> Bar Council verified advocates across India.
             Filter by area, location, language, fee &amp; availability.
           </p>
         </div>
@@ -666,7 +666,7 @@ export default function Search() {
                 />
                 {/* City chips */}
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginTop: 6 }}>
-                  {['Delhi','Mumbai','Bengaluru','Hyderabad','Chennai','Kolkata','Pune','Jaipur','Ahmedabad','Lucknow'].map(c => (
+                  {['Delhi','Mumbai','Bengaluru','Hyderabad','Chennai','Kolkata','Pune','Jaipur','Ahmedabad','Lucknow','Chandigarh','Patna','Kochi','Bhubaneswar','Indore','Guwahati','Panaji','Srinagar'].map(c => (
                     <button key={c} onClick={() => { setCity(c === city ? '' : c); setDebouncedCity(c === city ? '' : c) }} style={{
                       background: city === c ? '#7B1D2E' : '#FDF6EE',
                       border: `1px solid ${city === c ? '#7B1D2E' : '#E8C9A8'}`,
@@ -715,7 +715,7 @@ export default function Search() {
                 <div style={st.sblabel}><Globe size={13} color="#7B1D2E" /> Language</div>
                 <select style={st.sel} value={language} onChange={e => setLanguage(e.target.value)}>
                   <option value="">All Languages</option>
-                  {['Hindi','English','Tamil','Bengali','Marathi','Gujarati','Telugu','Kannada','Punjabi','Urdu','Malayalam','Odia','Tulu','Marwari'].map(l => <option key={l}>{l}</option>)}
+                  {['Hindi','English','Tamil','Bengali','Marathi','Gujarati','Telugu','Kannada','Punjabi','Urdu','Malayalam','Odia','Assamese','Bhojpuri','Marwari','Tulu','Konkani','Kashmiri'].map(l => <option key={l}>{l}</option>)}
                 </select>
               </div>
 
